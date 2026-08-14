@@ -1,0 +1,1401 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Vendor Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+        @media (max-width: 980px) {
+          #app > div:first-child { grid-template-columns: 1fr !important; }
+          #app section:first-child { min-height: 380px; }
+          main { padding: 18px !important; }
+        }
+        @media (max-width: 820px) {
+          #app div[style*="grid-template-columns:250px"] { grid-template-columns: 1fr !important; }
+          aside { position:static !important; }
+        }
+        @media (max-width: 720px) {
+          form div[style*="grid-template-columns:repeat(2"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:minmax(0,1.4fr)"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:1.2fr .85fr"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:minmax(0,1.5fr)"] { grid-template-columns:1fr !important; }
+          header { padding:12px 14px !important; }
+        }
+      </style><style id="vvvebjs-styles"></style>
+<style id="page64-reference-theme">
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0 !important;
+    font-family: 'Inter', sans-serif !important;
+    background: #f4f7f5 !important;
+    color: #1e2e24 !important;
+  }
+
+  button, input, select, textarea {
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  /* ===== Reference palette ===== */
+  :root {
+    --om-green: #1a4d2a;
+    --om-green-2: #2d6e3e;
+    --om-green-dark: #0f3a1e;
+    --om-gold: #f5c542;
+    --om-bg: #f4f7f5;
+    --om-soft: #f8fbf8;
+    --om-soft-green: #eef6ef;
+    --om-border: #e1eee1;
+    --om-text: #1e2e24;
+    --om-muted: #5a6f5a;
+  }
+
+  /* ===== Authentication ===== */
+  #app > div:first-child {
+    background: #f4f7f5 !important;
+    gap: 26px !important;
+    padding: 30px 20px !important;
+    max-width: 1450px !important;
+    margin: 0 auto !important;
+    min-height: 100vh !important;
+    align-items: stretch !important;
+  }
+
+  .vendor-auth-hero {
+    background: linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%) !important;
+    border-radius: 32px !important;
+    padding: 42px 46px !important;
+    box-shadow: 0 20px 40px rgba(0,20,0,.15) !important;
+    min-height: calc(100vh - 60px) !important;
+  }
+
+  .vendor-auth-hero::after {
+    content: "🌿";
+    position: absolute;
+    right: 22px;
+    bottom: -26px;
+    font-size: 170px;
+    opacity: .08;
+    transform: rotate(8deg);
+    pointer-events: none;
+  }
+
+  .vendor-auth-hero h1 {
+    font-size: 43px !important;
+    line-height: 1.08 !important;
+    font-weight: 850 !important;
+    letter-spacing: -.03em !important;
+    margin-top: 30px !important;
+  }
+
+  .vendor-auth-hero p {
+    color: rgba(255,255,255,.88) !important;
+    font-size: 16px !important;
+    line-height: 1.65 !important;
+    border-left: 4px solid #f5c542 !important;
+    padding-left: 16px !important;
+  }
+
+  .vendor-auth-hero > div:first-of-type > div:first-child {
+    border-radius: 40px !important;
+    background: rgba(255,255,255,.12) !important;
+    border-color: rgba(255,255,255,.15) !important;
+  }
+
+  .vendor-auth-panel {
+    padding: 0 !important;
+    align-items: center !important;
+  }
+
+  .vendor-auth-panel > div {
+    width: 100% !important;
+    background: #fff !important;
+    border: 1px solid #e6eee6 !important;
+    border-radius: 28px !important;
+    box-shadow: 0 12px 30px rgba(0,20,0,.06) !important;
+  }
+
+  .vendor-auth-panel > div > div:first-child {
+    padding: 26px 28px !important;
+    background: #fff !important;
+    border-bottom: 1px solid #e6eee6 !important;
+  }
+
+  .vendor-auth-panel > div > div:first-child > div:first-child > div:first-child {
+    color: #1a4d2a !important;
+    font-size: 24px !important;
+    font-weight: 850 !important;
+  }
+
+  .vendor-auth-panel label {
+    color: #1a4d2a !important;
+    font-weight: 720 !important;
+  }
+
+  .vendor-auth-panel input,
+  .vendor-auth-panel select,
+  .vendor-auth-panel textarea {
+    border-radius: 16px !important;
+    border: 1px solid #dbe8db !important;
+    background: #fff !important;
+    color: #1e2e24 !important;
+    min-height: 46px !important;
+    box-shadow: none !important;
+  }
+
+  .vendor-auth-panel textarea {
+    min-height: 96px !important;
+  }
+
+  .vendor-auth-panel button {
+    border-radius: 40px !important;
+    font-weight: 800 !important;
+    transition: .2s ease !important;
+  }
+
+  .vendor-auth-panel button:hover {
+    transform: translateY(-2px);
+  }
+
+  .vendor-auth-panel button[type="submit"] {
+    background: #1a4d2a !important;
+    box-shadow: 0 8px 16px rgba(26,77,42,.18) !important;
+  }
+
+  .vendor-auth-panel button[type="submit"]:hover {
+    background: #0f3a1e !important;
+  }
+
+  .vendor-auth-panel button[onclick*="fill"] {
+    background: #f5c542 !important;
+    color: #1e2e24 !important;
+    border-color: #f5c542 !important;
+  }
+
+  /* ===== Dashboard shell ===== */
+  #app > div[style*="background:#f4f7f3"] {
+    background: #f4f7f5 !important;
+    padding: 30px 20px !important;
+  }
+
+  .vendor-dashboard-header {
+    position: relative !important;
+    top: auto !important;
+    max-width: 1450px !important;
+    margin: 0 auto 20px !important;
+    background: linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 28px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 20px 40px rgba(0,20,0,.15) !important;
+    overflow: hidden !important;
+  }
+
+  .vendor-dashboard-header::after {
+    content: "🌿";
+    position: absolute;
+    right: 260px;
+    bottom: -42px;
+    font-size: 110px;
+    opacity: .08;
+    pointer-events: none;
+  }
+
+  .vendor-dashboard-header > div:first-child > div:first-child {
+    background: rgba(255,255,255,.14) !important;
+    color: #f5c542 !important;
+    box-shadow: none !important;
+  }
+
+  .vendor-dashboard-header > div:first-child > div:last-child > div:first-child {
+    color: #fff !important;
+    font-weight: 850 !important;
+    font-size: 20px !important;
+  }
+
+  .vendor-dashboard-header > div:first-child > div:last-child > div:last-child {
+    color: rgba(255,255,255,.82) !important;
+  }
+
+  .vendor-dashboard-header > div:last-child > button,
+  .vendor-dashboard-header > div:last-child > div {
+    background: rgba(255,255,255,.12) !important;
+    color: #fff !important;
+    border-color: rgba(255,255,255,.18) !important;
+  }
+
+  .vendor-dashboard-header > div:last-child > div > div:last-child > div:last-child {
+    color: rgba(255,255,255,.78) !important;
+  }
+
+  #app div[style*="grid-template-columns:250px"] {
+    display: block !important;
+    min-height: auto !important;
+    max-width: 1450px !important;
+    margin: 0 auto !important;
+  }
+
+  .vendor-dashboard-tabs {
+    position: sticky !important;
+    top: 12px !important;
+    z-index: 120 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+    background: #fff !important;
+    color: #1a4d2a !important;
+    border: 1px solid #e6eee6 !important;
+    border-radius: 22px !important;
+    padding: 10px !important;
+    margin-bottom: 28px !important;
+    box-shadow: 0 10px 24px rgba(0,20,0,.05) !important;
+  }
+
+  .vendor-dashboard-tabs > div:first-child,
+  .vendor-dashboard-tabs > div:last-child,
+  .vendor-dashboard-tabs > div[style*="height:1px"] {
+    display: none !important;
+  }
+
+  .vendor-dashboard-tabs > button {
+    flex: 1 0 auto !important;
+    min-height: 46px !important;
+    border-radius: 15px !important;
+    padding: 12px 18px !important;
+    margin: 0 !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+
+  .vendor-dashboard-tabs > button[style*="background:#fff"] {
+    background: #1a4d2a !important;
+    color: #fff !important;
+    box-shadow: 0 8px 16px rgba(26,77,42,.18) !important;
+  }
+
+  .vendor-dashboard-tabs > button[style*="background:transparent"] {
+    background: #f4f7f5 !important;
+    color: #47604e !important;
+  }
+
+  .vendor-dashboard-tabs > button span:first-child {
+    background: transparent !important;
+  }
+
+  .vendor-dashboard-main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* ===== Page title block ===== */
+  .vendor-dashboard-main > div:first-child {
+    background: #fff;
+  }
+
+  .vendor-dashboard-main h2 {
+    color: #1a4d2a !important;
+    font-size: 30px !important;
+    font-weight: 850 !important;
+    letter-spacing: -.025em !important;
+  }
+
+  .vendor-dashboard-main div[style*="text-transform:uppercase"] {
+    color: #b68b40 !important;
+  }
+
+  /* ===== Metric cards ===== */
+  .vendor-dashboard-main div[style*="grid-template-columns:repeat(3"] > div {
+    border-radius: 24px !important;
+    border: 1px solid #e6eee6 !important;
+    box-shadow: 0 12px 30px rgba(0,20,0,.06) !important;
+    min-height: 142px !important;
+    padding: 22px !important;
+  }
+
+  .vendor-dashboard-main div[style*="grid-template-columns:repeat(3"] > div > div:first-child {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 19px !important;
+    background: #eef6ff !important;
+    color: #134f7a !important;
+  }
+
+  /* ===== Cards / panels ===== */
+  .vendor-dashboard-main section {
+    border-radius: 24px !important;
+    border: 1px solid #e6eee6 !important;
+    box-shadow: 0 10px 24px rgba(0,20,0,.05) !important;
+  }
+
+  .vendor-dashboard-main section[style*="background:#173f2a"] {
+    background: linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%) !important;
+  }
+
+  /* ===== Controls ===== */
+  .vendor-dashboard-main button {
+    border-radius: 40px !important;
+    font-weight: 800 !important;
+    transition: all .2s ease !important;
+  }
+
+  .vendor-dashboard-main button:hover {
+    transform: translateY(-2px);
+  }
+
+  .vendor-dashboard-main button[style*="background:#17643a"] {
+    background: #1a4d2a !important;
+    box-shadow: 0 8px 16px rgba(26,77,42,.18) !important;
+  }
+
+  .vendor-dashboard-main button[style*="background:#eaf6ec"] {
+    background: #eef6ef !important;
+    color: #1a4d2a !important;
+  }
+
+  /* ===== Request / accepted tables ===== */
+  .vendor-dashboard-main section > div[style*="grid-template-columns:1.2fr"],
+  .vendor-dashboard-main section > div[style*="grid-template-columns:minmax(0,1.5fr)"] {
+    background: #edf5ef !important;
+    color: #173f24 !important;
+  }
+
+  .vendor-dashboard-main section > div[style*="grid-template-columns:1.2fr"] {
+    text-transform: uppercase !important;
+    letter-spacing: .035em !important;
+  }
+
+  .vendor-dashboard-main section div[style*="border-bottom:1px solid #edf2ed"] {
+    border-bottom-color: #e3ece5 !important;
+  }
+
+  /* ===== Search/filter toolbar ===== */
+  .vendor-dashboard-main section > div[style*="background:#fbfdfb"] {
+    background: #f8fbf8 !important;
+    padding: 18px !important;
+  }
+
+  /* ===== Modals ===== */
+  #request-modal {
+    background: rgba(10,31,18,.62) !important;
+    backdrop-filter: blur(7px) !important;
+  }
+
+  #request-modal > div {
+    border-radius: 26px !important;
+    border: 1px solid #e2ece3 !important;
+    box-shadow: 0 30px 90px rgba(0,20,0,.32) !important;
+  }
+
+  #request-modal > div > div:first-child {
+    background: linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%) !important;
+    padding: 22px 24px !important;
+  }
+
+  #request-modal button {
+    border-radius: 40px !important;
+    font-weight: 800 !important;
+  }
+
+  /* ===== Toast ===== */
+  #prototype-toast {
+    background: #1a4d2a !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0,20,0,.22) !important;
+    font-weight: 700 !important;
+  }
+
+  @media (max-width: 980px) {
+    #app > div:first-child {
+      grid-template-columns: 1fr !important;
+      padding: 18px 12px !important;
+    }
+
+    .vendor-auth-hero {
+      min-height: 430px !important;
+      padding: 30px 24px !important;
+    }
+
+    .vendor-auth-hero h1 {
+      font-size: 31px !important;
+    }
+
+    .vendor-dashboard-header,
+    #app div[style*="grid-template-columns:250px"] {
+      max-width: 100% !important;
+    }
+  }
+
+  @media (max-width: 720px) {
+    #app > div[style*="background:#f4f7f3"] {
+      padding: 18px 12px !important;
+    }
+
+    .vendor-dashboard-header {
+      border-radius: 22px !important;
+    }
+
+    .vendor-dashboard-tabs {
+      top: 6px !important;
+      border-radius: 18px !important;
+      padding: 8px !important;
+    }
+
+    .vendor-dashboard-tabs > button {
+      flex: 0 0 auto !important;
+      padding: 11px 14px !important;
+    }
+
+    .vendor-dashboard-main h2 {
+      font-size: 26px !important;
+    }
+  }
+</style>
+
+
+<style id="page64-compact-tabs-profile-update">
+  .vendor-dashboard-tabs {
+    overflow: hidden !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+  .vendor-dashboard-tabs > button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+  }
+  .vendor-dashboard-tabs > button span:first-child {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+  }
+  .vendor-dashboard-header > div:last-child > button[title="View Vendor Profile"] {
+    background: rgba(255,255,255,.12) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    box-shadow: none !important;
+    border-radius: 14px !important;
+    transform: none !important;
+  }
+  .vendor-dashboard-header > div:last-child > button[title="View Vendor Profile"]:hover {
+    background: rgba(255,255,255,.18) !important;
+    transform: translateY(-1px) !important;
+  }
+  @media (max-width: 720px) {
+    .vendor-dashboard-tabs {
+      gap: 5px !important;
+      padding: 6px !important;
+    }
+    .vendor-dashboard-tabs > button {
+      padding: 9px 10px !important;
+      font-size: 11px !important;
+    }
+    .vendor-dashboard-tabs > button span:first-child {
+      display: none !important;
+    }
+  }
+</style>
+
+
+<style id="auth-vertical-layout-refinement">
+  /* ===== Simplified vertical authentication layout ===== */
+  #app > div:first-child {
+    display: block !important;
+    padding: 24px 20px !important;
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+    min-height: 100vh !important;
+  }
+
+  .vendor-auth-hero {
+    min-height: auto !important;
+    width: 100% !important;
+    padding: 24px 30px !important;
+    margin: 0 0 18px !important;
+    border-radius: 24px !important;
+    display: block !important;
+  }
+
+  .vendor-auth-hero::after {
+    font-size: 95px !important;
+    right: 20px !important;
+    bottom: -28px !important;
+  }
+
+  .vendor-auth-hero > div:first-of-type {
+    max-width: 100% !important;
+  }
+
+  .vendor-auth-hero > div:first-of-type > div:first-child {
+    display: inline-flex !important;
+    margin-bottom: 12px !important;
+  }
+
+  .vendor-auth-hero h1 {
+    font-size: 30px !important;
+    line-height: 1.18 !important;
+    margin: 10px 0 10px !important;
+    max-width: 900px !important;
+  }
+
+  .vendor-auth-hero p {
+    max-width: 950px !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+  }
+
+  /* Convert the lower three feature rows into compact top-nav style pills */
+  .vendor-auth-hero > div:last-child {
+    display: flex !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
+    margin-top: 18px !important;
+  }
+
+  .vendor-auth-hero > div:last-child > div {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 11px 14px !important;
+    border-top: none !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.09) !important;
+    align-items: center !important;
+  }
+
+  .vendor-auth-hero > div:last-child > div > div:first-child {
+    min-width: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+  }
+
+  .vendor-auth-hero > div:last-child > div > div:last-child > div:first-child {
+    font-size: 13px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .vendor-auth-hero > div:last-child > div > div:last-child > div:last-child {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  .vendor-auth-panel {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .vendor-auth-panel > div {
+    width: 100% !important;
+    max-width: none !important;
+    border-radius: 24px !important;
+  }
+
+  .vendor-auth-panel > div > div:first-child {
+    padding: 22px 24px !important;
+  }
+
+  .vendor-auth-panel > div > div:nth-child(2) {
+    padding: 24px !important;
+  }
+
+  /* Registration fields remain readable, but page is a single vertical section */
+  #vendor-registration-form,
+  #vendor-login-form {
+    max-width: 100% !important;
+  }
+
+  #vendor-login-form {
+    width: min(620px, 100%) !important;
+    margin: 0 auto !important;
+  }
+
+  @media (max-width: 760px) {
+    #app > div:first-child {
+      padding: 14px 10px !important;
+    }
+
+    .vendor-auth-hero {
+      padding: 20px !important;
+      border-radius: 20px !important;
+    }
+
+    .vendor-auth-hero h1 {
+      font-size: 25px !important;
+    }
+
+    .vendor-auth-hero > div:last-child {
+      flex-wrap: wrap !important;
+    }
+
+    .vendor-auth-hero > div:last-child > div {
+      flex: 1 1 100% !important;
+    }
+
+    .vendor-auth-panel > div > div:first-child,
+    .vendor-auth-panel > div > div:nth-child(2) {
+      padding: 18px !important;
+    }
+  }
+</style>
+
+</head><body>
+
+  <div id="app" style="min-height:100vh;">
+        <div style="min-height:100vh;display:grid;grid-template-columns:1fr;background:linear-gradient(135deg,#f7faf6 0%,#eef6ef 62%,#fff9df 100%);">
+          <section class="vendor-auth-hero" style="padding:48px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(150deg,#123d27 0%,#1f6a42 70%,#2f7e50 100%);color:#fff;position:relative;overflow:hidden;">
+            <div style="position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(255,224,98,.08);right:-120px;top:-80px;"></div>
+            <div style="position:absolute;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.05);left:-80px;bottom:80px;"></div>
+            <div style="position:relative;z-index:1;">
+              <div style="display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.08);font-weight:800;font-size:13px;letter-spacing:.02em;">
+                <span style="width:9px;height:9px;border-radius:50%;background:#ffe066;box-shadow:0 0 0 5px rgba(255,224,102,.13);"></span>
+                OM NURSERY • VENDOR PORTAL
+              </div>
+              <h1 style="font-size:48px;line-height:1.04;margin:34px 0 18px;max-width:650px;letter-spacing:-1.8px;">A simpler way for vendors to manage nursery quotation requests.</h1>
+              <p style="margin:0;max-width:610px;color:#dbeade;font-size:17px;line-height:1.8;">Register once, log in securely, review RFQs raised from the Nursery CRM and accept quotation opportunities directly from one portal.</p>
+            </div>
+
+            <div style="position:relative;z-index:1;display:grid;gap:14px;">
+              
+                <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.12);">
+                  <div style="min-width:42px;height:42px;border-radius:12px;background:#ffe066;color:#153221;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">01</div>
+                  <div><div style="font-size:15px;font-weight:900;margin-bottom:5px;">Vendor onboarding</div><div style="color:#bfd6c5;font-size:13px;line-height:1.5;">Basic legal, contact and office information</div></div>
+                </div>
+              
+                <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.12);">
+                  <div style="min-width:42px;height:42px;border-radius:12px;background:#ffe066;color:#153221;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">02</div>
+                  <div><div style="font-size:15px;font-weight:900;margin-bottom:5px;">Quotation requests</div><div style="color:#bfd6c5;font-size:13px;line-height:1.5;">See RFQs coming directly from Nursery CRM</div></div>
+                </div>
+              
+                <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.12);">
+                  <div style="min-width:42px;height:42px;border-radius:12px;background:#ffe066;color:#153221;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">03</div>
+                  <div><div style="font-size:15px;font-weight:900;margin-bottom:5px;">Accepted quotations</div><div style="color:#bfd6c5;font-size:13px;line-height:1.5;">Track accepted opportunities separately</div></div>
+                </div>
+              
+            </div>
+          </section>
+
+          <section class="vendor-auth-panel" style="padding:34px 42px;display:flex;align-items:center;justify-content:center;overflow:auto;">
+            <div style="width:min(860px,100%);background:#fff;border:1px solid #dfe9df;border-radius:28px;box-shadow:0 30px 80px rgba(32,78,49,.10);overflow:hidden;">
+              <div style="padding:24px 28px;border-bottom:1px solid #edf2ec;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:#fbfdfb;">
+                <div>
+                  <div style="font-size:24px;font-weight:950;letter-spacing:-.6px;">Vendor Registration</div>
+                  <div style="font-size:13px;color:#6d7c70;margin-top:6px;">Create vendor access for the OM Nursery procurement portal.</div>
+                </div>
+                <button onclick="fillRegistrationDummy()" style="border:1px solid #d8bc31;background:#fff8cf;color:#5a4700;border-radius:12px;padding:11px 14px;font-weight:900;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">⚡ Fill Dummy Data</button>
+              </div>
+
+              <div style="padding:28px;">
+                
+        <form onsubmit="registerVendor(event)" id="vendor-registration-form" style="display:grid;gap:26px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#e8f5ea;color:#17643a;display:flex;align-items:center;justify-content:center;font-weight:950;">1</span>
+              <div><div style="font-size:17px;font-weight:950;">Business Details</div><div style="font-size:12px;color:#718176;margin-top:2px;">Legal identity and vendor classification</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Legal Business Name <span style="color:#b45309;">*</span>
+          <input id="legalName" required="" type="text" placeholder="e.g. GreenRoot Agro Pvt. Ltd." style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Trade Name
+          <input id="tradeName" type="text" placeholder="e.g. GreenRoot Nursery" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Vendor Type / Category <span style="color:#b45309;">*</span>
+          <select id="vendorType" required="" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+            <option value="">Select category</option>
+            <option value="Plant Grower / Wholesale Nursery">Plant Grower / Wholesale Nursery</option><option value="Seeds &amp; Plugs">Seeds &amp; Plugs</option><option value="Chemicals &amp; Fertilizers">Chemicals &amp; Fertilizers</option><option value="Packaging &amp; Pots">Packaging &amp; Pots</option><option value="Logistics &amp; Freight">Logistics &amp; Freight</option><option value="Maintenance / Equipment">Maintenance / Equipment</option>
+          </select>
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Company Registration / Tax ID Number <span style="color:#b45309;">*</span>
+          <input id="taxId" required="" type="text" placeholder="e.g. 27AABCG1234Q1Z7" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+            </div>
+          </div>
+
+          <div style="height:1px;background:#edf1ec;"></div>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#e8f5ea;color:#17643a;display:flex;align-items:center;justify-content:center;font-weight:950;">2</span>
+              <div><div style="font-size:17px;font-weight:950;">Primary Contact Details</div><div style="font-size:12px;color:#718176;margin-top:2px;">Main account holder and communication details</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Primary Contact Person Name <span style="color:#b45309;">*</span>
+          <input id="contactName" required="" type="text" placeholder="First and last name" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Job Title / Role <span style="color:#b45309;">*</span>
+          <input id="jobTitle" required="" type="text" placeholder="e.g. Sales Manager / Owner" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Email Address <span style="color:#b45309;">*</span>
+          <input id="email" required="" type="email" placeholder="vendor@company.com" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+              
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          Phone Number <span style="color:#b45309;">*</span>
+          <input id="phone" required="" type="tel" placeholder="e.g. +91 98765 43210" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+        </label>
+      
+            </div>
+          </div>
+
+          <div style="height:1px;background:#edf1ec;"></div>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#fff6c9;color:#6d5300;display:flex;align-items:center;justify-content:center;font-weight:950;">3</span>
+              <div><div style="font-size:17px;font-weight:950;">Business Address</div><div style="font-size:12px;color:#718176;margin-top:2px;">Primary office location for vendor records</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+              <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+                Primary Office Address <span style="color:#b45309;">*</span>
+                <textarea id="officeAddress" required="" placeholder="Building / Road / Area / City / State / PIN" style="width:100%;box-sizing:border-box;min-height:112px;resize:vertical;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;box-shadow:inset 0 1px 2px rgba(20,50,30,.02);" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='inset 0 1px 2px rgba(20,50,30,.02)'"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap;padding-top:4px;">
+            <button type="button" onclick="switchAuth('login')" style="border:1px solid #d6e0d5;background:#fff;color:#35513b;border-radius:13px;padding:13px 18px;font-weight:900;cursor:pointer;">Already Registered? Login</button>
+            <button type="submit" style="border:none;background:#17643a;color:white;border-radius:13px;padding:14px 22px;font-weight:950;cursor:pointer;box-shadow:0 10px 24px rgba(23,100,58,.18);">Register &amp; Continue →</button>
+          </div>
+        </form>
+      
+              </div>
+
+              <div style="padding:20px 28px;border-top:1px solid #edf2ec;background:#fbfdfb;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:14px;color:#5f7163;">
+                Already registered?
+                <button onclick="switchAuth('login')" style="border:none;background:transparent;color:#166534;font-weight:900;cursor:pointer;padding:2px 4px;">Login to Vendor Portal</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+  <script>
+    const state = {
+      registeredVendor: null,
+      loggedIn: false,
+      currentAuthView: 'register',
+      currentDashboardTab: 'overview',
+      toastTimer: null,
+      quotationRequests: [
+        {
+          id: 'RFQ-2026-0812-014',
+          workOrder: 'WO-260812-018',
+          title: 'Organic Fertilizer Supply',
+          category: 'Chemicals & Fertilizers',
+          nursery: 'OM Nursery - Kamshet Farm',
+          requestedQty: '1,250 kg',
+          requiredBy: '18 Aug 2026',
+          issuedOn: '12 Aug 2026',
+          notes: 'Neem cake + organic growth mix. Vendor may quote partial quantity.',
+          status: 'New'
+        },
+        {
+          id: 'RFQ-2026-0812-011',
+          workOrder: 'WO-260811-009',
+          title: '10 x 12 Grow Bags',
+          category: 'Packaging & Pots',
+          nursery: 'OM Nursery - Talegaon Farm',
+          requestedQty: '5,000 pcs',
+          requiredBy: '20 Aug 2026',
+          issuedOn: '11 Aug 2026',
+          notes: 'UV stabilized black grow bags. Sample approval required before dispatch.',
+          status: 'New'
+        },
+        {
+          id: 'RFQ-2026-0810-008',
+          workOrder: 'WO-260810-004',
+          title: 'Mango Hapoos Saplings',
+          category: 'Plant Grower / Wholesale Nursery',
+          nursery: 'OM Nursery - Karla Farm',
+          requestedQty: '350 plants',
+          requiredBy: '25 Aug 2026',
+          issuedOn: '10 Aug 2026',
+          notes: 'Healthy grafted plants, 2.5-3 ft target height, batch traceability preferred.',
+          status: 'New'
+        }
+      ],
+      acceptedQuotations: [
+        {
+          id: 'RFQ-2026-0806-003',
+          workOrder: 'WO-260806-002',
+          title: 'Cocopeat Blocks',
+          category: 'Seeds & Plugs',
+          nursery: 'OM Nursery - Vadegaon Farm',
+          requestedQty: '600 blocks',
+          requiredBy: '14 Aug 2026',
+          acceptedOn: '08 Aug 2026',
+          quoteStatus: 'Accepted - Quote Pending'
+        }
+      ]
+    };
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function showToast(message, tone = 'success') {
+      let toast = document.getElementById('prototype-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'prototype-toast';
+        toast.style.cssText = 'position:fixed;right:24px;bottom:24px;z-index:9999;padding:14px 18px;border-radius:14px;font-weight:800;font-size:14px;box-shadow:0 20px 50px rgba(19,49,31,.18);transition:all .25s ease;opacity:0;transform:translateY(8px);max-width:360px;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.style.background = tone === 'error' ? '#7f1d1d' : tone === 'warning' ? '#92400e' : '#123d27';
+      toast.style.color = '#fff';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      clearTimeout(state.toastTimer);
+      state.toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+      }, 2400);
+    }
+
+    function appShell(content) {
+      document.getElementById('app').innerHTML = content;
+    }
+
+    function renderAuth() {
+      const isRegister = state.currentAuthView === 'register';
+      appShell(`
+        <div style="min-height:100vh;display:grid;grid-template-columns:1fr;background:linear-gradient(135deg,#f7faf6 0%,#eef6ef 62%,#fff9df 100%);">
+          <section class="vendor-auth-hero" style="padding:48px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(150deg,#123d27 0%,#1f6a42 70%,#2f7e50 100%);color:#fff;position:relative;overflow:hidden;">
+            <div style="position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(255,224,98,.08);right:-120px;top:-80px;"></div>
+            <div style="position:absolute;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.05);left:-80px;bottom:80px;"></div>
+            <div style="position:relative;z-index:1;">
+              <div style="display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.08);font-weight:800;font-size:13px;letter-spacing:.02em;">
+                <span style="width:9px;height:9px;border-radius:50%;background:#ffe066;box-shadow:0 0 0 5px rgba(255,224,102,.13);"></span>
+                OM NURSERY • VENDOR PORTAL
+              </div>
+              <h1 style="font-size:48px;line-height:1.04;margin:34px 0 18px;max-width:650px;letter-spacing:-1.8px;">A simpler way for vendors to manage nursery quotation requests.</h1>
+              <p style="margin:0;max-width:610px;color:#dbeade;font-size:17px;line-height:1.8;">Register once, log in securely, review RFQs raised from the Nursery CRM and accept quotation opportunities directly from one portal.</p>
+            </div>
+
+            <div style="position:relative;z-index:1;display:grid;gap:14px;">
+              ${[
+                ['01','Vendor onboarding','Basic legal, contact and office information'],
+                ['02','Quotation requests','See RFQs coming directly from Nursery CRM'],
+                ['03','Accepted quotations','Track accepted opportunities separately']
+              ].map(item => `
+                <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.12);">
+                  <div style="min-width:42px;height:42px;border-radius:12px;background:#ffe066;color:#153221;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">${item[0]}</div>
+                  <div><div style="font-size:15px;font-weight:900;margin-bottom:5px;">${item[1]}</div><div style="color:#bfd6c5;font-size:13px;line-height:1.5;">${item[2]}</div></div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="vendor-auth-panel" style="padding:34px 42px;display:flex;align-items:center;justify-content:center;overflow:auto;">
+            <div style="width:min(860px,100%);background:#fff;border:1px solid #dfe9df;border-radius:28px;box-shadow:0 30px 80px rgba(32,78,49,.10);overflow:hidden;">
+              <div style="padding:24px 28px;border-bottom:1px solid #edf2ec;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:#fbfdfb;">
+                <div>
+                  <div style="font-size:24px;font-weight:950;letter-spacing:-.6px;">${isRegister ? 'Vendor Registration' : 'Vendor Login'}</div>
+                  <div style="font-size:13px;color:#6d7c70;margin-top:6px;">${isRegister ? 'Create vendor access for the OM Nursery procurement portal.' : 'Use your registered vendor credentials to access the dashboard.'}</div>
+                </div>
+                <button onclick="${isRegister ? 'fillRegistrationDummy()' : 'fillLoginDummy()'}" style="border:1px solid #d8bc31;background:#fff8cf;color:#5a4700;border-radius:12px;padding:11px 14px;font-weight:900;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">⚡ Fill Dummy Data</button>
+              </div>
+
+              <div style="padding:28px;">
+                ${isRegister ? registrationForm() : loginForm()}
+              </div>
+
+              <div style="padding:20px 28px;border-top:1px solid #edf2ec;background:#fbfdfb;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:14px;color:#5f7163;">
+                ${isRegister ? 'Already registered?' : 'New vendor?'}
+                <button onclick="switchAuth('${isRegister ? 'login' : 'register'}')" style="border:none;background:transparent;color:#166534;font-weight:900;cursor:pointer;padding:2px 4px;">${isRegister ? 'Login to Vendor Portal' : 'Register your business'}</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      `);
+    }
+
+    function registrationForm() {
+      return `
+        <form onsubmit="registerVendor(event)" id="vendor-registration-form" style="display:grid;gap:26px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#e8f5ea;color:#17643a;display:flex;align-items:center;justify-content:center;font-weight:950;">1</span>
+              <div><div style="font-size:17px;font-weight:950;">Business Details</div><div style="font-size:12px;color:#718176;margin-top:2px;">Legal identity and vendor classification</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+              ${inputField('legalName','Legal Business Name','e.g. GreenRoot Agro Pvt. Ltd.','text',true)}
+              ${inputField('tradeName','Trade Name','e.g. GreenRoot Nursery','text',false)}
+              ${selectField('vendorType','Vendor Type / Category',[
+                'Plant Grower / Wholesale Nursery','Seeds & Plugs','Chemicals & Fertilizers','Packaging & Pots','Logistics & Freight','Maintenance / Equipment'
+              ], true)}
+              ${inputField('taxId','Company Registration / Tax ID Number','e.g. 27AABCG1234Q1Z7','text',true)}
+            </div>
+          </div>
+
+          <div style="height:1px;background:#edf1ec;"></div>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#e8f5ea;color:#17643a;display:flex;align-items:center;justify-content:center;font-weight:950;">2</span>
+              <div><div style="font-size:17px;font-weight:950;">Primary Contact Details</div><div style="font-size:12px;color:#718176;margin-top:2px;">Main account holder and communication details</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+              ${inputField('contactName','Primary Contact Person Name','First and last name','text',true)}
+              ${inputField('jobTitle','Job Title / Role','e.g. Sales Manager / Owner','text',true)}
+              ${inputField('email','Email Address','vendor@company.com','email',true)}
+              ${inputField('phone','Phone Number','e.g. +91 98765 43210','tel',true)}
+            </div>
+          </div>
+
+          <div style="height:1px;background:#edf1ec;"></div>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+              <span style="width:34px;height:34px;border-radius:10px;background:#fff6c9;color:#6d5300;display:flex;align-items:center;justify-content:center;font-weight:950;">3</span>
+              <div><div style="font-size:17px;font-weight:950;">Business Address</div><div style="font-size:12px;color:#718176;margin-top:2px;">Primary office location for vendor records</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+              <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+                Primary Office Address <span style="color:#b45309;">*</span>
+                <textarea id="officeAddress" required placeholder="Building / Road / Area / City / State / PIN" style="width:100%;box-sizing:border-box;min-height:112px;resize:vertical;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;box-shadow:inset 0 1px 2px rgba(20,50,30,.02);" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='inset 0 1px 2px rgba(20,50,30,.02)'"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap;padding-top:4px;">
+            <button type="button" onclick="switchAuth('login')" style="border:1px solid #d6e0d5;background:#fff;color:#35513b;border-radius:13px;padding:13px 18px;font-weight:900;cursor:pointer;">Already Registered? Login</button>
+            <button type="submit" style="border:none;background:#17643a;color:white;border-radius:13px;padding:14px 22px;font-weight:950;cursor:pointer;box-shadow:0 10px 24px rgba(23,100,58,.18);">Register & Continue →</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function loginForm() {
+      return `
+        <form onsubmit="loginVendor(event)" id="vendor-login-form" style="display:grid;gap:18px;max-width:580px;margin:10px auto 4px;">
+          <div style="padding:18px;border-radius:16px;background:#edf8ef;border:1px solid #d3ead8;display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:10px;background:#17643a;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">✓</div>
+            <div><div style="font-size:14px;font-weight:950;color:#1b4a2d;">Prototype Login</div><div style="font-size:12px;line-height:1.55;color:#57705f;margin-top:3px;">Use the dummy-data button for a one-click demo. Registration automatically creates prototype credentials.</div></div>
+          </div>
+          ${inputField('loginEmail','Email Address','vendor@company.com','email',true)}
+          <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+            Password <span style="color:#b45309;">*</span>
+            <input id="loginPassword" required type="password" placeholder="Enter your password" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'" />
+          </label>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:2px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#66766a;font-weight:750;"><input type="checkbox" checked style="accent-color:#17643a;"> Remember me</label>
+            <button type="button" onclick="showToast('Password reset is disabled in this prototype.','warning')" style="border:none;background:transparent;color:#17643a;font-weight:900;cursor:pointer;">Forgot password?</button>
+          </div>
+          <button type="submit" style="margin-top:6px;border:none;background:#17643a;color:white;border-radius:13px;padding:14px 22px;font-weight:950;cursor:pointer;box-shadow:0 10px 24px rgba(23,100,58,.18);font-size:15px;">Login to Vendor Dashboard →</button>
+        </form>
+      `;
+    }
+
+    function inputField(id, label, placeholder, type='text', required=false) {
+      return `
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          ${label}${required ? ' <span style="color:#b45309;">*</span>' : ''}
+          <input id="${id}" ${required ? 'required' : ''} type="${type}" placeholder="${placeholder}" style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'" />
+        </label>
+      `;
+    }
+
+    function selectField(id, label, options, required=false) {
+      return `
+        <label style="display:grid;gap:8px;font-size:13px;font-weight:850;color:#334a39;">
+          ${label}${required ? ' <span style="color:#b45309;">*</span>' : ''}
+          <select id="${id}" ${required ? 'required' : ''} style="width:100%;box-sizing:border-box;border:1px solid #d8e3d7;border-radius:13px;padding:13px 14px;font:inherit;font-size:14px;outline:none;background:#fcfefc;color:#173321;" onfocus="this.style.borderColor='#2f8550';this.style.boxShadow='0 0 0 4px rgba(47,133,80,.10)'" onblur="this.style.borderColor='#d8e3d7';this.style.boxShadow='none'">
+            <option value="">Select category</option>
+            ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+          </select>
+        </label>
+      `;
+    }
+
+    function switchAuth(view) {
+      state.currentAuthView = view;
+      renderAuth();
+    }
+
+    function fillRegistrationDummy() {
+      const values = {
+        legalName: 'GreenRoot Agro Solutions Pvt. Ltd.',
+        tradeName: 'GreenRoot Nursery Supplies',
+        vendorType: 'Plant Grower / Wholesale Nursery',
+        taxId: '27AABCG4821Q1Z7',
+        contactName: 'Arjun Mehta',
+        jobTitle: 'Sales Manager',
+        email: 'vendor@greenroot.in',
+        phone: '+91 98765 43120',
+        officeAddress: 'Plot 18, Talegaon MIDC Road, Maval, Pune, Maharashtra 410507'
+      };
+      Object.entries(values).forEach(([key,val]) => {
+        const el = document.getElementById(key);
+        if (el) el.value = val;
+      });
+      showToast('Dummy registration details filled.');
+    }
+
+    function fillLoginDummy() {
+      document.getElementById('loginEmail').value = state.registeredVendor?.email || 'vendor@greenroot.in';
+      document.getElementById('loginPassword').value = state.registeredVendor?.password || 'Vendor@123';
+      showToast('Dummy login credentials filled.');
+    }
+
+    function registerVendor(event) {
+      event.preventDefault();
+      state.registeredVendor = {
+        legalName: document.getElementById('legalName').value,
+        tradeName: document.getElementById('tradeName').value,
+        vendorType: document.getElementById('vendorType').value,
+        taxId: document.getElementById('taxId').value,
+        contactName: document.getElementById('contactName').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        officeAddress: document.getElementById('officeAddress').value,
+        password: 'Vendor@123'
+      };
+      showToast('Vendor registered successfully. Login credentials created.');
+      state.currentAuthView = 'login';
+      renderAuth();
+      setTimeout(fillLoginDummy, 80);
+    }
+
+    function loginVendor(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const expectedEmail = state.registeredVendor?.email || 'vendor@greenroot.in';
+      const expectedPassword = state.registeredVendor?.password || 'Vendor@123';
+      if (email.toLowerCase() !== expectedEmail.toLowerCase() || password !== expectedPassword) {
+        showToast('Invalid prototype credentials. Use Fill Dummy Data.', 'error');
+        return;
+      }
+      if (!state.registeredVendor) {
+        state.registeredVendor = {
+          legalName: 'GreenRoot Agro Solutions Pvt. Ltd.',
+          tradeName: 'GreenRoot Nursery Supplies',
+          vendorType: 'Plant Grower / Wholesale Nursery',
+          taxId: '27AABCG4821Q1Z7',
+          contactName: 'Arjun Mehta',
+          jobTitle: 'Sales Manager',
+          email: 'vendor@greenroot.in',
+          phone: '+91 98765 43120',
+          officeAddress: 'Plot 18, Talegaon MIDC Road, Maval, Pune, Maharashtra 410507',
+          password: 'Vendor@123'
+        };
+      }
+      state.loggedIn = true;
+      state.currentDashboardTab = 'overview';
+      renderDashboard();
+      setTimeout(() => showToast('Welcome to the Vendor Dashboard.'), 100);
+    }
+
+    function logoutVendor() {
+      state.loggedIn = false;
+      state.currentAuthView = 'login';
+      renderAuth();
+    }
+
+    function renderDashboard() {
+      const vendor = state.registeredVendor || {};
+      const pendingCount = state.quotationRequests.length;
+      const acceptedCount = state.acceptedQuotations.length;
+      appShell(`
+        <div style="min-height:100vh;background:#f4f7f3;">
+          <header class="vendor-dashboard-header" style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid #dfe8df;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#166534,#2f8550);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 10px 20px rgba(22,101,52,.18);">🌿</div>
+              <div><div style="font-weight:950;font-size:18px;letter-spacing:-.3px;">OM Nursery Vendor Portal</div><div style="font-size:12px;color:#728075;margin-top:3px;">Procurement & quotation workspace</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button onclick="showToast('Prototype notifications are all clear.')" style="width:42px;height:42px;border-radius:12px;border:1px solid #dce5da;background:#fff;cursor:pointer;font-size:16px;">🔔</button>
+              <button onclick="switchDashboardTab('profile')" title="View Vendor Profile" style="display:flex;align-items:center;gap:10px;background:#f8fbf7;border:1px solid #dce5da;border-radius:14px;padding:7px 10px 7px 8px;cursor:pointer;text-align:left;">
+                <div style="width:36px;height:36px;border-radius:11px;background:#fff0a8;display:flex;align-items:center;justify-content:center;font-weight:950;color:#655000;">${escapeHtml((vendor.contactName || 'Vendor').split(' ').map(x => x[0]).join('').slice(0,2).toUpperCase())}</div>
+                <div><div style="font-size:13px;font-weight:900;">${escapeHtml(vendor.contactName || 'Vendor User')}</div><div style="font-size:11px;color:#738178;">${escapeHtml(vendor.tradeName || vendor.legalName || 'Vendor Company')}</div></div>
+              </button>
+              <button onclick="logoutVendor()" style="border:1px solid #dce5da;background:#fff;color:#52645a;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer;">Logout</button>
+            </div>
+          </header>
+
+          <div style="display:grid;grid-template-columns:250px minmax(0,1fr);min-height:calc(100vh - 75px);">
+            <aside class="vendor-dashboard-tabs" style="background:#143d28;color:#fff;padding:22px 16px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#9ec2aa;font-weight:900;padding:0 10px 12px;">Vendor Workspace</div>
+              ${navButton('overview','⌂','Overview')}
+              ${navButton('requests','📄','Quotation Requests',pendingCount)}
+              ${navButton('accepted','✓','Accepted Quotations',acceptedCount)}
+              ${navButton('profile','🏢','Vendor Profile')}
+              <div style="height:1px;background:rgba(255,255,255,.10);margin:18px 8px;"></div>
+              <div style="padding:14px;border-radius:15px;background:rgba(255,224,102,.10);border:1px solid rgba(255,224,102,.18);">
+                <div style="font-size:12px;font-weight:950;color:#ffe37c;">Prototype Integration</div>
+                <div style="font-size:11px;line-height:1.55;color:#c7ddce;margin-top:5px;">Quotation Requests shown here represent RFQs received from Nursery CRM.</div>
+              </div>
+            </aside>
+
+            <main class="vendor-dashboard-main" style="padding:28px;overflow:auto;">
+              ${dashboardContent()}
+            </main>
+          </div>
+        </div>
+      `);
+    }
+
+    function navButton(tab, icon, label, badge) {
+      const active = state.currentDashboardTab === tab;
+      return `<button onclick="switchDashboardTab('${tab}')" style="width:100%;border:none;background:${active ? '#fff' : 'transparent'};color:${active ? '#17492e' : '#d8e8dd'};border-radius:13px;padding:12px 13px;margin:3px 0;display:flex;align-items:center;gap:11px;cursor:pointer;text-align:left;font-weight:850;font-size:13px;box-shadow:${active ? '0 8px 20px rgba(0,0,0,.09)' : 'none'};">
+        <span style="width:26px;height:26px;border-radius:9px;background:${active ? '#e8f5ea' : 'rgba(255,255,255,.08)'};display:flex;align-items:center;justify-content:center;">${icon}</span>
+        <span style="flex:1;">${label}</span>
+        ${badge !== undefined ? `<span style="min-width:22px;height:22px;border-radius:999px;background:${active ? '#fff0a8' : 'rgba(255,224,102,.16)'};color:${active ? '#6d5300' : '#ffe37c'};display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:950;padding:0 5px;">${badge}</span>` : ''}
+      </button>`;
+    }
+
+    function switchDashboardTab(tab) {
+      state.currentDashboardTab = tab;
+      renderDashboard();
+    }
+
+    function dashboardContent() {
+      if (state.currentDashboardTab === 'requests') return quotationRequestsView();
+      if (state.currentDashboardTab === 'accepted') return acceptedQuotationsView();
+      if (state.currentDashboardTab === 'profile') return vendorProfileView();
+      return overviewView();
+    }
+
+    function pageHeading(kicker, title, sub, action='') {
+      return `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;">
+        <div><div style="font-size:11px;color:#237044;font-weight:950;text-transform:uppercase;letter-spacing:.14em;">${kicker}</div><h2 style="font-size:30px;line-height:1.15;margin:7px 0 7px;letter-spacing:-.9px;">${title}</h2><div style="color:#718076;font-size:13px;line-height:1.6;">${sub}</div></div>
+        ${action}
+      </div>`;
+    }
+
+    function overviewView() {
+      const vendor = state.registeredVendor;
+      return `
+        ${pageHeading('Vendor Dashboard','Good afternoon, ' + escapeHtml((vendor.contactName || 'Vendor').split(' ')[0]) + '.','Review procurement opportunities from OM Nursery and keep accepted quotations organized.')}
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px;">
+          ${metricCard('Quotation Requests',state.quotationRequests.length,'Awaiting your review','📄','#e7f6ea')}
+          ${metricCard('Accepted Quotations',state.acceptedQuotations.length,'Moved to accepted list','✓','#fff5c7')}
+          ${metricCard('Vendor Status','Active','Registration verified for prototype','●','#e9f2ff')}
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr;gap:18px;align-items:start;">
+          <section style="background:#fff;border:1px solid #dfe8df;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(31,76,44,.05);">
+            <div style="padding:18px 20px;border-bottom:1px solid #edf2ed;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+              <div><div style="font-size:16px;font-weight:950;">Latest Quotation Requests</div><div style="font-size:12px;color:#78847b;margin-top:4px;">Newest RFQs received from Nursery CRM</div></div>
+              <button onclick="switchDashboardTab('requests')" style="border:none;background:#eaf6ec;color:#17643a;border-radius:11px;padding:9px 12px;font-weight:900;cursor:pointer;">View All →</button>
+            </div>
+            ${requestRows(state.quotationRequests.slice(0,3), true)}
+          </section>
+
+        </div>
+      `;
+    }
+
+    function metricCard(label,value,sub,icon,bg) {
+      return `<div style="background:#fff;border:1px solid #dfe8df;border-radius:19px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 24px rgba(30,70,40,.04);">
+        <div style="width:46px;height:46px;border-radius:14px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:20px;">${icon}</div>
+        <div><div style="font-size:12px;color:#718075;font-weight:850;">${label}</div><div style="font-size:23px;font-weight:950;margin-top:2px;">${value}</div><div style="font-size:11px;color:#8a968e;margin-top:2px;">${sub}</div></div>
+      </div>`;
+    }
+
+    function quotationRequestsView() {
+      return `
+        ${pageHeading('Procurement Inbox','Quotation Requests','Review RFQs received from the Nursery CRM. Accept an RFQ to move it into the Accepted Quotations tab.', `<button onclick="showToast('Quotation requests refreshed from prototype CRM.')" style="border:1px solid #d6e2d6;background:#fff;color:#31563c;border-radius:12px;padding:11px 14px;font-weight:900;cursor:pointer;">↻ Refresh Requests</button>`)}
+        <section style="background:#fff;border:1px solid #dfe8df;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(31,76,44,.05);">
+          <div style="padding:16px 18px;border-bottom:1px solid #edf2ed;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fbfdfb;">
+            <div style="flex:1;min-width:220px;border:1px solid #dce5dc;border-radius:11px;padding:10px 12px;background:#fff;color:#8a958c;font-size:12px;">🔎 Search quotation number, work order or requirement...</div>
+            <div style="border:1px solid #dce5dc;border-radius:11px;padding:10px 12px;background:#fff;color:#516255;font-size:12px;font-weight:850;">All Categories ▾</div>
+            <div style="border:1px solid #dce5dc;border-radius:11px;padding:10px 12px;background:#fff;color:#516255;font-size:12px;font-weight:850;">Newest First ▾</div>
+          </div>
+          ${state.quotationRequests.length ? requestRows(state.quotationRequests, false) : `<div style="padding:60px 24px;text-align:center;color:#738177;"><div style="font-size:34px;">✓</div><div style="font-weight:950;font-size:17px;margin-top:8px;">No pending quotation requests</div><div style="font-size:12px;margin-top:5px;">New RFQs from Nursery CRM will appear here.</div></div>`}
+        </section>
+      `;
+    }
+
+    function requestRows(items, compact) {
+      return `<div style="display:grid;">${items.map((q,index) => `
+        <div style="padding:${compact ? '16px 20px' : '19px 20px'};display:grid;grid-template-columns:minmax(0,1.5fr) minmax(180px,.7fr) minmax(180px,.7fr) auto;gap:16px;align-items:center;border-bottom:${index < items.length - 1 ? '1px solid #edf2ed' : 'none'};">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:11px;font-weight:950;color:#17643a;background:#e8f6eb;padding:5px 8px;border-radius:999px;">${q.id}</span>
+              <span style="font-size:11px;font-weight:900;color:#775f00;background:#fff3b3;padding:5px 8px;border-radius:999px;">${q.workOrder}</span>
+            </div>
+            <div style="font-size:15px;font-weight:950;margin-top:8px;">${escapeHtml(q.title)}</div>
+            <div style="font-size:11px;color:#768278;margin-top:4px;">${escapeHtml(q.category)} • ${escapeHtml(q.nursery)}</div>
+          </div>
+          <div><div style="font-size:11px;color:#7d897f;">Required Quantity</div><div style="font-size:13px;font-weight:950;margin-top:4px;">${escapeHtml(q.requestedQty)}</div></div>
+          <div><div style="font-size:11px;color:#7d897f;">Required By</div><div style="font-size:13px;font-weight:950;margin-top:4px;">${escapeHtml(q.requiredBy)}</div></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button onclick="openRequest('${q.id}')" style="border:1px solid #d9e4d9;background:#fff;color:#31553b;border-radius:10px;padding:9px 11px;font-weight:900;cursor:pointer;font-size:12px;">View</button>
+          </div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function openRequest(id) {
+      const q = state.quotationRequests.find(x => x.id === id) || state.acceptedQuotations.find(x => x.id === id);
+      if (!q) return;
+      const isAccepted = !state.quotationRequests.some(x => x.id === id);
+      const overlay = document.createElement('div');
+      overlay.id = 'request-modal';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(8,28,17,.48);backdrop-filter:blur(5px);z-index:5000;display:flex;align-items:center;justify-content:center;padding:24px;';
+      overlay.innerHTML = `
+        <div style="width:min(700px,100%);background:#fff;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.25);overflow:hidden;">
+          <div style="padding:20px 22px;background:#173f2a;color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div><div style="font-size:11px;color:#bcd8c3;font-weight:900;letter-spacing:.12em;">QUOTATION REQUEST</div><div style="font-size:21px;font-weight:950;margin-top:5px;">${escapeHtml(q.title)}</div><div style="font-size:12px;color:#cae0cf;margin-top:4px;">${q.id} • ${q.workOrder}</div></div>
+            <button onclick="document.getElementById('request-modal').remove()" style="width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-size:18px;">×</button>
+          </div>
+          <div style="padding:22px;display:grid;gap:18px;">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+              ${detailBox('Nursery / Source', q.nursery)}
+              ${detailBox('Category', q.category)}
+              ${detailBox('Requested Quantity', q.requestedQty)}
+              ${detailBox('Required By', q.requiredBy)}
+            </div>
+            <div style="padding:15px;border-radius:14px;background:#f7faf6;border:1px solid #e1e9e0;"><div style="font-size:11px;color:#758177;font-weight:850;">Requirement Notes</div><div style="font-size:13px;line-height:1.65;margin-top:6px;color:#334b39;">${escapeHtml(q.notes || 'Accepted quotation. Detailed vendor quote can be added in a later procurement stage.')}</div></div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;">
+              <button onclick="document.getElementById('request-modal').remove()" style="border:1px solid #dce5dc;background:#fff;color:#405846;border-radius:11px;padding:10px 14px;font-weight:900;cursor:pointer;">Close</button>
+              ${!isAccepted ? `<button onclick="document.getElementById('request-modal').remove();acceptQuotation('${q.id}')" style="border:none;background:#17643a;color:#fff;border-radius:11px;padding:10px 15px;font-weight:950;cursor:pointer;">Accept Quotation Request</button>` : ''}
+            </div>
+          </div>
+        </div>`;
+      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
+    }
+
+    function detailBox(label,value) {
+      return `<div style="padding:13px 14px;border:1px solid #e0e8df;border-radius:13px;background:#fff;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#859187;font-weight:900;">${label}</div><div style="font-size:13px;font-weight:900;margin-top:5px;color:#284331;">${escapeHtml(value)}</div></div>`;
+    }
+
+    function acceptQuotation(id) {
+      const index = state.quotationRequests.findIndex(q => q.id === id);
+      if (index === -1) return;
+      const q = state.quotationRequests.splice(index, 1)[0];
+      const accepted = {
+        ...q,
+        acceptedOn: '12 Aug 2026',
+        quoteStatus: 'Accepted - Quote Pending'
+      };
+      state.acceptedQuotations.unshift(accepted);
+      renderDashboard();
+      showToast(`${id} accepted and moved to Accepted Quotations.`);
+    }
+
+    function acceptedQuotationsView() {
+      return `
+        ${pageHeading('Accepted Opportunities','Accepted Quotations','Quotation requests accepted by your vendor account are listed here separately.')}
+        <section style="background:#fff;border:1px solid #dfe8df;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(31,76,44,.05);">
+          <div style="display:grid;grid-template-columns:1.2fr .85fr .7fr .75fr .65fr auto;gap:14px;padding:12px 18px;background:#f7faf6;border-bottom:1px solid #e8eee7;color:#708077;font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:950;">
+            <div>Quotation</div><div>Work Order</div><div>Quantity</div><div>Required By</div><div>Status</div><div>Action</div>
+          </div>
+          ${state.acceptedQuotations.map((q,index) => `
+            <div style="display:grid;grid-template-columns:1.2fr .85fr .7fr .75fr .65fr auto;gap:14px;padding:17px 18px;align-items:center;border-bottom:${index < state.acceptedQuotations.length - 1 ? '1px solid #edf2ed' : 'none'};">
+              <div><div style="font-size:12px;font-weight:950;color:#17643a;">${q.id}</div><div style="font-size:13px;font-weight:900;margin-top:4px;">${escapeHtml(q.title)}</div><div style="font-size:10px;color:#89948b;margin-top:3px;">Accepted ${escapeHtml(q.acceptedOn)}</div></div>
+              <div style="font-size:12px;font-weight:850;">${q.workOrder}</div>
+              <div style="font-size:12px;font-weight:850;">${escapeHtml(q.requestedQty)}</div>
+              <div style="font-size:12px;font-weight:850;">${escapeHtml(q.requiredBy)}</div>
+              <div><span style="display:inline-flex;padding:6px 8px;border-radius:999px;background:#fff2b7;color:#705800;font-size:10px;font-weight:950;">${escapeHtml(q.quoteStatus)}</span></div>
+              <div><button onclick="openAcceptedQuote('${q.id}')" style="border:1px solid #d8e3d8;background:#fff;color:#31563b;border-radius:10px;padding:9px 11px;font-size:11px;font-weight:900;cursor:pointer;">View</button></div>
+            </div>
+          `).join('')}
+        </section>
+      `;
+    }
+
+    function openAcceptedQuote(id) {
+      openRequest(id);
+    }
+
+    function vendorProfileView() {
+      const v = state.registeredVendor;
+      return `
+        ${pageHeading('Account Information','Vendor Profile','Vendor registration data used for this procurement portal account.')}
+        <section style="background:#fff;border:1px solid #dfe8df;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(31,76,44,.05);">
+          <div style="padding:22px;background:linear-gradient(120deg,#173f2a,#236642);color:#fff;display:flex;align-items:center;gap:16px;">
+            <div style="width:58px;height:58px;border-radius:17px;background:#ffe066;color:#604c00;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:18px;">${escapeHtml((v.tradeName || v.legalName).split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase())}</div>
+            <div><div style="font-size:20px;font-weight:950;">${escapeHtml(v.tradeName || v.legalName)}</div><div style="font-size:12px;color:#c9dfcf;margin-top:4px;">${escapeHtml(v.vendorType)}</div></div>
+          </div>
+          <div style="padding:22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+            ${detailBox('Legal Business Name', v.legalName)}
+            ${detailBox('Trade Name', v.tradeName || '—')}
+            ${detailBox('Tax / Registration ID', v.taxId)}
+            ${detailBox('Primary Contact', v.contactName)}
+            ${detailBox('Job Title / Role', v.jobTitle)}
+            ${detailBox('Email Address', v.email)}
+            ${detailBox('Phone Number', v.phone)}
+            ${detailBox('Primary Office Address', v.officeAddress)}
+          </div>
+        </section>
+      `;
+    }
+
+    function profileLine(label,value) {
+      return `<div style="margin:11px 0;"><div style="font-size:10px;color:#9fc0a8;text-transform:uppercase;letter-spacing:.08em;font-weight:900;">${label}</div><div style="font-size:12px;font-weight:850;margin-top:3px;word-break:break-word;">${escapeHtml(value || '—')}</div></div>`;
+    }
+
+    function addResponsiveRules() {
+      const style = document.createElement('style');
+      style.textContent = `
+        @media (max-width: 980px) {
+          #app > div:first-child { grid-template-columns: 1fr !important; }
+          #app section:first-child { min-height: 380px; }
+          main { padding: 18px !important; }
+        }
+        @media (max-width: 820px) {
+          #app div[style*="grid-template-columns:250px"] { grid-template-columns: 1fr !important; }
+          aside { position:static !important; }
+        }
+        @media (max-width: 720px) {
+          form div[style*="grid-template-columns:repeat(2"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:minmax(0,1.4fr)"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:1.2fr .85fr"] { grid-template-columns:1fr !important; }
+          main div[style*="grid-template-columns:minmax(0,1.5fr)"] { grid-template-columns:1fr !important; }
+          header { padding:12px 14px !important; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    addResponsiveRules();
+    renderAuth();
+  </script>
+</body></html>
