@@ -1,0 +1,1485 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Company and Branch Access</title>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family:"Inter", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(245,197,66,0.18), transparent 28%),
+        linear-gradient(135deg, #eef5ef 0%, #f8faf8 45%, #edf6ee 100%);
+      color:#1e2e24;
+      padding:30px 20px;
+      min-height:100vh;
+    }
+
+    .container { max-width:1400px; margin:auto; }
+
+    .hero {
+      background:
+        linear-gradient(145deg, rgba(26,77,42,0.96), rgba(45,110,62,0.94)),
+        url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='8'/%3E%3Ccircle cx='110' cy='70' r='10'/%3E%3Ccircle cx='70' cy='140' r='7'/%3E%3C/g%3E%3C/svg%3E");
+      border-radius:34px;
+      padding:44px;
+      margin-bottom:30px;
+      color:white;
+      box-shadow:0 24px 60px rgba(20,70,35,0.24);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after {
+      content:"🏢";
+      position:absolute;
+      right:35px;
+      bottom:10px;
+      font-size:135px;
+      opacity:0.12;
+      transform:rotate(-8deg);
+    }
+
+    .hero h1 {
+      font-size:44px;
+      font-weight:900;
+      letter-spacing:-1px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero span { color:#f5c542; }
+
+    .hero p {
+      margin-top:12px;
+      font-size:17px;
+      border-left:5px solid #f5c542;
+      padding-left:16px;
+      opacity:0.92;
+      max-width:930px;
+      line-height:1.6;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-badges {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-badge {
+      background:rgba(255,255,255,0.13);
+      border:1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      padding:8px 13px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:850;
+    }
+
+    .card {
+      background:rgba(255,255,255,0.88);
+      backdrop-filter:blur(10px);
+      border-radius:28px;
+      padding:30px;
+      margin-bottom:26px;
+      border:1px solid rgba(215,232,215,0.9);
+      box-shadow:0 16px 42px rgba(20,70,35,0.08);
+    }
+
+    .title {
+      font-size:25px;
+      font-weight:900;
+      color:#1a4d2a;
+      margin-bottom:22px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .title::before {
+      content:"";
+      width:9px;
+      height:28px;
+      border-radius:20px;
+      background:#f5c542;
+      display:inline-block;
+      flex:none;
+    }
+
+    .sub-title {
+      color:#1a4d2a;
+      font-size:18px;
+      font-weight:950;
+      margin-bottom:8px;
+    }
+
+    .helper {
+      color:#5a6f5a;
+      font-weight:650;
+      line-height:1.6;
+      font-size:13px;
+      margin-bottom:16px;
+    }
+
+    .login-box {
+      max-width:450px;
+      margin:90px auto;
+      text-align:center;
+      padding:38px;
+    }
+
+    .login-box h1 { font-size:34px; font-weight:900; }
+
+    input, select, textarea {
+      width:100%;
+      padding:14px 16px;
+      border:1px solid #d5e5d5;
+      border-radius:16px;
+      margin-top:7px;
+      font-size:14px;
+      font-weight:650;
+      background:#fbfdfb;
+      color:#1e2e24;
+      outline:none;
+      transition:0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color:#1a4d2a;
+      box-shadow:0 0 0 4px rgba(26,77,42,0.10);
+      background:white;
+    }
+
+    textarea { min-height:90px; resize:vertical; }
+
+    input[type="file"] {
+      padding:11px;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    label {
+      font-size:13px;
+      font-weight:850;
+      color:#1a4d2a;
+      letter-spacing:0.2px;
+    }
+
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+
+    .btn-row {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(175px,1fr));
+      gap:14px;
+    }
+
+    button {
+      border:none;
+      cursor:pointer;
+      font-weight:900;
+      border-radius:999px;
+      padding:13px 20px;
+      transition:0.22s ease;
+      box-shadow:0 10px 20px rgba(0,0,0,0.08);
+      white-space:nowrap;
+    }
+
+    button:hover { transform:translateY(-3px); }
+
+    .btn-green { background:linear-gradient(135deg,#1a4d2a,#2d6e3e); color:white; }
+    .btn-gold { background:linear-gradient(135deg,#f5c542,#e8ae24); color:#1e2e24; }
+    .btn-red { background:linear-gradient(135deg,#e63946,#b42331); color:white; }
+    .btn-blue { background:linear-gradient(135deg,#176b87,#2498bb); color:white; }
+    .btn-light { background:#eef6ef; color:#1a4d2a; border:1px solid #d9e9d9; }
+    .btn-small { padding:9px 14px; font-size:12px; }
+
+    .company-card {
+      border:1px solid #dfeee0;
+      background:linear-gradient(135deg,#ffffff,#f7fbf7);
+      border-radius:24px;
+      padding:22px;
+      margin-bottom:16px;
+      box-shadow:0 12px 28px rgba(20,70,35,0.06);
+      transition:0.25s;
+    }
+
+    .company-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 18px 36px rgba(20,70,35,0.11);
+    }
+
+    .company-head {
+      font-size:20px;
+      font-weight:950;
+      color:#1a4d2a;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+
+    .company-meta {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      background:#eaf3ea;
+      color:#1a4d2a;
+      border:1px solid #dcebdc;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .pill.gold { background:#fff8df; color:#7a5a0c; border-color:#f2dfa2; }
+    .pill.blue { background:#edf6ff; color:#134f7a; border-color:#d6eaff; }
+    .pill.red { background:#fff0ef; color:#9e1f14; border-color:#ffd4cf; }
+
+    .branch-list { display:none; margin-top:18px; padding-left:0; }
+
+    .branch-item {
+      background:#f4faf4;
+      border-radius:16px;
+      padding:14px 16px;
+      margin-bottom:10px;
+      border:1px solid #dcebdc;
+      font-weight:800;
+      color:#294b32;
+    }
+
+    .partner-summary {
+      margin-top:12px;
+      background:#fff;
+      border:1px solid #e2eee2;
+      border-radius:16px;
+      padding:12px 14px;
+      color:#4e6655;
+      font-size:12px;
+      line-height:1.6;
+      font-weight:700;
+    }
+
+    .hidden { display:none; }
+
+    .toggle-box {
+      background:#f8fbf8;
+      border:1px solid #dfeee0;
+      padding:16px;
+      border-radius:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-weight:850;
+      color:#1a4d2a;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.7);
+    }
+
+    .toggle-box input {
+      width:auto;
+      transform:scale(1.35);
+      accent-color:#1a4d2a;
+      margin:0;
+    }
+
+    .form-section {
+      margin-top:26px;
+      padding-top:24px;
+      border-top:1px dashed #cddfcd;
+    }
+
+    .success {
+      background:#dcf7ea;
+      color:#0f7a45;
+      padding:14px 18px;
+      border-radius:16px;
+      margin-bottom:20px;
+      font-weight:900;
+      display:none;
+    }
+
+    .warning-box {
+      background:#fff8df;
+      color:#75550b;
+      border:1px solid #f2dfa2;
+      border-radius:18px;
+      padding:15px 17px;
+      font-weight:750;
+      line-height:1.6;
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    .modal {
+      position:fixed;
+      inset:0;
+      background:rgba(5,20,10,0.72);
+      backdrop-filter:blur(8px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:20px;
+    }
+
+    .modal-box {
+      background:white;
+      width:100%;
+      max-width:460px;
+      padding:34px;
+      border-radius:30px;
+      text-align:center;
+      box-shadow:0 34px 90px rgba(0,0,0,0.35);
+    }
+
+    .modal-box h2 { color:#1a4d2a; margin-bottom:10px; font-weight:950; }
+    .modal-box p { color:#5a6f5a; font-weight:700; margin-bottom:18px; line-height:1.5; }
+
+    .error {
+      color:#e63946;
+      font-size:14px;
+      font-weight:850;
+      margin-top:12px;
+      display:none;
+    }
+
+    .toast {
+      position:fixed;
+      bottom:28px;
+      right:28px;
+      background:#1a4d2a;
+      color:white;
+      padding:16px 24px;
+      border-radius:18px;
+      display:none;
+      font-weight:900;
+      z-index:99999;
+      box-shadow:0 16px 35px rgba(20,70,35,0.25);
+      max-width:calc(100vw - 40px);
+    }
+
+    #workspace { border-top:6px solid #f5c542; }
+
+    .partner-row {
+      display:grid;
+      grid-template-columns:1.2fr 1fr 1fr auto;
+      gap:12px;
+      align-items:end;
+      background:#f8fbf8;
+      border:1px solid #dfeee0;
+      padding:14px;
+      border-radius:18px;
+      margin-bottom:12px;
+    }
+
+    .partner-row button { margin-bottom:1px; }
+
+    .document-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .document-card {
+      background:#f8fbf8;
+      border:1px solid #dfeee0;
+      border-radius:18px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .document-card::after {
+      content:"📄";
+      position:absolute;
+      right:12px;
+      top:8px;
+      font-size:34px;
+      opacity:0.08;
+    }
+
+    .document-name {
+      color:#1a4d2a;
+      font-weight:950;
+      font-size:13px;
+      padding-right:35px;
+    }
+
+    .document-note {
+      color:#6b806f;
+      font-size:11px;
+      font-weight:700;
+      line-height:1.5;
+      margin-top:5px;
+    }
+
+    .file-status {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-top:9px;
+      padding:6px 9px;
+      border-radius:999px;
+      background:#edf6ff;
+      color:#134f7a;
+      border:1px solid #d6eaff;
+      font-size:11px;
+      font-weight:850;
+      max-width:100%;
+      word-break:break-word;
+    }
+
+    .empty-box {
+      background:#f8fbf8;
+      border:1px dashed #bfd5bf;
+      border-radius:18px;
+      padding:24px;
+      text-align:center;
+      color:#5a6f5a;
+      font-weight:750;
+    }
+
+    .restore-card {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      background:#fff7f6;
+      border:1px solid #ffd8d3;
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:12px;
+    }
+
+    .restore-card h4 { color:#8b241b; font-weight:950; margin-bottom:5px; }
+    .restore-card p { color:#7b5a56; font-size:12px; font-weight:700; line-height:1.5; }
+
+    @media(max-width:1100px) {
+      .partner-row { grid-template-columns:1fr 1fr; }
+      .partner-row button { width:100%; }
+    }
+
+    @media(max-width:900px) {
+      .grid, .grid-2, .document-grid, .partner-row { grid-template-columns:1fr; }
+      .hero { padding:30px; }
+      .hero h1 { font-size:32px; }
+      .card { padding:22px; }
+      .restore-card { align-items:flex-start; flex-direction:column; }
+    }
+  </style>
+<style id="vvvebjs-styles"></style></head><body>
+
+  <div class="modal" id="passwordModal">
+    <div class="modal-box">
+      <div style="font-size:48px;">🔐</div>
+      <h2 id="modalTitle">Confirm Password</h2>
+      <p id="modalDescription">Enter password to continue this action.</p>
+      <input type="password" id="modalPassword" placeholder="Enter password">
+      <div class="error" id="modalError">Incorrect password.</div>
+      <br><br>
+      <button class="btn-green" onclick="confirmModalPassword()">Confirm</button>
+      <button class="btn-gold" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div id="loginScreen" class="login-box card">
+    <div style="font-size:52px;">⚠️</div>
+    <h1 style="color:#1a4d2a;margin-bottom:10px;"><span style="color:#ff0000;">CAUTION!</span></h1>
+    <h1 style="color:#1a4d2a;margin-bottom:10px;">OM FARM</h1>
+    <p style="color:#5a6f5a;font-weight:700;margin-bottom:20px;">Company &amp; Branch Access<br><br><span style="color:#ff0000;">Dashboard Password: fundsroom</span></p>
+
+    <input type="password" id="loginPassword" placeholder="Enter password">
+    <div class="error" id="loginError">Wrong password. Please try again.</div>
+    <br><br>
+    <button class="btn-green" onclick="login()">Unlock Dashboard</button>
+  </div>
+
+  <div id="mainApp" class="container hidden">
+
+    <div class="hero">
+      <h1>OM <span>Nursery</span> · Company and Branch Access</h1>
+      <p>Manage company and branch details, partner designations, company-type documentation, protected alterations, soft deletion and company restoration.</p>
+      <div class="hero-badges">
+        <div class="hero-badge">✏️ Alteration Password: omnursery</div>
+        <div class="hero-badge">🗑️ Deletion Password: fundsroom</div>
+        <div class="hero-badge">♻️ Soft Delete &amp; Re-Alive</div>
+        <div class="hero-badge">📸 Document Image Uploads</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="btn-row">
+        <button class="btn-green" onclick="showPanel('editCompany')">View / Edit Company</button>
+        <button class="btn-green" onclick="showPanel('editBranch')">View / Edit Branch</button>
+        <button class="btn-red" onclick="showPanel('deleteCompany')">Delete Company</button>
+        <button class="btn-red" onclick="showPanel('deleteBranch')">Delete Branch</button>
+        <button class="btn-blue" onclick="showPanel('restoreCompany')">Re-Alive Company</button>
+        <button class="btn-gold" onclick="showPanel('addCompany')">Add New Company</button>
+        <button class="btn-gold" onclick="showPanel('addBranch')">Add New Branch</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="title">Existing Companies &amp; Branches</h2>
+      <div id="companyList"></div>
+    </div>
+
+    <div id="workspace" class="card hidden">
+      <h2 class="title" id="workspaceTitle"></h2>
+      <div class="success" id="successMsg"></div>
+      <div id="workspaceContent"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const LOGIN_PASSWORD = "fundsroom";
+    const ALTERATION_PASSWORD = "omnursery";
+    const DELETION_PASSWORD = "fundsroom";
+
+    const COMPANY_TYPES = [
+      "Proprietorship",
+      "Partnership Firm",
+      "Limited Liability Partnership (LLP)",
+      "Private Limited Company",
+      "Public Limited Company",
+      "One Person Company (OPC)",
+      "Trust / Society",
+      "Other"
+    ];
+
+    const DOCUMENT_REQUIREMENTS = {
+      "Proprietorship": [
+        "Owner Aadhaar Card",
+        "Owner PAN Card",
+        "Passport-size Owner Photograph",
+        "Business Address Proof",
+        "GST Certificate, if applicable",
+        "Udyam / Shop Act Certificate, if available",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Partnership Firm": [
+        "Partnership Deed",
+        "Firm PAN Card",
+        "Partner Aadhaar Cards",
+        "Partner PAN Cards",
+        "Passport-size Partner Photographs",
+        "Business Address Proof",
+        "GST Certificate, if applicable",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Limited Liability Partnership (LLP)": [
+        "LLP Incorporation Certificate",
+        "LLP Agreement",
+        "LLP PAN Card",
+        "Designated Partner Aadhaar Cards",
+        "Designated Partner PAN Cards",
+        "Registered Office Address Proof",
+        "GST Certificate, if applicable",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Private Limited Company": [
+        "Certificate of Incorporation",
+        "Company PAN Card",
+        "Memorandum of Association (MOA)",
+        "Articles of Association (AOA)",
+        "Director Aadhaar Cards",
+        "Director PAN Cards",
+        "Registered Office Address Proof",
+        "GST Certificate, if applicable",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Public Limited Company": [
+        "Certificate of Incorporation",
+        "Company PAN Card",
+        "Memorandum of Association (MOA)",
+        "Articles of Association (AOA)",
+        "Director KYC Documents",
+        "Registered Office Address Proof",
+        "GST Certificate, if applicable",
+        "Board Authorisation / Resolution",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "One Person Company (OPC)": [
+        "Certificate of Incorporation",
+        "Company PAN Card",
+        "MOA and AOA",
+        "Director Aadhaar Card",
+        "Director PAN Card",
+        "Nominee KYC Documents",
+        "Registered Office Address Proof",
+        "GST Certificate, if applicable",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Trust / Society": [
+        "Registration Certificate",
+        "Trust Deed / Society By-Laws",
+        "Organisation PAN Card",
+        "Trustee / Member KYC Documents",
+        "Authorisation Letter / Resolution",
+        "Registered Address Proof",
+        "GST Certificate, if applicable",
+        "Cancelled Cheque or Bank Proof"
+      ],
+      "Other": [
+        "Registration or Formation Proof",
+        "Entity PAN Card",
+        "Authorised Person Aadhaar Card",
+        "Authorised Person PAN Card",
+        "Business Address Proof",
+        "GST Certificate, if applicable",
+        "Authorisation Letter",
+        "Cancelled Cheque or Bank Proof"
+      ]
+    };
+
+    let modalAction = null;
+    let modalExpectedPassword = "";
+    let currentDocumentFiles = {};
+    let currentEditingCompanyIndex = null;
+
+    let companies = [
+      {
+        name:"OM Farm",
+        phone:"9876543210",
+        address:"Pune, Maharashtra",
+        state:"Maharashtra",
+        companyType:"Private Limited Company",
+        assessee:"No",
+        gst:"27AAACO1234A1Z5",
+        gstPeriodicity:"Monthly",
+        filingMode:"Online",
+        einvoice:"Yes",
+        gstEnabled:true,
+        tdsEnabled:true,
+        tcsEnabled:false,
+        vatEnabled:false,
+        serviceChargeEnabled:true,
+        partners:[
+          {name:"Aarav Patil",designation:"Managing Director",contact:"9876501111"},
+          {name:"Meera Patil",designation:"Director - Operations",contact:"9876502222"}
+        ],
+        documents:{
+          "Certificate of Incorporation":"om-farm-incorporation.jpg",
+          "Company PAN Card":"om-farm-pan.jpg",
+          "GST Certificate, if applicable":"om-farm-gst.jpg"
+        },
+        active:true,
+        deletedAt:null,
+        branches:[branch("Kamshet"),branch("Karla"),branch("Talegaon")]
+      },
+      {
+        name:"OM Agro",
+        phone:"9876500000",
+        address:"Vadgaon, Maharashtra",
+        state:"Maharashtra",
+        companyType:"Partnership Firm",
+        assessee:"No",
+        gst:"27AAACO5678A1Z9",
+        gstPeriodicity:"Quarterly",
+        filingMode:"Online",
+        einvoice:"No",
+        gstEnabled:true,
+        tdsEnabled:false,
+        tcsEnabled:false,
+        vatEnabled:false,
+        serviceChargeEnabled:false,
+        partners:[
+          {name:"Rohan Shinde",designation:"Managing Partner",contact:"9876511111"},
+          {name:"Neha Shinde",designation:"Partner - Finance",contact:"9876522222"}
+        ],
+        documents:{
+          "Partnership Deed":"om-agro-partnership-deed.jpg",
+          "Firm PAN Card":"om-agro-pan.jpg"
+        },
+        active:true,
+        deletedAt:null,
+        branches:[branch("Vadgaon"),branch("Ratnagiri")]
+      },
+      {
+        name:"Sadiksha",
+        phone:"9000000000",
+        address:"Lanjha, Maharashtra",
+        state:"Maharashtra",
+        companyType:"Proprietorship",
+        assessee:"No",
+        gst:"27AAACS1111A1Z2",
+        gstPeriodicity:"Monthly",
+        filingMode:"Online",
+        einvoice:"Yes",
+        gstEnabled:true,
+        tdsEnabled:false,
+        tcsEnabled:false,
+        vatEnabled:false,
+        serviceChargeEnabled:true,
+        partners:[
+          {name:"Sadiksha More",designation:"Proprietor",contact:"9000000000"}
+        ],
+        documents:{
+          "Owner Aadhaar Card":"sadiksha-aadhaar.jpg",
+          "Owner PAN Card":"sadiksha-pan.jpg"
+        },
+        active:true,
+        deletedAt:null,
+        branches:[branch("Lanjha")]
+      }
+    ];
+
+    function branch(name) {
+      return {
+        name:name,
+        phone:"9999999999",
+        address:name + ", Maharashtra",
+        bankName:"HDFC Bank",
+        bankBranch:"Pune Branch",
+        accountName:name + " Branch Account",
+        accountNumber:"123456789012",
+        ifsc:"HDFC0001234"
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>\"']/g, char => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;"
+      })[char]);
+    }
+
+    function login() {
+      const pass = document.getElementById("loginPassword").value;
+      if (pass !== LOGIN_PASSWORD) {
+        document.getElementById("loginError").style.display = "block";
+        return;
+      }
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("mainApp").classList.remove("hidden");
+      renderCompanies();
+    }
+
+    function activeCompanyEntries() {
+      return companies.map((company,index)=>({company,index})).filter(entry=>entry.company.active !== false);
+    }
+
+    function deletedCompanyEntries() {
+      return companies.map((company,index)=>({company,index})).filter(entry=>entry.company.active === false);
+    }
+
+    function renderCompanies() {
+      const box = document.getElementById("companyList");
+      const active = activeCompanyEntries();
+      const deletedCount = deletedCompanyEntries().length;
+
+      if (!active.length) {
+        box.innerHTML = `<div class="empty-box">No active companies are available. Use “Re-Alive Company” to restore a soft-deleted company.</div>`;
+        return;
+      }
+
+      box.innerHTML = active.map(({company:c,index:i}) => `
+        <div class="company-card">
+          <div class="company-head" onclick="toggleBranches(${i})">
+            <span>🏢 ${escapeHtml(c.name)}</span>
+            <span style="font-size:13px;">View Details ▼</span>
+          </div>
+          <div class="company-meta">
+            <span class="pill blue">${escapeHtml(c.companyType || "Other")}</span>
+            <span class="pill">👥 ${(c.partners || []).length} Partner / Owner</span>
+            <span class="pill gold">🌿 ${(c.branches || []).length} Branches</span>
+            <span class="pill">📄 ${Object.keys(c.documents || {}).length} Documents</span>
+            ${deletedCount ? `<span class="pill red">♻️ ${deletedCount} Recoverable Deleted</span>` : ""}
+          </div>
+          <div class="branch-list" id="branches-${i}">
+            <div class="partner-summary">
+              <strong style="color:#1a4d2a;">Partner / Management Breakdown</strong><br>
+              ${(c.partners || []).length ? c.partners.map(p=>`${escapeHtml(p.name)} — ${escapeHtml(p.designation)}${p.contact ? ` (${escapeHtml(p.contact)})` : ""}`).join("<br>") : "No partner details added."}
+            </div>
+            <div style="margin-top:12px;">
+              ${(c.branches || []).length ? c.branches.map(b => `<div class="branch-item">🌿 ${escapeHtml(b.name)}</div>`).join("") : `<div class="empty-box">No branches added.</div>`}
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function toggleBranches(index) {
+      const el = document.getElementById("branches-" + index);
+      if (el) el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    function showPanel(type) {
+      document.getElementById("workspace").classList.remove("hidden");
+      document.getElementById("successMsg").style.display = "none";
+      currentDocumentFiles = {};
+      currentEditingCompanyIndex = null;
+
+      if (type === "addCompany") addCompanyPanel();
+      if (type === "addBranch") addBranchPanel();
+      if (type === "editCompany") editCompanyPanel();
+      if (type === "editBranch") editBranchPanel();
+      if (type === "deleteCompany") deleteCompanyPanel();
+      if (type === "deleteBranch") deleteBranchPanel();
+      if (type === "restoreCompany") restoreCompanyPanel();
+
+      document.getElementById("workspace").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    function companyOptions(includeDeleted=false) {
+      const entries = includeDeleted ? deletedCompanyEntries() : activeCompanyEntries();
+      return entries.map(({company,index}) => `<option value="${index}">${escapeHtml(company.name)}</option>`).join("");
+    }
+
+    function companyTypeOptions(selected="") {
+      return COMPANY_TYPES.map(type=>`<option ${type===selected ? "selected" : ""}>${escapeHtml(type)}</option>`).join("");
+    }
+
+    function addCompanyPanel() {
+      document.getElementById("workspaceTitle").innerText = "Add New Company";
+      document.getElementById("workspaceContent").innerHTML = `
+        ${companyForm()}
+        <br>
+        <button class="btn-green" onclick="saveNewCompany()">Save Company</button>
+      `;
+      renderDocumentRequirements();
+      addPartnerRow("","Owner / Partner","");
+    }
+
+    function companyForm(c = {}) {
+      currentDocumentFiles = {...(c.documents || {})};
+      const partners = c.partners || [];
+
+      return `
+        <div class="sub-title">🏢 Basic Company Information</div>
+        <div class="helper">Enter the legal and taxation setup of the company.</div>
+        <div class="grid">
+          ${field("Name","companyName",c.name)}
+          ${field("Phone Numbers","companyPhone",c.phone)}
+          ${field("Address","companyAddress",c.address)}
+          ${field("State","companyState",c.state)}
+
+          <div>
+            <label>Company Type *</label>
+            <select id="companyType" onchange="renderDocumentRequirements()">
+              <option value="">Select Company Type</option>
+              ${companyTypeOptions(c.companyType)}
+            </select>
+          </div>
+
+          ${field("Assessee of Other Territory","companyAssessee",c.assessee)}
+          ${field("GST Number","companyGST",c.gst)}
+
+          <div>
+            <label>Periodicity of GST</label>
+            <select id="companyGSTPeriod">
+              <option ${c.gstPeriodicity==="Monthly" ? "selected" : ""}>Monthly</option>
+              <option ${c.gstPeriodicity==="Quarterly" ? "selected" : ""}>Quarterly</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Mode of Filing</label>
+            <select id="companyFiling">
+              <option ${c.filingMode==="Online" ? "selected" : ""}>Online</option>
+              <option ${c.filingMode==="Offline" ? "selected" : ""}>Offline</option>
+            </select>
+          </div>
+
+          <div>
+            <label>E-Invoice Applicable</label>
+            <select id="companyEinvoice">
+              <option ${c.einvoice==="Yes" ? "selected" : ""}>Yes</option>
+              <option ${c.einvoice==="No" ? "selected" : ""}>No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="sub-title">👥 Partner / Owner Breakdown</div>
+          <div class="helper">Add every owner, partner, director, trustee or authorised person with their designation.</div>
+          <div id="partnerRows"></div>
+          <button type="button" class="btn-light btn-small" onclick="addPartnerRow()">➕ Add Partner / Person</button>
+        </div>
+
+        <div class="form-section">
+          <div class="sub-title">📸 Company Documentation</div>
+          <div class="helper">Choose the company type above. The indicative document checklist will appear here. Upload clear images wherever possible; PDF is also accepted in this demo.</div>
+          <div id="documentRequirements"></div>
+        </div>
+
+        <div class="form-section grid">
+          ${toggle("Enable GST","enableGST",c.gstEnabled)}
+          ${toggle("Enable TDS","enableTDS",c.tdsEnabled)}
+          ${toggle("Enable TCS","enableTCS",c.tcsEnabled)}
+          ${toggle("Enable VAT","enableVAT",c.vatEnabled)}
+          ${toggle("Enable Service Charge","enableServiceCharge",c.serviceChargeEnabled)}
+        </div>
+
+      `;
+    }
+
+    function hydratePartnerRows(partners) {
+      const container = document.getElementById("partnerRows");
+      if (!container) return;
+      container.innerHTML = "";
+      (partners || []).forEach(p=>addPartnerRow(p.name,p.designation,p.contact));
+      if (!(partners || []).length) addPartnerRow("","Owner / Partner","");
+    }
+
+    function addPartnerRow(name="",designation="",contact="") {
+      const container = document.getElementById("partnerRows");
+      if (!container) return;
+      const row = document.createElement("div");
+      row.className = "partner-row";
+      row.innerHTML = `
+        <div><label>Partner / Person Name *</label><input class="partner-name" value="${escapeHtml(name)}" placeholder="Enter full name"></div>
+        <div><label>Designation *</label><input class="partner-designation" value="${escapeHtml(designation)}" placeholder="e.g. Managing Partner"></div>
+        <div><label>Contact Number</label><input class="partner-contact" value="${escapeHtml(contact)}" placeholder="Enter contact number"></div>
+        <button type="button" class="btn-red btn-small" onclick="removePartnerRow(this)">Remove</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function removePartnerRow(button) {
+      const rows = document.querySelectorAll("#partnerRows .partner-row");
+      if (rows.length <= 1) {
+        showToast("At least one owner, partner or authorised person must remain.", false);
+        return;
+      }
+      button.closest(".partner-row").remove();
+    }
+
+    function collectPartners() {
+      return [...document.querySelectorAll("#partnerRows .partner-row")].map(row=>({
+        name:row.querySelector(".partner-name").value.trim(),
+        designation:row.querySelector(".partner-designation").value.trim(),
+        contact:row.querySelector(".partner-contact").value.trim()
+      })).filter(p=>p.name || p.designation || p.contact);
+    }
+
+    function documentKey(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    }
+
+    function renderDocumentRequirements() {
+      const container = document.getElementById("documentRequirements");
+      const typeSelect = document.getElementById("companyType");
+      if (!container || !typeSelect) return;
+
+      const type = typeSelect.value;
+      if (!type) {
+        container.innerHTML = `<div class="empty-box">Select a company type to see the required document checklist.</div>`;
+        return;
+      }
+
+      const requirements = DOCUMENT_REQUIREMENTS[type] || DOCUMENT_REQUIREMENTS.Other;
+      container.innerHTML = `
+        <div class="warning-box">Upload clear front-facing images. Avoid blurred, cropped or password-protected files. This checklist is indicative and can be changed as per OM Nursery's internal verification process.</div>
+        <div class="document-grid">
+          ${requirements.map(doc=>{
+            const existing = currentDocumentFiles[doc];
+            return `
+              <div class="document-card">
+                <div class="document-name">${escapeHtml(doc)}</div>
+                <div class="document-note">Preferred: JPG, JPEG or PNG image. PDF is also accepted.</div>
+                <input type="file" accept="image/*,.pdf,application/pdf" onchange="handleDocumentUpload('${escapeHtml(doc).replace(/'/g,"\\'")}',this)">
+                <div id="doc-status-${documentKey(doc)}">${existing ? `<span class="file-status">✅ ${escapeHtml(existing)}</span>` : `<span class="file-status" style="background:#fff8df;color:#7a5a0c;border-color:#f2dfa2;">Pending upload</span>`}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function handleDocumentUpload(documentName,input) {
+      const file = input.files && input.files[0];
+      const status = document.getElementById("doc-status-" + documentKey(documentName));
+      if (!file) {
+        delete currentDocumentFiles[documentName];
+        if (status) status.innerHTML = `<span class="file-status" style="background:#fff8df;color:#7a5a0c;border-color:#f2dfa2;">Pending upload</span>`;
+        return;
+      }
+
+      const isImage = file.type.startsWith("image/");
+      const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+      if (!isImage && !isPdf) {
+        input.value = "";
+        showToast("Please upload an image or PDF file only.", false);
+        return;
+      }
+
+      currentDocumentFiles[documentName] = file.name;
+      if (status) status.innerHTML = `<span class="file-status">✅ ${escapeHtml(file.name)}</span>`;
+    }
+
+    function field(label,id,value="") {
+      return `
+        <div>
+          <label>${escapeHtml(label)}</label>
+          <input id="${id}" value="${escapeHtml(value || "")}" placeholder="Enter ${escapeHtml(label)}">
+        </div>
+      `;
+    }
+
+    function toggle(label,id,checkedValue=false) {
+      return `
+        <div class="toggle-box">
+          <span>${escapeHtml(label)}</span>
+          <input type="checkbox" id="${id}" ${checkedValue ? "checked" : ""}>
+        </div>
+      `;
+    }
+
+    function readCompanyForm() {
+      return {
+        name:val("companyName"),
+        phone:val("companyPhone"),
+        address:val("companyAddress"),
+        state:val("companyState"),
+        companyType:val("companyType"),
+        assessee:val("companyAssessee"),
+        gst:val("companyGST"),
+        gstPeriodicity:val("companyGSTPeriod"),
+        filingMode:val("companyFiling"),
+        einvoice:val("companyEinvoice"),
+        gstEnabled:checked("enableGST"),
+        tdsEnabled:checked("enableTDS"),
+        tcsEnabled:checked("enableTCS"),
+        vatEnabled:checked("enableVAT"),
+        serviceChargeEnabled:checked("enableServiceCharge"),
+        partners:collectPartners(),
+        documents:{...currentDocumentFiles},
+        branches:[],
+        active:true,
+        deletedAt:null
+      };
+    }
+
+    function validateCompany(company) {
+      if (!company.name) return "Company name is required.";
+      if (!company.companyType) return "Please select the company type.";
+      if (!company.partners.length) return "Add at least one partner, owner or authorised person.";
+      if (company.partners.some(p=>!p.name || !p.designation)) return "Every partner/person must have both name and designation.";
+      return "";
+    }
+
+    function saveNewCompany() {
+      const company = readCompanyForm();
+      const error = validateCompany(company);
+      if (error) return alert(error);
+      companies.push(company);
+      renderCompanies();
+      showSuccess("Company created successfully with partners and documentation checklist.");
+    }
+
+    function addBranchPanel() {
+      document.getElementById("workspaceTitle").innerText = "Add New Branch";
+      document.getElementById("workspaceContent").innerHTML = `
+        <label>Choose Company</label>
+        <select id="branchCompany" onchange="showInheritedCompanyDetails()">
+          <option value="">Select Company</option>
+          ${companyOptions()}
+        </select>
+        <div id="inheritedDetails"></div>
+        <div class="form-section">
+          <h3 class="title">Enter Branch Details</h3>
+          ${branchForm()}
+          <br>
+          <button class="btn-green" onclick="saveNewBranch()">Save Branch</button>
+        </div>
+      `;
+    }
+
+    function showInheritedCompanyDetails() {
+      const i = val("branchCompany");
+      const target = document.getElementById("inheritedDetails");
+      if (i === "") { target.innerHTML = ""; return; }
+      const c = companies[Number(i)];
+      target.innerHTML = `
+        <div class="company-card" style="margin-top:20px;">
+          <b>Inherited Company Details:</b><br><br>
+          Company: ${escapeHtml(c.name)}<br>
+          Company Type: ${escapeHtml(c.companyType)}<br>
+          GST: ${escapeHtml(c.gst || "Not provided")}<br>
+          GST Periodicity: ${escapeHtml(c.gstPeriodicity)}<br>
+          Filing Mode: ${escapeHtml(c.filingMode)}<br>
+          GST Enabled: ${c.gstEnabled ? "Yes" : "No"}<br>
+          Partner / Management Count: ${(c.partners || []).length}
+        </div>
+      `;
+    }
+
+    function branchForm(b = {}) {
+      return `
+        <div class="grid">
+          ${field("Name","branchName",b.name)}
+          ${field("Phone Number","branchPhone",b.phone)}
+          ${field("Address","branchAddress",b.address)}
+          ${field("Bank Name","bankName",b.bankName)}
+          ${field("Bank Branch Name","bankBranch",b.bankBranch)}
+          ${field("Bank Account Name","accountName",b.accountName)}
+          ${field("Bank Account Number","accountNumber",b.accountNumber)}
+          ${field("IFSC Code","ifsc",b.ifsc)}
+        </div>
+      `;
+    }
+
+    function readBranchForm() {
+      return {
+        name:val("branchName"),
+        phone:val("branchPhone"),
+        address:val("branchAddress"),
+        bankName:val("bankName"),
+        bankBranch:val("bankBranch"),
+        accountName:val("accountName"),
+        accountNumber:val("accountNumber"),
+        ifsc:val("ifsc")
+      };
+    }
+
+    function saveNewBranch() {
+      const companyIndex = val("branchCompany");
+      if (companyIndex === "") return alert("Please choose company.");
+      const branchData = readBranchForm();
+      if (!branchData.name) return alert("Branch name is required.");
+      companies[Number(companyIndex)].branches.push(branchData);
+      renderCompanies();
+      showSuccess("Branch added successfully.");
+    }
+
+    function editCompanyPanel() {
+      document.getElementById("workspaceTitle").innerText = "View / Edit Company Details";
+      document.getElementById("workspaceContent").innerHTML = `
+        <div class="warning-box">Saving company alterations requires the alteration password.</div>
+        <label>Choose Company</label>
+        <select id="editCompanySelect" onchange="loadCompanyEditForm()">
+          <option value="">Select Company</option>
+          ${companyOptions()}
+        </select>
+        <div id="editCompanyForm"></div>
+      `;
+    }
+
+    function loadCompanyEditForm() {
+      const i = val("editCompanySelect");
+      const target = document.getElementById("editCompanyForm");
+      if (i === "") { target.innerHTML = ""; return; }
+      currentEditingCompanyIndex = Number(i);
+      const company = companies[currentEditingCompanyIndex];
+      target.innerHTML = `
+        <div class="form-section">
+          ${companyForm(company)}
+          <br>
+          <button class="btn-green" onclick="requestCompanyEditSave(${currentEditingCompanyIndex})">Save Changes</button>
+        </div>
+      `;
+      hydratePartnerRows(company.partners);
+      renderDocumentRequirements();
+    }
+
+    function requestCompanyEditSave(index) {
+      const updated = readCompanyForm();
+      const error = validateCompany(updated);
+      if (error) return alert(error);
+      requestPassword(
+        "Alter Company Details",
+        "Enter the alteration password to save company changes.",
+        ALTERATION_PASSWORD,
+        function() {
+          updated.branches = companies[index].branches;
+          updated.active = companies[index].active;
+          updated.deletedAt = companies[index].deletedAt;
+          companies[index] = updated;
+          renderCompanies();
+          showSuccess("Company details updated successfully.");
+        }
+      );
+    }
+
+    function editBranchPanel() {
+      document.getElementById("workspaceTitle").innerText = "View / Edit Branch Details";
+      document.getElementById("workspaceContent").innerHTML = `
+        <div class="warning-box">Saving branch alterations requires the alteration password.</div>
+        <div class="grid-2">
+          <div>
+            <label>Choose Company</label>
+            <select id="editBranchCompany" onchange="loadBranchDropdown()">
+              <option value="">Select Company</option>
+              ${companyOptions()}
+            </select>
+          </div>
+          <div>
+            <label>Choose Branch</label>
+            <select id="editBranchSelect" onchange="loadBranchEditForm()">
+              <option value="">Select Branch</option>
+            </select>
+          </div>
+        </div>
+        <div id="editBranchForm"></div>
+      `;
+    }
+
+    function loadBranchDropdown() {
+      const companyIndex = val("editBranchCompany");
+      const dropdown = document.getElementById("editBranchSelect");
+      dropdown.innerHTML = `<option value="">Select Branch</option>`;
+      document.getElementById("editBranchForm").innerHTML = "";
+      if (companyIndex === "") return;
+      dropdown.innerHTML += companies[Number(companyIndex)].branches.map((b,i) => `<option value="${i}">${escapeHtml(b.name)}</option>`).join("");
+    }
+
+    function loadBranchEditForm() {
+      const companyIndex = val("editBranchCompany");
+      const branchIndex = val("editBranchSelect");
+      const target = document.getElementById("editBranchForm");
+      if (companyIndex === "" || branchIndex === "") { target.innerHTML = ""; return; }
+      target.innerHTML = `
+        <div class="form-section">
+          ${branchForm(companies[Number(companyIndex)].branches[Number(branchIndex)])}
+          <br>
+          <button class="btn-green" onclick="requestBranchEditSave(${Number(companyIndex)},${Number(branchIndex)})">Save Branch Changes</button>
+        </div>
+      `;
+    }
+
+    function requestBranchEditSave(companyIndex,branchIndex) {
+      const updatedBranch = readBranchForm();
+      if (!updatedBranch.name) return alert("Branch name is required.");
+      requestPassword(
+        "Alter Branch Details",
+        "Enter the alteration password to save branch changes.",
+        ALTERATION_PASSWORD,
+        function() {
+          companies[companyIndex].branches[branchIndex] = updatedBranch;
+          renderCompanies();
+          showSuccess("Branch details updated successfully.");
+        }
+      );
+    }
+
+    function deleteCompanyPanel() {
+      document.getElementById("workspaceTitle").innerText = "Delete Company";
+      const options = companyOptions();
+      document.getElementById("workspaceContent").innerHTML = `
+        <div class="warning-box">Company deletion is a soft delete. The company and all its branches remain recoverable through the Re-Alive Company option.</div>
+        ${options ? `
+          <label>Choose Company</label>
+          <select id="deleteCompanySelect">${options}</select>
+          <br><br>
+          <button class="btn-red" onclick="askPasswordForDeleteCompany()">Soft Delete Company</button>
+        ` : `<div class="empty-box">No active company is available for deletion.</div>`}
+      `;
+    }
+
+    function askPasswordForDeleteCompany() {
+      const companyIndex = val("deleteCompanySelect");
+      if (companyIndex === "") return alert("Please choose a company.");
+      requestPassword(
+        "Soft Delete Company",
+        "Enter the deletion password. The company will be hidden but can be restored later.",
+        DELETION_PASSWORD,
+        function() {
+          const company = companies[Number(companyIndex)];
+          company.active = false;
+          company.deletedAt = new Date().toLocaleString("en-IN");
+          renderCompanies();
+          showSuccess("Company soft-deleted successfully. It can be re-alived later.");
+          deleteCompanyPanel();
+        }
+      );
+    }
+
+    function restoreCompanyPanel() {
+      document.getElementById("workspaceTitle").innerText = "Re-Alive Company";
+      const deleted = deletedCompanyEntries();
+      document.getElementById("workspaceContent").innerHTML = `
+        <div class="warning-box">Re-aliving a company restores the same company record, partner details, documents and branches. The alteration password is required.</div>
+        ${deleted.length ? deleted.map(({company,index})=>`
+          <div class="restore-card">
+            <div>
+              <h4>♻️ ${escapeHtml(company.name)}</h4>
+              <p>${escapeHtml(company.companyType || "Other")} · ${(company.branches || []).length} branches · Deleted on ${escapeHtml(company.deletedAt || "Not recorded")}</p>
+            </div>
+            <button class="btn-blue" onclick="askPasswordForRestoreCompany(${index})">Re-Alive Company</button>
+          </div>
+        `).join("") : `<div class="empty-box">There are no soft-deleted companies to restore.</div>`}
+      `;
+    }
+
+    function askPasswordForRestoreCompany(index) {
+      requestPassword(
+        "Re-Alive Company",
+        "Enter the alteration password to restore this company.",
+        ALTERATION_PASSWORD,
+        function() {
+          companies[index].active = true;
+          companies[index].deletedAt = null;
+          renderCompanies();
+          showSuccess("Company re-alived successfully with all previous data.");
+          restoreCompanyPanel();
+        }
+      );
+    }
+
+    function deleteBranchPanel() {
+      document.getElementById("workspaceTitle").innerText = "Delete Branch";
+      document.getElementById("workspaceContent").innerHTML = `
+        <div class="warning-box">Branch deletion requires the deletion password. Company deletion remains soft delete and recoverable.</div>
+        <div class="grid-2">
+          <div>
+            <label>Choose Company</label>
+            <select id="deleteBranchCompany" onchange="loadDeleteBranchDropdown()">
+              <option value="">Select Company</option>
+              ${companyOptions()}
+            </select>
+          </div>
+          <div>
+            <label>Choose Branch</label>
+            <select id="deleteBranchSelect">
+              <option value="">Select Branch</option>
+            </select>
+          </div>
+        </div>
+        <br>
+        <button class="btn-red" onclick="askPasswordForDeleteBranch()">Delete Branch</button>
+      `;
+    }
+
+    function loadDeleteBranchDropdown() {
+      const companyIndex = val("deleteBranchCompany");
+      const dropdown = document.getElementById("deleteBranchSelect");
+      dropdown.innerHTML = `<option value="">Select Branch</option>`;
+      if (companyIndex === "") return;
+      dropdown.innerHTML += companies[Number(companyIndex)].branches.map((b,i) => `<option value="${i}">${escapeHtml(b.name)}</option>`).join("");
+    }
+
+    function askPasswordForDeleteBranch() {
+      const companyIndex = val("deleteBranchCompany");
+      const branchIndex = val("deleteBranchSelect");
+      if (companyIndex === "" || branchIndex === "") return alert("Please choose company and branch.");
+      requestPassword(
+        "Delete Branch",
+        "Enter the deletion password to remove this branch.",
+        DELETION_PASSWORD,
+        function() {
+          companies[Number(companyIndex)].branches.splice(Number(branchIndex),1);
+          renderCompanies();
+          showSuccess("Branch deleted successfully.");
+          deleteBranchPanel();
+        }
+      );
+    }
+
+    function requestPassword(title,description,expectedPassword,action) {
+      modalAction = action;
+      modalExpectedPassword = expectedPassword;
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("modalDescription").innerText = description;
+      openModal();
+    }
+
+    function openModal() {
+      document.getElementById("modalPassword").value = "";
+      document.getElementById("modalError").style.display = "none";
+      document.getElementById("passwordModal").style.display = "flex";
+      setTimeout(()=>document.getElementById("modalPassword").focus(),50);
+    }
+
+    function closeModal() {
+      document.getElementById("passwordModal").style.display = "none";
+      modalAction = null;
+      modalExpectedPassword = "";
+    }
+
+    function confirmModalPassword() {
+      const pass = val("modalPassword");
+      if (pass !== modalExpectedPassword) {
+        document.getElementById("modalError").style.display = "block";
+        return;
+      }
+      const action = modalAction;
+      document.getElementById("passwordModal").style.display = "none";
+      modalAction = null;
+      modalExpectedPassword = "";
+      if (typeof action === "function") action();
+    }
+
+    function val(id) {
+      const element = document.getElementById(id);
+      return element ? element.value.trim() : "";
+    }
+
+    function checked(id) {
+      const element = document.getElementById(id);
+      return element ? element.checked : false;
+    }
+
+    function showSuccess(message) {
+      const element = document.getElementById("successMsg");
+      element.innerText = message;
+      element.style.display = "block";
+      showToast(message,true);
+    }
+
+    function showToast(message,success=true) {
+      const toast = document.getElementById("toast");
+      toast.innerText = (success ? "✅ " : "⚠️ ") + message;
+      toast.style.background = success ? "#1a4d2a" : "#9e1f14";
+      toast.style.display = "block";
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => { toast.style.display = "none"; }, 2800);
+    }
+
+    document.getElementById("loginPassword").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") login();
+    });
+
+    document.getElementById("modalPassword").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") confirmModalPassword();
+    });
+
+    document.getElementById("passwordModal").addEventListener("click", function(event) {
+      if (event.target === this) closeModal();
+    });
+
+    window.login = login;
+    window.showPanel = showPanel;
+    window.toggleBranches = toggleBranches;
+    window.renderDocumentRequirements = renderDocumentRequirements;
+    window.handleDocumentUpload = handleDocumentUpload;
+    window.addPartnerRow = addPartnerRow;
+    window.removePartnerRow = removePartnerRow;
+    window.saveNewCompany = saveNewCompany;
+    window.showInheritedCompanyDetails = showInheritedCompanyDetails;
+    window.saveNewBranch = saveNewBranch;
+    window.loadCompanyEditForm = loadCompanyEditForm;
+    window.requestCompanyEditSave = requestCompanyEditSave;
+    window.loadBranchDropdown = loadBranchDropdown;
+    window.loadBranchEditForm = loadBranchEditForm;
+    window.requestBranchEditSave = requestBranchEditSave;
+    window.askPasswordForDeleteCompany = askPasswordForDeleteCompany;
+    window.askPasswordForRestoreCompany = askPasswordForRestoreCompany;
+    window.loadDeleteBranchDropdown = loadDeleteBranchDropdown;
+    window.askPasswordForDeleteBranch = askPasswordForDeleteBranch;
+    window.confirmModalPassword = confirmModalPassword;
+    window.closeModal = closeModal;
+  </script>
+
+  <div style="display:flex;justify-content:center;align-items:center;margin:30px auto;">
+    <img src="/media/workspaces/2588/OMN_COMPANY_REG_FLOW.png" alt="OM Nursery Company Registration Flow" style="max-width:100%;height:auto;border-radius:24px;box-shadow:0 16px 42px rgba(20,70,35,0.12);" width="800" onerror="this.style.display='none'">
+  </div>
+</body></html>
+

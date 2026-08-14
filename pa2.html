@@ -1,0 +1,645 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · PO Packing Slip &amp; Variance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{font-family:'Inter',sans-serif;}
+body,button,input,select,textarea,div,span,p,h1,h2,h3,h4,h5,h6,table,tr,td,th,label{
+font-family:'Inter',sans-serif !important;
+}
+</style>
+<style id="vvvebjs-styles"></style></head><body>
+
+  <div id="amountModal" style="display:none; position:fixed; inset:0; background:rgba(10,20,15,0.72); backdrop-filter:blur(7px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#fff; width:100%; max-width:430px; border-radius:28px; padding:32px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.35);">
+      <div style="font-size:48px; margin-bottom:10px;">🔐</div>
+      <h2 style="margin:0 0 8px; color:#1a4d2a; font-size:28px; font-weight:850;">Amount Access</h2>
+      <p style="margin:0 0 22px; color:#5a6f5a; font-weight:600; line-height:1.5;">Enter password to unmask purchase order amount details.</p>
+      <input id="amountPassword" type="password" placeholder="Enter password" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:16px; padding:13px 14px; font-size:15px; font-weight:600; outline:none; margin-bottom:12px;">
+      <button onclick="unlockAmounts()" style="width:100%; border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:12px 20px; font-weight:800; cursor:pointer;">Show Amounts</button>
+      <button onclick="closeAmountPopup()" style="width:100%; border:0; background:#f5c542; color:#1e2e24; border-radius:40px; padding:12px 20px; font-weight:800; cursor:pointer; margin-top:10px;">Cancel</button>
+      <div id="amountError" style="display:none; color:#e63946; font-size:14px; margin-top:12px; font-weight:700;">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <div id="notifyModal" style="display:none; position:fixed; inset:0; background:rgba(10,20,15,0.72); backdrop-filter:blur(7px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#fff; width:100%; max-width:420px; border-radius:28px; padding:34px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.35);">
+      <div style="font-size:54px; margin-bottom:12px;">✅</div>
+      <h2 style="margin:0 0 8px; color:#1a4d2a; font-size:28px; font-weight:850;">Notification Sent</h2>
+      <p style="margin:0 0 24px; color:#5a6f5a; font-weight:650; line-height:1.5;">Head Of Operations informed.</p>
+      <button onclick="document.getElementById('notifyModal').style.display='none'" style="border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:12px 34px; font-weight:800; cursor:pointer;">Okay</button>
+    </div>
+  </div>
+
+  <div id="toast" style="position:fixed; bottom:30px; right:30px; background:#1a4d2a; color:#fff; padding:14px 24px; border-radius:16px; box-shadow:0 10px 30px rgba(0,20,0,0.2); transform:translateY(100px); opacity:0; transition:all .3s; z-index:99999; font-weight:650;"></div>
+
+  <div style="max-width:1400px; margin:0 auto;">
+    <div style="background:linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%); border-radius:32px; padding:42px 50px; margin-bottom:34px; box-shadow:0 20px 40px rgba(0,20,0,0.15); position:relative; overflow:hidden;">
+      <div style="position:absolute; right:30px; bottom:-18px; font-size:140px; opacity:.10; transform:rotate(8deg);">🚚</div>
+      <div style="position:relative; z-index:1; display:flex; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div style="font-size:48px;">📦</div>
+        <div>
+          <h1 style="font-size:42px; line-height:1.1; font-weight:850; color:#fff; margin:0; letter-spacing:-.02em;">Propagation and Acquisition <span style="color:#f5c542;">Module 2</span></h1>
+          <div style="color:rgba(255,255,255,.88); font-size:17px; margin-top:10px; border-left:4px solid #f5c542; padding-left:18px; max-width:900px; font-weight:550;">Track purchase orders, received stock, damaged quantity, vendor details, supervisor remarks and variance reporting.</div>
+        </div>
+      </div>
+      <div style="position:relative; z-index:1; margin-top:18px; display:flex; flex-wrap:wrap; gap:10px;">
+        <span style="background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.15); padding:7px 16px; border-radius:40px; font-size:13px; font-weight:650;">PO Details</span>
+        <span style="background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.15); padding:7px 16px; border-radius:40px; font-size:13px; font-weight:650;">Packing Slip Entry</span>
+        <span style="background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.15); padding:7px 16px; border-radius:40px; font-size:13px; font-weight:650;">Variance Report</span>
+        <span style="background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.15); padding:7px 16px; border-radius:40px; font-size:13px; font-weight:650;">Masked Amounts</span>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:22px; margin-bottom:28px;" id="metricGrid">
+      <div style="background:#fff; border-radius:24px; padding:22px; min-height:136px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:relative; overflow:hidden;">
+        <div style="color:#5a6f5a; font-size:15px; font-weight:700; margin-bottom:26px;">Open POs</div>
+        <div style="position:absolute; right:20px; top:20px; width:62px; height:62px; background:#eef6ff; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px;">🧾</div>
+        <div style="color:#0b1f3a; font-size:30px; font-weight:850;">3</div>
+      </div>
+    
+      <div style="background:#fff; border-radius:24px; padding:22px; min-height:136px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:relative; overflow:hidden;">
+        <div style="color:#5a6f5a; font-size:15px; font-weight:700; margin-bottom:26px;">Packing Slips</div>
+        <div style="position:absolute; right:20px; top:20px; width:62px; height:62px; background:#eef6ff; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px;">📄</div>
+        <div style="color:#0b1f3a; font-size:30px; font-weight:850;">2</div>
+      </div>
+    
+      <div style="background:#fff; border-radius:24px; padding:22px; min-height:136px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:relative; overflow:hidden;">
+        <div style="color:#5a6f5a; font-size:15px; font-weight:700; margin-bottom:26px;">Total Received</div>
+        <div style="position:absolute; right:20px; top:20px; width:62px; height:62px; background:#eef6ff; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px;">📦</div>
+        <div style="color:#0b1f3a; font-size:30px; font-weight:850;">1410</div>
+      </div>
+    
+      <div style="background:#fff; border-radius:24px; padding:22px; min-height:136px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:relative; overflow:hidden;">
+        <div style="color:#5a6f5a; font-size:15px; font-weight:700; margin-bottom:26px;">Damaged / Short</div>
+        <div style="position:absolute; right:20px; top:20px; width:62px; height:62px; background:#eef6ff; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px;">⚠️</div>
+        <div style="color:#0b1f3a; font-size:30px; font-weight:850;">51 / 760</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:360px 1fr; gap:28px; align-items:start;">
+      <div style="background:#fff; border-radius:28px; padding:26px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:sticky; top:20px;">
+        <h3 style="font-family:'Inter',sans-serif;color:#1a4d2a; font-size:23px; font-weight:800; margin:0 0 8px;">🧾 Purchase Orders</h3>
+        <p style="font-family:'Inter',sans-serif;color:#5a6f5a; font-weight:600; line-height:1.5; margin:0 0 20px;">Click a purchase order to view stock list, vendor details and packing slip creation.</p>
+        <div id="poList" style="display:flex; flex-direction:column; gap:14px;">
+      <button onclick="selectPO('PO-701')" style="text-align:left; border:2px solid #1a4d2a; background:#f1f8f1; border-radius:20px; padding:18px; cursor:pointer; box-shadow:0 8px 18px rgba(0,20,0,.04);">
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+          <div>
+            <div style="font-size:18px; font-weight:850; color:#1a4d2a;">PO-701</div>
+            <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-top:4px;">Req: REQ-2401 · Kamshet</div>
+          </div>
+          <span style="display:inline-block; padding:6px 13px; border-radius:40px; background:#fff4d8; color:#9b6b00; font-size:12px; font-weight:800;">Partially Received</span>
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#1e2e24; font-weight:650;">Vendor: Bloom Agro Suppliers</div>
+        <div style="margin-top:6px; font-size:13px; color:#5a6f5a; font-weight:650;">Items: 3 · Qty: 1020</div>
+      </button>
+    
+      <button onclick="selectPO('PO-702')" style="text-align:left; border:1px solid #e1eee1; background:#fff; border-radius:20px; padding:18px; cursor:pointer; box-shadow:0 8px 18px rgba(0,20,0,.04);">
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+          <div>
+            <div style="font-size:18px; font-weight:850; color:#1a4d2a;">PO-702</div>
+            <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-top:4px;">Req: REQ-2402 · Karla</div>
+          </div>
+          <span style="display:inline-block; padding:6px 13px; border-radius:40px; background:#e6f3ff; color:#1363a5; font-size:12px; font-weight:800;">Pending Slip</span>
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#1e2e24; font-weight:650;">Vendor: GreenRoot Nursery Inputs</div>
+        <div style="margin-top:6px; font-size:13px; color:#5a6f5a; font-weight:650;">Items: 3 · Qty: 660</div>
+      </button>
+    
+      <button onclick="selectPO('PO-703')" style="text-align:left; border:1px solid #e1eee1; background:#fff; border-radius:20px; padding:18px; cursor:pointer; box-shadow:0 8px 18px rgba(0,20,0,.04);">
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+          <div>
+            <div style="font-size:18px; font-weight:850; color:#1a4d2a;">PO-703</div>
+            <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-top:4px;">Req: REQ-2403 · Ratnagiri</div>
+          </div>
+          <span style="display:inline-block; padding:6px 13px; border-radius:40px; background:#e5f8ea; color:#1a7a3b; font-size:12px; font-weight:800;">Received</span>
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#1e2e24; font-weight:650;">Vendor: Konkan Plant Supply Co.</div>
+        <div style="margin-top:6px; font-size:13px; color:#5a6f5a; font-weight:650;">Items: 2 · Qty: 490</div>
+      </button>
+    </div>
+      </div>
+
+      <div>
+        <div id="poDetailsSection" style="background:#fff; border-radius:28px; padding:28px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; margin-bottom:28px;">
+      <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+        <div>
+          <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">🌿 Purchase Order Details</h3>
+          <p style="color:#5a6f5a; font-weight:650; margin:0;">PO No: <strong>PO-701</strong> · Requisition No: <strong>REQ-2401</strong></p>
+        </div>
+        <button onclick="openAmountPopup()" style="border:0; background:#f5c542; color:#1e2e24; border-radius:40px; padding:11px 22px; font-weight:850; cursor:pointer;">View Purchase Order Amount</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:24px;">
+        <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Farm</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">Kamshet</div></div>
+        <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Order Date</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">2026-07-02</div></div>
+        <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Expected Delivery</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">2026-07-07</div></div>
+        <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">PO Amount</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">₹••••••</div></div>
+      </div>
+
+      <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:22px; margin-bottom:24px;">
+        <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:19px; font-weight:850;">Vendor Details</h4>
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px;">
+          <div><div style="font-size:12px; color:#5a6f5a; font-weight:800; margin-bottom:5px;">Vendor Name</div><div style="font-size:14px; color:#1e2e24; font-weight:750; line-height:1.4;">Bloom Agro Suppliers</div></div>
+          <div><div style="font-size:12px; color:#5a6f5a; font-weight:800; margin-bottom:5px;">Location</div><div style="font-size:14px; color:#1e2e24; font-weight:750; line-height:1.4;">Talegaon MIDC, Pune</div></div>
+          <div><div style="font-size:12px; color:#5a6f5a; font-weight:800; margin-bottom:5px;">GST Number</div><div style="font-size:14px; color:#1e2e24; font-weight:750; line-height:1.4;">27AABCB9487C1Z8</div></div>
+          <div><div style="font-size:12px; color:#5a6f5a; font-weight:800; margin-bottom:5px;">Contact Number</div><div style="font-size:14px; color:#1e2e24; font-weight:750; line-height:1.4;">+91 98765 43120</div></div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px;">
+        
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Rose Plant" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Rose Plant</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Flowering Plant</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>400</span></div>
+          
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Received</span><span>340</span></div>
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; color:#b42331;"><span>Damaged</span><span>24</span></div>
+          
+        </div>
+      </div>
+    
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1598880940080-ff9a29891b85?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Areca Palm" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Areca Palm</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Indoor Plant</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>120</span></div>
+          
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Received</span><span>110</span></div>
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; color:#b42331;"><span>Damaged</span><span>5</span></div>
+          
+        </div>
+      </div>
+    
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Grow Bag 12 inch" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Grow Bag 12 inch</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Inventory</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>500</span></div>
+          
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Received</span><span>470</span></div>
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; color:#b42331;"><span>Damaged</span><span>12</span></div>
+          
+        </div>
+      </div>
+    
+      </div>
+    </div>
+        <div id="packingSlipSection" style="background:#fff; border-radius:28px; padding:28px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; margin-bottom:28px;">
+      <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+        <div>
+          <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">📄 Packing Slip Entry</h3>
+          <p style="color:#5a6f5a; font-weight:650; margin:0;">Mention actual received and damaged quantity for <strong>PO-701</strong>.</p>
+        </div>
+        <span style="background:#fff4d8; color:#9b6b00; border-radius:40px; padding:8px 14px; font-size:13px; font-weight:850;">Supervisor Action Required</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-bottom:20px;">
+        
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Rose Plant" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Rose Plant</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Flowering Plant</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>400</span></div>
+          
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Actually Received</label>
+            <input id="received-rose" type="number" value="340" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Damaged Quantity</label>
+            <input id="damaged-rose" type="number" value="24" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+          
+        </div>
+      </div>
+    
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1598880940080-ff9a29891b85?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Areca Palm" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Areca Palm</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Indoor Plant</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>120</span></div>
+          
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Actually Received</label>
+            <input id="received-areca" type="number" value="110" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Damaged Quantity</label>
+            <input id="damaged-areca" type="number" value="5" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+          
+        </div>
+      </div>
+    
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Grow Bag 12 inch" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">Grow Bag 12 inch</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">Inventory</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>500</span></div>
+          
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Actually Received</label>
+            <input id="received-pot12" type="number" value="470" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Damaged Quantity</label>
+            <input id="damaged-pot12" type="number" value="12" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+          
+        </div>
+      </div>
+    
+      </div>
+      <label style="display:block; color:#1a4d2a; font-weight:850; font-size:14px; margin-bottom:8px;">Supervisor Comment</label>
+      <textarea id="supervisorComment" rows="4" placeholder="Add remarks about damage, shortage, unloading condition, vendor packaging etc." style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:18px; padding:14px; font-size:15px; font-weight:600; outline:none; resize:vertical;">Shipment received with minor damage in rose plant trays.</textarea>
+      <button onclick="submitPackingSlip()" style="margin-top:18px; border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:12px 28px; font-weight:850; cursor:pointer;">Submit Packing Slip</button>
+    </div>
+        <div id="varianceSection" style="background:#fff; border-radius:28px; padding:28px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6;">
+      <div id="varianceReportContent">
+        <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+          <div>
+            <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">📊 Professional Variance Report</h3>
+            <p style="color:#5a6f5a; font-weight:650; margin:0;">PO No: <strong>PO-701</strong> · Requisition No: <strong>REQ-2401</strong> · Vendor: <strong>Bloom Agro Suppliers</strong></p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button onclick="notifyHead()" style="border:0; background:#f5c542; color:#1e2e24; border-radius:40px; padding:11px 20px; font-weight:850; cursor:pointer;">Notify Head Of Operations</button>
+            <button onclick="downloadPDF()" style="border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:11px 20px; font-weight:850; cursor:pointer;">Download PDF</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:24px;">
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Requested Qty</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">1020</div></div>
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Received Qty</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">920</div></div>
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Short Qty</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">100</div></div>
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">Damaged Qty</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">41</div></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px;">
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:20px; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+            <h4 style="margin:0 0 12px; color:#1a4d2a; font-size:18px; font-weight:850;">Received vs Short vs Damaged</h4>
+            <canvas id="varianceBarChart" height="190"></canvas>
+          </div>
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:20px; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+            <h4 style="margin:0 0 12px; color:#1a4d2a; font-size:18px; font-weight:850;">Stock Quality Split</h4>
+            <canvas id="damageDoughnutChart" height="190"></canvas>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px;">
+          <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:20px;">
+            <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:18px; font-weight:850;">Variance Summary</h4>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e4eee4; font-weight:750;"><span>Fulfilment Rate</span><span>90.2%</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e4eee4; font-weight:750;"><span>Damage Rate</span><span style="color:#1a7a3b;">4.5%</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; font-weight:750;"><span>Healthy Stock Received</span><span>879</span></div>
+          </div>
+          <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:20px;">
+            <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:18px; font-weight:850;">Supervisor Comment</h4>
+            <p style="margin:0; color:#5a6f5a; line-height:1.6; font-weight:650;">Shipment received with minor damage in rose plant trays.</p>
+          </div>
+        </div>
+
+        <div style="overflow:auto; background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:0; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+          <table style="width:100%; border-collapse:collapse; min-width:780px;">
+            <thead><tr style="background:#f0f5f0; color:#1a4d2a; font-size:14px; font-weight:850;"><th style="padding:14px 16px; text-align:left;">Stock</th><th style="padding:14px 16px; text-align:left;">Requested</th><th style="padding:14px 16px; text-align:left;">Received</th><th style="padding:14px 16px; text-align:left;">Short</th><th style="padding:14px 16px; text-align:left;">Damaged</th><th style="padding:14px 16px; text-align:left;">Status</th></tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #eaf0ea;"><td style="padding:14px 16px; font-weight:850; color:#1e2e24;">Rose Plant</td><td style="padding:14px 16px; font-weight:700;">400</td><td style="padding:14px 16px; font-weight:700;">340</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">60</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">24</td><td style="padding:14px 16px;"><span style="background:#ffe3e6; color:#b42331; padding:5px 12px; border-radius:40px; font-size:12px; font-weight:850;">Variance Found</span></td></tr><tr style="border-bottom:1px solid #eaf0ea;"><td style="padding:14px 16px; font-weight:850; color:#1e2e24;">Areca Palm</td><td style="padding:14px 16px; font-weight:700;">120</td><td style="padding:14px 16px; font-weight:700;">110</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">10</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">5</td><td style="padding:14px 16px;"><span style="background:#ffe3e6; color:#b42331; padding:5px 12px; border-radius:40px; font-size:12px; font-weight:850;">Variance Found</span></td></tr><tr style="border-bottom:1px solid #eaf0ea;"><td style="padding:14px 16px; font-weight:850; color:#1e2e24;">Grow Bag 12 inch</td><td style="padding:14px 16px; font-weight:700;">500</td><td style="padding:14px 16px; font-weight:700;">470</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">30</td><td style="padding:14px 16px; font-weight:800; color:#b42331;">12</td><td style="padding:14px 16px;"><span style="background:#ffe3e6; color:#b42331; padding:5px 12px; border-radius:40px; font-size:12px; font-weight:850;">Variance Found</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let selectedPOId = 'PO-701';
+  let amountsUnlocked = false;
+  let damageChart = null;
+  let varianceChart = null;
+
+  const purchaseOrders = [
+    {
+      id: 'PO-701', requisitionNo: 'REQ-2401', farm: 'Kamshet', status: 'Partially Received', orderDate: '2026-07-02', expectedDelivery: '2026-07-07', amount: 128500,
+      vendor: { name: 'Bloom Agro Suppliers', location: 'Talegaon MIDC, Pune', gst: '27AABCB9487C1Z8', contact: '+91 98765 43120' },
+      items: [
+        { id:'rose', name:'Rose Plant', category:'Flowering Plant', requested:400, received:340, damaged:24, image:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&fit=crop&w=700&q=80' },
+        { id:'areca', name:'Areca Palm', category:'Indoor Plant', requested:120, received:110, damaged:5, image:'https://images.unsplash.com/photo-1598880940080-ff9a29891b85?auto=format&fit=crop&w=700&q=80' },
+        { id:'pot12', name:'Grow Bag 12 inch', category:'Inventory', requested:500, received:470, damaged:12, image:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=700&q=80' }
+      ],
+      comment:'Shipment received with minor damage in rose plant trays.'
+    },
+    {
+      id: 'PO-702', requisitionNo: 'REQ-2402', farm: 'Karla', status: 'Pending Slip', orderDate: '2026-07-04', expectedDelivery: '2026-07-09', amount: 94200,
+      vendor: { name: 'GreenRoot Nursery Inputs', location: 'Chakan, Pune', gst: '27AACCG5612K1Z3', contact: '+91 98220 77881' },
+      items: [
+        { id:'hibiscus', name:'Hibiscus Plant', category:'Flowering Plant', requested:260, received:0, damaged:0, image:'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=700&q=80' },
+        { id:'coco', name:'Cocopeat Block', category:'Growing Media', requested:180, received:0, damaged:0, image:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=700&q=80' },
+        { id:'tray', name:'Propagation Tray', category:'Inventory', requested:220, received:0, damaged:0, image:'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=700&q=80' }
+      ],
+      comment:''
+    },
+    {
+      id: 'PO-703', requisitionNo: 'REQ-2403', farm: 'Ratnagiri', status: 'Received', orderDate: '2026-07-01', expectedDelivery: '2026-07-05', amount: 176800,
+      vendor: { name: 'Konkan Plant Supply Co.', location: 'Ratnagiri, Maharashtra', gst: '27AAICK2077P1Z1', contact: '+91 97655 12045' },
+      items: [
+        { id:'mango', name:'Mango Sapling', category:'Fruit Plant', requested:350, received:350, damaged:8, image:'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&amp;fit=crop&amp;w=700&amp;q=80' },
+        { id:'fert', name:'Organic Fertilizer Bag', category:'Fertilizer', requested:140, received:140, damaged:2, image:'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=80' }
+      ],
+      comment:'Overall acceptable. Two fertilizer bags torn during unloading.'
+    }
+  ];
+
+  function money(value) { return '₹' + Number(value).toLocaleString('en-IN'); }
+  function selectedPO() { return purchaseOrders.find(po => po.id === selectedPOId); }
+  function totalRequested(po) { return po.items.reduce((sum, item) => sum + Number(item.requested || 0), 0); }
+  function totalReceived(po) { return po.items.reduce((sum, item) => sum + Number(item.received || 0), 0); }
+  function totalDamaged(po) { return po.items.reduce((sum, item) => sum + Number(item.damaged || 0), 0); }
+  function totalShort(po) { return po.items.reduce((sum, item) => sum + Math.max(0, Number(item.requested || 0) - Number(item.received || 0)), 0); }
+
+  function badge(status) {
+    const map = { 'Received':['#e5f8ea','#1a7a3b'], 'Partially Received':['#fff4d8','#9b6b00'], 'Pending Slip':['#e6f3ff','#1363a5'] };
+    const c = map[status] || ['#eef3ee','#1a4d2a'];
+    return `<span style="display:inline-block; padding:6px 13px; border-radius:40px; background:${c[0]}; color:${c[1]}; font-size:12px; font-weight:800;">${status}</span>`;
+  }
+
+  function renderMetrics() {
+    const slips = purchaseOrders.filter(po => totalReceived(po) > 0).length;
+    const requested = purchaseOrders.reduce((sum, po) => sum + totalRequested(po), 0);
+    const received = purchaseOrders.reduce((sum, po) => sum + totalReceived(po), 0);
+    const damaged = purchaseOrders.reduce((sum, po) => sum + totalDamaged(po), 0);
+    const cards = [
+      ['Open POs', purchaseOrders.length, '🧾', 'blue'],
+      ['Packing Slips', slips, '📄', 'green'],
+      ['Total Received', received, '📦', 'green'],
+      ['Damaged / Short', `${damaged} / ${requested - received}`, '⚠️', 'red']
+    ];
+    document.getElementById('metricGrid').innerHTML = cards.map(card => `
+      <div style="background:#fff; border-radius:24px; padding:22px; min-height:136px; box-shadow:0 12px 30px rgba(0,20,0,.06); border:1px solid #e6eee6; position:relative; overflow:hidden;">
+        <div style="color:#5a6f5a; font-size:15px; font-weight:700; margin-bottom:26px;">${card[0]}</div>
+        <div style="position:absolute; right:20px; top:20px; width:62px; height:62px; background:#eef6ff; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px;">${card[2]}</div>
+        <div style="color:#0b1f3a; font-size:30px; font-weight:850;">${card[1]}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderPOList() {
+    document.getElementById('poList').innerHTML = purchaseOrders.map(po => `
+      <button onclick="selectPO('${po.id}')" style="text-align:left; border:${selectedPOId === po.id ? '2px solid #1a4d2a' : '1px solid #e1eee1'}; background:${selectedPOId === po.id ? '#f1f8f1' : '#fff'}; border-radius:20px; padding:18px; cursor:pointer; box-shadow:0 8px 18px rgba(0,20,0,.04);">
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+          <div>
+            <div style="font-size:18px; font-weight:850; color:#1a4d2a;">${po.id}</div>
+            <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-top:4px;">Req: ${po.requisitionNo} · ${po.farm}</div>
+          </div>
+          ${badge(po.status)}
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:#1e2e24; font-weight:650;">Vendor: ${po.vendor.name}</div>
+        <div style="margin-top:6px; font-size:13px; color:#5a6f5a; font-weight:650;">Items: ${po.items.length} · Qty: ${totalRequested(po)}</div>
+      </button>
+    `).join('');
+  }
+
+  function renderPODetails() {
+    const po = selectedPO();
+    document.getElementById('poDetailsSection').innerHTML = `
+      <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+        <div>
+          <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">🌿 Purchase Order Details</h3>
+          <p style="color:#5a6f5a; font-weight:650; margin:0;">PO No: <strong>${po.id}</strong> · Requisition No: <strong>${po.requisitionNo}</strong></p>
+        </div>
+        <button onclick="openAmountPopup()" style="border:0; background:#f5c542; color:#1e2e24; border-radius:40px; padding:11px 22px; font-weight:850; cursor:pointer;">View Purchase Order Amount</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:24px;">
+        ${infoBox('Farm', po.farm)}
+        ${infoBox('Order Date', po.orderDate)}
+        ${infoBox('Expected Delivery', po.expectedDelivery)}
+        ${infoBox('PO Amount', amountsUnlocked ? money(po.amount) : '₹••••••')}
+      </div>
+
+      <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:22px; margin-bottom:24px;">
+        <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:19px; font-weight:850;">Vendor Details</h4>
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px;">
+          ${infoLine('Vendor Name', po.vendor.name)}
+          ${infoLine('Location', po.vendor.location)}
+          ${infoLine('GST Number', po.vendor.gst)}
+          ${infoLine('Contact Number', po.vendor.contact)}
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px;">
+        ${po.items.map(item => stockCard(item, false)).join('')}
+      </div>
+    `;
+  }
+
+  function infoBox(label, value) {
+    return `<div style="background:#fff; border:1px solid #e6eee6; border-radius:18px; padding:16px; box-shadow:0 8px 18px rgba(0,20,0,.04);"><div style="color:#5a6f5a; font-size:12px; font-weight:800; margin-bottom:6px;">${label}</div><div style="color:#1e2e24; font-size:17px; font-weight:850;">${value}</div></div>`;
+  }
+  function infoLine(label, value) {
+    return `<div><div style="font-size:12px; color:#5a6f5a; font-weight:800; margin-bottom:5px;">${label}</div><div style="font-size:14px; color:#1e2e24; font-weight:750; line-height:1.4;">${value}</div></div>`;
+  }
+  function stockCard(item, withInputs) {
+    return `
+      <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; overflow:hidden; box-shadow:0 10px 24px rgba(0,20,0,.05);">
+        <img src="${item.image}" alt="${item.name}" style="width:100%; height:150px; object-fit:cover; display:block;">
+        <div style="padding:16px;">
+          <div style="font-size:17px; color:#1a4d2a; font-weight:850; margin-bottom:5px;">${item.name}</div>
+          <div style="font-size:13px; color:#5a6f5a; font-weight:700; margin-bottom:12px;">${item.category}</div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Requested</span><span>${item.requested}</span></div>
+          ${withInputs ? `
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Actually Received</label>
+            <input id="received-${item.id}" type="number" value="${item.received}" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+            <label style="display:block; color:#1a4d2a; font-weight:800; font-size:13px; margin-top:12px;">Damaged Quantity</label>
+            <input id="damaged-${item.id}" type="number" value="${item.damaged}" min="0" style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:14px; padding:11px 12px; font-weight:700; margin-top:6px;">
+          ` : `
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; margin-bottom:8px;"><span>Received</span><span>${item.received}</span></div>
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:800; color:#b42331;"><span>Damaged</span><span>${item.damaged}</span></div>
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPackingSlip() {
+    const po = selectedPO();
+    document.getElementById('packingSlipSection').innerHTML = `
+      <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+        <div>
+          <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">📄 Packing Slip Entry</h3>
+          <p style="color:#5a6f5a; font-weight:650; margin:0;">Mention actual received and damaged quantity for <strong>${po.id}</strong>.</p>
+        </div>
+        <span style="background:#fff4d8; color:#9b6b00; border-radius:40px; padding:8px 14px; font-size:13px; font-weight:850;">Supervisor Action Required</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-bottom:20px;">
+        ${po.items.map(item => stockCard(item, true)).join('')}
+      </div>
+      <label style="display:block; color:#1a4d2a; font-weight:850; font-size:14px; margin-bottom:8px;">Supervisor Comment</label>
+      <textarea id="supervisorComment" rows="4" placeholder="Add remarks about damage, shortage, unloading condition, vendor packaging etc." style="width:100%; box-sizing:border-box; border:1px solid #dbe8db; border-radius:18px; padding:14px; font-size:15px; font-weight:600; outline:none; resize:vertical;">${po.comment}</textarea>
+      <button onclick="submitPackingSlip()" style="margin-top:18px; border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:12px 28px; font-weight:850; cursor:pointer;">Submit Packing Slip</button>
+    `;
+  }
+
+  function renderVariance() {
+    const po = selectedPO();
+    const requested = totalRequested(po), received = totalReceived(po), damaged = totalDamaged(po), shortage = totalShort(po);
+    const healthy = Math.max(0, received - damaged);
+    const fulfilment = requested ? ((received / requested) * 100).toFixed(1) : 0;
+    const damageRate = received ? ((damaged / received) * 100).toFixed(1) : 0;
+
+    document.getElementById('varianceSection').innerHTML = `
+      <div id="varianceReportContent">
+        <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start; flex-wrap:wrap; margin-bottom:22px;">
+          <div>
+            <h3 style="color:#1a4d2a; font-size:24px; font-weight:850; margin:0 0 8px;">📊 Professional Variance Report</h3>
+            <p style="color:#5a6f5a; font-weight:650; margin:0;">PO No: <strong>${po.id}</strong> · Requisition No: <strong>${po.requisitionNo}</strong> · Vendor: <strong>${po.vendor.name}</strong></p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button onclick="notifyHead()" style="border:0; background:#f5c542; color:#1e2e24; border-radius:40px; padding:11px 20px; font-weight:850; cursor:pointer;">Notify Head Of Operations</button>
+            <button onclick="downloadPDF()" style="border:0; background:#1a4d2a; color:#fff; border-radius:40px; padding:11px 20px; font-weight:850; cursor:pointer;">Download PDF</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:24px;">
+          ${infoBox('Requested Qty', requested)}
+          ${infoBox('Received Qty', received)}
+          ${infoBox('Short Qty', shortage)}
+          ${infoBox('Damaged Qty', damaged)}
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px;">
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:20px; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+            <h4 style="margin:0 0 12px; color:#1a4d2a; font-size:18px; font-weight:850;">Received vs Short vs Damaged</h4>
+            <canvas id="varianceBarChart" height="190"></canvas>
+          </div>
+          <div style="background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:20px; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+            <h4 style="margin:0 0 12px; color:#1a4d2a; font-size:18px; font-weight:850;">Stock Quality Split</h4>
+            <canvas id="damageDoughnutChart" height="190"></canvas>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px;">
+          <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:20px;">
+            <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:18px; font-weight:850;">Variance Summary</h4>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e4eee4; font-weight:750;"><span>Fulfilment Rate</span><span>${fulfilment}%</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e4eee4; font-weight:750;"><span>Damage Rate</span><span style="color:${damageRate > 5 ? '#b42331' : '#1a7a3b'};">${damageRate}%</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; font-weight:750;"><span>Healthy Stock Received</span><span>${healthy}</span></div>
+          </div>
+          <div style="background:#f8fbf8; border:1px solid #e1eee1; border-radius:22px; padding:20px;">
+            <h4 style="margin:0 0 14px; color:#1a4d2a; font-size:18px; font-weight:850;">Supervisor Comment</h4>
+            <p style="margin:0; color:#5a6f5a; line-height:1.6; font-weight:650;">${po.comment || 'No comment submitted yet.'}</p>
+          </div>
+        </div>
+
+        <div style="overflow:auto; background:#fff; border:1px solid #e6eee6; border-radius:22px; padding:0; box-shadow:0 8px 20px rgba(0,20,0,.04);">
+          <table style="width:100%; border-collapse:collapse; min-width:780px;">
+            <thead><tr style="background:#f0f5f0; color:#1a4d2a; font-size:14px; font-weight:850;"><th style="padding:14px 16px; text-align:left;">Stock</th><th style="padding:14px 16px; text-align:left;">Requested</th><th style="padding:14px 16px; text-align:left;">Received</th><th style="padding:14px 16px; text-align:left;">Short</th><th style="padding:14px 16px; text-align:left;">Damaged</th><th style="padding:14px 16px; text-align:left;">Status</th></tr></thead>
+            <tbody>
+              ${po.items.map(item => {
+                const short = Math.max(0, item.requested - item.received);
+                const issue = short > 0 || item.damaged > 0;
+                return `<tr style="border-bottom:1px solid #eaf0ea;"><td style="padding:14px 16px; font-weight:850; color:#1e2e24;">${item.name}</td><td style="padding:14px 16px; font-weight:700;">${item.requested}</td><td style="padding:14px 16px; font-weight:700;">${item.received}</td><td style="padding:14px 16px; font-weight:800; color:${short > 0 ? '#b42331' : '#1a7a3b'};">${short}</td><td style="padding:14px 16px; font-weight:800; color:${item.damaged > 0 ? '#b42331' : '#1a7a3b'};">${item.damaged}</td><td style="padding:14px 16px;">${issue ? '<span style="background:#ffe3e6; color:#b42331; padding:5px 12px; border-radius:40px; font-size:12px; font-weight:850;">Variance Found</span>' : '<span style="background:#dcf7ea; color:#0f7a45; padding:5px 12px; border-radius:40px; font-size:12px; font-weight:850;">Matched</span>'}</td></tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+    setTimeout(drawCharts, 80);
+  }
+
+  function drawCharts() {
+    const po = selectedPO();
+    const labels = po.items.map(i => i.name);
+    const shortData = po.items.map(i => Math.max(0, i.requested - i.received));
+    const damagedData = po.items.map(i => i.damaged);
+    const receivedData = po.items.map(i => i.received);
+    if (varianceChart) varianceChart.destroy();
+    if (damageChart) damageChart.destroy();
+    varianceChart = new Chart(document.getElementById('varianceBarChart'), {
+      type: 'bar',
+      data: { labels, datasets: [{ label:'Received', data:receivedData }, { label:'Short', data:shortData }, { label:'Damaged', data:damagedData }] },
+      options: { responsive:true, plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ beginAtZero:true } } }
+    });
+    const healthy = Math.max(0, totalReceived(po) - totalDamaged(po));
+    damageChart = new Chart(document.getElementById('damageDoughnutChart'), {
+      type: 'doughnut',
+      data: { labels:['Healthy Received','Damaged','Short'], datasets:[{ data:[healthy, totalDamaged(po), totalShort(po)] }] },
+      options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+    });
+  }
+
+  function selectPO(id) { selectedPOId = id; amountsUnlocked = false; renderAll(); }
+
+  function submitPackingSlip() {
+    const po = selectedPO();
+    po.items.forEach(item => {
+      item.received = Number(document.getElementById(`received-${item.id}`).value || 0);
+      item.damaged = Number(document.getElementById(`damaged-${item.id}`).value || 0);
+    });
+    po.comment = document.getElementById('supervisorComment').value.trim();
+    po.status = totalShort(po) === 0 ? 'Received' : 'Partially Received';
+    renderAll();
+    showToast('Packing slip submitted and variance report updated.');
+  }
+
+  function openAmountPopup() { document.getElementById('amountPassword').value=''; document.getElementById('amountError').style.display='none'; document.getElementById('amountModal').style.display='flex'; }
+  function closeAmountPopup() { document.getElementById('amountModal').style.display='none'; }
+  function unlockAmounts() {
+    if (document.getElementById('amountPassword').value !== 'fundsroom') { document.getElementById('amountError').style.display='block'; return; }
+    amountsUnlocked = true; closeAmountPopup(); renderPODetails(); showToast('Purchase order amount unlocked.');
+  }
+  document.getElementById('amountPassword').addEventListener('keydown', e => { if (e.key === 'Enter') unlockAmounts(); });
+
+  function notifyHead() { document.getElementById('notifyModal').style.display='flex'; }
+
+  async function downloadPDF() {
+    const target = document.getElementById('varianceReportContent');
+    showToast('Preparing PDF report...');
+    const canvas = await html2canvas(target, { scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth - 16;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 8;
+    pdf.addImage(imgData, 'PNG', 8, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight + 8;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 8, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    pdf.save(`${selectedPOId}_variance_report.pdf`);
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = '✅ ' + message;
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; }, 2800);
+  }
+
+  function renderAll() { renderMetrics(); renderPOList(); renderPODetails(); renderPackingSlip(); renderVariance(); }
+  renderAll();
+
+  window.addEventListener('resize', () => {
+    const grid = document.querySelector('div[style*="grid-template-columns:360px"]');
+    if (window.innerWidth < 1000) {
+      grid.style.gridTemplateColumns = '1fr';
+      document.getElementById('metricGrid').style.gridTemplateColumns = 'repeat(2,minmax(0,1fr))';
+    } else {
+      grid.style.gridTemplateColumns = '360px 1fr';
+      document.getElementById('metricGrid').style.gridTemplateColumns = 'repeat(4,minmax(0,1fr))';
+    }
+  });
+  window.dispatchEvent(new Event('resize'));
+</script>
+</body></html>
+
