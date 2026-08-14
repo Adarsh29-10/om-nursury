@@ -1,0 +1,2389 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Advanced Plant Inventory Check</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --green:#1a4d2a;
+      --green-dark:#0f3a1e;
+      --green-mid:#2d6e3e;
+      --gold:#f5c542;
+      --background:#f4f7f5;
+      --white:#ffffff;
+      --text:#1e2e24;
+      --muted:#5a6f5a;
+      --border:#e4ece4;
+      --soft:#f8fbf8;
+      --blue:#1363a5;
+      --red:#b42331;
+      --orange:#9b6b00;
+      --shadow:0 12px 30px rgba(0,20,0,0.06);
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:var(--background);
+      color:var(--text);
+      padding:30px 20px;
+    }
+
+    button,
+    input{
+      font:inherit;
+    }
+
+    button{
+      border:0;
+    }
+
+    .container{
+      max-width:1380px;
+      margin:0 auto;
+    }
+
+    /* HERO */
+
+    .hero-section{
+      background:linear-gradient(145deg,var(--green) 0%,var(--green-mid) 100%);
+      border-radius:32px;
+      padding:42px 50px;
+      margin-bottom:30px;
+      box-shadow:0 20px 40px rgba(0,20,0,0.15);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-section::after{
+      content:"🌿";
+      position:absolute;
+      right:30px;
+      bottom:-18px;
+      font-size:145px;
+      opacity:0.10;
+      transform:rotate(10deg);
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-row{
+      display:flex;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .hero-icon{
+      font-size:50px;
+      line-height:1;
+    }
+
+    .hero-section h1{
+      color:#fff;
+      font-size:42px;
+      line-height:1.08;
+      font-weight:900;
+      letter-spacing:-0.035em;
+    }
+
+    .hero-section h1 span{
+      color:var(--gold);
+    }
+
+    .sub-head{
+      color:rgba(255,255,255,0.88);
+      font-size:17px;
+      line-height:1.6;
+      margin-top:10px;
+      border-left:4px solid var(--gold);
+      padding-left:17px;
+      max-width:1000px;
+      font-weight:560;
+    }
+
+    .badge-row{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .badge-module{
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.15);
+      padding:7px 15px;
+      border-radius:40px;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    /* SECTION */
+
+    .section-card{
+      background:var(--white);
+      border-radius:28px;
+      padding:30px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+      margin-bottom:28px;
+      overflow:visible;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
+    }
+
+    .section-title{
+      color:var(--green);
+      font-size:24px;
+      font-weight:900;
+      letter-spacing:-0.02em;
+    }
+
+    .section-sub{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      font-weight:600;
+      margin-top:6px;
+      max-width:900px;
+    }
+
+    .filter-count-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      background:#eaf3ea;
+      color:var(--green);
+      border:1px solid #d8e8d8;
+      border-radius:999px;
+      padding:8px 13px;
+      font-size:12px;
+      font-weight:850;
+    }
+
+    /* MULTI-SELECT FILTERS */
+
+    .filter-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:16px;
+      align-items:start;
+    }
+
+    .filter-field{
+      min-width:0;
+    }
+
+    .filter-label{
+      color:var(--green);
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:8px;
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+
+    .filter-helper{
+      color:var(--muted);
+      font-size:11px;
+      font-weight:650;
+      margin-top:7px;
+      line-height:1.45;
+    }
+
+    .multi-select{
+      position:relative;
+      width:100%;
+    }
+
+    .multi-select-toggle{
+      width:100%;
+      min-height:52px;
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:11px 13px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      cursor:pointer;
+      text-align:left;
+      transition:all 0.22s;
+      color:var(--text);
+    }
+
+    .multi-select-toggle:hover,
+    .multi-select.open .multi-select-toggle{
+      border-color:var(--green);
+      background:#fff;
+      box-shadow:0 9px 22px rgba(0,20,0,0.08);
+    }
+
+    .toggle-copy{
+      min-width:0;
+      display:flex;
+      align-items:center;
+      gap:9px;
+    }
+
+    .toggle-icon{
+      width:32px;
+      height:32px;
+      min-width:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:10px;
+      background:#eaf3ea;
+      font-size:16px;
+    }
+
+    .toggle-text{
+      min-width:0;
+    }
+
+    .toggle-title{
+      color:var(--green);
+      font-size:12px;
+      font-weight:900;
+      margin-bottom:2px;
+    }
+
+    .toggle-value{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      max-width:175px;
+    }
+
+    .toggle-arrow{
+      color:var(--green);
+      font-size:13px;
+      transition:transform 0.2s;
+    }
+
+    .multi-select.open .toggle-arrow{
+      transform:rotate(180deg);
+    }
+
+    .multi-select-menu{
+      display:none;
+      position:absolute;
+      top:calc(100% + 8px);
+      left:0;
+      width:max(100%,260px);
+      max-width:340px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:0 18px 42px rgba(0,20,0,0.16);
+      z-index:1000;
+      overflow:hidden;
+    }
+
+    .multi-select.open .multi-select-menu{
+      display:block;
+    }
+
+    .menu-search-wrap{
+      padding:12px 12px 9px;
+      border-bottom:1px solid var(--border);
+      background:#fbfdfb;
+    }
+
+    .menu-search{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:11px;
+      padding:10px 11px;
+      outline:none;
+      color:var(--text);
+      background:#fff;
+      font-size:12px;
+      font-weight:650;
+    }
+
+    .menu-search:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(26,77,42,0.08);
+    }
+
+    .multi-options{
+      max-height:258px;
+      overflow:auto;
+      padding:7px;
+    }
+
+    .option-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:10px 9px;
+      border-radius:11px;
+      cursor:pointer;
+      transition:background 0.16s;
+      user-select:none;
+    }
+
+    .option-row:hover{
+      background:#f0f6f0;
+    }
+
+    .option-row.hidden{
+      display:none;
+    }
+
+    .option-row input{
+      width:17px;
+      height:17px;
+      min-width:17px;
+      margin-top:1px;
+      accent-color:var(--green);
+      cursor:pointer;
+    }
+
+    .option-main{
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .option-sub{
+      color:var(--muted);
+      font-size:10.5px;
+      font-weight:650;
+      line-height:1.35;
+      margin-top:2px;
+    }
+
+    .menu-footer{
+      border-top:1px solid var(--border);
+      padding:10px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      background:#fbfdfb;
+    }
+
+    .menu-action{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--green);
+      border-radius:10px;
+      padding:9px;
+      font-size:11px;
+      font-weight:850;
+      cursor:pointer;
+      transition:all 0.18s;
+    }
+
+    .menu-action:hover{
+      border-color:var(--green);
+      background:#edf5ed;
+    }
+
+    .selected-filter-strip{
+      margin-top:20px;
+      padding:16px;
+      border-radius:18px;
+      background:var(--soft);
+      border:1px solid var(--border);
+      min-height:58px;
+    }
+
+    .selected-filter-title{
+      color:var(--green);
+      font-size:12px;
+      font-weight:900;
+      margin-bottom:9px;
+    }
+
+    .selected-filter-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .filter-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:#eaf3ea;
+      color:var(--green);
+      border:1px solid #d8e8d8;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .filter-chip button{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:rgba(26,77,42,0.11);
+      color:var(--green);
+      cursor:pointer;
+      font-size:11px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .all-filter-text{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .filter-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:11px;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    .btn{
+      min-height:48px;
+      border-radius:14px;
+      padding:12px 20px;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      transition:all 0.22s;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .btn-primary{
+      background:linear-gradient(145deg,var(--green),var(--green-mid));
+      color:#fff;
+      box-shadow:0 10px 22px rgba(26,77,42,0.20);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 15px 28px rgba(26,77,42,0.26);
+    }
+
+    .btn-secondary{
+      background:#fff;
+      color:var(--green);
+      border:1px solid var(--border);
+    }
+
+    .btn-secondary:hover{
+      border-color:var(--green);
+      background:#f4f9f4;
+    }
+
+    /* RESULTS */
+
+    .result-area{
+      display:none;
+    }
+
+    .metric-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-bottom:25px;
+    }
+
+    .stage-breakdown{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:15px;
+      margin:18px 0 24px;
+    }
+
+    .stage-card{
+      background:linear-gradient(145deg,#f8fbf8,#fff);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:18px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      box-shadow:0 8px 20px rgba(0,20,0,0.04);
+    }
+
+    .stage-card-icon{
+      width:48px;
+      height:48px;
+      min-width:48px;
+      border-radius:15px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:23px;
+      background:#eaf3ea;
+    }
+
+    .stage-card-label{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:750;
+      margin-bottom:3px;
+    }
+
+    .stage-card-number{
+      color:var(--green);
+      font-size:25px;
+      font-weight:950;
+    }
+
+    .metric-card{
+      background:#fff;
+      border-radius:24px;
+      padding:22px;
+      min-height:145px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      transition:all 0.25s;
+    }
+
+    .metric-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 18px 40px rgba(0,20,0,0.10);
+    }
+
+    .metric-label{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:27px;
+    }
+
+    .metric-number{
+      color:#0b1f3a;
+      font-size:32px;
+      font-weight:900;
+    }
+
+    .metric-icon{
+      position:absolute;
+      right:18px;
+      top:18px;
+      width:58px;
+      height:58px;
+      background:#eef6ff;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--blue);
+      font-size:25px;
+    }
+
+    .mini-badge{
+      display:inline-block;
+      margin-top:10px;
+      padding:5px 12px;
+      border-radius:40px;
+      color:#fff;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .green{background:#0f8f55}
+    .blue{background:#17b7d9}
+    .orange{background:#f7a614}
+    .red{background:#e63946}
+
+    .search-summary{
+      background:linear-gradient(145deg,#f8fbf8,#fff);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:20px;
+      display:grid;
+      grid-template-columns:82px 1fr;
+      gap:18px;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .summary-icon{
+      width:82px;
+      height:82px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#eaf3ea;
+      font-size:38px;
+      border:1px solid #d8e8d8;
+    }
+
+    .summary-name{
+      color:var(--green);
+      font-size:24px;
+      font-weight:900;
+      letter-spacing:-0.02em;
+    }
+
+    .summary-description{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:650;
+      line-height:1.55;
+      margin-top:4px;
+    }
+
+    .tag-row{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .tag{
+      background:#eaf3ea;
+      color:var(--green);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .tag.gold{
+      background:#fff8df;
+      color:#7a5a0c;
+    }
+
+    .table-card{
+      background:#fff;
+      border-radius:24px;
+      padding:20px;
+      border:1px solid var(--border);
+      box-shadow:0 10px 24px rgba(0,20,0,0.05);
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:980px;
+    }
+
+    thead th{
+      background:#f0f5f0;
+      color:var(--green);
+      font-weight:800;
+      font-size:13px;
+      text-align:left;
+      border-bottom:2px solid #d4e4d4;
+      padding:14px 16px;
+      white-space:nowrap;
+    }
+
+    tbody td{
+      padding:14px 16px;
+      vertical-align:middle;
+      border-bottom:1px solid #eaf0ea;
+      font-weight:620;
+      color:var(--text);
+      font-size:13.5px;
+    }
+
+    tbody tr:hover{
+      background:#f8fbf8;
+    }
+
+    .plant-cell-name{
+      color:var(--green);
+      font-weight:900;
+    }
+
+    .plant-cell-code{
+      color:var(--muted);
+      font-size:10.5px;
+      font-weight:700;
+      margin-top:3px;
+    }
+
+    .status-pill{
+      padding:6px 12px;
+      border-radius:40px;
+      font-size:11px;
+      font-weight:850;
+      display:inline-block;
+      white-space:nowrap;
+    }
+
+    .status-available{
+      background:#dcf7ea;
+      color:#0f7a45;
+    }
+
+    .status-low{
+      background:#fff4d8;
+      color:var(--orange);
+    }
+
+    .status-unavailable{
+      background:#ffe3e6;
+      color:var(--red);
+    }
+
+    .result-box{
+      background:linear-gradient(145deg,var(--green) 0%,var(--green-mid) 100%);
+      color:#fff;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 12px 30px rgba(0,20,0,0.12);
+      margin-top:20px;
+    }
+
+    .result-box h4{
+      color:var(--gold);
+      font-weight:900;
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .result-box p{
+      color:rgba(255,255,255,0.90);
+      font-weight:580;
+      line-height:1.7;
+      margin:0;
+    }
+
+    .empty-state{
+      display:none;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:44px 24px;
+      text-align:center;
+      box-shadow:var(--shadow);
+      margin-bottom:28px;
+    }
+
+    .empty-state-icon{
+      font-size:50px;
+      margin-bottom:13px;
+    }
+
+    .empty-state h3{
+      color:var(--green);
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .empty-state p{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:650;
+      line-height:1.6;
+      max-width:620px;
+      margin:8px auto 0;
+    }
+
+    .toast{
+      position:fixed;
+      bottom:28px;
+      right:28px;
+      background:var(--green);
+      color:#fff;
+      padding:14px 20px;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,20,0,0.22);
+      transform:translateY(100px);
+      opacity:0;
+      transition:all 0.3s;
+      z-index:99999;
+      font-weight:750;
+      max-width:min(430px,calc(100vw - 36px));
+    }
+
+    .toast.show{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    @media(max-width:1180px){
+      .filter-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:900px){
+      .filter-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .metric-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .stage-breakdown{
+        grid-template-columns:repeat(3,1fr);
+      }
+
+      .hero-section{
+        padding:30px 24px;
+      }
+
+      .hero-section h1{
+        font-size:32px;
+      }
+
+      .sub-head{
+        font-size:15px;
+      }
+
+      .section-card{
+        padding:22px;
+      }
+    }
+
+    @media(max-width:620px){
+      body{
+        padding:18px 12px;
+      }
+
+      .filter-grid,
+      .metric-grid,
+      .stage-breakdown,
+      .search-summary{
+        grid-template-columns:1fr;
+      }
+
+      .filter-actions{
+        flex-direction:column-reverse;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .multi-select-menu{
+        width:100%;
+        max-width:none;
+      }
+
+      .summary-icon{
+        width:64px;
+        height:64px;
+      }
+
+      .hero-section{
+        border-radius:24px;
+      }
+    }
+  </style>
+<style id="vvvebjs-styles"></style></head><body>
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <div class="hero-row">
+          <div class="hero-icon">📦</div>
+          <div>
+            <h1>OM <span>Nursery</span> · Plant Inventory Check</h1>
+            <div class="sub-head">
+              Use multiple inventory parameters together to find exact plant stock by farm, plant variety, growth stage, grow bag size and block.
+            </div>
+          </div>
+        </div>
+
+        <div class="badge-row">
+          <span class="badge-module">🏡 Multi-Farm Selection</span>
+          <span class="badge-module">🪴 Plant &amp; Variety Selection</span>
+          <span class="badge-module">🌱 Stage Selection</span>
+          <span class="badge-module">📏 Grow Bag Size</span>
+          <span class="badge-module">🧱 Block Selection</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADVANCED SEARCH -->
+    <div class="section-card" id="filterSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Advanced Inventory Search</h2>
+          <p class="section-sub">
+            Every dropdown supports multiple selections. Leave any dropdown empty to include all available options under that parameter.
+          </p>
+        </div>
+
+        <div class="filter-count-pill" id="filterCountPill">🔎 No filters selected</div>
+      </div>
+
+      <div class="filter-grid" id="filterGrid">
+          <div class="filter-field">
+            <div class="filter-label">🏡 Farm</div>
+
+            <div class="multi-select" id="multi-farm">
+              <button type="button" class="multi-select-toggle" onclick="toggleDropdown('farm',event)" aria-expanded="false">
+                <span class="toggle-copy">
+                  <span class="toggle-icon">🏡</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">Farm</span>
+                    <span class="toggle-value" id="toggleValue-farm">All Farm</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                
+
+                <div class="multi-options" id="options-farm">
+                  
+                      <label class="option-row" data-search="kamshet om nursery kamshet farm">
+                        <input type="checkbox" value="Kamshet" onchange="handleFilterChange('farm')">
+
+                        <span>
+                          <span class="option-main">Kamshet</span>
+                          <span class="option-sub">OM Nursery Kamshet Farm</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="vadegaon om nursery vadegaon farm">
+                        <input type="checkbox" value="Vadegaon" onchange="handleFilterChange('farm')">
+
+                        <span>
+                          <span class="option-main">Vadegaon</span>
+                          <span class="option-sub">OM Nursery Vadegaon Farm</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="karla om nursery karla farm">
+                        <input type="checkbox" value="Karla" onchange="handleFilterChange('farm')">
+
+                        <span>
+                          <span class="option-main">Karla</span>
+                          <span class="option-sub">OM Nursery Karla Farm</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="talegaon om nursery talegaon farm">
+                        <input type="checkbox" value="Talegaon" onchange="handleFilterChange('farm')">
+
+                        <span>
+                          <span class="option-main">Talegaon</span>
+                          <span class="option-sub">OM Nursery Talegaon Farm</span>
+                        </span>
+                      </label>
+                    
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('farm')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('farm')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">Select one or more nursery farms</div>
+          </div>
+        
+          <div class="filter-field">
+            <div class="filter-label">🪴 Plant &amp; Variety</div>
+
+            <div class="multi-select" id="multi-plant">
+              <button type="button" class="multi-select-toggle" onclick="toggleDropdown('plant',event)" aria-expanded="false">
+                <span class="toggle-copy">
+                  <span class="toggle-icon">🪴</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">Plant &amp; Variety</span>
+                    <span class="toggle-value" id="toggleValue-plant">All Plant &amp; Variety</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                
+                  <div class="menu-search-wrap">
+                    <input class="menu-search" type="text" placeholder="Search plant &amp; variety..." oninput="filterDropdownOptions('plant',this.value)">
+                  </div>
+                
+
+                <div class="multi-options" id="options-plant">
+                  
+                      <label class="option-row" data-search="mango - hapoos mangifera indica · alphonso">
+                        <input type="checkbox" value="Mango - Hapoos" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mango - Hapoos</span>
+                          <span class="option-sub">Mangifera indica · Alphonso</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mango - pairi mangifera indica · pairi">
+                        <input type="checkbox" value="Mango - Pairi" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mango - Pairi</span>
+                          <span class="option-sub">Mangifera indica · Pairi</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mango - totapuri mangifera indica · totapuri">
+                        <input type="checkbox" value="Mango - Totapuri" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mango - Totapuri</span>
+                          <span class="option-sub">Mangifera indica · Totapuri</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mango - kesar mangifera indica · kesar">
+                        <input type="checkbox" value="Mango - Kesar" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mango - Kesar</span>
+                          <span class="option-sub">Mangifera indica · Kesar</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mango - dasheri mangifera indica · dasheri">
+                        <input type="checkbox" value="Mango - Dasheri" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mango - Dasheri</span>
+                          <span class="option-sub">Mangifera indica · Dasheri</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="guava - allahabad safeda psidium guajava">
+                        <input type="checkbox" value="Guava - Allahabad Safeda" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Guava - Allahabad Safeda</span>
+                          <span class="option-sub">Psidium guajava</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="guava - lalit psidium guajava">
+                        <input type="checkbox" value="Guava - Lalit" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Guava - Lalit</span>
+                          <span class="option-sub">Psidium guajava</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="lemon - kagzi citrus limon">
+                        <input type="checkbox" value="Lemon - Kagzi" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Lemon - Kagzi</span>
+                          <span class="option-sub">Citrus limon</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mosambi - sathgudi citrus limetta">
+                        <input type="checkbox" value="Mosambi - Sathgudi" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mosambi - Sathgudi</span>
+                          <span class="option-sub">Citrus limetta</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="orange - nagpur citrus sinensis">
+                        <input type="checkbox" value="Orange - Nagpur" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Orange - Nagpur</span>
+                          <span class="option-sub">Citrus sinensis</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="pomegranate - bhagwa punica granatum">
+                        <input type="checkbox" value="Pomegranate - Bhagwa" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Pomegranate - Bhagwa</span>
+                          <span class="option-sub">Punica granatum</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="pomegranate - ganesh punica granatum">
+                        <input type="checkbox" value="Pomegranate - Ganesh" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Pomegranate - Ganesh</span>
+                          <span class="option-sub">Punica granatum</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="chikoo - kalipatti manilkara zapota">
+                        <input type="checkbox" value="Chikoo - Kalipatti" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Chikoo - Kalipatti</span>
+                          <span class="option-sub">Manilkara zapota</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="coconut - dwarf cocos nucifera">
+                        <input type="checkbox" value="Coconut - Dwarf" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Coconut - Dwarf</span>
+                          <span class="option-sub">Cocos nucifera</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="papaya - red lady carica papaya">
+                        <input type="checkbox" value="Papaya - Red Lady" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Papaya - Red Lady</span>
+                          <span class="option-sub">Carica papaya</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="jamun - rajamun syzygium cumini">
+                        <input type="checkbox" value="Jamun - Rajamun" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Jamun - Rajamun</span>
+                          <span class="option-sub">Syzygium cumini</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="custard apple - balanagar annona squamosa">
+                        <input type="checkbox" value="Custard Apple - Balanagar" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Custard Apple - Balanagar</span>
+                          <span class="option-sub">Annona squamosa</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="amla - na-7 phyllanthus emblica">
+                        <input type="checkbox" value="Amla - NA-7" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Amla - NA-7</span>
+                          <span class="option-sub">Phyllanthus emblica</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="fig - pune red ficus carica">
+                        <input type="checkbox" value="Fig - Pune Red" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Fig - Pune Red</span>
+                          <span class="option-sub">Ficus carica</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="banana - grand naine musa acuminata">
+                        <input type="checkbox" value="Banana - Grand Naine" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Banana - Grand Naine</span>
+                          <span class="option-sub">Musa acuminata</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="jackfruit - konkan prolific artocarpus heterophyllus">
+                        <input type="checkbox" value="Jackfruit - Konkan Prolific" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Jackfruit - Konkan Prolific</span>
+                          <span class="option-sub">Artocarpus heterophyllus</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="avocado - green persea americana">
+                        <input type="checkbox" value="Avocado - Green" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Avocado - Green</span>
+                          <span class="option-sub">Persea americana</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="litchi - shahi litchi chinensis">
+                        <input type="checkbox" value="Litchi - Shahi" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Litchi - Shahi</span>
+                          <span class="option-sub">Litchi chinensis</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="ber - apple ziziphus mauritiana">
+                        <input type="checkbox" value="Ber - Apple" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Ber - Apple</span>
+                          <span class="option-sub">Ziziphus mauritiana</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="mulberry - black morus nigra">
+                        <input type="checkbox" value="Mulberry - Black" onchange="handleFilterChange('plant')">
+
+                        <span>
+                          <span class="option-main">Mulberry - Black</span>
+                          <span class="option-sub">Morus nigra</span>
+                        </span>
+                      </label>
+                    
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('plant')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('plant')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">Select multiple plant varieties</div>
+          </div>
+        
+          <div class="filter-field">
+            <div class="filter-label">🌱 Plant Stage</div>
+
+            <div class="multi-select" id="multi-stage">
+              <button type="button" class="multi-select-toggle" onclick="toggleDropdown('stage',event)" aria-expanded="false">
+                <span class="toggle-copy">
+                  <span class="toggle-icon">🌱</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">Plant Stage</span>
+                    <span class="toggle-value" id="toggleValue-stage">All Plant Stage</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                
+
+                <div class="multi-options" id="options-stage">
+                  
+                      <label class="option-row" data-search="sapling newly established plant stage">
+                        <input type="checkbox" value="Sapling" onchange="handleFilterChange('stage')">
+
+                        <span>
+                          <span class="option-main">Sapling</span>
+                          <span class="option-sub">Newly established plant stage</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="child growing and developing plant stage">
+                        <input type="checkbox" value="Child" onchange="handleFilterChange('stage')">
+
+                        <span>
+                          <span class="option-main">Child</span>
+                          <span class="option-sub">Growing and developing plant stage</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="adult mature plant stage">
+                        <input type="checkbox" value="Adult" onchange="handleFilterChange('stage')">
+
+                        <span>
+                          <span class="option-main">Adult</span>
+                          <span class="option-sub">Mature plant stage</span>
+                        </span>
+                      </label>
+                    
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('stage')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('stage')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">Select growth stages</div>
+          </div>
+        
+          <div class="filter-field">
+            <div class="filter-label">📏 Grow Bag Size</div>
+
+            <div class="multi-select" id="multi-bag">
+              <button type="button" class="multi-select-toggle" onclick="toggleDropdown('bag',event)" aria-expanded="false">
+                <span class="toggle-copy">
+                  <span class="toggle-icon">📏</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">Grow Bag Size</span>
+                    <span class="toggle-value" id="toggleValue-bag">All Grow Bag Size</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                
+
+                <div class="multi-options" id="options-bag">
+                  
+                      <label class="option-row" data-search="5x4 small starter grow bag">
+                        <input type="checkbox" value="5x4" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">5x4</span>
+                          <span class="option-sub">Small starter grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="5x7 compact nursery grow bag">
+                        <input type="checkbox" value="5x7" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">5x7</span>
+                          <span class="option-sub">Compact nursery grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="6x6 small square grow bag">
+                        <input type="checkbox" value="6x6" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">6x6</span>
+                          <span class="option-sub">Small square grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="8x8 medium grow bag">
+                        <input type="checkbox" value="8x8" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">8x8</span>
+                          <span class="option-sub">Medium grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="10x10 standard medium grow bag">
+                        <input type="checkbox" value="10x10" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">10x10</span>
+                          <span class="option-sub">Standard medium grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="12x12 large nursery grow bag">
+                        <input type="checkbox" value="12x12" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">12x12</span>
+                          <span class="option-sub">Large nursery grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="14x14 extra-large grow bag">
+                        <input type="checkbox" value="14x14" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">14x14</span>
+                          <span class="option-sub">Extra-large grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="16x16 heavy plant grow bag">
+                        <input type="checkbox" value="16x16" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">16x16</span>
+                          <span class="option-sub">Heavy plant grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="18x18 mature plant grow bag">
+                        <input type="checkbox" value="18x18" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">18x18</span>
+                          <span class="option-sub">Mature plant grow bag</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="20x20 premium large grow bag">
+                        <input type="checkbox" value="20x20" onchange="handleFilterChange('bag')">
+
+                        <span>
+                          <span class="option-main">20x20</span>
+                          <span class="option-sub">Premium large grow bag</span>
+                        </span>
+                      </label>
+                    
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('bag')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('bag')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">Select one or more grow bag sizes</div>
+          </div>
+        
+          <div class="filter-field">
+            <div class="filter-label">🧱 Block</div>
+
+            <div class="multi-select" id="multi-block">
+              <button type="button" class="multi-select-toggle" onclick="toggleDropdown('block',event)" aria-expanded="false">
+                <span class="toggle-copy">
+                  <span class="toggle-icon">🧱</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">Block</span>
+                    <span class="toggle-value" id="toggleValue-block">All Block</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                
+
+                <div class="multi-options" id="options-block">
+                  
+                      <label class="option-row" data-search="block a1 section a · row 1">
+                        <input type="checkbox" value="Block A1" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block A1</span>
+                          <span class="option-sub">Section A · Row 1</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block a2 section a · row 2">
+                        <input type="checkbox" value="Block A2" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block A2</span>
+                          <span class="option-sub">Section A · Row 2</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block a3 section a · row 3">
+                        <input type="checkbox" value="Block A3" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block A3</span>
+                          <span class="option-sub">Section A · Row 3</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block b1 section b · row 1">
+                        <input type="checkbox" value="Block B1" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block B1</span>
+                          <span class="option-sub">Section B · Row 1</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block b2 section b · row 2">
+                        <input type="checkbox" value="Block B2" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block B2</span>
+                          <span class="option-sub">Section B · Row 2</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block b3 section b · row 3">
+                        <input type="checkbox" value="Block B3" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block B3</span>
+                          <span class="option-sub">Section B · Row 3</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block c1 section c · row 1">
+                        <input type="checkbox" value="Block C1" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block C1</span>
+                          <span class="option-sub">Section C · Row 1</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block c2 section c · row 2">
+                        <input type="checkbox" value="Block C2" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block C2</span>
+                          <span class="option-sub">Section C · Row 2</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block c3 section c · row 3">
+                        <input type="checkbox" value="Block C3" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block C3</span>
+                          <span class="option-sub">Section C · Row 3</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block d1 section d · row 1">
+                        <input type="checkbox" value="Block D1" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block D1</span>
+                          <span class="option-sub">Section D · Row 1</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block d2 section d · row 2">
+                        <input type="checkbox" value="Block D2" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block D2</span>
+                          <span class="option-sub">Section D · Row 2</span>
+                        </span>
+                      </label>
+                    
+                      <label class="option-row" data-search="block d3 section d · row 3">
+                        <input type="checkbox" value="Block D3" onchange="handleFilterChange('block')">
+
+                        <span>
+                          <span class="option-main">Block D3</span>
+                          <span class="option-sub">Section D · Row 3</span>
+                        </span>
+                      </label>
+                    
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('block')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('block')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">Select farm inventory blocks</div>
+          </div>
+        </div>
+
+      <div class="selected-filter-strip">
+        <div class="selected-filter-title">Selected Search Parameters</div>
+        <div class="selected-filter-chips" id="selectedFilterChips"><span class="all-filter-text">No specific filters selected. Search will include the complete inventory.</span></div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn btn-secondary" type="button" onclick="resetFilters()">
+          ↺ Reset Filters
+        </button>
+
+        <button class="btn btn-primary" type="button" onclick="applyFilters()">
+          🔍 Search Inventory
+        </button>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-icon">🌱</div>
+      <h3>No Matching Inventory Found</h3>
+      <p>
+        No inventory records match the selected combination. Remove one or more filters and search again.
+      </p>
+    </div>
+
+    <!-- RESULT AREA -->
+    <div class="result-area" id="resultArea">
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Available Stock</div>
+          <div class="metric-icon">🌱</div>
+          <div class="metric-number" id="metricAvailable">0</div>
+          <span class="mini-badge green">Matched Inventory</span>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Usable Stock</div>
+          <div class="metric-icon">✅</div>
+          <div class="metric-number" id="metricUsable">0</div>
+          <span class="mini-badge blue">Ready Stock</span>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Farms With Stock</div>
+          <div class="metric-icon">🏡</div>
+          <div class="metric-number" id="metricFarms">0</div>
+          <span class="mini-badge orange">Selected Locations</span>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Matching Records</div>
+          <div class="metric-icon">📋</div>
+          <div class="metric-number" id="metricRecords">0</div>
+          <span class="mini-badge red">Inventory Entries</span>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div id="searchSummary"></div>
+
+        <h3 class="section-title">Stage-wise Inventory Breakdown</h3>
+
+        <div class="stage-breakdown">
+          <div class="stage-card">
+            <div class="stage-card-icon">🌱</div>
+            <div>
+              <div class="stage-card-label">Sapling Stage</div>
+              <div class="stage-card-number" id="stageSapling">0</div>
+            </div>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-icon">🪴</div>
+            <div>
+              <div class="stage-card-label">Child Stage</div>
+              <div class="stage-card-number" id="stageChild">0</div>
+            </div>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-icon">🌳</div>
+            <div>
+              <div class="stage-card-label">Adult Stage</div>
+              <div class="stage-card-number" id="stageAdult">0</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="section-title">Matching Inventory Records</h3>
+
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Farm</th>
+                <th>Plant &amp; Variety</th>
+                <th>Stage</th>
+                <th>Grow Bag Size</th>
+                <th>Block</th>
+                <th>Available Quantity</th>
+                <th>Usable Quantity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTable"></tbody>
+          </table>
+        </div>
+
+        <div class="result-box">
+          <h4>Inventory Availability Summary</h4>
+          <p id="decisionMessage"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const filterDefinitions = {
+      farm:{
+        label:"Farm",
+        icon:"🏡",
+        helper:"Select one or more nursery farms",
+        searchable:false,
+        options:[
+          {value:"Kamshet",label:"Kamshet",sub:"OM Nursery Kamshet Farm"},
+          {value:"Vadegaon",label:"Vadegaon",sub:"OM Nursery Vadegaon Farm"},
+          {value:"Karla",label:"Karla",sub:"OM Nursery Karla Farm"},
+          {value:"Talegaon",label:"Talegaon",sub:"OM Nursery Talegaon Farm"}
+        ]
+      },
+      plant:{
+        label:"Plant & Variety",
+        icon:"🪴",
+        helper:"Select multiple plant varieties",
+        searchable:true,
+        options:[
+          {value:"Mango - Hapoos",label:"Mango - Hapoos",sub:"Mangifera indica · Alphonso"},
+          {value:"Mango - Pairi",label:"Mango - Pairi",sub:"Mangifera indica · Pairi"},
+          {value:"Mango - Totapuri",label:"Mango - Totapuri",sub:"Mangifera indica · Totapuri"},
+          {value:"Mango - Kesar",label:"Mango - Kesar",sub:"Mangifera indica · Kesar"},
+          {value:"Mango - Dasheri",label:"Mango - Dasheri",sub:"Mangifera indica · Dasheri"},
+          {value:"Guava - Allahabad Safeda",label:"Guava - Allahabad Safeda",sub:"Psidium guajava"},
+          {value:"Guava - Lalit",label:"Guava - Lalit",sub:"Psidium guajava"},
+          {value:"Lemon - Kagzi",label:"Lemon - Kagzi",sub:"Citrus limon"},
+          {value:"Mosambi - Sathgudi",label:"Mosambi - Sathgudi",sub:"Citrus limetta"},
+          {value:"Orange - Nagpur",label:"Orange - Nagpur",sub:"Citrus sinensis"},
+          {value:"Pomegranate - Bhagwa",label:"Pomegranate - Bhagwa",sub:"Punica granatum"},
+          {value:"Pomegranate - Ganesh",label:"Pomegranate - Ganesh",sub:"Punica granatum"},
+          {value:"Chikoo - Kalipatti",label:"Chikoo - Kalipatti",sub:"Manilkara zapota"},
+          {value:"Coconut - Dwarf",label:"Coconut - Dwarf",sub:"Cocos nucifera"},
+          {value:"Papaya - Red Lady",label:"Papaya - Red Lady",sub:"Carica papaya"},
+          {value:"Jamun - Rajamun",label:"Jamun - Rajamun",sub:"Syzygium cumini"},
+          {value:"Custard Apple - Balanagar",label:"Custard Apple - Balanagar",sub:"Annona squamosa"},
+          {value:"Amla - NA-7",label:"Amla - NA-7",sub:"Phyllanthus emblica"},
+          {value:"Fig - Pune Red",label:"Fig - Pune Red",sub:"Ficus carica"},
+          {value:"Banana - Grand Naine",label:"Banana - Grand Naine",sub:"Musa acuminata"},
+          {value:"Jackfruit - Konkan Prolific",label:"Jackfruit - Konkan Prolific",sub:"Artocarpus heterophyllus"},
+          {value:"Avocado - Green",label:"Avocado - Green",sub:"Persea americana"},
+          {value:"Litchi - Shahi",label:"Litchi - Shahi",sub:"Litchi chinensis"},
+          {value:"Ber - Apple",label:"Ber - Apple",sub:"Ziziphus mauritiana"},
+          {value:"Mulberry - Black",label:"Mulberry - Black",sub:"Morus nigra"}
+        ]
+      },
+      stage:{
+        label:"Plant Stage",
+        icon:"🌱",
+        helper:"Select growth stages",
+        searchable:false,
+        options:[
+          {value:"Sapling",label:"Sapling",sub:"Newly established plant stage"},
+          {value:"Child",label:"Child",sub:"Growing and developing plant stage"},
+          {value:"Adult",label:"Adult",sub:"Mature plant stage"}
+        ]
+      },
+      bag:{
+        label:"Grow Bag Size",
+        icon:"📏",
+        helper:"Select one or more grow bag sizes",
+        searchable:false,
+        options:[
+          {value:"5x4",label:"5x4",sub:"Small starter grow bag"},
+          {value:"5x7",label:"5x7",sub:"Compact nursery grow bag"},
+          {value:"6x6",label:"6x6",sub:"Small square grow bag"},
+          {value:"8x8",label:"8x8",sub:"Medium grow bag"},
+          {value:"10x10",label:"10x10",sub:"Standard medium grow bag"},
+          {value:"12x12",label:"12x12",sub:"Large nursery grow bag"},
+          {value:"14x14",label:"14x14",sub:"Extra-large grow bag"},
+          {value:"16x16",label:"16x16",sub:"Heavy plant grow bag"},
+          {value:"18x18",label:"18x18",sub:"Mature plant grow bag"},
+          {value:"20x20",label:"20x20",sub:"Premium large grow bag"}
+        ]
+      },
+      block:{
+        label:"Block",
+        icon:"🧱",
+        helper:"Select farm inventory blocks",
+        searchable:false,
+        options:[
+          {value:"Block A1",label:"Block A1",sub:"Section A · Row 1"},
+          {value:"Block A2",label:"Block A2",sub:"Section A · Row 2"},
+          {value:"Block A3",label:"Block A3",sub:"Section A · Row 3"},
+          {value:"Block B1",label:"Block B1",sub:"Section B · Row 1"},
+          {value:"Block B2",label:"Block B2",sub:"Section B · Row 2"},
+          {value:"Block B3",label:"Block B3",sub:"Section B · Row 3"},
+          {value:"Block C1",label:"Block C1",sub:"Section C · Row 1"},
+          {value:"Block C2",label:"Block C2",sub:"Section C · Row 2"},
+          {value:"Block C3",label:"Block C3",sub:"Section C · Row 3"},
+          {value:"Block D1",label:"Block D1",sub:"Section D · Row 1"},
+          {value:"Block D2",label:"Block D2",sub:"Section D · Row 2"},
+          {value:"Block D3",label:"Block D3",sub:"Section D · Row 3"}
+        ]
+      }
+    };
+
+    const filterOrder = ["farm","plant","stage","bag","block"];
+
+    const selections = {
+      farm:[],
+      plant:[],
+      stage:[],
+      bag:[],
+      block:[]
+    };
+
+    let filteredRecords = [];
+
+    function escapeHtml(value){
+      return String(value ?? "").replace(/[&<>'"]/g,function(character){
+        return {
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          "'":"&#39;",
+          '"':"&quot;"
+        }[character];
+      });
+    }
+
+    function formatNumber(value){
+      return Number(value || 0).toLocaleString("en-IN");
+    }
+
+    function createInventoryData(){
+      const farms = filterDefinitions.farm.options.map(function(item){ return item.value; });
+      const plants = filterDefinitions.plant.options.map(function(item){ return item.value; });
+      const stages = filterDefinitions.stage.options.map(function(item){ return item.value; });
+      const bags = filterDefinitions.bag.options.map(function(item){ return item.value; });
+      const blocks = filterDefinitions.block.options.map(function(item){ return item.value; });
+      const records = [];
+
+      farms.forEach(function(farm,farmIndex){
+        plants.forEach(function(plant,plantIndex){
+          stages.forEach(function(stage,stageIndex){
+            for(let variantIndex = 0; variantIndex < 2; variantIndex++){
+              const bagIndex =
+                (plantIndex * 2 + stageIndex * 3 + farmIndex + variantIndex * 4) % bags.length;
+
+              const blockIndex =
+                (plantIndex + stageIndex * 2 + farmIndex * 3 + variantIndex * 5) % blocks.length;
+
+              const available =
+                16 +
+                ((plantIndex * 19 + stageIndex * 37 + farmIndex * 43 + variantIndex * 29) % 180);
+
+              const unusable =
+                3 +
+                ((plantIndex + farmIndex + stageIndex + variantIndex) % 16);
+
+              const usable = Math.max(available - unusable,0);
+
+              records.push({
+                id:"INV-" +
+                  String(farmIndex + 1).padStart(2,"0") + "-" +
+                  String(plantIndex + 1).padStart(3,"0") + "-" +
+                  String(stageIndex + 1) + "-" +
+                  String(variantIndex + 1),
+                farm:farm,
+                plant:plant,
+                stage:stage,
+                bag:bags[bagIndex],
+                block:blocks[blockIndex],
+                available:available,
+                usable:usable
+              });
+            }
+          });
+        });
+      });
+
+      return records;
+    }
+
+    const inventoryData = createInventoryData();
+
+    function renderFilterGrid(){
+      document.getElementById("filterGrid").innerHTML = filterOrder.map(function(key){
+        const definition = filterDefinitions[key];
+
+        return `
+          <div class="filter-field">
+            <div class="filter-label">${definition.icon} ${escapeHtml(definition.label)}</div>
+
+            <div class="multi-select" id="multi-${key}">
+              <button
+                type="button"
+                class="multi-select-toggle"
+                onclick="toggleDropdown('${key}',event)"
+                aria-expanded="false"
+              >
+                <span class="toggle-copy">
+                  <span class="toggle-icon">${definition.icon}</span>
+
+                  <span class="toggle-text">
+                    <span class="toggle-title">${escapeHtml(definition.label)}</span>
+                    <span class="toggle-value" id="toggleValue-${key}">All ${escapeHtml(definition.label)}</span>
+                  </span>
+                </span>
+
+                <span class="toggle-arrow">▼</span>
+              </button>
+
+              <div class="multi-select-menu" onclick="event.stopPropagation()">
+                ${definition.searchable ? `
+                  <div class="menu-search-wrap">
+                    <input
+                      class="menu-search"
+                      type="text"
+                      placeholder="Search ${escapeHtml(definition.label.toLowerCase())}..."
+                      oninput="filterDropdownOptions('${key}',this.value)"
+                    >
+                  </div>
+                ` : ""}
+
+                <div class="multi-options" id="options-${key}">
+                  ${definition.options.map(function(option){
+                    return `
+                      <label class="option-row" data-search="${escapeHtml((option.label + " " + option.sub).toLowerCase())}">
+                        <input
+                          type="checkbox"
+                          value="${escapeHtml(option.value)}"
+                          onchange="handleFilterChange('${key}')"
+                        >
+
+                        <span>
+                          <span class="option-main">${escapeHtml(option.label)}</span>
+                          <span class="option-sub">${escapeHtml(option.sub)}</span>
+                        </span>
+                      </label>
+                    `;
+                  }).join("")}
+                </div>
+
+                <div class="menu-footer">
+                  <button type="button" class="menu-action" onclick="selectAllOptions('${key}')">
+                    Select All
+                  </button>
+
+                  <button type="button" class="menu-action" onclick="clearOptions('${key}')">
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-helper">${escapeHtml(definition.helper)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleDropdown(key,event){
+      event.stopPropagation();
+      const target = document.getElementById("multi-" + key);
+      const wasOpen = target.classList.contains("open");
+
+      closeAllDropdowns();
+
+      if(!wasOpen){
+        target.classList.add("open");
+        target.querySelector(".multi-select-toggle").setAttribute("aria-expanded","true");
+      }
+    }
+
+    function closeAllDropdowns(){
+      document.querySelectorAll(".multi-select").forEach(function(dropdown){
+        dropdown.classList.remove("open");
+        const button = dropdown.querySelector(".multi-select-toggle");
+
+        if(button){
+          button.setAttribute("aria-expanded","false");
+        }
+      });
+    }
+
+    function handleFilterChange(key){
+      const inputs = document.querySelectorAll("#options-" + key + " input[type='checkbox']");
+      selections[key] = Array.from(inputs)
+        .filter(function(input){ return input.checked; })
+        .map(function(input){ return input.value; });
+
+      updateToggleText(key);
+      renderSelectedFilterChips();
+    }
+
+    function updateToggleText(key){
+      const selected = selections[key];
+      const label = filterDefinitions[key].label;
+      const target = document.getElementById("toggleValue-" + key);
+
+      if(selected.length === 0){
+        target.textContent = "All " + label;
+      }else if(selected.length === 1){
+        target.textContent = selected[0];
+      }else{
+        target.textContent = selected.length + " selected";
+      }
+    }
+
+    function selectAllOptions(key){
+      document.querySelectorAll("#options-" + key + " .option-row:not(.hidden) input").forEach(function(input){
+        input.checked = true;
+      });
+
+      handleFilterChange(key);
+    }
+
+    function clearOptions(key){
+      document.querySelectorAll("#options-" + key + " input").forEach(function(input){
+        input.checked = false;
+      });
+
+      handleFilterChange(key);
+    }
+
+    function filterDropdownOptions(key,query){
+      const normalized = String(query || "").trim().toLowerCase();
+
+      document.querySelectorAll("#options-" + key + " .option-row").forEach(function(row){
+        const searchableText = row.getAttribute("data-search") || "";
+        row.classList.toggle("hidden",normalized && !searchableText.includes(normalized));
+      });
+    }
+
+    function renderSelectedFilterChips(){
+      const chipContainer = document.getElementById("selectedFilterChips");
+      const chips = [];
+
+      filterOrder.forEach(function(key){
+        const definition = filterDefinitions[key];
+
+        selections[key].forEach(function(value){
+          chips.push(`
+            <span class="filter-chip">
+              ${definition.icon} ${escapeHtml(definition.label)}: ${escapeHtml(value)}
+              <button
+                type="button"
+                title="Remove filter"
+                onclick="removeFilterValue('${key}','${escapeAttributeForJs(value)}')"
+              >×</button>
+            </span>
+          `);
+        });
+      });
+
+      const totalSelected = filterOrder.reduce(function(total,key){
+        return total + selections[key].length;
+      },0);
+
+      document.getElementById("filterCountPill").textContent =
+        totalSelected === 0
+          ? "🔎 No filters selected"
+          : "🔎 " + totalSelected + " selections active";
+
+      chipContainer.innerHTML = chips.length
+        ? chips.join("")
+        : '<span class="all-filter-text">No specific filters selected. Search will include the complete inventory.</span>';
+    }
+
+    function escapeAttributeForJs(value){
+      return String(value)
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'");
+    }
+
+    function removeFilterValue(key,value){
+      const inputs = document.querySelectorAll("#options-" + key + " input");
+
+      inputs.forEach(function(input){
+        if(input.value === value){
+          input.checked = false;
+        }
+      });
+
+      handleFilterChange(key);
+    }
+
+    function resetFilters(){
+      filterOrder.forEach(function(key){
+        selections[key] = [];
+        document.querySelectorAll("#options-" + key + " input").forEach(function(input){
+          input.checked = false;
+        });
+
+        const searchInput = document.querySelector("#multi-" + key + " .menu-search");
+
+        if(searchInput){
+          searchInput.value = "";
+          filterDropdownOptions(key,"");
+        }
+
+        updateToggleText(key);
+      });
+
+      renderSelectedFilterChips();
+      closeAllDropdowns();
+      document.getElementById("resultArea").style.display = "none";
+      document.getElementById("emptyState").style.display = "none";
+      showToast("All inventory filters have been reset");
+    }
+
+    function recordMatches(record){
+      return filterOrder.every(function(key){
+        return selections[key].length === 0 || selections[key].includes(record[key]);
+      });
+    }
+
+    function applyFilters(){
+      closeAllDropdowns();
+      filteredRecords = inventoryData.filter(recordMatches);
+
+      if(filteredRecords.length === 0){
+        document.getElementById("resultArea").style.display = "none";
+        document.getElementById("emptyState").style.display = "block";
+        document.getElementById("emptyState").scrollIntoView({
+          behavior:"smooth",
+          block:"center"
+        });
+
+        showToast("No inventory records matched the selected filters");
+        return;
+      }
+
+      document.getElementById("emptyState").style.display = "none";
+      document.getElementById("resultArea").style.display = "block";
+
+      renderResults(filteredRecords);
+
+      document.getElementById("resultArea").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+      showToast(formatNumber(filteredRecords.length) + " inventory records found");
+    }
+
+    function renderResults(records){
+      const totalAvailable = records.reduce(function(total,item){
+        return total + item.available;
+      },0);
+
+      const totalUsable = records.reduce(function(total,item){
+        return total + item.usable;
+      },0);
+
+      const farmsWithStock = new Set(
+        records
+          .filter(function(item){ return item.available > 0; })
+          .map(function(item){ return item.farm; })
+      ).size;
+
+      const stageTotals = {
+        Sapling:0,
+        Child:0,
+        Adult:0
+      };
+
+      records.forEach(function(item){
+        stageTotals[item.stage] = (stageTotals[item.stage] || 0) + item.available;
+      });
+
+      document.getElementById("metricAvailable").textContent = formatNumber(totalAvailable);
+      document.getElementById("metricUsable").textContent = formatNumber(totalUsable);
+      document.getElementById("metricFarms").textContent = farmsWithStock;
+      document.getElementById("metricRecords").textContent = formatNumber(records.length);
+      document.getElementById("stageSapling").textContent = formatNumber(stageTotals.Sapling);
+      document.getElementById("stageChild").textContent = formatNumber(stageTotals.Child);
+      document.getElementById("stageAdult").textContent = formatNumber(stageTotals.Adult);
+
+      renderSearchSummary(records,totalAvailable,totalUsable,farmsWithStock);
+      renderInventoryTable(records);
+      renderDecisionMessage(records,totalAvailable,totalUsable,farmsWithStock,stageTotals);
+    }
+
+    function renderSearchSummary(records,totalAvailable,totalUsable,farmsWithStock){
+      const selectedPlantCount = selections.plant.length || new Set(records.map(function(item){
+        return item.plant;
+      })).size;
+
+      const activeFilterGroups = filterOrder.filter(function(key){
+        return selections[key].length > 0;
+      }).length;
+
+      const summaryTags = [];
+
+      filterOrder.forEach(function(key){
+        const definition = filterDefinitions[key];
+        const count = selections[key].length;
+
+        summaryTags.push(`
+          <span class="tag ${count ? "gold" : ""}">
+            ${definition.icon} ${escapeHtml(definition.label)}: ${count ? count + " selected" : "All"}
+          </span>
+        `);
+      });
+
+      document.getElementById("searchSummary").innerHTML = `
+        <div class="search-summary">
+          <div class="summary-icon">🔎</div>
+
+          <div>
+            <div class="summary-name">Advanced Inventory Search Results</div>
+
+            <div class="summary-description">
+              ${formatNumber(records.length)} matching inventory entries found across
+              ${farmsWithStock} farm${farmsWithStock === 1 ? "" : "s"} for
+              ${selectedPlantCount} plant variet${selectedPlantCount === 1 ? "y" : "ies"}.
+              ${activeFilterGroups === 0 ? "The complete inventory is currently displayed." : activeFilterGroups + " filter groups are active."}
+            </div>
+
+            <div class="tag-row">
+              ${summaryTags.join("")}
+              <span class="tag">Available ${formatNumber(totalAvailable)}</span>
+              <span class="tag">Usable ${formatNumber(totalUsable)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInventoryTable(records){
+      const sortedRecords = records.slice().sort(function(a,b){
+        return (
+          a.farm.localeCompare(b.farm) ||
+          a.plant.localeCompare(b.plant) ||
+          a.stage.localeCompare(b.stage) ||
+          a.block.localeCompare(b.block)
+        );
+      });
+
+      const displayRecords = sortedRecords.slice(0,150);
+
+      document.getElementById("inventoryTable").innerHTML = displayRecords.map(function(item){
+        let statusClass = "status-available";
+        let statusText = "Available";
+
+        if(item.available === 0){
+          statusClass = "status-unavailable";
+          statusText = "Unavailable";
+        }else if(item.usable < 30){
+          statusClass = "status-low";
+          statusText = "Low Stock";
+        }
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.farm)} Farm</strong></td>
+
+            <td>
+              <div class="plant-cell-name">${escapeHtml(item.plant)}</div>
+              <div class="plant-cell-code">${escapeHtml(item.id)}</div>
+            </td>
+
+            <td>${stageIcon(item.stage)} ${escapeHtml(item.stage)}</td>
+            <td>${escapeHtml(item.bag)}</td>
+            <td>${escapeHtml(item.block)}</td>
+            <td>${formatNumber(item.available)}</td>
+            <td>${formatNumber(item.usable)}</td>
+
+            <td>
+              <span class="status-pill ${statusClass}">
+                ${statusText}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function stageIcon(stage){
+      if(stage === "Sapling"){
+        return "🌱";
+      }
+
+      if(stage === "Child"){
+        return "🪴";
+      }
+
+      return "🌳";
+    }
+
+    function renderDecisionMessage(records,totalAvailable,totalUsable,farmsWithStock,stageTotals){
+      const highestRecord = records.reduce(function(highest,current){
+        return current.available > highest.available ? current : highest;
+      });
+
+      const uniquePlants = new Set(records.map(function(item){ return item.plant; })).size;
+      const uniqueBags = new Set(records.map(function(item){ return item.bag; })).size;
+      const uniqueBlocks = new Set(records.map(function(item){ return item.block; })).size;
+
+      const limitedTableMessage = records.length > 150
+        ? " The table shows the first 150 matching entries for a clear demo view."
+        : "";
+
+      document.getElementById("decisionMessage").innerHTML = `
+        The selected search parameters returned <strong>${formatNumber(records.length)} inventory entries</strong>
+        for <strong>${uniquePlants} plant variet${uniquePlants === 1 ? "y" : "ies"}</strong> across
+        <strong>${farmsWithStock} farm${farmsWithStock === 1 ? "" : "s"}</strong>.
+        Total available stock is <strong>${formatNumber(totalAvailable)} plants</strong>, of which
+        <strong>${formatNumber(totalUsable)} plants</strong> are usable.
+        Stage totals include <strong>${formatNumber(stageTotals.Sapling)} saplings</strong>,
+        <strong>${formatNumber(stageTotals.Child)} child-stage plants</strong> and
+        <strong>${formatNumber(stageTotals.Adult)} adult plants</strong>.
+        Results cover <strong>${uniqueBags} grow bag size${uniqueBags === 1 ? "" : "s"}</strong> and
+        <strong>${uniqueBlocks} block${uniqueBlocks === 1 ? "" : "s"}</strong>.
+        The highest single inventory entry is
+        <strong>${escapeHtml(highestRecord.plant)}</strong> at
+        <strong>${escapeHtml(highestRecord.farm)} Farm</strong>,
+        ${escapeHtml(highestRecord.block)}, with
+        <strong>${formatNumber(highestRecord.available)} plants</strong>.${limitedTableMessage}
+      `;
+    }
+
+    function showToast(message){
+      const toast = document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(function(){
+        toast.classList.remove("show");
+      },2600);
+    }
+
+    document.addEventListener("click",function(){
+      closeAllDropdowns();
+    });
+
+    renderFilterGrid();
+    renderSelectedFilterChips();
+  </script>
+</body></html>
+

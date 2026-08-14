@@ -1,0 +1,1685 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Material Allocation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7f5;
+      color: #1e2e24;
+      padding: 30px 20px;
+    }
+
+    .container { max-width: 1450px; margin: 0 auto; }
+
+    .hero-section {
+      background: linear-gradient(145deg, #1a4d2a 0%, #2d6e3e 100%);
+      border-radius: 32px;
+      padding: 42px 50px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 40px rgba(0,20,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::after {
+      content: "🌿";
+      position: absolute;
+      right: 28px;
+      bottom: -10px;
+      font-size: 145px;
+      opacity: 0.10;
+      transform: rotate(8deg);
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon { font-size: 52px; }
+
+    .hero-section h1 {
+      font-size: 43px;
+      font-weight: 850;
+      color: #fff;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-section h1 span { color: #f5c542; }
+
+    .sub-head {
+      color: rgba(255,255,255,0.88);
+      font-size: 17px;
+      margin-top: 10px;
+      border-left: 4px solid #f5c542;
+      padding-left: 16px;
+      max-width: 980px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .badge-module {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 7px 16px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .step strong {
+      display: block;
+      color: #f5c542;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .step span {
+      font-size: 12px;
+      font-weight: 650;
+      opacity: 0.93;
+    }
+
+    .section-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0,20,0,0.06);
+      border: 1px solid #e6eee6;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      color: #1a4d2a;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i { color: #b68b40; }
+
+    .muted {
+      color: #5a6f5a;
+      font-weight: 560;
+      line-height: 1.55;
+    }
+
+    .grid { display: grid; gap: 18px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    label {
+      display: block;
+      color: #1a4d2a;
+      font-weight: 720;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid #dbe8db;
+      font-family: inherit;
+      font-weight: 560;
+      outline: none;
+      background: #fff;
+      color: #1e2e24;
+    }
+
+    textarea { resize: vertical; min-height: 96px; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #1a4d2a;
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 40px;
+      padding: 10px 22px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-green { background: #1a4d2a; color: #fff; box-shadow: 0 8px 16px rgba(26,77,42,0.18); }
+    .btn-green:hover { background: #0f3a1e; }
+    .btn-gold { background: #f5c542; color: #1e2e24; box-shadow: 0 8px 16px rgba(245,197,66,0.22); }
+    .btn-light { background: #eef6ef; color: #1a4d2a; }
+    .btn-red { background: #ffe3e6; color: #b42331; }
+    .btn-blue { background: #e6f3ff; color: #1363a5; }
+    .btn-small { padding: 8px 14px; font-size: 13px; }
+
+    .metric-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 142px;
+      box-shadow: 0 12px 30px rgba(0,20,0,0.06);
+      border: 1px solid #e6eee6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-label {
+      color: #5a6f5a;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+
+    .metric-number {
+      color: #0b1f3a;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .metric-icon {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 58px;
+      height: 58px;
+      background: #eef6ff;
+      border-radius: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #134f7a;
+      font-size: 24px;
+    }
+
+    .mini-badge, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-size: 12px;
+      font-weight: 820;
+    }
+
+    .mini-badge { margin-top: 12px; color: #fff; }
+
+    .green { background: #0f8f55; }
+    .blue { background: #17b7d9; }
+    .orange { background: #f7a614; }
+    .red { background: #e63946; }
+    .gold { background: #f5c542; color: #1e2e24; }
+
+    .status-pending { background: #fff4d8; color: #9b6b00; }
+    .status-approved { background: #dcf7ea; color: #0f7a45; }
+    .status-review { background: #e6f3ff; color: #1363a5; }
+    .status-deleted { background: #ffe3e6; color: #b42331; }
+    .status-draft { background: #f0f5f0; color: #4f674f; }
+    .status-po { background: #ecdcff; color: #6733a6; }
+    .status-short { background: #ffe3e6; color: #b42331; }
+    .status-transfer { background: #e6f3ff; color: #1363a5; }
+
+    .farm-card {
+      background: #fff;
+      border: 1px solid #e6eee6;
+      border-radius: 24px;
+      padding: 22px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,20,0,0.05);
+      transition: all 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .farm-card::after {
+      content: "🌱";
+      position: absolute;
+      right: -8px;
+      bottom: -18px;
+      font-size: 70px;
+      opacity: 0.08;
+      transform: rotate(-15deg);
+    }
+
+    .farm-card:hover,
+    .farm-card.active {
+      transform: translateY(-4px);
+      background: linear-gradient(145deg, #1a4d2a 0%, #2d6e3e 100%);
+      color: #fff;
+      box-shadow: 0 16px 32px rgba(0,20,0,0.12);
+    }
+
+    .farm-card:hover .muted,
+    .farm-card.active .muted {
+      color: rgba(255,255,255,0.82);
+    }
+
+    .farm-card h3 {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .farm-card p {
+      font-size: 13px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .block-card {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 24px;
+      padding: 22px;
+      transition: all 0.22s;
+      cursor: pointer;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .block-card::after {
+      content: "☘";
+      position: absolute;
+      right: -12px;
+      bottom: -22px;
+      color: rgba(26,77,42,0.08);
+      font-size: 100px;
+      transform: rotate(-18deg);
+    }
+
+    .block-card:hover,
+    .block-card.active {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0,20,0,0.09);
+      border-color: #1a4d2a;
+      background: #ffffff;
+    }
+
+    .block-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .block-title {
+      color: #1a4d2a;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .block-zone {
+      color: #5a6f5a;
+      font-size: 13px;
+      font-weight: 650;
+      margin-top: 4px;
+    }
+
+    .block-total {
+      background: #1a4d2a;
+      color: #fff;
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .plant-summary-list {
+      display: grid;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .plant-summary-row {
+      background: #fff;
+      border: 1px solid #e6eee6;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .plant-summary-row strong {
+      color: #1a4d2a;
+      font-size: 14px;
+    }
+
+    .stage-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .stage-chip {
+      background: #eef6ef;
+      color: #1a4d2a;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .product-card {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 22px;
+      overflow: hidden;
+      height: 100%;
+      transition: all 0.22s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(0,20,0,0.08);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-body { padding: 18px; }
+
+    .product-body h4 {
+      color: #1a4d2a;
+      font-size: 17px;
+      font-weight: 850;
+      margin-bottom: 8px;
+    }
+
+    .product-meta {
+      color: #5a6f5a;
+      font-size: 13px;
+      font-weight: 650;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .qty-row {
+      display: grid;
+      grid-template-columns: 1fr 92px;
+      align-items: end;
+      gap: 10px;
+    }
+
+    .table-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid #e6eee6;
+      box-shadow: 0 10px 24px rgba(0,20,0,0.05);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    thead th {
+      background: #f0f5f0;
+      color: #1a4d2a;
+      font-weight: 800;
+      font-size: 13px;
+      text-align: left;
+      border-bottom: 2px solid #d4e4d4;
+      padding: 14px 16px;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #eaf0ea;
+      font-weight: 620;
+      color: #1e2e24;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover { background: #f8fbf8; }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .flow-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .flow-tab {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid #dbe8db;
+      background: #fff;
+      color: #1a4d2a;
+      cursor: pointer;
+      font-weight: 820;
+      font-family: inherit;
+    }
+
+    .flow-tab.active {
+      background: #1a4d2a;
+      color: #fff;
+      border-color: #1a4d2a;
+    }
+
+    .selected-pill {
+      background: #1a4d2a;
+      color: #fff;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-weight: 850;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-box {
+      background: #f8fbf8;
+      border: 1px dashed #b7cdb7;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .voucher-box {
+      background: linear-gradient(145deg, #f8fbf8, #ffffff);
+      border: 1px solid #d8ead8;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 12px 28px rgba(0,20,0,0.06);
+      margin-top: 18px;
+    }
+
+    .warning-final {
+      background: #b42331;
+      color: #f5c542;
+      border-radius: 26px;
+      padding: 26px;
+      margin-bottom: 30px;
+      box-shadow: 0 16px 34px rgba(180,35,49,0.22);
+      border: 2px solid rgba(245,197,66,0.65);
+    }
+
+    .warning-final h3 {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: #f5c542;
+    }
+
+    .warning-final p {
+      font-size: 15px;
+      font-weight: 750;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1a4d2a;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,20,0,0.22);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 99999;
+      font-weight: 700;
+      max-width: 440px;
+      line-height: 1.45;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast i {
+      color: #f5c542;
+      margin-right: 8px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #eaf0ea;
+      margin: 22px 0;
+    }
+
+    @media(max-width: 980px) {
+      .grid-4, .grid-3, .grid-2, .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-section {
+        padding: 30px 24px;
+      }
+
+      .hero-section h1 {
+        font-size: 31px;
+      }
+
+      .section-card {
+        padding: 22px;
+      }
+
+      .qty-row {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 18px 12px;
+      }
+    }
+  
+
+    .work-order-row.active-row { background: #eef6ef; }
+    .work-order-row.flagged-row { box-shadow: inset 5px 0 0 #e63946; }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .summary-item {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 82px;
+    }
+
+    .summary-item span {
+      display: block;
+      color: #5a6f5a;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 7px;
+    }
+
+    .summary-item strong {
+      color: #1a4d2a;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .filter-bar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+      align-items: end;
+    }
+
+    .requirement-card {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 22px;
+      overflow: hidden;
+      height: 100%;
+      transition: all .22s;
+    }
+
+    .requirement-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(0,20,0,.08);
+    }
+
+    .requirement-card img {
+      width: 100%;
+      height: 132px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .requirement-card-body { padding: 17px; }
+    .requirement-card-body h4 { color: #1a4d2a; font-size: 16px; font-weight: 900; margin-bottom: 7px; }
+
+    .editable-qty {
+      min-width: 105px;
+      padding: 9px 10px;
+      border-radius: 12px;
+    }
+
+    .status-completed { background: #dcf7ea; color: #0f7a45; }
+    .status-progress { background: #e6f3ff; color: #1363a5; }
+    .status-halted { background: #ffe3e6; color: #b42331; }
+    .status-attention { background: #fff4d8; color: #9b6b00; }
+    .status-notstarted { background: #f0f5f0; color: #4f674f; }
+    .status-sent { background: #ecdcff; color: #6733a6; }
+
+    .progress-track {
+      height: 9px;
+      background: #e7eee7;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 7px;
+      min-width: 110px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #1a4d2a;
+      border-radius: 999px;
+    }
+
+    .work-message {
+      margin-top: 7px;
+      max-width: 260px;
+      color: #5a6f5a;
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .linked-card {
+      background: linear-gradient(145deg, #f8fbf8, #fff);
+      border: 1px solid #d8ead8;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .quotation-items {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .quotation-item-row {
+      display: grid;
+      grid-template-columns: 1.6fr .8fr .8fr .8fr;
+      gap: 12px;
+      align-items: end;
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .compact-note {
+      background: #eef6ef;
+      color: #1a4d2a;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    .action-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: flex-start;
+    }
+
+    .flagged-label {
+      color: #b42331;
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .total-box {
+      background: #1a4d2a;
+      color: #fff;
+      border-radius: 18px;
+      padding: 15px 18px;
+      font-weight: 850;
+      text-align: right;
+    }
+
+    .total-box strong { color: #f5c542; font-size: 22px; }
+
+    @media(max-width: 1120px) {
+      .summary-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .filter-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media(max-width: 720px) {
+      .summary-strip, .filter-bar, .quotation-item-row { grid-template-columns: 1fr; }
+    }
+</style>
+<style id="vvvebjs-styles"></style></head><body>
+  <div class="container">
+    <div class="hero-section">
+      <div class="hero-row">
+        <div class="hero-icon">📦</div>
+        <div>
+          <h1>Material Allocation <span>Module</span></h1>
+          <div class="sub-head">
+            Work-order-linked material planning, requirement allocation, internal stock transfer, editable procurement quantities, autogenerated RFQ flow, quotation receipt registration and purchase order finalization.
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge-module"><i class="fa fa-tasks"></i> Work Orders</span>
+        <span class="badge-module"><i class="fa fa-cubes"></i> Material Requirements</span>
+        <span class="badge-module"><i class="fa fa-exchange"></i> Internal Transfer</span>
+        <span class="badge-module"><i class="fa fa-shopping-cart"></i> Procurement</span>
+        <span class="badge-module"><i class="fa fa-envelope"></i> RFQ &amp; Quotation</span>
+      </div>
+
+      <div class="timeline">
+        <div class="step"><strong>Step 01</strong><span>Select the assigned work order</span></div>
+        <div class="step"><strong>Step 02</strong><span>Choose and edit material needs</span></div>
+        <div class="step"><strong>Step 03</strong><span>Check internal stock availability</span></div>
+        <div class="step"><strong>Step 04</strong><span>Transfer stock or create procurement</span></div>
+        <div class="step"><strong>Step 05</strong><span>Send RFQ and register quotations</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:28px;">
+      <div class="metric-card">
+        <div class="metric-label">Active Work Orders</div>
+        <div class="metric-icon"><i class="fa fa-tasks"></i></div>
+        <div class="metric-number" id="metricWorkOrders">6</div>
+        <span class="mini-badge green">Linked</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Material Allocations</div>
+        <div class="metric-icon"><i class="fa fa-cubes"></i></div>
+        <div class="metric-number" id="metricAllocations">0</div>
+        <span class="mini-badge blue">Created</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Open Procurements</div>
+        <div class="metric-icon"><i class="fa fa-shopping-cart"></i></div>
+        <div class="metric-number" id="metricProcurements">0</div>
+        <span class="mini-badge orange">Editable</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Quotations Received</div>
+        <div class="metric-icon"><i class="fa fa-file-text-o"></i></div>
+        <div class="metric-number" id="metricQuotations">0</div>
+        <span class="mini-badge gold">Registered</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-list-ul"></i> Work Orders &amp; Material Allocation Status</h3>
+          <p class="muted">Select a work order to create or review its material allocation. Each downstream transfer, procurement, RFQ and quotation remains linked to the same work order number.</p>
+        </div>
+        <div style="text-align:right;">
+          <span class="selected-pill" id="selectedWorkOrderPill"><i class="fa fa-link"></i> No Work Order Selected</span>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div>
+          <label>Farm Filter</label>
+          <select id="workOrderFarmFilter" onchange="renderWorkOrders()">
+            <option value="All">All Farms</option>
+            <option>Kamshet</option><option>Karla</option><option>Vadegaon</option><option>Ratnagiri</option>
+          </select>
+        </div>
+        <div>
+          <label>Supervisor Filter</label>
+          <select id="workOrderSupervisorFilter" onchange="renderWorkOrders()">
+            <option value="All">All Supervisors</option>
+            <option>Ramesh</option><option>Suresh</option><option>Dharmesh</option><option>Mahesh</option><option>Ganesh</option><option>Prakash</option>
+          </select>
+        </div>
+        <div>
+          <label>Status Filter</label>
+          <select id="workOrderStatusFilter" onchange="renderWorkOrders()">
+            <option value="All">All Statuses</option>
+            <option>Completed</option><option>In-Progress</option><option>Pending</option><option>Not Started</option><option>Halted</option><option>Attention</option>
+          </select>
+        </div>
+        <div>
+          <label>Allocation Filter</label>
+          <select id="workOrderAllocationFilter" onchange="renderWorkOrders()">
+            <option value="All">All Allocation Statuses</option>
+            <option>Not Started</option><option>Pending</option><option>Partially Allocated</option><option>Allocated</option>
+          </select>
+        </div>
+        <div>
+          <label>Search Work Order / Plant</label>
+          <input id="workOrderSearch" placeholder="Example: WO-2026-001 or Tulsi" oninput="renderWorkOrders()">
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table style="min-width:1850px;">
+          <thead>
+            <tr>
+              <th>Work Order No.</th>
+              <th>Assigned On</th>
+              <th>Farm / Block</th>
+              <th>Plants &amp; Stage</th>
+              <th>Supervisors</th>
+              <th>Work Actions</th>
+              <th>Schedule</th>
+              <th>Work Status &amp; Message</th>
+              <th>Efficiency</th>
+              <th>Material Allocation</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="workOrderTableBody">
+      <tr class="work-order-row  ">
+        <td><span class="selected-pill">WO-2026-001</span></td>
+        <td>05 Aug 2026, 09:20 AM</td>
+        <td><strong>Kamshet</strong><br><span class="muted">Block A</span></td>
+        <td><strong>Tulsi, Rose</strong><br><span class="muted">Sapling, Child · 36 plants</span></td>
+        <td>Ramesh, Suresh</td>
+        <td>Growth<br>Maintenance</td>
+        <td><strong>2026-08-05</strong> to <strong>2026-08-06</strong><br><span class="muted">Estimated: 14 Hours</span></td>
+        <td><span class="status-pill status-completed">Completed</span><div class="work-message">All selected plants completed the scheduled maintenance and growth activity.</div><div class="work-message"><strong>Completed:</strong> 06 Aug 2026, 01:10 PM</div></td>
+        <td><strong>96%</strong><div class="progress-track"><div class="progress-fill" style="width:96%;"></div></div></td>
+        <td><span class="status-pill status-approved">Partially Allocated</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-001')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>
+      <tr class="work-order-row  ">
+        <td><span class="selected-pill">WO-2026-002</span></td>
+        <td>05 Aug 2026, 11:45 AM</td>
+        <td><strong>Karla</strong><br><span class="muted">Block B</span></td>
+        <td><strong>Rose, Curry Leaf</strong><br><span class="muted">Adult · 30 plants</span></td>
+        <td>Dharmesh</td>
+        <td>Maintenance<br>Update Location</td>
+        <td><strong>2026-08-06</strong> to <strong>2026-08-08</strong><br><span class="muted">Estimated: 20 Hours</span></td>
+        <td><span class="status-pill status-progress">In-Progress</span><div class="work-message">Maintenance is continuing. Approximately sixty percent of the assigned rows are complete.</div></td>
+        <td><strong>82%</strong><div class="progress-track"><div class="progress-fill" style="width:82%;"></div></div></td>
+        <td><span class="status-pill status-pending">Pending</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-002')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>
+      <tr class="work-order-row  flagged-row">
+        <td><span class="selected-pill">WO-2026-003</span><div class="flagged-label" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</div></td>
+        <td>06 Aug 2026, 08:30 AM</td>
+        <td><strong>Vadegaon</strong><br><span class="muted">Block C</span></td>
+        <td><strong>Hibiscus</strong><br><span class="muted">Sapling, Child · 31 plants</span></td>
+        <td>Mahesh, Ganesh</td>
+        <td>Growth<br>Mortality</td>
+        <td><strong>2026-08-06</strong> to <strong>2026-08-07</strong><br><span class="muted">Estimated: 12 Hours</span></td>
+        <td><span class="status-pill status-halted">Halted</span><div class="work-message">Rooting hormone and plant tags are unavailable. Work is halted until material allocation is completed.</div></td>
+        <td><strong>48%</strong><div class="progress-track"><div class="progress-fill" style="width:48%;"></div></div></td>
+        <td><span class="status-pill status-notstarted">Not Started</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-003')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>
+      <tr class="work-order-row  flagged-row">
+        <td><span class="selected-pill">WO-2026-004</span><div class="flagged-label" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</div></td>
+        <td>06 Aug 2026, 10:15 AM</td>
+        <td><strong>Ratnagiri</strong><br><span class="muted">Block A</span></td>
+        <td><strong>Mango Plant, Areca Palm</strong><br><span class="muted">Child, Adult · 44 plants</span></td>
+        <td>Prakash</td>
+        <td>Create Sellable Batch<br>Maintenance</td>
+        <td><strong>2026-08-07</strong> to <strong>2026-08-09</strong><br><span class="muted">Estimated: 24 Hours</span></td>
+        <td><span class="status-pill status-attention">Attention</span><div class="work-message">Available grow bags do not match the required quality specification. Procurement review is required.</div></td>
+        <td><strong>67%</strong><div class="progress-track"><div class="progress-fill" style="width:67%;"></div></div></td>
+        <td><span class="status-pill status-pending">Pending</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-004')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>
+      <tr class="work-order-row  ">
+        <td><span class="selected-pill">WO-2026-005</span></td>
+        <td>06 Aug 2026, 01:20 PM</td>
+        <td><strong>Kamshet</strong><br><span class="muted">Block C</span></td>
+        <td><strong>Marigold, Areca Palm</strong><br><span class="muted">Sapling · 38 plants</span></td>
+        <td>Ramesh</td>
+        <td>Growth</td>
+        <td><strong>2026-08-08</strong> to <strong>2026-08-08</strong><br><span class="muted">Estimated: 8 Hours</span></td>
+        <td><span class="status-pill status-notstarted">Not Started</span><div class="work-message">Work order assigned. Awaiting material allocation and scheduled start date.</div></td>
+        <td><strong>0%</strong><div class="progress-track"><div class="progress-fill" style="width:2%;"></div></div></td>
+        <td><span class="status-pill status-notstarted">Not Started</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-005')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>
+      <tr class="work-order-row  ">
+        <td><span class="selected-pill">WO-2026-006</span></td>
+        <td>06 Aug 2026, 02:05 PM</td>
+        <td><strong>Karla</strong><br><span class="muted">Block C</span></td>
+        <td><strong>Money Plant, Peace Lily</strong><br><span class="muted">Sapling, Child · 46 plants</span></td>
+        <td>Suresh</td>
+        <td>Maintenance</td>
+        <td><strong>2026-08-07</strong> to <strong>2026-08-08</strong><br><span class="muted">Estimated: 10 Hours</span></td>
+        <td><span class="status-pill status-pending">Pending</span><div class="work-message">Supervisor accepted the assignment. Material readiness is pending.</div></td>
+        <td><strong>0%</strong><div class="progress-track"><div class="progress-fill" style="width:2%;"></div></div></td>
+        <td><span class="status-pill status-pending">Pending</span></td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('WO-2026-006')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-card hidden" id="allocationSection">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-cubes"></i> Create Material Allocation</h3>
+          <p class="muted" id="allocationSubText">Choose the raw materials required for the selected work order.</p>
+        </div>
+        <div style="text-align:right;">
+          <span class="selected-pill" id="allocationNoPill"><i class="fa fa-file"></i> MA-DRAFT</span>
+        </div>
+      </div>
+
+      <div class="summary-strip" id="workOrderSummaryStrip"></div>
+
+      <div class="divider"></div>
+      <h3 class="section-title"><i class="fa fa-th-large"></i> Choose Material Needs</h3>
+      <p class="muted" style="margin-bottom:18px;">Suggested quantities are generated using the work-order plant quantity. Every material requirement remains editable before allocation.</p>
+      <div class="grid grid-4" id="materialRequirementGrid"></div>
+
+      <div class="action-row" style="margin-top:24px;">
+        <button class="btn btn-green" onclick="createMaterialAllocation()"><i class="fa fa-check-circle"></i> Create Allocation &amp; Check Availability</button>
+        <button class="btn btn-light" onclick="resetSuggestedMaterials()"><i class="fa fa-refresh"></i> Reset Suggested Quantities</button>
+      </div>
+    </div>
+
+    <div class="section-card hidden" id="availabilitySection">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-search"></i> Work Order Material Availability</h3>
+          <p class="muted" id="availabilityText"></p>
+        </div>
+        <div class="flow-tabs">
+          <button class="flow-tab active" id="tabAvailability" onclick="showDecisionPanel('availability')">Availability</button>
+          <button class="flow-tab" id="tabTransfer" onclick="showDecisionPanel('transfer')">Internal Transfer</button>
+          <button class="flow-tab" id="tabProcurement" onclick="showDecisionPanel('procurement')">Procurement</button>
+        </div>
+      </div>
+
+      <div id="availabilityPanel" style="margin-top:22px;">
+        <div class="table-card">
+          <table style="min-width:1250px;">
+            <thead>
+              <tr>
+                <th>Work Order</th><th>Raw Material</th><th>Required</th><th>Destination Stock</th><th>Other Farms</th><th>Internal Transfer Qty</th><th>Procurement Qty</th><th>Recommended Flow</th>
+              </tr>
+            </thead>
+            <tbody id="availabilityTableBody"></tbody>
+          </table>
+        </div>
+        <div class="action-row" style="margin-top:22px;">
+          <button class="btn btn-blue" onclick="showDecisionPanel('transfer')"><i class="fa fa-exchange"></i> Review Internal Transfer</button>
+          <button class="btn btn-gold" onclick="showDecisionPanel('procurement')"><i class="fa fa-shopping-cart"></i> Review Procurement</button>
+        </div>
+      </div>
+
+      <div id="transferPanel" class="hidden" style="margin-top:22px;">
+        <h3 class="section-title"><i class="fa fa-exchange"></i> Internal Transfer Linked to Work Order</h3>
+        <p class="muted" style="margin-bottom:16px;">Create transfer vouchers only for quantities available at other farms. The Work Order Number is carried into every transfer line.</p>
+        <div id="transferMessageBox" class="info-box" style="margin-bottom:18px;"></div>
+        <div class="table-card">
+          <table style="min-width:1250px;">
+            <thead>
+              <tr><th>Work Order</th><th>Material</th><th>Transfer Qty</th><th>From Farm</th><th>To Farm</th><th>Distance KM</th><th>Driver</th><th>Trip Status</th></tr>
+            </thead>
+            <tbody id="transferTableBody"></tbody>
+          </table>
+        </div>
+        <button class="btn btn-blue" style="margin-top:18px;" onclick="createTransferVoucher()"><i class="fa fa-file-o"></i> Create Transfer Voucher</button>
+        <div id="transferVoucherBox" class="voucher-box hidden"></div>
+      </div>
+
+      <div id="procurementPanel" class="hidden" style="margin-top:22px;">
+        <h3 class="section-title"><i class="fa fa-shopping-cart"></i> Procurement Linked to Work Order</h3>
+        <p class="muted" style="margin-bottom:16px;">Procurement quantities are editable. Save the required quantities first, then send the RFQ. The RFQ number will be generated automatically.</p>
+        <div id="procurementShortageBox" class="info-box" style="margin-bottom:18px;"></div>
+        <div class="table-card">
+          <table style="min-width:1350px;">
+            <thead>
+              <tr><th>Material</th><th>System Shortage</th><th>Editable Procurement Qty</th><th>Unit</th><th>Need By Date</th><th>Priority</th><th>Remarks</th></tr>
+            </thead>
+            <tbody id="procurementRequirementTableBody"></tbody>
+          </table>
+        </div>
+        <div class="action-row" style="margin-top:18px;">
+          <button class="btn btn-gold" onclick="createOrUpdateProcurement()"><i class="fa fa-save"></i> Save Procurement Requirements</button>
+        </div>
+
+        <div class="divider"></div>
+        <h3 class="section-title"><i class="fa fa-inbox"></i> Procurement Register</h3>
+        <div class="table-card">
+          <table style="min-width:1700px;">
+            <thead>
+              <tr><th>Procurement No.</th><th>Work Order</th><th>Material &amp; Editable Qty</th><th>Need By</th><th>Status</th><th>RFQ No.</th><th>Created On</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="procurementRegisterBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card hidden" id="quotationReceiveSection">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-file-text-o"></i> Register Quotation Received</h3>
+          <p class="muted" id="quotationReceiveText">Register the vendor response received against the autogenerated RFQ.</p>
+        </div>
+        <div style="text-align:right;"><span class="selected-pill" id="activeRfqPill"><i class="fa fa-envelope"></i> RFQ</span></div>
+      </div>
+
+      <div class="grid grid-4" style="margin-top:22px;">
+        <div><label>Work Order Number</label><input id="quoteWorkOrder" readonly=""></div>
+        <div><label>Procurement Number</label><input id="quoteProcurementNo" readonly=""></div>
+        <div><label>RFQ Number</label><input id="quoteRfqNo" readonly=""></div>
+        <div><label>Quotation Number</label><input id="vendorQuotationNo" placeholder="Vendor quotation reference"></div>
+        <div><label>Vendor Name</label><input id="vendorName" placeholder="Enter vendor/company name"></div>
+        <div><label>Contact Person</label><input id="vendorContactPerson" placeholder="Contact person name"></div>
+        <div><label>Phone Number</label><input id="vendorPhone" placeholder="Vendor phone number"></div>
+        <div><label>Email Address</label><input id="vendorEmail" type="email" placeholder="Vendor email"></div>
+        <div><label>GST / Tax Number</label><input id="vendorGst" placeholder="GSTIN or tax reference"></div>
+        <div><label>Quotation Date</label><input id="quotationDate" type="date"></div>
+        <div><label>Valid Until</label><input id="quotationValidUntil" type="date"></div>
+        <div><label>Delivery Days</label><input id="quotationDeliveryDays" type="number" min="1" placeholder="Example: 5"></div>
+        <div><label>Transport Charges</label><input id="quotationTransport" type="number" min="0" value="0" oninput="calculateQuotationTotal()"></div>
+        <div><label>Tax Percentage</label><input id="quotationTax" type="number" min="0" value="18" oninput="calculateQuotationTotal()"></div>
+        <div><label>Delivery Location</label><input id="quotationDeliveryLocation" readonly=""></div>
+        <div><label>Quotation Status</label><select id="quotationStatus"><option>Received</option><option>Partially Available</option><option>Under Clarification</option></select></div>
+      </div>
+
+      <div class="divider"></div>
+      <h3 class="section-title"><i class="fa fa-list"></i> Vendor Material Offer</h3>
+      <p class="muted">Enter how much material the vendor can supply and the unit price quoted for each item.</p>
+      <div class="quotation-items" id="quotationItemsGrid"></div>
+
+      <div class="grid grid-2" style="margin-top:18px; align-items:end;">
+        <div><label>Quotation Remarks / Other Conditions</label><textarea id="quotationRemarks" placeholder="Packaging, quality grade, freight, delivery condition, taxes, warranty, substitutions or other quotation details"></textarea></div>
+        <div class="total-box">Quotation Total<br><strong id="quotationGrandTotal">₹0</strong><div style="font-size:12px; margin-top:6px; color:rgba(255,255,255,.82);" id="quotationTotalBreakup">Subtotal ₹0 + Tax ₹0 + Transport ₹0</div></div>
+      </div>
+
+      <div class="action-row" style="margin-top:22px;">
+        <button class="btn btn-green" onclick="saveQuotationReceived()"><i class="fa fa-save"></i> Save Quotation Received</button>
+        <button class="btn btn-light" onclick="closeQuotationReceive()"><i class="fa fa-times"></i> Close</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title"><i class="fa fa-balance-scale"></i> Received Quotations &amp; Vendor Comparison</h3>
+      <p class="muted" style="margin-bottom:18px;">Quotation records show vendor identity, quantities available, total amount, delivery commitment and the linked Work Order Number.</p>
+      <div class="table-card">
+        <table style="min-width:1850px;">
+          <thead>
+            <tr><th>Quotation Record</th><th>Work Order</th><th>Procurement / RFQ</th><th>Vendor Details</th><th>Materials Offered</th><th>Amount</th><th>Delivery</th><th>Status</th><th>Remarks</th><th>Action</th></tr>
+          </thead>
+          <tbody id="quotationRegisterBody"><tr><td colspan="10" style="text-align:center;color:#5a6f5a;padding:24px;">No vendor quotations received yet.</td></tr></tbody>
+        </table>
+      </div>
+      <div id="poBox" class="voucher-box hidden"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-link"></i> Work Order Linked Transfers &amp; Procurements</h3>
+          <p class="muted">Review all material allocation records, internal transfer vouchers, procurements, RFQs, quotations and purchase orders against each Work Order ID.</p>
+        </div>
+        <div class="grid grid-2">
+          <div><label>Work Order Filter</label><select id="linkedWorkOrderFilter" onchange="renderLinkedRecords()"><option value="All">All Work Orders</option><option>WO-2026-001</option><option>WO-2026-002</option><option>WO-2026-003</option><option>WO-2026-004</option><option>WO-2026-005</option><option>WO-2026-006</option></select></div>
+          <div><label>Record Type Filter</label><select id="linkedTypeFilter" onchange="renderLinkedRecords()"><option value="All">All Record Types</option><option>Material Allocation</option><option>Internal Transfer</option><option>Procurement</option><option>RFQ</option><option>Quotation</option><option>Purchase Order</option></select></div>
+        </div>
+      </div>
+      <div class="table-card" style="margin-top:22px;">
+        <table style="min-width:1500px;">
+          <thead><tr><th>Record Number</th><th>Record Type</th><th>Work Order</th><th>Farm / Block</th><th>Material Details</th><th>Status</th><th>Linked Reference</th><th>Date &amp; Time</th></tr></thead>
+          <tbody id="linkedRecordsBody"><tr><td colspan="8" style="text-align:center;color:#5a6f5a;padding:24px;">No linked material records found.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="warning-final">
+      <h3><i class="fa fa-exclamation-triangle"></i> Flow Continuation Note</h3>
+      <p>The flow after purchase-order creation and material receiving will continue in Propagation and Acquisition Module 02.</p>
+      <button class="btn btn-gold" onclick="window.location.href='https://fundsweb.in/local/workspaces/2588/appku/source/page13.html'"><i class="fa fa-arrow-right"></i> Continue to Propagation and Acquisition Module 02</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastText">Done</span></div>
+
+
+<script>
+  const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+  const currentDateTime = () => new Date().toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
+  const farms = ["Kamshet", "Karla", "Vadegaon", "Ratnagiri"];
+  const drivers = ["Ramesh Jadhav", "Suresh More", "Dharmesh Patil", "Ganesh Pawar", "Mahesh Shinde"];
+
+  let selectedWorkOrderId = null;
+  let currentAllocation = null;
+  let activeProcurementId = null;
+  let activeQuotationItems = [];
+  let allocationCounter = 1;
+  let transferCounter = 1;
+  let procurementCounter = 1;
+  let rfqCounter = 1;
+  let quotationCounter = 1;
+  let poCounter = 1;
+
+  let allocations = [];
+  let transferVouchers = [];
+  let procurements = [];
+  let quotations = [];
+  let purchaseOrders = [];
+
+  const workOrders = [
+    {
+      id: "WO-2026-001", assignedOn: "05 Aug 2026, 09:20 AM", farm: "Kamshet", block: "Block A", plants: ["Tulsi", "Rose"], stages: ["Sapling", "Child"], quantity: 36,
+      supervisors: ["Ramesh", "Suresh"], actions: ["Growth", "Maintenance"], startDate: "2026-08-05", endDate: "2026-08-06", estimatedTime: "14 Hours",
+      status: "Completed", message: "All selected plants completed the scheduled maintenance and growth activity.", efficiency: 96, completedOn: "06 Aug 2026, 01:10 PM", allocationStatus: "Partially Allocated", flagged: false
+    },
+    {
+      id: "WO-2026-002", assignedOn: "05 Aug 2026, 11:45 AM", farm: "Karla", block: "Block B", plants: ["Rose", "Curry Leaf"], stages: ["Adult"], quantity: 30,
+      supervisors: ["Dharmesh"], actions: ["Maintenance", "Update Location"], startDate: "2026-08-06", endDate: "2026-08-08", estimatedTime: "20 Hours",
+      status: "In-Progress", message: "Maintenance is continuing. Approximately sixty percent of the assigned rows are complete.", efficiency: 82, completedOn: "-", allocationStatus: "Pending", flagged: false
+    },
+    {
+      id: "WO-2026-003", assignedOn: "06 Aug 2026, 08:30 AM", farm: "Vadegaon", block: "Block C", plants: ["Hibiscus"], stages: ["Sapling", "Child"], quantity: 31,
+      supervisors: ["Mahesh", "Ganesh"], actions: ["Growth", "Mortality"], startDate: "2026-08-06", endDate: "2026-08-07", estimatedTime: "12 Hours",
+      status: "Halted", message: "Rooting hormone and plant tags are unavailable. Work is halted until material allocation is completed.", efficiency: 48, completedOn: "-", allocationStatus: "Not Started", flagged: true
+    },
+    {
+      id: "WO-2026-004", assignedOn: "06 Aug 2026, 10:15 AM", farm: "Ratnagiri", block: "Block A", plants: ["Mango Plant", "Areca Palm"], stages: ["Child", "Adult"], quantity: 44,
+      supervisors: ["Prakash"], actions: ["Create Sellable Batch", "Maintenance"], startDate: "2026-08-07", endDate: "2026-08-09", estimatedTime: "24 Hours",
+      status: "Attention", message: "Available grow bags do not match the required quality specification. Procurement review is required.", efficiency: 67, completedOn: "-", allocationStatus: "Pending", flagged: true
+    },
+    {
+      id: "WO-2026-005", assignedOn: "06 Aug 2026, 01:20 PM", farm: "Kamshet", block: "Block C", plants: ["Marigold", "Areca Palm"], stages: ["Sapling"], quantity: 38,
+      supervisors: ["Ramesh"], actions: ["Growth"], startDate: "2026-08-08", endDate: "2026-08-08", estimatedTime: "8 Hours",
+      status: "Not Started", message: "Work order assigned. Awaiting material allocation and scheduled start date.", efficiency: 0, completedOn: "-", allocationStatus: "Not Started", flagged: false
+    },
+    {
+      id: "WO-2026-006", assignedOn: "06 Aug 2026, 02:05 PM", farm: "Karla", block: "Block C", plants: ["Money Plant", "Peace Lily"], stages: ["Sapling", "Child"], quantity: 46,
+      supervisors: ["Suresh"], actions: ["Maintenance"], startDate: "2026-08-07", endDate: "2026-08-08", estimatedTime: "10 Hours",
+      status: "Pending", message: "Supervisor accepted the assignment. Material readiness is pending.", efficiency: 0, completedOn: "-", allocationStatus: "Pending", flagged: false
+    }
+  ];
+
+  const rawMaterials = [
+    { id: "RM-001", name: "Cocopeat Blocks", category: "Growing Medium", unit: "Blocks", rate: 180, img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-002", name: "Grow Bags 3x4", category: "Grow Bag", unit: "Bags", rate: 12, img: "https://images.unsplash.com/photo-1617576683096-00fc8eecb3af?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-003", name: "Grow Bags 4x4", category: "Grow Bag", unit: "Bags", rate: 16, img: "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-004", name: "Grow Bags 5x6", category: "Grow Bag", unit: "Bags", rate: 22, img: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-005", name: "Cutting Equipment", category: "Tool", unit: "Sets", rate: 250, img: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-006", name: "Rooting Hormone", category: "Chemical", unit: "Bottles", rate: 120, img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-007", name: "Organic Fertilizer", category: "Fertilizer", unit: "Kg", rate: 45, img: "https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=700&q=80" },
+    { id: "RM-008", name: "Labels & Plant Tags", category: "Tagging", unit: "Pcs", rate: 2, img: "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=700&q=80" }
+  ];
+
+  const rawMaterialStock = {
+    Kamshet: { "RM-001": 36, "RM-002": 120, "RM-003": 85, "RM-004": 65, "RM-005": 3, "RM-006": 1, "RM-007": 45, "RM-008": 3 },
+    Karla: { "RM-001": 22, "RM-002": 75, "RM-003": 110, "RM-004": 45, "RM-005": 2, "RM-006": 1, "RM-007": 35, "RM-008": 4 },
+    Vadegaon: { "RM-001": 42, "RM-002": 160, "RM-003": 55, "RM-004": 30, "RM-005": 4, "RM-006": 0, "RM-007": 28, "RM-008": 2 },
+    Ratnagiri: { "RM-001": 18, "RM-002": 90, "RM-003": 50, "RM-004": 85, "RM-005": 1, "RM-006": 1, "RM-007": 52, "RM-008": 3 }
+  };
+
+  function money(value) { return "₹" + Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 }); }
+  function getWorkOrder(id) { return workOrders.find(row => row.id === id); }
+  function getMaterial(id) { return rawMaterials.find(row => row.id === id); }
+  function selectedWorkOrder() { return getWorkOrder(selectedWorkOrderId); }
+  function otherFarmStock(materialId, destinationFarm) { return farms.filter(f => f !== destinationFarm).reduce((sum, farm) => sum + Number(rawMaterialStock[farm][materialId] || 0), 0); }
+  function bestSourceFarm(materialId, destinationFarm) { return farms.filter(f => f !== destinationFarm).sort((a,b) => (rawMaterialStock[b][materialId] || 0) - (rawMaterialStock[a][materialId] || 0))[0]; }
+
+  function statusPill(status) {
+    const cls = status === "Completed" ? "status-completed" :
+      status === "In-Progress" ? "status-progress" :
+      status === "Halted" ? "status-halted" :
+      status === "Attention" ? "status-attention" :
+      status === "Not Started" ? "status-notstarted" :
+      status === "RFQ Sent" ? "status-sent" :
+      status.includes("PO") ? "status-po" :
+      status.includes("Quotation") ? "status-approved" :
+      status.includes("Allocated") ? "status-approved" :
+      status.includes("Transfer") ? "status-transfer" : "status-pending";
+    return `<span class="status-pill ${cls}">${status}</span>`;
+  }
+
+  function renderWorkOrders() {
+    const farm = document.getElementById("workOrderFarmFilter").value;
+    const supervisor = document.getElementById("workOrderSupervisorFilter").value;
+    const status = document.getElementById("workOrderStatusFilter").value;
+    const allocation = document.getElementById("workOrderAllocationFilter").value;
+    const search = document.getElementById("workOrderSearch").value.trim().toLowerCase();
+
+    const list = workOrders.filter(row =>
+      (farm === "All" || row.farm === farm) &&
+      (supervisor === "All" || row.supervisors.includes(supervisor)) &&
+      (status === "All" || row.status === status) &&
+      (allocation === "All" || row.allocationStatus === allocation) &&
+      (!search || `${row.id} ${row.plants.join(" ")} ${row.stages.join(" ")} ${row.farm} ${row.block}`.toLowerCase().includes(search))
+    );
+
+    const tbody = document.getElementById("workOrderTableBody");
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:#5a6f5a;padding:24px;">No work orders match the selected filters.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(row => `
+      <tr class="work-order-row ${row.id === selectedWorkOrderId ? "active-row" : ""} ${row.flagged ? "flagged-row" : ""}">
+        <td><span class="selected-pill">${row.id}</span>${row.flagged ? `<div class="flagged-label" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</div>` : ""}</td>
+        <td>${row.assignedOn}</td>
+        <td><strong>${row.farm}</strong><br><span class="muted">${row.block}</span></td>
+        <td><strong>${row.plants.join(", ")}</strong><br><span class="muted">${row.stages.join(", ")} · ${row.quantity} plants</span></td>
+        <td>${row.supervisors.join(", ")}</td>
+        <td>${row.actions.join("<br>")}</td>
+        <td><strong>${row.startDate}</strong> to <strong>${row.endDate}</strong><br><span class="muted">Estimated: ${row.estimatedTime}</span></td>
+        <td>${statusPill(row.status)}<div class="work-message">${row.message}</div>${row.completedOn !== "-" ? `<div class="work-message"><strong>Completed:</strong> ${row.completedOn}</div>` : ""}</td>
+        <td><strong>${row.efficiency}%</strong><div class="progress-track"><div class="progress-fill" style="width:${Math.max(row.efficiency, 2)}%;"></div></div></td>
+        <td>${statusPill(row.allocationStatus)}</td>
+        <td><button class="btn btn-green btn-small" onclick="openMaterialAllocation('${row.id}')"><i class="fa fa-cubes"></i> Material Allocation</button></td>
+      </tr>`).join("");
+  }
+
+  function suggestedRequirements(workOrder) {
+    const qty = workOrder.quantity;
+    const hasAdult = workOrder.stages.includes("Adult");
+    const hasChild = workOrder.stages.includes("Child");
+    return {
+      "RM-001": Math.ceil(qty / (hasAdult ? 8 : hasChild ? 10 : 12)),
+      "RM-002": workOrder.stages.includes("Sapling") ? Math.ceil(qty * .65) : 0,
+      "RM-003": hasChild ? Math.ceil(qty * .55) : 0,
+      "RM-004": hasAdult ? Math.ceil(qty * .55) : 0,
+      "RM-005": Math.max(1, Math.ceil(qty / 50)),
+      "RM-006": Math.ceil(qty / 28),
+      "RM-007": Math.ceil(qty * .42),
+      "RM-008": qty
+    };
+  }
+
+  function openMaterialAllocation(workOrderId) {
+    selectedWorkOrderId = workOrderId;
+    const wo = selectedWorkOrder();
+    const existing = allocations.find(row => row.workOrderId === workOrderId);
+    currentAllocation = existing ? JSON.parse(JSON.stringify(existing)) : {
+      id: `MA-2026-${String(allocationCounter).padStart(3, "0")}`,
+      workOrderId: wo.id,
+      farm: wo.farm,
+      block: wo.block,
+      createdOn: currentDateTime(),
+      requirements: []
+    };
+
+    document.getElementById("selectedWorkOrderPill").innerHTML = `<i class="fa fa-link"></i> ${wo.id}`;
+    document.getElementById("allocationSection").classList.remove("hidden");
+    document.getElementById("allocationNoPill").innerHTML = `<i class="fa fa-file"></i> ${currentAllocation.id}`;
+    document.getElementById("allocationSubText").innerHTML = `Choose material requirements for <strong>${wo.id}</strong> assigned at <strong>${wo.farm} · ${wo.block}</strong>.`;
+    document.getElementById("workOrderSummaryStrip").innerHTML = `
+      <div class="summary-item"><span>Work Order</span><strong>${wo.id}</strong></div>
+      <div class="summary-item"><span>Farm / Block</span><strong>${wo.farm}<br>${wo.block}</strong></div>
+      <div class="summary-item"><span>Plants</span><strong>${wo.plants.join(", ")}</strong></div>
+      <div class="summary-item"><span>Stages / Qty</span><strong>${wo.stages.join(", ")}<br>${wo.quantity} plants</strong></div>
+      <div class="summary-item"><span>Supervisors</span><strong>${wo.supervisors.join(", ")}</strong></div>
+      <div class="summary-item"><span>Work Status</span><strong>${wo.status}<br>Allocation: ${wo.allocationStatus}</strong></div>`;
+
+    renderMaterialRequirementGrid();
+    if (existing) {
+      renderAvailability();
+      document.getElementById("availabilitySection").classList.remove("hidden");
+    } else {
+      document.getElementById("availabilitySection").classList.add("hidden");
+    }
+    renderWorkOrders();
+    document.getElementById("allocationSection").scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast(`Material allocation opened for ${wo.id}`);
+  }
+
+  function renderMaterialRequirementGrid() {
+    const wo = selectedWorkOrder();
+    const suggested = suggestedRequirements(wo);
+    const existingMap = Object.fromEntries((currentAllocation.requirements || []).map(row => [row.id, row.qty]));
+    document.getElementById("materialRequirementGrid").innerHTML = rawMaterials.map(item => `
+      <div class="requirement-card">
+        <img src="${item.img}" alt="${item.name}">
+        <div class="requirement-card-body">
+          <h4>${item.name}</h4>
+          <div class="product-meta"><strong>Code:</strong> ${item.id}<br><strong>Category:</strong> ${item.category}<br><strong>Unit:</strong> ${item.unit}</div>
+          <label>Required Quantity</label>
+          <input type="number" min="0" id="material-${item.id}" value="${existingMap[item.id] ?? suggested[item.id] ?? 0}">
+        </div>
+      </div>`).join("");
+  }
+
+  function resetSuggestedMaterials() {
+    if (!selectedWorkOrderId) return;
+    const suggested = suggestedRequirements(selectedWorkOrder());
+    rawMaterials.forEach(item => document.getElementById(`material-${item.id}`).value = suggested[item.id] || 0);
+    showToast("Suggested material quantities restored");
+  }
+
+  function createMaterialAllocation() {
+    if (!selectedWorkOrderId) return;
+    const requirements = rawMaterials.map(item => ({
+      id: item.id, name: item.name, category: item.category, unit: item.unit, rate: item.rate,
+      qty: Number(document.getElementById(`material-${item.id}`).value || 0)
+    })).filter(row => row.qty > 0);
+    if (!requirements.length) { alert("Please enter at least one material requirement."); return; }
+
+    currentAllocation.requirements = requirements;
+    currentAllocation.updatedOn = currentDateTime();
+    const index = allocations.findIndex(row => row.workOrderId === selectedWorkOrderId);
+    if (index >= 0) allocations[index] = JSON.parse(JSON.stringify(currentAllocation));
+    else { allocations.unshift(JSON.parse(JSON.stringify(currentAllocation))); allocationCounter++; }
+
+    const wo = selectedWorkOrder();
+    wo.allocationStatus = "Partially Allocated";
+    document.getElementById("availabilitySection").classList.remove("hidden");
+    renderAvailability();
+    renderMetrics(); renderWorkOrders(); renderLinkedRecords();
+    showDecisionPanel("availability");
+    document.getElementById("availabilitySection").scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast(`${currentAllocation.id} saved for ${wo.id}`);
+  }
+
+  function allocationRows() {
+    if (!currentAllocation || !currentAllocation.requirements) return [];
+    const wo = selectedWorkOrder();
+    return currentAllocation.requirements.map(row => {
+      const destinationStock = Number(rawMaterialStock[wo.farm][row.id] || 0);
+      const afterDestination = Math.max(row.qty - destinationStock, 0);
+      const otherStock = otherFarmStock(row.id, wo.farm);
+      const transferQty = Math.min(afterDestination, otherStock);
+      const procurementQty = Math.max(afterDestination - transferQty, 0);
+      return { ...row, destinationStock, otherStock, transferQty, procurementQty };
+    });
+  }
+
+  function renderAvailability() {
+    const wo = selectedWorkOrder();
+    document.getElementById("availabilityText").innerHTML = `<strong>${currentAllocation.id}</strong> linked to <strong>${wo.id}</strong> · ${wo.farm} · ${wo.block} · ${wo.plants.join(", ")}.`;
+    document.getElementById("availabilityTableBody").innerHTML = allocationRows().map(row => `
+      <tr>
+        <td><span class="selected-pill">${wo.id}</span></td>
+        <td><strong>${row.name}</strong><br><span class="muted">${row.id} · ${row.category}</span></td>
+        <td>${row.qty} ${row.unit}</td>
+        <td>${row.destinationStock} ${row.unit}</td>
+        <td>${row.otherStock} ${row.unit}</td>
+        <td><strong>${row.transferQty}</strong> ${row.unit}</td>
+        <td style="font-weight:900;color:${row.procurementQty ? "#b42331" : "#0f7a45"};">${row.procurementQty} ${row.unit}</td>
+        <td>${row.procurementQty > 0 ? `<span class="status-pill status-short">Transfer + Procurement</span>` : row.transferQty > 0 ? `<span class="status-pill status-transfer">Internal Transfer</span>` : `<span class="status-pill status-approved">Destination Stock</span>`}</td>
+      </tr>`).join("");
+    renderTransferPanel(); renderProcurementPanel();
+  }
+
+  function showDecisionPanel(panel) {
+    document.getElementById("availabilityPanel").classList.toggle("hidden", panel !== "availability");
+    document.getElementById("transferPanel").classList.toggle("hidden", panel !== "transfer");
+    document.getElementById("procurementPanel").classList.toggle("hidden", panel !== "procurement");
+    document.getElementById("tabAvailability").classList.toggle("active", panel === "availability");
+    document.getElementById("tabTransfer").classList.toggle("active", panel === "transfer");
+    document.getElementById("tabProcurement").classList.toggle("active", panel === "procurement");
+    if (panel === "transfer") renderTransferPanel();
+    if (panel === "procurement") renderProcurementPanel();
+  }
+
+  function transferRows() { return allocationRows().filter(row => row.transferQty > 0); }
+  function shortageRows() { return allocationRows().filter(row => row.procurementQty > 0); }
+
+  function renderTransferPanel() {
+    const rows = transferRows();
+    const wo = selectedWorkOrder();
+    document.getElementById("transferMessageBox").innerHTML = rows.length ? `<strong style="color:#1a4d2a;">${rows.length} material item(s) can be transferred internally for ${wo.id}.</strong><br><span class="muted">Transfer quantity is limited to the requirement remaining after destination-farm stock.</span>` : `<strong style="color:#0f7a45;">No internal transfer is required for this work order.</strong>`;
+    document.getElementById("transferTableBody").innerHTML = rows.length ? rows.map((row,index) => {
+      const source = bestSourceFarm(row.id, wo.farm);
+      return `<tr>
+        <td><span class="selected-pill">${wo.id}</span></td><td><strong>${row.name}</strong><br><span class="muted">${row.id}</span></td>
+        <td><input class="editable-qty" type="number" min="0" max="${row.transferQty}" id="transferQty-${row.id}" value="${row.transferQty}"> ${row.unit}</td>
+        <td><select id="sourceFarm-${row.id}">${farms.filter(f=>f!==wo.farm).map(f=>`<option ${f===source?"selected":""}>${f}</option>`).join("")}</select></td>
+        <td><span class="selected-pill">${wo.farm}</span></td><td><input type="number" min="1" id="distance-${row.id}" value="${38 + index*14}"></td>
+        <td><select id="driver-${row.id}">${drivers.map((d,i)=>`<option ${i===index%drivers.length?"selected":""}>${d}</option>`).join("")}</select></td>
+        <td><select id="trip-${row.id}"><option>Planned</option><option>Driver Assigned</option><option>In Transit</option></select></td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="8" style="text-align:center;color:#5a6f5a;padding:24px;">No transferable quantity found.</td></tr>`;
+  }
+
+  function createTransferVoucher() {
+    const rows = transferRows();
+    const wo = selectedWorkOrder();
+    if (!rows.length) { alert("No transferable material is available."); return; }
+    const voucherNo = `TV-2026-${String(transferCounter).padStart(3,"0")}`; transferCounter++;
+    const details = rows.map(row => ({
+      id: row.id, name: row.name, unit: row.unit, qty: Number(document.getElementById(`transferQty-${row.id}`).value || 0),
+      from: document.getElementById(`sourceFarm-${row.id}`).value, to: wo.farm, distance: document.getElementById(`distance-${row.id}`).value,
+      driver: document.getElementById(`driver-${row.id}`).value, status: document.getElementById(`trip-${row.id}`).value
+    })).filter(row => row.qty > 0);
+    if (!details.length) { alert("Please enter at least one transfer quantity."); return; }
+    transferVouchers.unshift({ id: voucherNo, workOrderId: wo.id, allocationId: currentAllocation.id, farm: wo.farm, block: wo.block, details, status: "Transfer Planned", createdOn: currentDateTime() });
+    document.getElementById("transferVoucherBox").classList.remove("hidden");
+    document.getElementById("transferVoucherBox").innerHTML = `<h3 style="color:#1a4d2a;margin-bottom:8px;">Transfer Voucher Created ✅</h3><p class="muted"><strong>${voucherNo}</strong> linked to <strong>${wo.id}</strong> and <strong>${currentAllocation.id}</strong>.</p>
+      <div class="table-card" style="box-shadow:none;margin-top:15px;"><table><thead><tr><th>Material</th><th>Qty</th><th>From</th><th>To</th><th>Driver</th><th>Status</th></tr></thead><tbody>${details.map(d=>`<tr><td>${d.name}</td><td>${d.qty} ${d.unit}</td><td>${d.from}</td><td>${d.to}</td><td>${d.driver}</td><td>${statusPill(d.status)}</td></tr>`).join("")}</tbody></table></div>`;
+    wo.allocationStatus = shortageRows().length ? "Partially Allocated" : "Allocated";
+    renderMetrics(); renderWorkOrders(); renderLinkedRecords(); showToast(`${voucherNo} created for ${wo.id}`);
+  }
+
+  function renderProcurementPanel() {
+    const rows = shortageRows();
+    const wo = selectedWorkOrder();
+    document.getElementById("procurementShortageBox").innerHTML = rows.length ? `<strong style="color:#b42331;">Procurement is required for ${wo.id}:</strong><br><span class="muted">${rows.map(r=>`${r.name}: ${r.procurementQty} ${r.unit}`).join(" · ")}</span>` : `<strong style="color:#0f7a45;">No procurement shortage remains for ${wo.id}.</strong>`;
+    document.getElementById("procurementRequirementTableBody").innerHTML = rows.length ? rows.map(row => `
+      <tr><td><strong>${row.name}</strong><br><span class="muted">${row.id}</span></td><td>${row.procurementQty} ${row.unit}</td>
+      <td><input class="editable-qty" type="number" min="0" id="procQty-${row.id}" value="${row.procurementQty}"></td><td>${row.unit}</td>
+      <td><input type="date" id="needBy-${row.id}" value="${wo.endDate}"></td><td><select id="priority-${row.id}"><option>Normal</option><option ${wo.status==="Halted"||wo.status==="Attention"?"selected":""}>Urgent</option><option>Critical</option></select></td>
+      <td><input id="procRemark-${row.id}" placeholder="Material specification or reason"></td></tr>`).join("") : `<tr><td colspan="7" style="text-align:center;color:#5a6f5a;padding:24px;">No procurement quantity required.</td></tr>`;
+    renderProcurementRegister();
+  }
+
+  function createOrUpdateProcurement() {
+    const rows = shortageRows(); const wo = selectedWorkOrder();
+    if (!rows.length) { alert("No procurement shortage is available."); return; }
+    const details = rows.map(row => ({ id: row.id, name: row.name, unit: row.unit, qty: Number(document.getElementById(`procQty-${row.id}`).value || 0), needBy: document.getElementById(`needBy-${row.id}`).value, priority: document.getElementById(`priority-${row.id}`).value, remarks: document.getElementById(`procRemark-${row.id}`).value.trim() })).filter(row=>row.qty>0);
+    if (!details.length) { alert("Enter at least one procurement quantity."); return; }
+    let record = procurements.find(p => p.workOrderId === wo.id && p.allocationId === currentAllocation.id && !p.status.includes("PO"));
+    if (record) { record.details = details; record.updatedOn = currentDateTime(); record.status = record.rfqNo ? "RFQ Sent" : "Procurement Saved"; }
+    else { record = { id: `PR-2026-${String(procurementCounter).padStart(3,"0")}`, workOrderId: wo.id, allocationId: currentAllocation.id, farm: wo.farm, block: wo.block, details, status: "Procurement Saved", rfqNo: null, createdOn: currentDateTime() }; procurements.unshift(record); procurementCounter++; }
+    wo.allocationStatus = "Pending";
+    renderProcurementRegister(); renderMetrics(); renderWorkOrders(); renderLinkedRecords(); showToast(`${record.id} saved with editable quantities`);
+  }
+
+  function updateProcurementQuantities(procurementId) {
+    const p = procurements.find(row => row.id === procurementId); if (!p) return;
+    p.details.forEach(item => { item.qty = Number(document.getElementById(`registerQty-${p.id}-${item.id}`).value || 0); });
+    p.updatedOn = currentDateTime(); renderProcurementRegister(); renderLinkedRecords(); showToast(`${p.id} quantities updated`);
+  }
+
+  function sendRfq(procurementId) {
+    const p = procurements.find(row => row.id === procurementId); if (!p) return;
+    if (!p.rfqNo) { p.rfqNo = `RFQ-2026-${String(rfqCounter).padStart(3,"0")}`; rfqCounter++; }
+    p.status = "RFQ Sent"; p.rfqSentOn = currentDateTime();
+    renderProcurementRegister(); renderMetrics(); renderLinkedRecords(); showToast(`${p.rfqNo} autogenerated and sent for ${p.workOrderId}`);
+  }
+
+  function renderProcurementRegister() {
+    const tbody = document.getElementById("procurementRegisterBody");
+    const list = selectedWorkOrderId ? procurements.filter(p=>p.workOrderId===selectedWorkOrderId) : procurements;
+    if (!list.length) { tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#5a6f5a;padding:24px;">No procurement records created for this work order.</td></tr>`; return; }
+    tbody.innerHTML = list.map(p => `
+      <tr><td><span class="selected-pill">${p.id}</span></td><td>${p.workOrderId}</td>
+      <td>${p.details.map(item=>`<div style="margin-bottom:8px;"><strong>${item.name}</strong><br><input class="editable-qty" type="number" min="0" id="registerQty-${p.id}-${item.id}" value="${item.qty}"> ${item.unit}</div>`).join("")}</td>
+      <td>${p.details.map(item=>`${item.name}: ${item.needBy}`).join("<br>")}</td><td>${statusPill(p.status)}</td><td>${p.rfqNo ? `<span class="status-pill status-review">${p.rfqNo}</span>` : "Not Generated"}</td><td>${p.createdOn}</td>
+      <td><div class="action-stack"><button class="btn btn-light btn-small" onclick="updateProcurementQuantities('${p.id}')"><i class="fa fa-save"></i> Update Quantity</button>
+      ${!p.rfqNo ? `<button class="btn btn-blue btn-small" onclick="sendRfq('${p.id}')"><i class="fa fa-paper-plane"></i> Send RFQ</button>` : `<button class="btn btn-green btn-small" onclick="openQuotationReceive('${p.id}')"><i class="fa fa-file-text-o"></i> Register Quotation Received</button>`}</div></td></tr>`).join("");
+  }
+
+  function openQuotationReceive(procurementId) {
+    const p = procurements.find(row => row.id === procurementId); if (!p || !p.rfqNo) { alert("Send the RFQ first."); return; }
+    activeProcurementId = procurementId; activeQuotationItems = p.details.map(item => ({ ...item, offeredQty: item.qty, unitPrice: getMaterial(item.id).rate }));
+    document.getElementById("quotationReceiveSection").classList.remove("hidden");
+    document.getElementById("quoteWorkOrder").value = p.workOrderId;
+    document.getElementById("quoteProcurementNo").value = p.id;
+    document.getElementById("quoteRfqNo").value = p.rfqNo;
+    document.getElementById("quotationDeliveryLocation").value = `${p.farm} · ${p.block}`;
+    document.getElementById("activeRfqPill").innerHTML = `<i class="fa fa-envelope"></i> ${p.rfqNo}`;
+    document.getElementById("quotationReceiveText").innerHTML = `Register vendor response against <strong>${p.rfqNo}</strong> for <strong>${p.workOrderId}</strong>.`;
+    document.getElementById("quotationDate").value = today;
+    const valid = new Date(); valid.setDate(valid.getDate()+15); document.getElementById("quotationValidUntil").value = valid.toISOString().slice(0,10);
+    ["vendorQuotationNo","vendorName","vendorContactPerson","vendorPhone","vendorEmail","vendorGst","quotationDeliveryDays","quotationRemarks"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("quotationTransport").value = 0; document.getElementById("quotationTax").value = 18; document.getElementById("quotationStatus").value = "Received";
+    renderQuotationItems(); calculateQuotationTotal();
+    document.getElementById("quotationReceiveSection").scrollIntoView({ behavior:"smooth", block:"start" });
+    showToast(`Quotation registration opened for ${p.rfqNo}`);
+  }
+
+  function renderQuotationItems() {
+    document.getElementById("quotationItemsGrid").innerHTML = activeQuotationItems.map(item => `
+      <div class="quotation-item-row"><div><label>Material</label><div class="compact-note"><strong>${item.name}</strong><br>${item.id} · Required ${item.qty} ${item.unit}</div></div>
+      <div><label>Qty Vendor Can Supply</label><input type="number" min="0" id="offerQty-${item.id}" value="${item.offeredQty}" oninput="calculateQuotationTotal()"></div>
+      <div><label>Unit Price</label><input type="number" min="0" id="offerRate-${item.id}" value="${item.unitPrice}" oninput="calculateQuotationTotal()"></div>
+      <div><label>Line Amount</label><input id="offerLine-${item.id}" readonly></div></div>`).join("");
+  }
+
+  function calculateQuotationTotal() {
+    let subtotal = 0;
+    activeQuotationItems.forEach(item => {
+      const qty = Number(document.getElementById(`offerQty-${item.id}`)?.value || 0);
+      const rate = Number(document.getElementById(`offerRate-${item.id}`)?.value || 0);
+      const line = qty * rate; subtotal += line;
+      const field = document.getElementById(`offerLine-${item.id}`); if (field) field.value = money(line);
+    });
+    const transport = Number(document.getElementById("quotationTransport")?.value || 0);
+    const taxPercent = Number(document.getElementById("quotationTax")?.value || 0);
+    const tax = subtotal * taxPercent / 100; const total = subtotal + tax + transport;
+    document.getElementById("quotationGrandTotal").textContent = money(total);
+    document.getElementById("quotationTotalBreakup").textContent = `Subtotal ${money(subtotal)} + Tax ${money(tax)} + Transport ${money(transport)}`;
+    return { subtotal, taxPercent, tax, transport, total };
+  }
+
+  function saveQuotationReceived() {
+    const p = procurements.find(row => row.id === activeProcurementId); if (!p) return;
+    const vendorName = document.getElementById("vendorName").value.trim(); const days = Number(document.getElementById("quotationDeliveryDays").value || 0);
+    if (!vendorName || !days) { alert("Please enter vendor name and delivery days."); return; }
+    const offered = activeQuotationItems.map(item => ({ id:item.id, name:item.name, unit:item.unit, requiredQty:item.qty, offeredQty:Number(document.getElementById(`offerQty-${item.id}`).value||0), unitPrice:Number(document.getElementById(`offerRate-${item.id}`).value||0) }));
+    const totals = calculateQuotationTotal(); const quoteId = `QR-2026-${String(quotationCounter).padStart(3,"0")}`; quotationCounter++;
+    quotations.unshift({
+      id: quoteId, workOrderId:p.workOrderId, procurementId:p.id, rfqNo:p.rfqNo, vendorQuotationNo:document.getElementById("vendorQuotationNo").value.trim() || "Not Provided",
+      vendor:{ name:vendorName, contactPerson:document.getElementById("vendorContactPerson").value.trim(), phone:document.getElementById("vendorPhone").value.trim(), email:document.getElementById("vendorEmail").value.trim(), gst:document.getElementById("vendorGst").value.trim() },
+      quotationDate:document.getElementById("quotationDate").value, validUntil:document.getElementById("quotationValidUntil").value, deliveryDays:days,
+      deliveryLocation:document.getElementById("quotationDeliveryLocation").value, status:document.getElementById("quotationStatus").value, remarks:document.getElementById("quotationRemarks").value.trim() || "No additional remarks", offered, ...totals, createdOn:currentDateTime()
+    });
+    p.status = "Quotation Received";
+    renderQuotationRegister(); renderProcurementRegister(); renderMetrics(); renderLinkedRecords(); closeQuotationReceive(); showToast(`${quoteId} registered for ${p.rfqNo}`);
+  }
+
+  function closeQuotationReceive() { document.getElementById("quotationReceiveSection").classList.add("hidden"); activeProcurementId = null; activeQuotationItems = []; }
+
+  function renderQuotationRegister() {
+    const tbody = document.getElementById("quotationRegisterBody");
+    if (!quotations.length) { tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#5a6f5a;padding:24px;">No vendor quotations received yet.</td></tr>`; return; }
+    tbody.innerHTML = quotations.map(q => `
+      <tr><td><span class="selected-pill">${q.id}</span><br><span class="muted">Vendor Ref: ${q.vendorQuotationNo}</span></td><td>${q.workOrderId}</td><td>${q.procurementId}<br><span class="status-pill status-review">${q.rfqNo}</span></td>
+      <td><strong>${q.vendor.name}</strong><br><span class="muted">${q.vendor.contactPerson || "-"}<br>${q.vendor.phone || "-"}<br>${q.vendor.email || "-"}<br>GST: ${q.vendor.gst || "-"}</span></td>
+      <td>${q.offered.map(item=>`${item.name}: <strong>${item.offeredQty}/${item.requiredQty}</strong> ${item.unit} @ ${money(item.unitPrice)}`).join("<br>")}</td><td><strong>${money(q.total)}</strong><br><span class="muted">Subtotal ${money(q.subtotal)}<br>Tax ${money(q.tax)} · Transport ${money(q.transport)}</span></td>
+      <td>${q.deliveryDays} days<br><span class="muted">Valid until ${q.validUntil}<br>${q.deliveryLocation}</span></td><td>${statusPill(q.status)}</td><td>${q.remarks}</td>
+      <td><button class="btn btn-green btn-small" onclick="finalizeQuotation('${q.id}')"><i class="fa fa-check"></i> Finalize & Create PO</button></td></tr>`).join("");
+  }
+
+  function finalizeQuotation(quotationId) {
+    const q = quotations.find(row=>row.id===quotationId); if (!q) return;
+    if (purchaseOrders.some(po=>po.quotationId===quotationId)) { showToast("Purchase order already created for this quotation"); return; }
+    const poNo = `PO-2026-${String(poCounter).padStart(3,"0")}`; poCounter++;
+    purchaseOrders.unshift({ id:poNo, quotationId:q.id, workOrderId:q.workOrderId, procurementId:q.procurementId, rfqNo:q.rfqNo, vendor:q.vendor.name, amount:q.total, details:q.offered, status:"PO Created", createdOn:currentDateTime() });
+    const p = procurements.find(row=>row.id===q.procurementId); if (p) p.status = `PO Created: ${poNo}`;
+    const wo = getWorkOrder(q.workOrderId); if (wo) wo.allocationStatus = "Allocated";
+    document.getElementById("poBox").classList.remove("hidden"); document.getElementById("poBox").innerHTML = `<h3 style="color:#1a4d2a;margin-bottom:8px;">Purchase Order Created ✅</h3><p class="muted"><strong>${poNo}</strong> · Work Order <strong>${q.workOrderId}</strong> · Procurement <strong>${q.procurementId}</strong> · RFQ <strong>${q.rfqNo}</strong> · Vendor <strong>${q.vendor.name}</strong> · Amount <strong>${money(q.total)}</strong></p>`;
+    renderProcurementRegister(); renderWorkOrders(); renderMetrics(); renderLinkedRecords(); showToast(`${poNo} created for ${q.workOrderId}`);
+  }
+
+  function recordItemsText(details) { return details.map(item=>`${item.name}: ${item.qty ?? item.offeredQty} ${item.unit}`).join("<br>"); }
+
+  function renderLinkedRecords() {
+    const woFilter = document.getElementById("linkedWorkOrderFilter").value;
+    const typeFilter = document.getElementById("linkedTypeFilter").value;
+    const records = [];
+    allocations.forEach(a=>records.push({ id:a.id,type:"Material Allocation",workOrderId:a.workOrderId,farm:a.farm,block:a.block,details:a.requirements,status:"Allocation Created",linked:"-",date:a.updatedOn||a.createdOn }));
+    transferVouchers.forEach(t=>records.push({ id:t.id,type:"Internal Transfer",workOrderId:t.workOrderId,farm:t.farm,block:t.block,details:t.details,status:t.status,linked:t.allocationId,date:t.createdOn }));
+    procurements.forEach(p=>records.push({ id:p.id,type:"Procurement",workOrderId:p.workOrderId,farm:p.farm,block:p.block,details:p.details,status:p.status,linked:p.allocationId,date:p.updatedOn||p.createdOn }));
+    procurements.filter(p=>p.rfqNo).forEach(p=>records.push({ id:p.rfqNo,type:"RFQ",workOrderId:p.workOrderId,farm:p.farm,block:p.block,details:p.details,status:"RFQ Sent",linked:p.id,date:p.rfqSentOn||p.createdOn }));
+    quotations.forEach(q=>{const p=procurements.find(x=>x.id===q.procurementId);records.push({id:q.id,type:"Quotation",workOrderId:q.workOrderId,farm:p?.farm||"-",block:p?.block||"-",details:q.offered.map(i=>({name:i.name,qty:i.offeredQty,unit:i.unit})),status:q.status,linked:`${q.procurementId} / ${q.rfqNo}`,date:q.createdOn});});
+    purchaseOrders.forEach(po=>{const p=procurements.find(x=>x.id===po.procurementId);records.push({id:po.id,type:"Purchase Order",workOrderId:po.workOrderId,farm:p?.farm||"-",block:p?.block||"-",details:po.details.map(i=>({name:i.name,qty:i.offeredQty,unit:i.unit})),status:po.status,linked:po.quotationId,date:po.createdOn});});
+    const list = records.filter(r=>(woFilter==="All"||r.workOrderId===woFilter)&&(typeFilter==="All"||r.type===typeFilter));
+    document.getElementById("linkedRecordsBody").innerHTML = list.length ? list.map(r=>`<tr><td><span class="selected-pill">${r.id}</span></td><td>${r.type}</td><td>${r.workOrderId}</td><td>${r.farm} · ${r.block}</td><td>${recordItemsText(r.details)}</td><td>${statusPill(r.status)}</td><td>${r.linked}</td><td>${r.date}</td></tr>`).join("") : `<tr><td colspan="8" style="text-align:center;color:#5a6f5a;padding:24px;">No linked material records found.</td></tr>`;
+  }
+
+  function renderMetrics() {
+    document.getElementById("metricWorkOrders").textContent = workOrders.length;
+    document.getElementById("metricAllocations").textContent = allocations.length;
+    document.getElementById("metricProcurements").textContent = procurements.filter(p=>!p.status.includes("PO")).length;
+    document.getElementById("metricQuotations").textContent = quotations.length;
+  }
+
+  function populateLinkedWorkOrderFilter() {
+    document.getElementById("linkedWorkOrderFilter").innerHTML = `<option value="All">All Work Orders</option>${workOrders.map(w=>`<option>${w.id}</option>`).join("")}`;
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById("toast"); document.getElementById("toastText").textContent = message; toast.classList.add("show");
+    clearTimeout(toast._timeout); toast._timeout = setTimeout(()=>toast.classList.remove("show"),2800);
+  }
+
+  populateLinkedWorkOrderFilter();
+  renderWorkOrders();
+  renderQuotationRegister();
+  renderLinkedRecords();
+  renderMetrics();
+</script>
+</body></html>
+

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OM Nursery | Mimo Pages</title>
+  <style>
+    :root {
+      --green-dark: #0f3a1e;
+      --green: #1a4d2a;
+      --green-mid: #2d6e3e;
+      --green-soft: #edf6ee;
+      --gold: #f5c542;
+      --gold-deep: #d9a925;
+      --bg: #f4f7f5;
+      --card: #ffffff;
+      --text: #1e2e24;
+      --muted: #5a6f5a;
+      --border: #e3ece3;
+      --shadow: 0 14px 35px rgba(11, 34, 20, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 18px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      background: linear-gradient(145deg, var(--green) 0%, var(--green-mid) 100%);
+      border-radius: 30px;
+      padding: 40px 38px;
+      box-shadow: 0 20px 40px rgba(0, 20, 0, 0.15);
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .hero::after {
+      content: "🌿";
+      position: absolute;
+      right: 28px;
+      bottom: -10px;
+      font-size: 140px;
+      opacity: 0.12;
+      transform: rotate(8deg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon {
+      font-size: 54px;
+      line-height: 1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.04em;
+    }
+
+    h1 span {
+      color: var(--gold);
+    }
+
+    .subtext {
+      margin-top: 14px;
+      max-width: 900px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 600;
+      border-left: 4px solid var(--gold);
+      padding-left: 16px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px 18px;
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: -0.05em;
+    }
+
+    .stat-label {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-top: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      color: var(--green);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .pill {
+      background: #ebf4eb;
+      border: 1px solid #dfeee0;
+      color: var(--green);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .page-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbf9 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 18px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 20px rgba(15, 58, 30, 0.04);
+    }
+
+    .page-row:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 25px rgba(15, 58, 30, 0.08);
+    }
+
+    .page-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .page-no {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, var(--green) 0%, var(--green-mid) 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .page-info {
+      min-width: 0;
+    }
+
+    .page-tag {
+      background: #f5f0d9;
+      color: var(--gold-deep);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    .page-row h3 {
+      margin: 0;
+      color: var(--green-dark);
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .page-row p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .page-btn {
+      display: inline-block;
+      min-width: 170px;
+      text-align: center;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.2s ease, transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .page-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .hero,
+      .section {
+        padding: 20px 18px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .page-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .page-btn {
+        width: 100%;
+      }
+
+      .subtext {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-row">
+          <div class="hero-icon">🌱</div>
+          <h1>OM Nursery <span>Mimo</span> Pages</h1>
+        </div>
+
+        <p class="subtext">
+          Welcome to the nursery showcase. Use the buttons below to open each Mimo page quickly and move through the full set of modules in one place.
+        </p>
+
+        <div class="badge-row">
+          <span class="badge">Nursery Theme</span>
+          <span class="badge">Garden UI</span>
+          <span class="badge">Fast Navigation</span>
+          <span class="badge">Inline CSS</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-number">8</span>
+        <span class="stat-label">Pages</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">1</span>
+        <span class="stat-label">Landing</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Inline CSS</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">Open</span>
+        <span class="stat-label">Quick Access</span>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Open Mimo Pages</h2>
+        <span class="pill">Choose a page</span>
+      </div>
+
+      <div class="list">
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">01</div>
+            <div class="page-info">
+              <h3># Production Work Module</h3>
+              <p>Production Work Orders and operational workflow overview.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo1.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">02</div>
+            <div class="page-info">
+              <h3># Material Allocation Module</h3>
+              <p>Material planning and allocation tracking for nursery operations.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo2.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">03</div>
+            <div class="page-info">
+              <h3># Inventory Addition RFID Module</h3>
+              <p>RFID-based inventory addition and item mapping workflow.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo3.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">04</div>
+            <div class="page-info">
+              <h3># B2C Customer Flow Demo</h3>
+              <p>Customer registration, cart flow, and counter checkout experience.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo4.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">05</div>
+            <div class="page-info">
+              <h3># B2B Inquiry Management</h3>
+              <p>Business inquiry handling and quotation management workflow.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo5.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">06</div>
+            <div class="page-info">
+              <h3># Customer Review Dashboard</h3>
+              <p>Review analytics, rankings, and product performance overview.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo6.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">07</div>
+            <div class="page-info">
+              <h3># RFID Plant Identification</h3>
+              <p>Live scanning and plant identification for tagged nursery items.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo7.html">Open</a>
+        </div>
+
+        <div class="page-row">
+          <div class="page-left">
+            <div class="page-no">08</div>
+            <div class="page-info">
+              <h3># Plant Inventory Check</h3>
+              <p>Advanced inventory search and plant stock verification.</p>
+            </div>
+          </div>
+          <a class="page-btn" href="mimo8.html">Open</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

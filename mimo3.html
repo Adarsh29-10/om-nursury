@@ -1,0 +1,1615 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Individual &amp; Group RFID Mapping</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #1a4d2a;
+      --green-dark: #0f3a1e;
+      --green-mid: #2d6e3e;
+      --gold: #f5c542;
+      --background: #f4f7f5;
+      --white: #ffffff;
+      --text: #1e2e24;
+      --muted: #5a6f5a;
+      --border: #e6eee6;
+      --soft: #f8fbf8;
+      --blue: #1363a5;
+      --red: #b42331;
+      --orange: #9b6b00;
+      --shadow: 0 12px 30px rgba(0,20,0,0.06);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      padding: 30px 20px;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    .container { max-width: 1450px; margin: 0 auto; }
+
+    /* Small built-in icon replacement so the page remains HTML + CSS + JS only */
+    .fa { display: inline-flex; align-items: center; justify-content: center; font-style: normal; }
+    .fa-tags::before { content: "🏷️"; }
+    .fa-leaf::before { content: "🌿"; }
+    .fa-sitemap::before { content: "🌱"; }
+    .fa-map-marker::before { content: "📍"; }
+    .fa-object-group::before { content: "🧺"; }
+    .fa-check-circle::before { content: "✓"; }
+    .fa-plus-circle::before { content: "+"; }
+    .fa-th-large::before { content: "▦"; }
+    .fa-refresh::before { content: "↻"; }
+    .fa-list-ul::before { content: "☷"; }
+    .fa-clock-o::before { content: "◷"; }
+    .fa-map::before { content: "🗺️"; }
+    .fa-check::before { content: "✓"; }
+    .fa-users::before { content: "👥"; }
+    .fa-cubes::before { content: "▦"; }
+    .fa-id-card::before { content: "▣"; }
+
+    .hero-section {
+      background: linear-gradient(145deg, var(--green) 0%, var(--green-mid) 100%);
+      border-radius: 32px;
+      padding: 42px 50px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 40px rgba(0,20,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::after {
+      content: "🌿";
+      position: absolute;
+      right: 28px;
+      bottom: -10px;
+      font-size: 145px;
+      opacity: 0.10;
+      transform: rotate(8deg);
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon { font-size: 52px; }
+
+    .hero-section h1 {
+      font-size: 43px;
+      font-weight: 850;
+      color: #fff;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-section h1 span { color: var(--gold); }
+
+    .sub-head {
+      color: rgba(255,255,255,0.88);
+      font-size: 17px;
+      margin-top: 10px;
+      border-left: 4px solid var(--gold);
+      padding-left: 16px;
+      max-width: 1040px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .badge-module {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 7px 16px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .step strong {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .step span { font-size: 12px; font-weight: 650; opacity: 0.93; }
+
+    .section-card {
+      background: var(--white);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      color: var(--green);
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i { color: #b68b40; }
+    .muted { color: var(--muted); font-weight: 560; line-height: 1.55; }
+
+    .grid { display: grid; gap: 18px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    label {
+      display: block;
+      color: var(--green);
+      font-weight: 720;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid #dbe8db;
+      font-weight: 560;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+    }
+
+    select[multiple] { min-height: 150px; border-radius: 18px; padding: 10px; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08);
+    }
+
+    .input-help {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.45;
+      margin-top: 7px;
+      font-weight: 600;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 40px;
+      padding: 10px 22px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-green { background: var(--green); color: #fff; box-shadow: 0 8px 16px rgba(26,77,42,0.18); }
+    .btn-green:hover { background: var(--green-dark); }
+    .btn-gold { background: var(--gold); color: var(--text); box-shadow: 0 8px 16px rgba(245,197,66,0.22); }
+    .btn-light { background: #eef6ef; color: var(--green); }
+    .btn-red { background: #ffe3e6; color: var(--red); }
+    .btn-blue { background: #e6f3ff; color: var(--blue); }
+    .btn-small { padding: 8px 14px; font-size: 13px; }
+
+    .metric-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 142px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-label { color: var(--muted); font-size: 14px; font-weight: 700; margin-bottom: 26px; }
+    .metric-number { color: #0b1f3a; font-size: 30px; font-weight: 900; }
+
+    .metric-icon {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 58px;
+      height: 58px;
+      background: #eef6ff;
+      border-radius: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #134f7a;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .mini-badge, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-size: 12px;
+      font-weight: 820;
+    }
+
+    .mini-badge { margin-top: 12px; color: #fff; }
+    .green { background: #0f8f55; }
+    .blue { background: #17b7d9; }
+    .orange { background: #f7a614; }
+    .red { background: #e63946; }
+    .gold { background: var(--gold); color: var(--text); }
+
+    .status-pending { background: #fff4d8; color: var(--orange); }
+    .status-approved { background: #dcf7ea; color: #0f7a45; }
+    .status-review { background: #e6f3ff; color: var(--blue); }
+    .status-danger { background: #ffe3e6; color: var(--red); }
+    .status-draft { background: #f0f5f0; color: #4f674f; }
+    .status-po { background: #ecdcff; color: #6733a6; }
+    .status-group { background: #e9e1ff; color: #5d3ca6; }
+
+    /* Tabs */
+    .tab-shell { padding: 12px; }
+
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      background: #f3f8f3;
+      border: 1px solid #dce9dc;
+      border-radius: 24px;
+      padding: 10px;
+    }
+
+    .tab-button {
+      border: 1px solid transparent;
+      border-radius: 18px;
+      padding: 17px 18px;
+      background: transparent;
+      color: var(--green);
+      cursor: pointer;
+      font-weight: 850;
+      text-align: left;
+      transition: all 0.22s;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tab-button:hover { background: #fff; border-color: #dbe8db; }
+
+    .tab-button.active {
+      background: linear-gradient(145deg, var(--green), var(--green-mid));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(26,77,42,0.18);
+    }
+
+    .tab-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(26,77,42,0.10);
+      font-size: 22px;
+    }
+
+    .tab-button.active .tab-icon { background: rgba(255,255,255,0.15); }
+    .tab-title { display: block; font-size: 16px; }
+    .tab-sub { display: block; font-size: 11.5px; margin-top: 4px; opacity: 0.78; line-height: 1.35; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: tabFade 0.22s ease; }
+    @keyframes tabFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .rfid-card {
+      background: var(--soft);
+      border: 1px solid #e1eee1;
+      border-radius: 22px;
+      padding: 16px;
+      transition: all 0.22s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rfid-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,20,0,0.08); }
+
+    .rfid-card.selected {
+      border-color: var(--green);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08), 0 14px 28px rgba(0,20,0,0.08);
+    }
+
+    .rfid-card::after {
+      content: "🏷️";
+      position: absolute;
+      right: -8px;
+      bottom: -18px;
+      font-size: 62px;
+      opacity: 0.07;
+      transform: rotate(-18deg);
+    }
+
+    .rfid-card h4 {
+      color: var(--green);
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+      word-break: break-word;
+    }
+
+    .rfid-meta { color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.45; position: relative; z-index: 2; }
+
+    .check-dot {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      background: var(--green);
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 13px;
+      z-index: 3;
+    }
+
+    .rfid-card.selected .check-dot { display: flex; }
+
+    .group-intro {
+      background: linear-gradient(145deg, #f7fbf7, #fff);
+      border: 1px solid #dfeadf;
+      border-radius: 24px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .group-intro-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: #e8f3e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+    }
+
+    .group-intro h4 { color: var(--green); font-size: 20px; font-weight: 900; margin-bottom: 5px; }
+
+    .group-form-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(0,20,0,0.04);
+    }
+
+    .group-preview {
+      background: linear-gradient(145deg, var(--green), var(--green-mid));
+      border-radius: 24px;
+      padding: 24px;
+      color: #fff;
+      min-height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .group-preview::after {
+      content: "👥";
+      position: absolute;
+      right: -12px;
+      bottom: -24px;
+      font-size: 110px;
+      opacity: 0.08;
+    }
+
+    .group-preview h4 { color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 14px; position: relative; z-index: 2; }
+
+    .preview-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+      padding: 11px 0;
+      position: relative;
+      z-index: 2;
+      font-size: 13px;
+    }
+
+    .preview-row span:first-child { color: rgba(255,255,255,0.72); font-weight: 650; }
+    .preview-row strong { text-align: right; word-break: break-word; }
+
+    .block-card {
+      background: var(--soft);
+      border: 1px solid #e1eee1;
+      border-radius: 24px;
+      padding: 22px;
+      transition: all 0.22s;
+      min-height: 260px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .block-card::after {
+      content: "☘";
+      position: absolute;
+      right: -12px;
+      bottom: -22px;
+      color: rgba(26,77,42,0.08);
+      font-size: 100px;
+      transform: rotate(-18deg);
+    }
+
+    .block-card:hover { transform: translateY(-5px); box-shadow: 0 16px 32px rgba(0,20,0,0.09); border-color: var(--green); background: #fff; }
+
+    .block-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 14px; position: relative; z-index: 2; }
+    .block-title { color: var(--green); font-size: 22px; font-weight: 900; }
+    .block-zone { color: var(--muted); font-size: 13px; font-weight: 650; margin-top: 4px; }
+    .block-total { background: var(--green); color: #fff; border-radius: 16px; padding: 8px 12px; font-weight: 900; font-size: 13px; }
+    .plant-summary-list { display: grid; gap: 10px; position: relative; z-index: 2; }
+
+    .plant-summary-row { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+
+    .plant-summary-row.recent-added {
+      border-color: var(--gold);
+      background: #fff9e6;
+      box-shadow: 0 8px 18px rgba(245,197,66,0.12);
+    }
+
+    .plant-summary-row strong { color: var(--green); font-size: 14px; }
+    .stage-line { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+    .stage-chip { background: #eef6ef; color: var(--green); padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+    .stage-chip.added { background: var(--gold); color: var(--text); }
+
+    .selected-pill {
+      background: var(--green);
+      color: #fff;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-weight: 850;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-row { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+
+    .table-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 24px rgba(0,20,0,0.05);
+      overflow-x: auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+
+    thead th {
+      background: #f0f5f0;
+      color: var(--green);
+      font-weight: 800;
+      font-size: 13px;
+      text-align: left;
+      border-bottom: 2px solid #d4e4d4;
+      padding: 14px 16px;
+    }
+
+    tbody td { padding: 14px 16px; border-bottom: 1px solid #eaf0ea; font-weight: 620; color: var(--text); vertical-align: middle; font-size: 13.5px; }
+    tbody tr:hover { background: var(--soft); }
+
+    .inventory-message {
+      display: none;
+      background: #dcf7ea;
+      color: #0f7a45;
+      border: 1px solid #b7e7ca;
+      border-radius: 22px;
+      padding: 18px;
+      margin-top: 22px;
+      font-weight: 850;
+      box-shadow: 0 12px 28px rgba(15,122,69,0.09);
+    }
+
+    .inventory-message i { color: #0f7a45; margin-right: 8px; }
+
+    .info-box { background: var(--soft); border: 1px dashed #b7cdb7; border-radius: 22px; padding: 18px; }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--green);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,20,0,0.22);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 99999;
+      font-weight: 700;
+      max-width: 440px;
+      line-height: 1.45;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast i { color: var(--gold); margin-right: 8px; }
+
+    @media(max-width: 980px) {
+      .grid-4, .grid-3, .grid-2, .timeline { grid-template-columns: 1fr; }
+      .hero-section { padding: 30px 24px; }
+      .hero-section h1 { font-size: 31px; }
+      .section-card { padding: 22px; }
+      body { padding: 18px 12px; }
+      .tab-bar { grid-template-columns: 1fr; }
+    }
+
+    @media(max-width: 580px) {
+      .group-intro { grid-template-columns: 1fr; }
+      .group-intro-icon { width: 58px; height: 58px; border-radius: 18px; }
+      .tab-button { align-items: flex-start; }
+      .hero-section { border-radius: 24px; }
+    }
+  </style>
+<style id="vvvebjs-styles"></style></head><body>
+  <div class="container">
+
+    <div class="hero-section">
+      <div class="hero-row">
+        <div class="hero-icon">🏷️</div>
+        <div>
+          <h1>Inventory Addition <span>RFID Module</span></h1>
+          <div class="sub-head">
+            Maintain the existing one-RFID-per-plant mapping through Individual RFID Map, or assign one RFID code to a complete group of plants through Group RFID Map. Both methods update the same farm-wise block inventory instantly.
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge-module"><i class="fa fa-id-card"></i> Individual RFID Map</span>
+        <span class="badge-module"><i class="fa fa-users"></i> Group RFID Map</span>
+        <span class="badge-module"><i class="fa fa-leaf"></i> Plant Variety &amp; Stage</span>
+        <span class="badge-module"><i class="fa fa-map-marker"></i> Farm &amp; Block</span>
+        <span class="badge-module"><i class="fa fa-check-circle"></i> Live Inventory Update</span>
+      </div>
+
+      <div class="timeline">
+        <div class="step"><strong>Step 01</strong><span>Choose mapping type</span></div>
+        <div class="step"><strong>Step 02</strong><span>Enter or select RFID</span></div>
+        <div class="step"><strong>Step 03</strong><span>Assign plant details</span></div>
+        <div class="step"><strong>Step 04</strong><span>Choose farm and block</span></div>
+        <div class="step"><strong>Step 05</strong><span>Submit and update inventory</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:28px;">
+      <div class="metric-card">
+        <div class="metric-label">Available RFID Tags</div>
+        <div class="metric-icon"><i class="fa fa-tags"></i></div>
+        <div class="metric-number" id="metricAvailableRfids">60</div>
+        <span class="mini-badge green">Unassigned</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">RFID Maps Added Today</div>
+        <div class="metric-icon"><i class="fa fa-plus-circle"></i></div>
+        <div class="metric-number" id="metricAddedToday">0</div>
+        <span class="mini-badge blue">Individual + Group</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Total Live Plants</div>
+        <div class="metric-icon"><i class="fa fa-leaf"></i></div>
+        <div class="metric-number" id="metricLivePlants">1,705</div>
+        <span class="mini-badge gold">Inventory</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Active Blocks</div>
+        <div class="metric-icon"><i class="fa fa-th-large"></i></div>
+        <div class="metric-number" id="metricBlocks">12</div>
+        <span class="mini-badge orange">Farm-wise</span>
+      </div>
+    </div>
+
+    <div class="section-card tab-shell">
+      <div class="tab-bar">
+        <button class="tab-button active" id="individualTabButton" onclick="switchRfidTab('individual')">
+          <span class="tab-icon">🏷️</span>
+          <span>
+            <span class="tab-title">Individual RFID Map</span>
+            <span class="tab-sub">Existing workflow: each selected RFID represents one individual plant.</span>
+          </span>
+        </button>
+
+        <button class="tab-button" id="groupTabButton" onclick="switchRfidTab('group')">
+          <span class="tab-icon">👥</span>
+          <span>
+            <span class="tab-title">Group RFID Map</span>
+            <span class="tab-sub">One RFID code represents a manually entered quantity of the same plant group.</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- INDIVIDUAL RFID MAP TAB -->
+    <div class="tab-panel active" id="individualTabPanel">
+      <div class="section-card">
+        <div class="grid grid-2" style="align-items:start;">
+          <div>
+            <h3 class="section-title"><i class="fa fa-tags"></i> Select RFID Numbers</h3>
+            <p class="muted">
+              This is the existing individual mapping system. Every selected RFID number is counted as one plant and receives the same plant, stage, farm, block and batch assignment.
+            </p>
+
+            <div style="margin-top:18px;">
+              <label>RFID Numbers</label>
+              <select id="rfidMultiSelect" multiple="" onchange="handleRfidSelection()"><option value="__ALL__">Select All Available RFID Numbers</option><option value="RFID-OM-0001">RFID-OM-0001</option><option value="RFID-OM-0002">RFID-OM-0002</option><option value="RFID-OM-0003">RFID-OM-0003</option><option value="RFID-OM-0004">RFID-OM-0004</option><option value="RFID-OM-0005">RFID-OM-0005</option><option value="RFID-OM-0006">RFID-OM-0006</option><option value="RFID-OM-0007">RFID-OM-0007</option><option value="RFID-OM-0008">RFID-OM-0008</option><option value="RFID-OM-0009">RFID-OM-0009</option><option value="RFID-OM-0010">RFID-OM-0010</option><option value="RFID-OM-0011">RFID-OM-0011</option><option value="RFID-OM-0012">RFID-OM-0012</option><option value="RFID-OM-0013">RFID-OM-0013</option><option value="RFID-OM-0014">RFID-OM-0014</option><option value="RFID-OM-0015">RFID-OM-0015</option><option value="RFID-OM-0016">RFID-OM-0016</option><option value="RFID-OM-0017">RFID-OM-0017</option><option value="RFID-OM-0018">RFID-OM-0018</option><option value="RFID-OM-0019">RFID-OM-0019</option><option value="RFID-OM-0020">RFID-OM-0020</option><option value="RFID-OM-0021">RFID-OM-0021</option><option value="RFID-OM-0022">RFID-OM-0022</option><option value="RFID-OM-0023">RFID-OM-0023</option><option value="RFID-OM-0024">RFID-OM-0024</option><option value="RFID-OM-0025">RFID-OM-0025</option><option value="RFID-OM-0026">RFID-OM-0026</option><option value="RFID-OM-0027">RFID-OM-0027</option><option value="RFID-OM-0028">RFID-OM-0028</option><option value="RFID-OM-0029">RFID-OM-0029</option><option value="RFID-OM-0030">RFID-OM-0030</option><option value="RFID-OM-0031">RFID-OM-0031</option><option value="RFID-OM-0032">RFID-OM-0032</option><option value="RFID-OM-0033">RFID-OM-0033</option><option value="RFID-OM-0034">RFID-OM-0034</option><option value="RFID-OM-0035">RFID-OM-0035</option><option value="RFID-OM-0036">RFID-OM-0036</option><option value="RFID-OM-0037">RFID-OM-0037</option><option value="RFID-OM-0038">RFID-OM-0038</option><option value="RFID-OM-0039">RFID-OM-0039</option><option value="RFID-OM-0040">RFID-OM-0040</option><option value="RFID-OM-0041">RFID-OM-0041</option><option value="RFID-OM-0042">RFID-OM-0042</option><option value="RFID-OM-0043">RFID-OM-0043</option><option value="RFID-OM-0044">RFID-OM-0044</option><option value="RFID-OM-0045">RFID-OM-0045</option><option value="RFID-OM-0046">RFID-OM-0046</option><option value="RFID-OM-0047">RFID-OM-0047</option><option value="RFID-OM-0048">RFID-OM-0048</option><option value="RFID-OM-0049">RFID-OM-0049</option><option value="RFID-OM-0050">RFID-OM-0050</option><option value="RFID-OM-0051">RFID-OM-0051</option><option value="RFID-OM-0052">RFID-OM-0052</option><option value="RFID-OM-0053">RFID-OM-0053</option><option value="RFID-OM-0054">RFID-OM-0054</option><option value="RFID-OM-0055">RFID-OM-0055</option><option value="RFID-OM-0056">RFID-OM-0056</option><option value="RFID-OM-0057">RFID-OM-0057</option><option value="RFID-OM-0058">RFID-OM-0058</option><option value="RFID-OM-0059">RFID-OM-0059</option><option value="RFID-OM-0060">RFID-OM-0060</option></select>
+            </div>
+
+            <div class="action-row" style="margin-top:14px;">
+              <button class="btn btn-light btn-small" onclick="clearRfidSelection()"><i class="fa fa-refresh"></i> Clear Selection</button>
+              <span class="status-pill status-review" id="selectedCountPill">0 selected</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="section-title"><i class="fa fa-leaf"></i> Plant Assignment</h3>
+            <p class="muted" style="margin-bottom:18px;">
+              Choose which plant, stage, farm, block and batch the selected individual RFID plants should be added into.
+            </p>
+
+            <div class="grid grid-2">
+              <div>
+                <label>Plant Variety</label>
+                <select id="plantSelect"><option value="Tulsi">Tulsi</option><option value="Rose">Rose</option><option value="Aloe Vera">Aloe Vera</option><option value="Neem">Neem</option><option value="Jasmine">Jasmine</option><option value="Money Plant">Money Plant</option><option value="Hibiscus">Hibiscus</option><option value="Marigold">Marigold</option><option value="Areca Palm">Areca Palm</option><option value="Curry Leaf">Curry Leaf</option><option value="Mango Plant">Mango Plant</option><option value="Guava Plant">Guava Plant</option><option value="Bougainvillea">Bougainvillea</option><option value="Snake Plant">Snake Plant</option><option value="Ficus">Ficus</option><option value="Peace Lily">Peace Lily</option><option value="Bamboo">Bamboo</option><option value="Coconut Plant">Coconut Plant</option><option value="Lemon Plant">Lemon Plant</option><option value="Chikoo Plant">Chikoo Plant</option></select>
+              </div>
+
+              <div>
+                <label>Plant Stage</label>
+                <select id="stageSelect">
+                  <option>Sapling</option>
+                  <option>Child</option>
+                  <option>Adult</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Farm Location</label>
+                <select id="farmAssignSelect" onchange="updateAssignBlockDropdown()"><option value="Kamshet">Kamshet</option><option value="Karla">Karla</option><option value="Vadegaon">Vadegaon</option><option value="Ratnagiri">Ratnagiri</option></select>
+              </div>
+
+              <div>
+                <label>Block Location</label>
+                <select id="blockAssignSelect"><option value="A">Block A · Front Polyhouse</option><option value="B">Block B · Shade Net Area</option><option value="C">Block C · Open Bed Section</option></select>
+              </div>
+
+              <div>
+                <label>Select Batch</label>
+                <select id="batchSelect"><option value="">Select Batch</option><option value="1">Batch 1</option><option value="2">Batch 2</option><option value="3">Batch 3</option><option value="4">Batch 4</option><option value="5">Batch 5</option><option value="6">Batch 6</option><option value="7">Batch 7</option><option value="8">Batch 8</option><option value="9">Batch 9</option><option value="10">Batch 10</option><option value="11">Batch 11</option><option value="12">Batch 12</option><option value="13">Batch 13</option><option value="14">Batch 14</option><option value="15">Batch 15</option><option value="16">Batch 16</option><option value="17">Batch 17</option><option value="18">Batch 18</option><option value="19">Batch 19</option><option value="20">Batch 20</option></select>
+              </div>
+            </div>
+
+            <button class="btn btn-green" style="margin-top:20px;" onclick="submitInventoryAddition()">
+              <i class="fa fa-check-circle"></i> Submit Individual RFID Map
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-4" id="rfidCardGrid" style="margin-top:28px;"><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0001')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0001</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 01</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0002')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0002</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 02</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0003')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0003</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 03</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0004')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0004</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 04</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0005')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0005</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 05</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0006')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0006</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 06</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0007')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0007</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 07</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0008')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0008</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 08</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0009')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0009</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 09</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0010')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0010</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 10</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0011')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0011</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 11</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0012')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0012</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 12</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0013')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0013</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 13</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0014')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0014</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 14</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0015')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0015</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 15</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0016')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0016</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 16</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0017')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0017</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 17</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0018')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0018</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 18</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0019')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0019</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 19</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0020')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0020</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 20</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0021')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0021</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 21</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0022')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0022</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 22</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0023')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0023</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 23</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0024')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0024</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 24</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0025')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0025</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 25</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0026')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0026</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 26</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0027')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0027</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 27</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0028')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0028</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 28</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0029')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0029</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 29</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0030')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0030</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 30</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0031')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0031</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 31</div></div><div class="rfid-card " onclick="toggleRfidCard('RFID-OM-0032')"><div class="check-dot"><i class="fa fa-check"></i></div><h4>RFID-OM-0032</h4><div class="rfid-meta">Status: Unassigned<br>Batch Slot: 32</div></div></div>
+
+        <div id="individualInventoryMessage" class="inventory-message">
+          <i class="fa fa-check-circle"></i>
+          <span id="individualInventoryMessageText">Inventory updated successfully.</span>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="grid grid-2" style="align-items:center;">
+          <div>
+            <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-list-ul"></i> Individual RFID Mapping Log</h3>
+            <p class="muted">
+              Every submitted individual RFID mapping appears here with plant, stage, farm, block and batch details.
+            </p>
+          </div>
+
+          <div style="text-align:right;">
+            <span class="selected-pill" id="lastIndividualAdditionPill"><i class="fa fa-clock-o"></i> No individual addition yet</span>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:22px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Addition No.</th>
+                <th>Plant</th>
+                <th>Stage</th>
+                <th>Farm</th>
+                <th>Block</th>
+                <th>Batch</th>
+                <th>RFID Count</th>
+                <th>RFID Numbers</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="additionLogBody"><tr><td colspan="9" style="text-align:center; color:#5a6f5a; padding:24px;">No individual RFID mapping submitted yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP RFID MAP TAB -->
+    <div class="tab-panel" id="groupTabPanel">
+      <div class="section-card">
+        <div class="group-intro">
+          <div class="group-intro-icon">👥</div>
+          <div>
+            <h4>Assign one RFID code to a complete plant group</h4>
+            <p class="muted">
+              Enter a single RFID code, choose the common plant details and manually enter the quantity. The selected quantity will be added to the chosen farm and block as one grouped RFID inventory record.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="align-items:stretch;">
+          <div class="group-form-card">
+            <h3 class="section-title"><i class="fa fa-users"></i> Group RFID Assignment</h3>
+
+            <div class="grid grid-2">
+              <div style="grid-column:1/-1;">
+                <label>RFID Code</label>
+                <input id="groupRfidCode" type="text" placeholder="Example: RFID-GRP-OM-0001" autocomplete="off" oninput="normaliseGroupRfid(); updateGroupPreview();">
+                <div class="input-help">One RFID code will represent the complete quantity entered below.</div>
+              </div>
+
+              <div>
+                <label>Plant Variety</label>
+                <select id="groupPlantSelect" onchange="updateGroupPreview()"><option value="Tulsi">Tulsi</option><option value="Rose">Rose</option><option value="Aloe Vera">Aloe Vera</option><option value="Neem">Neem</option><option value="Jasmine">Jasmine</option><option value="Money Plant">Money Plant</option><option value="Hibiscus">Hibiscus</option><option value="Marigold">Marigold</option><option value="Areca Palm">Areca Palm</option><option value="Curry Leaf">Curry Leaf</option><option value="Mango Plant">Mango Plant</option><option value="Guava Plant">Guava Plant</option><option value="Bougainvillea">Bougainvillea</option><option value="Snake Plant">Snake Plant</option><option value="Ficus">Ficus</option><option value="Peace Lily">Peace Lily</option><option value="Bamboo">Bamboo</option><option value="Coconut Plant">Coconut Plant</option><option value="Lemon Plant">Lemon Plant</option><option value="Chikoo Plant">Chikoo Plant</option></select>
+              </div>
+
+              <div>
+                <label>Plant Stage</label>
+                <select id="groupStageSelect" onchange="updateGroupPreview()">
+                  <option>Sapling</option>
+                  <option>Child</option>
+                  <option>Adult</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Farm Location</label>
+                <select id="groupFarmSelect" onchange="updateGroupBlockDropdown(); updateGroupPreview();"><option value="Kamshet">Kamshet</option><option value="Karla">Karla</option><option value="Vadegaon">Vadegaon</option><option value="Ratnagiri">Ratnagiri</option></select>
+              </div>
+
+              <div>
+                <label>Block Location</label>
+                <select id="groupBlockSelect" onchange="updateGroupPreview()"><option value="A">Block A · Front Polyhouse</option><option value="B">Block B · Shade Net Area</option><option value="C">Block C · Open Bed Section</option></select>
+              </div>
+
+              <div style="grid-column:1/-1;">
+                <label>Quantity</label>
+                <input id="groupQuantity" type="number" min="1" step="1" placeholder="Enter total number of plants" oninput="updateGroupPreview()">
+                <div class="input-help">Quantity must be a whole number greater than zero.</div>
+              </div>
+            </div>
+
+            <button class="btn btn-green" style="margin-top:20px;" onclick="submitGroupRfidMap()">
+              <i class="fa fa-check-circle"></i> Submit Group RFID Map
+            </button>
+          </div>
+
+          <div class="group-preview">
+            <h4>Group Mapping Preview</h4>
+            <div class="preview-row"><span>RFID Code</span><strong id="previewGroupRfid">Not entered</strong></div>
+            <div class="preview-row"><span>Plant Variety</span><strong id="previewGroupPlant">Tulsi</strong></div>
+            <div class="preview-row"><span>Plant Stage</span><strong id="previewGroupStage">Sapling</strong></div>
+            <div class="preview-row"><span>Farm Location</span><strong id="previewGroupFarm">Kamshet</strong></div>
+            <div class="preview-row"><span>Block Location</span><strong id="previewGroupBlock">Block A · Front Polyhouse</strong></div>
+            <div class="preview-row"><span>Group Quantity</span><strong id="previewGroupQuantity">0 Plants</strong></div>
+
+            <div style="margin-top:20px; position:relative; z-index:2;">
+              <span class="status-pill status-pending">One RFID → Multiple Plants</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="groupInventoryMessage" class="inventory-message">
+          <i class="fa fa-check-circle"></i>
+          <span id="groupInventoryMessageText">Group RFID inventory updated successfully.</span>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="grid grid-2" style="align-items:center;">
+          <div>
+            <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-list-ul"></i> Group RFID Mapping Log</h3>
+            <p class="muted">
+              Each row shows one RFID code mapped to a group quantity and the exact inventory location updated by that submission.
+            </p>
+          </div>
+
+          <div style="text-align:right;">
+            <span class="selected-pill" id="lastGroupAdditionPill"><i class="fa fa-clock-o"></i> No group addition yet</span>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:22px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Map No.</th>
+                <th>RFID Code</th>
+                <th>Plant</th>
+                <th>Stage</th>
+                <th>Farm</th>
+                <th>Block</th>
+                <th>Quantity</th>
+                <th>Mapping Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="groupLogBody"><tr><td colspan="9" style="text-align:center; color:#5a6f5a; padding:24px;">No Group RFID mapping submitted yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMON UPDATED INVENTORY VIEW -->
+    <div class="section-card" id="updatedInventorySection">
+      <div class="grid grid-2" style="align-items:end;">
+        <div>
+          <h3 class="section-title"><i class="fa fa-map"></i> Updated Farm Inventory View</h3>
+          <p class="muted">
+            Choose a farm to see updated block-wise inventory. Individual RFID additions update counts by the number of selected RFID tags, while Group RFID additions update counts by the manually entered quantity.
+          </p>
+        </div>
+
+        <div>
+          <label>Choose Farm to View Inventory</label>
+          <select id="inventoryFarmViewSelect" onchange="renderInventoryBlocks()"><option value="Kamshet">Kamshet</option><option value="Karla">Karla</option><option value="Vadegaon">Vadegaon</option><option value="Ratnagiri">Ratnagiri</option></select>
+        </div>
+      </div>
+
+      <div class="grid grid-3" id="inventoryBlockGrid" style="margin-top:24px;"><div class="block-card"><div><div class="block-head"><div><div class="block-title">Block A</div><div class="block-zone">Front Polyhouse</div></div><div class="block-total">142 Total</div></div><div class="plant-summary-list"><div class="plant-summary-row "><strong>Tulsi · Total 55</strong><div class="stage-line"><span class="stage-chip ">Sapling 20</span><span class="stage-chip ">Child 15</span><span class="stage-chip ">Adult 20</span></div></div><div class="plant-summary-row "><strong>Rose · Total 40</strong><div class="stage-line"><span class="stage-chip ">Sapling 12</span><span class="stage-chip ">Child 18</span><span class="stage-chip ">Adult 10</span></div></div><div class="plant-summary-row "><strong>Aloe Vera · Total 47</strong><div class="stage-line"><span class="stage-chip ">Sapling 22</span><span class="stage-chip ">Child 11</span><span class="stage-chip ">Adult 14</span></div></div></div></div></div><div class="block-card"><div><div class="block-head"><div><div class="block-title">Block B</div><div class="block-zone">Shade Net Area</div></div><div class="block-total">139 Total</div></div><div class="plant-summary-list"><div class="plant-summary-row "><strong>Neem · Total 50</strong><div class="stage-line"><span class="stage-chip ">Sapling 18</span><span class="stage-chip ">Child 20</span><span class="stage-chip ">Adult 12</span></div></div><div class="plant-summary-row "><strong>Jasmine · Total 46</strong><div class="stage-line"><span class="stage-chip ">Sapling 15</span><span class="stage-chip ">Child 14</span><span class="stage-chip ">Adult 17</span></div></div><div class="plant-summary-row "><strong>Money Plant · Total 43</strong><div class="stage-line"><span class="stage-chip ">Sapling 28</span><span class="stage-chip ">Child 9</span><span class="stage-chip ">Adult 6</span></div></div></div></div></div><div class="block-card"><div><div class="block-head"><div><div class="block-title">Block C</div><div class="block-zone">Open Bed Section</div></div><div class="block-total">142 Total</div></div><div class="plant-summary-list"><div class="plant-summary-row "><strong>Hibiscus · Total 45</strong><div class="stage-line"><span class="stage-chip ">Sapling 10</span><span class="stage-chip ">Child 16</span><span class="stage-chip ">Adult 19</span></div></div><div class="plant-summary-row "><strong>Marigold · Total 53</strong><div class="stage-line"><span class="stage-chip ">Sapling 30</span><span class="stage-chip ">Child 18</span><span class="stage-chip ">Adult 5</span></div></div><div class="plant-summary-row "><strong>Areca Palm · Total 44</strong><div class="stage-line"><span class="stage-chip ">Sapling 8</span><span class="stage-chip ">Child 12</span><span class="stage-chip ">Adult 24</span></div></div></div></div></div></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <i class="fa fa-check-circle"></i>
+    <span id="toastText">Done</span>
+  </div>
+
+  <script>
+    const today = new Date().toISOString().slice(0, 10);
+
+    const plantVarieties = [
+      "Tulsi", "Rose", "Aloe Vera", "Neem", "Jasmine", "Money Plant",
+      "Hibiscus", "Marigold", "Areca Palm", "Curry Leaf", "Mango Plant",
+      "Guava Plant", "Bougainvillea", "Snake Plant", "Ficus", "Peace Lily",
+      "Bamboo", "Coconut Plant", "Lemon Plant", "Chikoo Plant"
+    ];
+
+    const inventoryData = {
+      Kamshet: {
+        manager: "Farm Manager: Ajay Patil",
+        blocks: [
+          {
+            id: "A",
+            zone: "Front Polyhouse",
+            plants: [
+              { name: "Tulsi", sapling: 20, child: 15, adult: 20 },
+              { name: "Rose", sapling: 12, child: 18, adult: 10 },
+              { name: "Aloe Vera", sapling: 22, child: 11, adult: 14 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Shade Net Area",
+            plants: [
+              { name: "Neem", sapling: 18, child: 20, adult: 12 },
+              { name: "Jasmine", sapling: 15, child: 14, adult: 17 },
+              { name: "Money Plant", sapling: 28, child: 9, adult: 6 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Open Bed Section",
+            plants: [
+              { name: "Hibiscus", sapling: 10, child: 16, adult: 19 },
+              { name: "Marigold", sapling: 30, child: 18, adult: 5 },
+              { name: "Areca Palm", sapling: 8, child: 12, adult: 24 }
+            ]
+          }
+        ]
+      },
+      Karla: {
+        manager: "Farm Manager: Sunil More",
+        blocks: [
+          {
+            id: "A",
+            zone: "Main Greenhouse",
+            plants: [
+              { name: "Tulsi", sapling: 25, child: 10, adult: 15 },
+              { name: "Bougainvillea", sapling: 16, child: 20, adult: 9 },
+              { name: "Snake Plant", sapling: 18, child: 14, adult: 11 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Mother Plant Area",
+            plants: [
+              { name: "Rose", sapling: 20, child: 16, adult: 18 },
+              { name: "Curry Leaf", sapling: 11, child: 13, adult: 22 },
+              { name: "Ficus", sapling: 9, child: 17, adult: 19 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Sapling Yard",
+            plants: [
+              { name: "Money Plant", sapling: 35, child: 12, adult: 8 },
+              { name: "Jasmine", sapling: 14, child: 18, adult: 13 },
+              { name: "Peace Lily", sapling: 17, child: 10, adult: 9 }
+            ]
+          }
+        ]
+      },
+      Vadegaon: {
+        manager: "Farm Manager: Nitin Shinde",
+        blocks: [
+          {
+            id: "A",
+            zone: "Nursery Row 1",
+            plants: [
+              { name: "Aloe Vera", sapling: 30, child: 15, adult: 10 },
+              { name: "Neem", sapling: 12, child: 15, adult: 25 },
+              { name: "Guava Plant", sapling: 18, child: 12, adult: 20 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Nursery Row 2",
+            plants: [
+              { name: "Tulsi", sapling: 20, child: 20, adult: 20 },
+              { name: "Mango Plant", sapling: 15, child: 13, adult: 12 },
+              { name: "Areca Palm", sapling: 11, child: 15, adult: 18 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Hardening Area",
+            plants: [
+              { name: "Hibiscus", sapling: 13, child: 18, adult: 17 },
+              { name: "Rose", sapling: 18, child: 14, adult: 16 },
+              { name: "Bamboo", sapling: 8, child: 12, adult: 21 }
+            ]
+          }
+        ]
+      },
+      Ratnagiri: {
+        manager: "Farm Manager: Rakesh Sawant",
+        blocks: [
+          {
+            id: "A",
+            zone: "Coastal Plant Section",
+            plants: [
+              { name: "Coconut Plant", sapling: 10, child: 16, adult: 18 },
+              { name: "Areca Palm", sapling: 14, child: 12, adult: 24 },
+              { name: "Mango Plant", sapling: 22, child: 18, adult: 14 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Fruit Plant Bed",
+            plants: [
+              { name: "Guava Plant", sapling: 25, child: 18, adult: 12 },
+              { name: "Lemon Plant", sapling: 20, child: 12, adult: 13 },
+              { name: "Chikoo Plant", sapling: 16, child: 14, adult: 19 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Shade Plant Area",
+            plants: [
+              { name: "Money Plant", sapling: 32, child: 10, adult: 8 },
+              { name: "Snake Plant", sapling: 18, child: 12, adult: 13 },
+              { name: "Peace Lily", sapling: 15, child: 11, adult: 9 }
+            ]
+          }
+        ]
+      }
+    };
+
+    let availableRfids = Array.from({ length: 60 }, function(_, index) {
+      return "RFID-OM-" + String(index + 1).padStart(4, "0");
+    });
+
+    let selectedRfids = [];
+    let individualAddedTodayCount = 0;
+    let groupMappedTodayCount = 0;
+    let individualAdditionCounter = 1;
+    let groupAdditionCounter = 1;
+    let lastAddedInfo = null;
+    let individualAdditionLogs = [];
+    let groupAdditionLogs = [];
+    let mappedRfidRegistry = new Set();
+
+    function escapeHtml(value) {
+      return String(value == null ? "" : value).replace(/[&<>'"]/g, function(character) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;"
+        }[character];
+      });
+    }
+
+    function formatNumber(value) {
+      return Number(value || 0).toLocaleString("en-IN");
+    }
+
+    function stageKey(stage) {
+      if (stage === "Sapling") return "sapling";
+      if (stage === "Child") return "child";
+      return "adult";
+    }
+
+    function getTotal(plant) {
+      return Number(plant.sapling || 0) + Number(plant.child || 0) + Number(plant.adult || 0);
+    }
+
+    function getFarmBlocks(farm) {
+      return inventoryData[farm].blocks;
+    }
+
+    function getTotalLivePlants() {
+      return Object.keys(inventoryData).reduce(function(farmTotal, farm) {
+        return farmTotal + inventoryData[farm].blocks.reduce(function(blockTotal, block) {
+          return blockTotal + block.plants.reduce(function(plantTotal, plant) {
+            return plantTotal + getTotal(plant);
+          }, 0);
+        }, 0);
+      }, 0);
+    }
+
+    function getTotalBlocks() {
+      return Object.keys(inventoryData).reduce(function(sum, farm) {
+        return sum + inventoryData[farm].blocks.length;
+      }, 0);
+    }
+
+    function populateSharedDropdowns() {
+      const plantOptions = plantVarieties.map(function(plant) {
+        return '<option value="' + escapeHtml(plant) + '">' + escapeHtml(plant) + '</option>';
+      }).join("");
+
+      document.getElementById("plantSelect").innerHTML = plantOptions;
+      document.getElementById("groupPlantSelect").innerHTML = plantOptions;
+
+      const farmOptions = Object.keys(inventoryData).map(function(farm) {
+        return '<option value="' + escapeHtml(farm) + '">' + escapeHtml(farm) + '</option>';
+      }).join("");
+
+      document.getElementById("farmAssignSelect").innerHTML = farmOptions;
+      document.getElementById("groupFarmSelect").innerHTML = farmOptions;
+      document.getElementById("inventoryFarmViewSelect").innerHTML = farmOptions;
+
+      document.getElementById("batchSelect").innerHTML =
+        '<option value="">Select Batch</option>' +
+        Array.from({ length: 20 }, function(_, index) {
+          const number = index + 1;
+          return '<option value="' + number + '">Batch ' + number + '</option>';
+        }).join("");
+    }
+
+    function switchRfidTab(tabName) {
+      const isIndividual = tabName === "individual";
+      document.getElementById("individualTabButton").classList.toggle("active", isIndividual);
+      document.getElementById("groupTabButton").classList.toggle("active", !isIndividual);
+      document.getElementById("individualTabPanel").classList.toggle("active", isIndividual);
+      document.getElementById("groupTabPanel").classList.toggle("active", !isIndividual);
+
+      if (!isIndividual) updateGroupPreview();
+    }
+
+    function renderRfidDropdown() {
+      const select = document.getElementById("rfidMultiSelect");
+
+      if (!availableRfids.length) {
+        select.innerHTML = '<option disabled>No RFID tags available</option>';
+        return;
+      }
+
+      select.innerHTML =
+        '<option value="__ALL__">Select All Available RFID Numbers</option>' +
+        availableRfids.map(function(rfid) {
+          return '<option value="' + escapeHtml(rfid) + '">' + escapeHtml(rfid) + '</option>';
+        }).join("");
+    }
+
+    function renderRfidCards() {
+      const grid = document.getElementById("rfidCardGrid");
+
+      if (!availableRfids.length) {
+        grid.innerHTML =
+          '<div class="info-box" style="grid-column:1/-1; text-align:center;">' +
+            '<div style="font-size:42px; margin-bottom:8px;">🏷️</div>' +
+            '<p class="muted">No unassigned RFID numbers available.</p>' +
+          '</div>';
+        return;
+      }
+
+      grid.innerHTML = availableRfids.slice(0, 32).map(function(rfid, index) {
+        const selectedClass = selectedRfids.includes(rfid) ? "selected" : "";
+        return (
+          '<div class="rfid-card ' + selectedClass + '" onclick="toggleRfidCard(\'' + escapeHtml(rfid) + '\')">' +
+            '<div class="check-dot"><i class="fa fa-check"></i></div>' +
+            '<h4>' + escapeHtml(rfid) + '</h4>' +
+            '<div class="rfid-meta">Status: Unassigned<br>Batch Slot: ' + String(index + 1).padStart(2, "0") + '</div>' +
+          '</div>'
+        );
+      }).join("");
+    }
+
+    function handleRfidSelection() {
+      const select = document.getElementById("rfidMultiSelect");
+      const values = Array.from(select.selectedOptions).map(function(option) { return option.value; });
+
+      if (values.includes("__ALL__")) {
+        selectedRfids = availableRfids.slice();
+        Array.from(select.options).forEach(function(option) {
+          option.selected = option.value !== "__ALL__";
+        });
+      } else {
+        selectedRfids = values;
+      }
+
+      renderRfidCards();
+      updateSelectedCount();
+    }
+
+    function toggleRfidCard(rfid) {
+      if (selectedRfids.includes(rfid)) {
+        selectedRfids = selectedRfids.filter(function(item) { return item !== rfid; });
+      } else {
+        selectedRfids.push(rfid);
+      }
+
+      const select = document.getElementById("rfidMultiSelect");
+      Array.from(select.options).forEach(function(option) {
+        option.selected = selectedRfids.includes(option.value);
+      });
+
+      renderRfidCards();
+      updateSelectedCount();
+    }
+
+    function clearRfidSelection() {
+      selectedRfids = [];
+      Array.from(document.getElementById("rfidMultiSelect").options).forEach(function(option) {
+        option.selected = false;
+      });
+      renderRfidCards();
+      updateSelectedCount();
+      showToast("RFID selection cleared");
+    }
+
+    function updateSelectedCount() {
+      document.getElementById("selectedCountPill").textContent = selectedRfids.length + " selected";
+    }
+
+    function updateAssignBlockDropdown() {
+      const farm = document.getElementById("farmAssignSelect").value;
+      const blocks = getFarmBlocks(farm);
+      document.getElementById("blockAssignSelect").innerHTML = blocks.map(function(block) {
+        return '<option value="' + escapeHtml(block.id) + '">Block ' + escapeHtml(block.id) + ' · ' + escapeHtml(block.zone) + '</option>';
+      }).join("");
+    }
+
+    function updateGroupBlockDropdown() {
+      const farm = document.getElementById("groupFarmSelect").value;
+      const blocks = getFarmBlocks(farm);
+      document.getElementById("groupBlockSelect").innerHTML = blocks.map(function(block) {
+        return '<option value="' + escapeHtml(block.id) + '">Block ' + escapeHtml(block.id) + ' · ' + escapeHtml(block.zone) + '</option>';
+      }).join("");
+    }
+
+    function normaliseGroupRfid() {
+      const input = document.getElementById("groupRfidCode");
+      const currentPosition = input.selectionStart;
+      input.value = input.value.toUpperCase().replace(/\s+/g, "-").replace(/[^A-Z0-9\-]/g, "");
+      try { input.setSelectionRange(currentPosition, currentPosition); } catch (error) {}
+    }
+
+    function updateGroupPreview() {
+      const farm = document.getElementById("groupFarmSelect").value;
+      const blockSelect = document.getElementById("groupBlockSelect");
+      const selectedBlockText = blockSelect.options.length ? blockSelect.options[blockSelect.selectedIndex].text : "—";
+      const quantity = Math.max(0, parseInt(document.getElementById("groupQuantity").value, 10) || 0);
+
+      document.getElementById("previewGroupRfid").textContent = document.getElementById("groupRfidCode").value.trim() || "Not entered";
+      document.getElementById("previewGroupPlant").textContent = document.getElementById("groupPlantSelect").value || "—";
+      document.getElementById("previewGroupStage").textContent = document.getElementById("groupStageSelect").value || "—";
+      document.getElementById("previewGroupFarm").textContent = farm || "—";
+      document.getElementById("previewGroupBlock").textContent = selectedBlockText || "—";
+      document.getElementById("previewGroupQuantity").textContent = formatNumber(quantity) + (quantity === 1 ? " Plant" : " Plants");
+    }
+
+    function addPlantQuantityToInventory(farm, blockId, plantName, stage, quantity, mappingRecord) {
+      const block = inventoryData[farm].blocks.find(function(item) { return item.id === blockId; });
+      let plant = block.plants.find(function(item) { return item.name === plantName; });
+
+      if (!plant) {
+        plant = { name: plantName, sapling: 0, child: 0, adult: 0 };
+        block.plants.push(plant);
+      }
+
+      plant[stageKey(stage)] += quantity;
+
+      if (mappingRecord.type === "individual") {
+        if (!Array.isArray(plant.batches)) plant.batches = [];
+
+        const existingBatchRecord = plant.batches.find(function(item) {
+          return item.batch === mappingRecord.batch && item.stage === stage;
+        });
+
+        if (existingBatchRecord) {
+          existingBatchRecord.count += quantity;
+        } else {
+          plant.batches.push({ batch: mappingRecord.batch, stage: stage, count: quantity });
+        }
+      }
+
+      if (mappingRecord.type === "group") {
+        if (!Array.isArray(plant.groupRfids)) plant.groupRfids = [];
+        plant.groupRfids.push({
+          rfid: mappingRecord.rfid,
+          stage: stage,
+          count: quantity,
+          mapId: mappingRecord.id
+        });
+      }
+
+      return { block: block, plant: plant };
+    }
+
+    function submitInventoryAddition() {
+      if (!selectedRfids.length) {
+        alert("Please select at least one RFID number.");
+        return;
+      }
+
+      const plantName = document.getElementById("plantSelect").value;
+      const stage = document.getElementById("stageSelect").value;
+      const farm = document.getElementById("farmAssignSelect").value;
+      const blockId = document.getElementById("blockAssignSelect").value;
+      const batch = document.getElementById("batchSelect").value;
+
+      if (!batch) {
+        alert("Please select a batch between 1 and 20.");
+        return;
+      }
+
+      const addCount = selectedRfids.length;
+      const additionNo = "INV-ADD-2026-" + String(individualAdditionCounter).padStart(3, "0");
+      individualAdditionCounter += 1;
+
+      const log = {
+        id: additionNo,
+        type: "individual",
+        plant: plantName,
+        stage: stage,
+        farm: farm,
+        block: "Block " + blockId,
+        blockId: blockId,
+        batch: batch,
+        count: addCount,
+        rfids: selectedRfids.slice(),
+        date: today
+      };
+
+      addPlantQuantityToInventory(farm, blockId, plantName, stage, addCount, log);
+
+      selectedRfids.forEach(function(rfid) { mappedRfidRegistry.add(rfid); });
+      individualAdditionLogs.unshift(log);
+      lastAddedInfo = log;
+      individualAddedTodayCount += addCount;
+      availableRfids = availableRfids.filter(function(rfid) { return !selectedRfids.includes(rfid); });
+      selectedRfids = [];
+      document.getElementById("batchSelect").value = "";
+      document.getElementById("inventoryFarmViewSelect").value = farm;
+
+      document.getElementById("individualInventoryMessage").style.display = "block";
+      document.getElementById("individualInventoryMessageText").textContent =
+        "Inventory updated: " + addCount + " individual RFID plant" + (addCount === 1 ? "" : "s") +
+        " added as " + plantName + " · " + stage + " in " + farm + " · Block " + blockId + " · Batch " + batch + ".";
+
+      renderAll();
+      showToast(additionNo + " submitted. Individual RFID inventory updated.");
+    }
+
+    function submitGroupRfidMap() {
+      normaliseGroupRfid();
+
+      const rfid = document.getElementById("groupRfidCode").value.trim();
+      const plantName = document.getElementById("groupPlantSelect").value;
+      const stage = document.getElementById("groupStageSelect").value;
+      const farm = document.getElementById("groupFarmSelect").value;
+      const blockId = document.getElementById("groupBlockSelect").value;
+      const quantity = parseInt(document.getElementById("groupQuantity").value, 10);
+
+      if (!rfid) {
+        alert("Please enter the RFID code for the plant group.");
+        document.getElementById("groupRfidCode").focus();
+        return;
+      }
+
+      if (rfid.length < 5) {
+        alert("Please enter a valid RFID code.");
+        document.getElementById("groupRfidCode").focus();
+        return;
+      }
+
+      if (mappedRfidRegistry.has(rfid)) {
+        alert("This RFID code is already mapped. Please enter a different RFID code.");
+        document.getElementById("groupRfidCode").focus();
+        return;
+      }
+
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        alert("Please enter a valid whole-number quantity greater than zero.");
+        document.getElementById("groupQuantity").focus();
+        return;
+      }
+
+      const mapNo = "GRP-RFID-2026-" + String(groupAdditionCounter).padStart(3, "0");
+      groupAdditionCounter += 1;
+
+      const log = {
+        id: mapNo,
+        type: "group",
+        rfid: rfid,
+        plant: plantName,
+        stage: stage,
+        farm: farm,
+        block: "Block " + blockId,
+        blockId: blockId,
+        count: quantity,
+        date: today
+      };
+
+      addPlantQuantityToInventory(farm, blockId, plantName, stage, quantity, log);
+
+      mappedRfidRegistry.add(rfid);
+      availableRfids = availableRfids.filter(function(item) { return item !== rfid; });
+      groupAdditionLogs.unshift(log);
+      lastAddedInfo = log;
+      groupMappedTodayCount += 1;
+      document.getElementById("inventoryFarmViewSelect").value = farm;
+
+      document.getElementById("groupInventoryMessage").style.display = "block";
+      document.getElementById("groupInventoryMessageText").textContent =
+        "Group inventory updated: RFID " + rfid + " now represents " + formatNumber(quantity) + " " + plantName +
+        " plant" + (quantity === 1 ? "" : "s") + " · " + stage + " in " + farm + " · Block " + blockId + ".";
+
+      document.getElementById("groupRfidCode").value = "";
+      document.getElementById("groupQuantity").value = "";
+
+      renderAll();
+      updateGroupPreview();
+      showToast(mapNo + " submitted. " + formatNumber(quantity) + " plants added through one Group RFID.");
+    }
+
+    function renderIndividualAdditionLog() {
+      const tbody = document.getElementById("additionLogBody");
+
+      if (!individualAdditionLogs.length) {
+        tbody.innerHTML =
+          '<tr><td colspan="9" style="text-align:center; color:#5a6f5a; padding:24px;">No individual RFID mapping submitted yet.</td></tr>';
+        document.getElementById("lastIndividualAdditionPill").innerHTML = '<i class="fa fa-clock-o"></i> No individual addition yet';
+        return;
+      }
+
+      tbody.innerHTML = individualAdditionLogs.map(function(log) {
+        const rfidText = log.rfids.slice(0, 4).map(escapeHtml).join("<br>");
+        const moreText = log.rfids.length > 4
+          ? '<br><span class="status-pill status-draft">+' + (log.rfids.length - 4) + ' more</span>'
+          : "";
+
+        return (
+          '<tr>' +
+            '<td><span class="selected-pill">' + escapeHtml(log.id) + '</span></td>' +
+            '<td>' + escapeHtml(log.plant) + '</td>' +
+            '<td>' + escapeHtml(log.stage) + '</td>' +
+            '<td>' + escapeHtml(log.farm) + '</td>' +
+            '<td>' + escapeHtml(log.block) + '</td>' +
+            '<td><span class="status-pill status-review">Batch ' + escapeHtml(log.batch) + '</span></td>' +
+            '<td><strong>' + formatNumber(log.count) + '</strong></td>' +
+            '<td>' + rfidText + moreText + '</td>' +
+            '<td><span class="status-pill status-approved">Inventory Updated</span></td>' +
+          '</tr>'
+        );
+      }).join("");
+
+      const latest = individualAdditionLogs[0];
+      document.getElementById("lastIndividualAdditionPill").innerHTML =
+        '<i class="fa fa-check-circle"></i> Last: ' + escapeHtml(latest.plant) + ' · Batch ' + escapeHtml(latest.batch) + ' · ' + formatNumber(latest.count) + ' added';
+    }
+
+    function renderGroupAdditionLog() {
+      const tbody = document.getElementById("groupLogBody");
+
+      if (!groupAdditionLogs.length) {
+        tbody.innerHTML =
+          '<tr><td colspan="9" style="text-align:center; color:#5a6f5a; padding:24px;">No Group RFID mapping submitted yet.</td></tr>';
+        document.getElementById("lastGroupAdditionPill").innerHTML = '<i class="fa fa-clock-o"></i> No group addition yet';
+        return;
+      }
+
+      tbody.innerHTML = groupAdditionLogs.map(function(log) {
+        return (
+          '<tr>' +
+            '<td><span class="selected-pill">' + escapeHtml(log.id) + '</span></td>' +
+            '<td><strong>' + escapeHtml(log.rfid) + '</strong></td>' +
+            '<td>' + escapeHtml(log.plant) + '</td>' +
+            '<td>' + escapeHtml(log.stage) + '</td>' +
+            '<td>' + escapeHtml(log.farm) + '</td>' +
+            '<td>' + escapeHtml(log.block) + '</td>' +
+            '<td><strong>' + formatNumber(log.count) + '</strong></td>' +
+            '<td><span class="status-pill status-group">One RFID → Group</span></td>' +
+            '<td><span class="status-pill status-approved">Inventory Updated</span></td>' +
+          '</tr>'
+        );
+      }).join("");
+
+      const latest = groupAdditionLogs[0];
+      document.getElementById("lastGroupAdditionPill").innerHTML =
+        '<i class="fa fa-check-circle"></i> Last: ' + escapeHtml(latest.rfid) + ' · ' + escapeHtml(latest.plant) + ' · ' + formatNumber(latest.count) + ' plants';
+    }
+
+    function renderInventoryBlocks() {
+      const farm = document.getElementById("inventoryFarmViewSelect").value;
+      const blocks = inventoryData[farm].blocks;
+
+      document.getElementById("inventoryBlockGrid").innerHTML = blocks.map(function(block) {
+        const blockTotal = block.plants.reduce(function(sum, plant) { return sum + getTotal(plant); }, 0);
+
+        return (
+          '<div class="block-card">' +
+            '<div>' +
+              '<div class="block-head">' +
+                '<div><div class="block-title">Block ' + escapeHtml(block.id) + '</div><div class="block-zone">' + escapeHtml(block.zone) + '</div></div>' +
+                '<div class="block-total">' + formatNumber(blockTotal) + ' Total</div>' +
+              '</div>' +
+              '<div class="plant-summary-list">' +
+                block.plants.map(function(plant) {
+                  const isRecentlyAdded = Boolean(
+                    lastAddedInfo &&
+                    lastAddedInfo.farm === farm &&
+                    lastAddedInfo.blockId === block.id &&
+                    lastAddedInfo.plant === plant.name
+                  );
+
+                  const batchChips = Array.isArray(plant.batches) && plant.batches.length
+                    ? '<div class="stage-line" style="margin-top:10px;">' + plant.batches.map(function(batchItem) {
+                        const isLatestBatch = isRecentlyAdded && lastAddedInfo.type === "individual" && lastAddedInfo.batch === batchItem.batch && lastAddedInfo.stage === batchItem.stage;
+                        return '<span class="status-pill ' + (isLatestBatch ? 'status-pending' : 'status-review') + '">🧺 Batch ' + escapeHtml(batchItem.batch) + ' · ' + escapeHtml(batchItem.stage) + ' ' + formatNumber(batchItem.count) + '</span>';
+                      }).join("") + '</div>'
+                    : "";
+
+                  const groupChips = Array.isArray(plant.groupRfids) && plant.groupRfids.length
+                    ? '<div class="stage-line" style="margin-top:10px;">' + plant.groupRfids.map(function(groupItem) {
+                        const isLatestGroup = isRecentlyAdded && lastAddedInfo.type === "group" && lastAddedInfo.rfid === groupItem.rfid;
+                        return '<span class="status-pill ' + (isLatestGroup ? 'status-pending' : 'status-group') + '">👥 ' + escapeHtml(groupItem.rfid) + ' · ' + escapeHtml(groupItem.stage) + ' ' + formatNumber(groupItem.count) + '</span>';
+                      }).join("") + '</div>'
+                    : "";
+
+                  return (
+                    '<div class="plant-summary-row ' + (isRecentlyAdded ? 'recent-added' : '') + '">' +
+                      '<strong>' + escapeHtml(plant.name) + ' · Total ' + formatNumber(getTotal(plant)) +
+                        (isRecentlyAdded ? '<span class="status-pill status-pending" style="margin-left:6px;">Newly Added</span>' : '') +
+                      '</strong>' +
+                      '<div class="stage-line">' +
+                        '<span class="stage-chip ' + (isRecentlyAdded && lastAddedInfo.stage === 'Sapling' ? 'added' : '') + '">Sapling ' + formatNumber(plant.sapling) + '</span>' +
+                        '<span class="stage-chip ' + (isRecentlyAdded && lastAddedInfo.stage === 'Child' ? 'added' : '') + '">Child ' + formatNumber(plant.child) + '</span>' +
+                        '<span class="stage-chip ' + (isRecentlyAdded && lastAddedInfo.stage === 'Adult' ? 'added' : '') + '">Adult ' + formatNumber(plant.adult) + '</span>' +
+                      '</div>' +
+                      batchChips +
+                      groupChips +
+                    '</div>'
+                  );
+                }).join("") +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join("");
+    }
+
+    function renderMetrics() {
+      document.getElementById("metricAvailableRfids").textContent = formatNumber(availableRfids.length);
+      document.getElementById("metricAddedToday").textContent = formatNumber(individualAddedTodayCount + groupMappedTodayCount);
+      document.getElementById("metricLivePlants").textContent = formatNumber(getTotalLivePlants());
+      document.getElementById("metricBlocks").textContent = formatNumber(getTotalBlocks());
+    }
+
+    function renderAll() {
+      renderRfidDropdown();
+      renderRfidCards();
+      updateAssignBlockDropdown();
+      updateGroupBlockDropdown();
+      updateSelectedCount();
+      renderIndividualAdditionLog();
+      renderGroupAdditionLog();
+      renderInventoryBlocks();
+      renderMetrics();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastText").textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(function() { toast.classList.remove("show"); }, 2800);
+    }
+
+    populateSharedDropdowns();
+    renderAll();
+    updateGroupPreview();
+  </script>
+</body></html>
+

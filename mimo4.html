@@ -1,0 +1,968 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · B2C Customer + Counter Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',Arial,sans-serif;background:#f4f7f5;color:#1e2e24;padding:28px 18px}
+    .container{max-width:1350px;margin:0 auto}
+    .hero{background:linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%);border-radius:32px;padding:38px 44px;margin-bottom:28px;box-shadow:0 20px 42px rgba(0,20,0,.15);position:relative;overflow:hidden}
+    .hero:after{content:'🌿';position:absolute;right:24px;bottom:-18px;font-size:150px;opacity:.1;transform:rotate(10deg)}
+    .hero-inner{position:relative;z-index:2;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .hero-icon{font-size:48px;line-height:1}
+    h1{font-size:42px;line-height:1.05;color:#fff;font-weight:850;letter-spacing:-.04em;margin-bottom:10px}
+    h1 span{color:#f5c542}
+    .subhead{max-width:900px;color:rgba(255,255,255,.9);font-size:17px;line-height:1.55;border-left:4px solid #f5c542;padding-left:16px}
+    .badges{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;padding:7px 14px;border-radius:40px;font-size:13px;font-weight:700}
+    .nav-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}
+    .nav-tabs button{border:2px solid #d9e9d9;background:#fff;color:#1a4d2a;border-radius:999px;padding:11px 17px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,20,0,.05);transition:.2s}
+    .nav-tabs button:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,20,0,.1)}
+    .nav-tabs button.active{background:#1a4d2a;color:#fff;border-color:#1a4d2a}
+    .section{background:#fff;border:1px solid #e6eee6;border-radius:28px;padding:28px;margin-bottom:26px;box-shadow:0 12px 30px rgba(0,20,0,.06)}
+    .section.hidden{display:none}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px}
+    .section-title{color:#1a4d2a;font-size:24px;font-weight:850;letter-spacing:-.02em;margin:0}
+    .section-sub{color:#5a6f5a;font-weight:600;font-size:14px;line-height:1.6;margin-top:7px;max-width:780px}
+    .grid{display:grid;gap:16px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    label{display:block;color:#1a4d2a;font-weight:750;font-size:13px;margin-bottom:7px}
+    input,select,textarea{width:100%;border:1px solid #dbe8db;background:#fff;border-radius:16px;padding:12px 14px;font:inherit;font-weight:600;color:#1e2e24;outline:none;transition:.2s}
+    input:focus,select:focus,textarea:focus{border-color:#1a4d2a;box-shadow:0 0 0 4px rgba(26,77,42,.08)}
+    textarea{min-height:92px;resize:vertical}
+    .btn{border:none;border-radius:999px;padding:11px 22px;font-weight:850;cursor:pointer;transition:.2s;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-green{background:#1a4d2a;color:#fff;box-shadow:0 8px 18px rgba(26,77,42,.18)}
+    .btn-green:hover{background:#0f3a1e;color:#fff}
+    .btn-gold{background:#f5c542;color:#1e2e24;box-shadow:0 8px 18px rgba(245,197,66,.24)}
+    .btn-light{background:#eef6ef;color:#1a4d2a;border:1px solid #d9e9d9}
+    .btn-red{background:#fff0ef;color:#9e1f14;border:1px solid #ffd4cf}
+    .btn-dark{background:#16251b;color:#fff}
+    .btn-small{padding:8px 13px;font-size:12px}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+    .profile-card{background:linear-gradient(145deg,#f8fbf8,#fff);border:1px solid #e6eee6;border-radius:24px;padding:20px;display:none;position:relative;overflow:hidden}
+    .profile-card:after{content:'👤';position:absolute;right:14px;bottom:-10px;font-size:84px;opacity:.07}
+    .profile-card h3{color:#1a4d2a;font-size:22px;font-weight:850;margin-bottom:12px}
+    .profile-row{display:grid;grid-template-columns:145px 1fr;gap:10px;border-bottom:1px solid #e8f0e8;padding:9px 0;color:#5a6f5a;font-size:14px;font-weight:650}
+    .profile-row:last-child{border-bottom:none}
+    .profile-row strong{color:#1a4d2a}
+    .mini-stat{background:#f8fbf8;border:1px solid #e6eee6;border-radius:22px;padding:18px;position:relative;overflow:hidden}
+    .mini-stat .num{font-size:30px;color:#1a4d2a;font-weight:900;line-height:1}
+    .mini-stat .lbl{color:#5a6f5a;font-size:13px;font-weight:750;margin-top:6px}
+    .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:20px}
+    .product-card{background:#fff;border:1px solid #e6eee6;border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(0,20,0,.06);transition:.25s;cursor:pointer;position:relative}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,20,0,.12)}
+    .product-card img{width:100%;height:165px;object-fit:cover;background:#eaf3ea;display:block}
+    .product-info{padding:16px}
+    .product-name{font-size:17px;font-weight:850;color:#1a4d2a;margin-bottom:5px}
+    .product-meta{font-size:12px;color:#5a6f5a;font-weight:700;line-height:1.6}
+    .product-price{font-size:22px;color:#1a4d2a;font-weight:900;margin:9px 0}
+    .pill-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .pill{display:inline-flex;align-items:center;gap:5px;background:#eaf3ea;color:#1a4d2a;border:1px solid #dcebdc;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+    .pill.gold{background:#fff8df;color:#7a5a0c;border-color:#f2dfa2}
+    .pill.blue{background:#edf6ff;color:#134f7a;border-color:#d6eaff}
+    .pill.red{background:#fff0ef;color:#9e1f14;border-color:#ffd4cf}
+    .qty-control{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#f8fbf8;border:1px solid #e6eee6;border-radius:16px;padding:8px;margin-top:12px}
+    .qty-control button{border:none;width:28px;height:28px;border-radius:50%;background:#1a4d2a;color:#fff;font-weight:900;cursor:pointer}
+    .qty-control span{font-weight:900;color:#1a4d2a}
+    .cart-summary{background:linear-gradient(145deg,#1a4d2a,#2d6e3e);border-radius:24px;padding:22px;color:#fff;position:sticky;top:14px;box-shadow:0 16px 34px rgba(0,20,0,.14)}
+    .cart-summary h3{font-size:22px;margin-bottom:14px;color:#fff;font-weight:900}
+    .cart-line{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(255,255,255,.16);padding:10px 0;font-size:14px;color:rgba(255,255,255,.9);font-weight:650}
+    .cart-line strong{color:#fff}
+    .cart-total{display:flex;justify-content:space-between;align-items:center;font-size:24px;font-weight:950;margin-top:16px;color:#f5c542}
+    .empty{background:#f8fbf8;border:1px dashed #bfd5bf;border-radius:20px;padding:28px;text-align:center;color:#5a6f5a;font-weight:750}
+    .store-head{background:linear-gradient(145deg,#1a4d2a,#2d6e3e);border-radius:26px;padding:26px;margin-bottom:20px;position:relative;overflow:hidden;color:#fff}
+    .store-head:after{content:'🛒';position:absolute;right:20px;bottom:-6px;font-size:96px;opacity:.09}
+    .category-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    .category-bar button{border:2px solid #d9e9d9;background:#f8fbf8;color:#1a4d2a;border-radius:999px;padding:9px 17px;font-weight:850;cursor:pointer;transition:.2s}
+    .category-bar button.active{background:#1a4d2a;border-color:#1a4d2a;color:#fff}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;backdrop-filter:blur(5px);padding:18px;overflow:auto}
+    .modal.open{display:flex;align-items:center;justify-content:center}
+    .modal-box{background:#fff;border-radius:28px;width:min(850px,100%);max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.35);position:relative}
+    .modal-head{padding:20px 24px;border-bottom:1px solid #e6eee6;display:flex;justify-content:space-between;align-items:center;gap:14px;position:sticky;top:0;background:#fff;z-index:2}
+    .modal-title{color:#1a4d2a;font-size:22px;font-weight:900}
+    .close-btn{border:none;background:#eef6ef;color:#1a4d2a;width:40px;height:40px;border-radius:50%;font-size:24px;line-height:1;cursor:pointer}
+    .modal-body{padding:24px}
+    .detail-img{width:100%;height:250px;object-fit:cover;border-radius:22px;border:1px solid #e6eee6;margin-bottom:18px}
+    .info-panel{background:#f8fbf8;border:1px solid #e6eee6;border-radius:20px;padding:18px}
+    .info-panel h4{color:#1a4d2a;font-weight:900;margin-bottom:10px}
+    .info-list{display:grid;gap:9px;color:#5a6f5a;font-weight:650;line-height:1.5;font-size:14px}
+    .info-list div{display:flex;gap:9px;align-items:flex-start}
+    .stepper{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+    .step{background:#f8fbf8;border:1px solid #e6eee6;border-radius:999px;padding:8px 12px;font-size:12px;color:#5a6f5a;font-weight:850}
+    .step.active{background:#1a4d2a;color:#fff;border-color:#1a4d2a}
+    .checkout-box{display:none;background:#f8fbf8;border:1px solid #e6eee6;border-radius:24px;padding:22px;margin-top:20px}
+    .checkout-box.active{display:block}
+    .qr-wrap{text-align:center;background:#fff;border:1px solid #e6eee6;border-radius:24px;padding:22px}
+    .dummy-qr{width:215px;height:215px;margin:18px auto;border:10px solid #fff;border-radius:18px;background:linear-gradient(90deg,#1a4d2a 10px,transparent 10px) 0 0/30px 30px,linear-gradient(#1a4d2a 10px,transparent 10px) 0 0/30px 30px,linear-gradient(90deg,transparent 15px,#1a4d2a 15px,#1a4d2a 22px,transparent 22px) 0 0/45px 45px,linear-gradient(transparent 15px,#1a4d2a 15px,#1a4d2a 22px,transparent 22px) 0 0/45px 45px,#f4f7f5;box-shadow:0 12px 30px rgba(0,20,0,.16);position:relative}
+    .dummy-qr:before,.dummy-qr:after{content:'';position:absolute;width:54px;height:54px;background:#fff;border:10px solid #1a4d2a;border-radius:8px}
+    .dummy-qr:before{top:12px;left:12px;box-shadow:108px 0 0 -10px #fff,108px 0 0 0 #1a4d2a,0 108px 0 -10px #fff,0 108px 0 0 #1a4d2a}
+    .dummy-qr:after{right:34px;bottom:34px;width:32px;height:32px;border-width:7px}
+    .invoice{background:#fff;border:1px solid #dbe8db;border-radius:24px;padding:24px;margin-top:18px;color:#1e2e24}
+    .invoice-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:2px solid #e6eee6;padding-bottom:16px;margin-bottom:16px}
+    .invoice h3{color:#1a4d2a;font-size:25px;font-weight:950;margin-bottom:4px}
+    .invoice-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+    .invoice-table th,.invoice-table td{border-bottom:1px solid #e6eee6;padding:11px 8px;text-align:left}
+    .invoice-table th{color:#1a4d2a;background:#f8fbf8;font-weight:900}
+    .invoice-table td{color:#5a6f5a;font-weight:650}
+    .rating-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;margin:12px 0 16px}
+    .rating-grid button{border:1px solid #d9e9d9;background:#fff;border-radius:12px;padding:11px 0;font-weight:900;color:#1a4d2a;cursor:pointer;transition:.2s}
+    .rating-grid button.active{background:#f5c542;border-color:#f5c542;color:#1e2e24;transform:translateY(-2px)}
+    .success-box{background:#eaf8ef;border:1px solid #bfe8ce;color:#1a4d2a;border-radius:22px;padding:20px;font-weight:750;line-height:1.6}
+    .counter-layout{display:grid;grid-template-columns:360px 1fr;gap:20px}
+    .ticket-list{display:grid;gap:12px}
+    .ticket{background:#fff;border:1px solid #e6eee6;border-radius:20px;padding:16px;cursor:pointer;transition:.2s;box-shadow:0 8px 18px rgba(0,20,0,.04)}
+    .ticket:hover,.ticket.active{border-color:#1a4d2a;transform:translateY(-2px);box-shadow:0 13px 26px rgba(0,20,0,.08)}
+    .ticket-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+    .ticket-no{font-size:19px;font-weight:950;color:#1a4d2a}
+    .status{display:inline-flex;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+    .status.pending{background:#fff8df;color:#7a5a0c}
+    .status.paid{background:#edf6ff;color:#134f7a}
+    .status.completed{background:#eaf8ef;color:#0f6b37}
+    .status.cancelled{background:#fff0ef;color:#9e1f14}
+    .ticket-meta{color:#5a6f5a;font-size:13px;font-weight:650;line-height:1.55}
+    .counter-detail{background:#f8fbf8;border:1px solid #e6eee6;border-radius:24px;padding:22px;min-height:420px}
+    .order-items{display:grid;gap:10px;margin-top:14px}
+    .order-item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e6eee6;border-radius:16px;padding:10px}
+    .order-item img{width:58px;height:58px;object-fit:cover;border-radius:14px}
+    .chart-card{background:#fff;border:1px solid #e6eee6;border-radius:24px;padding:20px;margin-top:20px}
+    .bar-row{display:grid;grid-template-columns:110px 1fr 45px;align-items:center;gap:10px;margin:13px 0;color:#5a6f5a;font-weight:800;font-size:13px}
+    .bar-bg{height:14px;background:#e6eee6;border-radius:999px;overflow:hidden}
+    .bar-fill{height:100%;background:linear-gradient(90deg,#1a4d2a,#2fc389);border-radius:999px;min-width:4px}
+    .cancel-list{display:grid;gap:10px;margin-top:14px}
+    .cancel-item{background:#fff7f6;border:1px solid #ffd8d3;border-radius:18px;padding:14px;color:#7e1b12;font-size:14px;line-height:1.5;font-weight:700}
+    .toast{position:fixed;right:24px;bottom:24px;background:#1a4d2a;color:#fff;padding:14px 18px;border-radius:16px;box-shadow:0 14px 34px rgba(0,20,0,.22);font-weight:800;z-index:10000;transform:translateY(90px);opacity:0;transition:.25s;max-width:min(420px,calc(100vw - 36px))}
+    .toast.show{transform:translateY(0);opacity:1}
+    .linkish{color:#1a4d2a;font-weight:900;text-decoration:underline;cursor:pointer}
+    .small-note{font-size:12px;color:#5a6f5a;font-weight:650;line-height:1.5;margin-top:8px}
+    @media(max-width:980px){.grid-2,.grid-3,.grid-4,.counter-layout{grid-template-columns:1fr}.cart-summary{position:relative;top:auto}.hero{padding:28px 24px}h1{font-size:32px}.subhead{font-size:15px}.rating-grid{grid-template-columns:repeat(5,1fr)}}
+    @media(max-width:560px){body{padding:18px 12px}.section{padding:20px;border-radius:22px}.product-grid{grid-template-columns:1fr}.profile-row{grid-template-columns:1fr;gap:3px}.invoice-table{font-size:12px}.invoice-table th,.invoice-table td{padding:8px 5px}.modal-body{padding:18px}.modal-head{padding:16px}.nav-tabs button{width:100%;justify-content:center}.actions .btn{width:100%}}
+  
+    .review-layout{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+    .review-card{background:#fff;border:1px solid #e6eee6;border-radius:18px;padding:13px 14px;box-shadow:0 6px 15px rgba(0,20,0,.035)}
+    .review-card-grid{display:grid;grid-template-columns:minmax(180px,.72fr) minmax(245px,.9fr) minmax(290px,1.35fr);gap:14px;align-items:start}
+    .review-card h4{color:#1a4d2a;font-size:17px;font-weight:900;margin-bottom:3px}
+    .review-card .small-note{margin-top:3px;line-height:1.35}
+    .review-field label{margin-bottom:5px}
+    .review-card .rating-grid{grid-template-columns:repeat(5,42px);gap:6px;margin:0;justify-content:start}
+    .review-card .rating-grid button{height:42px;padding:4px 0;font-size:24px;line-height:1;color:#b8c8b8;background:#f8fbf8;border-color:#dbe8db;border-radius:10px}
+    .review-card .rating-grid button:hover{color:#d8aa19;background:#fff8df;border-color:#f2dfa2;transform:translateY(-1px)}
+    .review-card .rating-grid button.active{background:#fff8df;border-color:#f5c542;color:#f5c542;transform:translateY(-1px)}
+    .review-card textarea{min-height:62px;height:62px;padding:10px 12px;border-radius:13px;line-height:1.35}
+    .review-card input{padding:9px 11px;border-radius:13px;margin-top:1px}
+    .review-submit-actions{margin-top:12px}
+    .review-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+    .review-summary-card{background:#fff;border:1px solid #e6eee6;border-radius:16px;padding:12px}
+    .review-summary-card strong{display:block;color:#1a4d2a;margin-bottom:4px}
+    .star-display{display:inline-block;color:#f5c542;font-size:20px;letter-spacing:2px;line-height:1.1;margin-bottom:3px}
+    .customer-only-note{background:#fff8df;border:1px solid #f2dfa2;color:#7a5a0c;border-radius:18px;padding:13px 15px;font-size:13px;font-weight:750;line-height:1.55;margin-top:14px}
+    @media(max-width:980px){.review-card-grid{grid-template-columns:minmax(180px,.75fr) minmax(230px,1fr)}.review-comment-field{grid-column:1/-1}.review-summary{grid-template-columns:1fr}}
+    @media(max-width:620px){.review-card-grid{grid-template-columns:1fr;gap:10px}.review-comment-field{grid-column:auto}.review-card .rating-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.review-card .rating-grid button{height:40px;font-size:22px}.review-card textarea{height:68px;min-height:68px}}
+</style>
+  <style id="vvvebjs-styles">#cartSection > .grid > .cart-summary > .small-note{color:#ffffff;}</style>
+</head><body>
+  <div class="container">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="hero-icon">🌱</div>
+        <div>
+          <h1>OM <span>Nursery</span> · B2C Customer Flow Demo</h1>
+          <div class="subhead">Simple customer registration, scanned RFID/QR products, store cart, counter billing, product review, display review, supervisor review and accountant counter tracking — all in one working HTML demo.</div>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge">👤 4-Field Registration</span>
+        <span class="badge">🏷️ RFID Scanned Cart</span>
+        <span class="badge">🧾 Counter Billing Only</span>
+        <span class="badge">⭐ 3-Part Reviews</span>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="active" onclick="jumpToSection('registrationSection', this)">1. Customer Registration</button>
+      <button onclick="jumpToSection('cartSection', this)">2. Customer Cart</button>
+      <button onclick="jumpToSection('storeSection', this)">3. Store</button>
+      <button onclick="jumpToSection('checkoutSection', this)">4. Counter Checkout</button>
+      <button onclick="jumpToSection('counterSection', this)">5. Counter</button>
+    </div>
+
+    <section id="registrationSection" class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">👤 Customer Registration</h2>
+          <p class="section-sub">Customer registration contains only the four required fields. The same four customer fields are used in the customer profile, counter ticket and bill.</p>
+        </div>
+        <button class="btn btn-light" onclick="fillDemoCustomer()">⚡ Fill Demo Data</button>
+      </div>
+
+      <div class="grid grid-4">
+        <div><label>Name *</label><input id="custName" placeholder="e.g. Aakash Patil"></div>
+        <div><label>Email *</label><input id="custEmail" type="email" placeholder="e.g. aakash@email.com"></div>
+        <div><label>Phone Number *</label><input id="custMobile" inputmode="numeric" placeholder="e.g. 9876543210" maxlength="10"></div>
+        <div><label>City * <span style="font-weight:600;color:#5a6f5a">(Manual Entry)</span></label><input id="custCity" placeholder="Type city manually, e.g. Pune"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-green" onclick="registerCustomer()">✅ Register Customer</button>
+        <button class="btn btn-gold" onclick="registerCustomer(true)">✅ Register &amp; Go To Cart</button>
+      </div>
+
+      <div id="profileCard" class="profile-card" style="margin-top:22px"></div>
+    </section>
+
+    <section id="cartSection" class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">🏷️ Scanned / Added Product Cart</h2>
+          <p class="section-sub">These are products scanned through RFID/QR or added from the store. Click a product tile to view care details, benefits and biological information.</p>
+        </div>
+        <div class="actions" style="margin-top:0">
+          <button class="btn btn-light" onclick="addRandomScannedProduct()">📡 Simulate RFID Scan</button>
+          <button class="btn btn-gold" onclick="jumpToSection('storeSection')">🛒 Open Store</button>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 360px;align-items:start">
+        <div><div id="cartProductGrid" class="product-grid">
+      <div class="product-card" onclick="openProductModal(1)">
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Rose Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Rose Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1001</strong></div>
+          <div class="product-meta">Stage: <strong>Adult</strong> · Source: RFID Scan</div>
+          <div class="product-price">₹299</div>
+          <div class="pill-row"><span class="pill">🌱 Adult</span><span class="pill gold">Qty 1</span></div>
+          <div class="qty-control" onclick="event.stopPropagation()"><button onclick="changeQty(1,-1)">−</button><span>1</span><button onclick="changeQty(1,1)">+</button><button style="background:#fff0ef;color:#9e1f14" onclick="removeFromCart(1)">×</button></div>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(2)">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Tulsi Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Tulsi Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1002</strong></div>
+          <div class="product-meta">Stage: <strong>Child</strong> · Source: RFID Scan</div>
+          <div class="product-price">₹199</div>
+          <div class="pill-row"><span class="pill">🌱 Child</span><span class="pill gold">Qty 2</span></div>
+          <div class="qty-control" onclick="event.stopPropagation()"><button onclick="changeQty(2,-1)">−</button><span>2</span><button onclick="changeQty(2,1)">+</button><button style="background:#fff0ef;color:#9e1f14" onclick="removeFromCart(2)">×</button></div>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(3)">
+        <img src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Mango Tree" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Mango Tree</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1003</strong></div>
+          <div class="product-meta">Stage: <strong>Sapling</strong> · Source: RFID Scan</div>
+          <div class="product-price">₹499</div>
+          <div class="pill-row"><span class="pill">🌱 Sapling</span><span class="pill gold">Qty 1</span></div>
+          <div class="qty-control" onclick="event.stopPropagation()"><button onclick="changeQty(3,-1)">−</button><span>1</span><button onclick="changeQty(3,1)">+</button><button style="background:#fff0ef;color:#9e1f14" onclick="removeFromCart(3)">×</button></div>
+        </div>
+      </div></div></div>
+        <div class="cart-summary">
+          <h3>Cart Summary</h3>
+          <div class="cart-line"><span>Customer</span><strong id="summaryCustomer">Not registered</strong></div>
+          <div class="cart-line"><span>Total Items</span><strong id="summaryItems">4</strong></div>
+          <div class="cart-line"><span>Subtotal</span><strong id="summarySubtotal">₹1,196</strong></div>
+          <div class="cart-line"><span>GST Demo</span><strong id="summaryGst">₹60</strong></div>
+          <div class="cart-total"><span>Total</span><span id="summaryTotal">₹1,256</span></div>
+          <div class="actions">
+            <button class="btn btn-gold" onclick="startCounterCheckout()">🏪 Proceed To Counter</button>
+          </div>
+          <p class="small-note">Self-checkout and online QR payment have been removed. The only checkout option creates a counter bill for the accountant.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="storeSection" class="section">
+      <div class="store-head">
+        <h2 style="font-size:30px;font-weight:950;letter-spacing:-.03em;margin-bottom:6px;position:relative;z-index:2">🌿 OM Nursery <span style="color:#f5c542">Store</span></h2>
+        <p style="color:rgba(255,255,255,.88);font-weight:650;line-height:1.5;position:relative;z-index:2">Customer can add more plants and gardening essentials to the same cart from here.</p>
+      </div>
+      <div class="category-bar" id="categoryBar"><button class="active" onclick="renderStore('all')">All</button><button class="" onclick="renderStore('flowering')">🌸 Flowering</button><button class="" onclick="renderStore('fruit')">🍎 Fruit Plants</button><button class="" onclick="renderStore('medicinal')">🌿 Medicinal</button><button class="" onclick="renderStore('indoor')">🪴 Indoor</button><button class="" onclick="renderStore('tools')">🔧 Tools &amp; Supplies</button></div>
+      <div id="storeGrid" class="product-grid">
+      <div class="product-card" onclick="openProductModal(1)">
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Rose Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Rose Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1001</strong></div>
+          <div class="product-meta">Stage: <strong>Adult</strong> · Source: Store</div>
+          <div class="product-price">₹299</div>
+          <div class="pill-row"><span class="pill">🌱 Adult</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(1)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(2)">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Tulsi Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Tulsi Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1002</strong></div>
+          <div class="product-meta">Stage: <strong>Child</strong> · Source: Store</div>
+          <div class="product-price">₹199</div>
+          <div class="pill-row"><span class="pill">🌱 Child</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(2)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(3)">
+        <img src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Mango Tree" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Mango Tree</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1003</strong></div>
+          <div class="product-meta">Stage: <strong>Sapling</strong> · Source: Store</div>
+          <div class="product-price">₹499</div>
+          <div class="pill-row"><span class="pill">🌱 Sapling</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(3)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(4)">
+        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Aloe Vera" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Aloe Vera</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1004</strong></div>
+          <div class="product-meta">Stage: <strong>Adult</strong> · Source: Store</div>
+          <div class="product-price">₹249</div>
+          <div class="pill-row"><span class="pill">🌱 Adult</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(4)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(5)">
+        <img src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Money Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Money Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1005</strong></div>
+          <div class="product-meta">Stage: <strong>Child</strong> · Source: Store</div>
+          <div class="product-price">₹179</div>
+          <div class="pill-row"><span class="pill">🌱 Child</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(5)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(6)">
+        <img src="https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Jasmine Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Jasmine Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1006</strong></div>
+          <div class="product-meta">Stage: <strong>Adult</strong> · Source: Store</div>
+          <div class="product-price">₹349</div>
+          <div class="pill-row"><span class="pill">🌱 Adult</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(6)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(7)">
+        <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Guava Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Guava Plant</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1007</strong></div>
+          <div class="product-meta">Stage: <strong>Sapling</strong> · Source: Store</div>
+          <div class="product-price">₹399</div>
+          <div class="pill-row"><span class="pill">🌱 Sapling</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(7)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(8)">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Areca Palm" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Areca Palm</div>
+          <div class="product-meta">RFID No: <strong>RFID-OM-1008</strong></div>
+          <div class="product-meta">Stage: <strong>Adult</strong> · Source: Store</div>
+          <div class="product-price">₹599</div>
+          <div class="pill-row"><span class="pill">🌱 Adult</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(8)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(9)">
+        <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Garden Trowel" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Garden Trowel</div>
+          <div class="product-meta">RFID No: <strong>TOOL-OM-2001</strong></div>
+          <div class="product-meta">Stage: <strong>Tool</strong> · Source: Store</div>
+          <div class="product-price">₹149</div>
+          <div class="pill-row"><span class="pill">🌱 Tool</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(9)">🛒 Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" onclick="openProductModal(10)">
+        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Organic Compost" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Organic Compost</div>
+          <div class="product-meta">RFID No: <strong>SUP-OM-2002</strong></div>
+          <div class="product-meta">Stage: <strong>Supply</strong> · Source: Store</div>
+          <div class="product-price">₹220</div>
+          <div class="pill-row"><span class="pill">🌱 Supply</span><span class="pill gold">Qty 1</span></div>
+          <button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(10)">🛒 Add to Cart</button>
+        </div>
+      </div></div>
+    </section>
+
+    <section id="checkoutSection" class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">🧾 Counter Checkout &amp; Reviews</h2>
+          <p class="section-sub">Select the assisting supervisor, generate the counter bill and collect product, display and supervisor reviews. No self-checkout or online payment is available.</p>
+        </div>
+      </div>
+
+      <div class="stepper">
+        <div id="stepCart" class="step active">Cart Summary</div>
+        <div id="stepSupervisor" class="step">Supervisor Details</div>
+        <div id="stepInvoice" class="step">Counter Bill</div>
+        <div id="stepFeedback" class="step">3-Part Reviews</div>
+        <div id="stepComplete" class="step">Completed</div>
+      </div>
+
+      <div id="checkoutEmpty" class="empty">Register the customer, confirm the cart and select Proceed To Counter.</div>
+
+      <div id="counterForm" class="checkout-box">
+        <h3 class="section-title" style="font-size:21px">🏪 Pay at Counter</h3>
+        <p class="section-sub">Select the supervisor assisting the customer. A counter bill number is generated and becomes visible to the accountant.</p>
+        <div class="grid grid-2" style="margin-top:16px">
+          <div><label>Supervisor Name *</label><select id="counterSupervisor"><option value="">Select supervisor</option><option>Ramesh</option><option>Suresh</option><option>Dharmesh</option><option>Rajesh</option><option>Jiggesh</option></select></div>
+          <div><label>Bill Number</label><input id="counterBillNumber" value="234" disabled=""></div>
+        </div>
+        <div class="actions"><button class="btn btn-green" onclick="createCounterTicket()">Generate Counter Bill</button></div>
+      </div>
+
+      <div id="invoiceBox" class="checkout-box"></div>
+      <div id="feedbackBox" class="checkout-box"></div>
+      <div id="completionBox" class="checkout-box"></div>
+    </section>
+
+    <section id="counterSection" class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">🧾 Accountant Counter</h2>
+          <p class="section-sub">The accountant can open pending tickets, see the four approved customer fields, review ordered items and update invoice status. Cancelled invoices require a reason.</p>
+        </div>
+        <button class="btn btn-light" onclick="seedCounterTicket()">➕ Add Sample Pending Ticket 234</button>
+      </div>
+
+      <div class="counter-layout">
+        <div>
+          <h3 style="color:#1a4d2a;font-weight:900;margin-bottom:12px">Tickets</h3>
+          <div id="ticketList" class="ticket-list"><div class="empty">No counter tickets yet. Generate a counter bill or add sample ticket 234.</div></div>
+        </div>
+        <div>
+          <div id="counterDetail" class="counter-detail"><div class="empty">Select a ticket to view customer and order details.</div></div>
+          <div id="invoiceChart" class="chart-card"><h3 style="color:#1a4d2a;font-weight:900;margin-bottom:8px">Invoice Status Chart</h3><div class="bar-row"><span>completed</span><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div><div class="bar-row"><span>pending</span><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div><div class="bar-row"><span>paid</span><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div><div class="bar-row"><span>cancelled</span><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div></div>
+          <div id="cancelList" class="chart-card"><h3 style="color:#1a4d2a;font-weight:900;margin-bottom:8px">Cancellations &amp; Reasons</h3><div class="empty">No cancellations yet.</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="productModal" class="modal">
+    <div class="modal-box">
+      <div class="modal-head"><div id="modalTitle" class="modal-title">Plant Details</div><button class="close-btn" onclick="closeProductModal()">×</button></div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const supervisors = ['Ramesh','Suresh','Dharmesh','Rajesh','Jiggesh'];
+    const categories = [
+      {key:'all',label:'All'},
+      {key:'flowering',label:'🌸 Flowering'},
+      {key:'fruit',label:'🍎 Fruit Plants'},
+      {key:'medicinal',label:'🌿 Medicinal'},
+      {key:'indoor',label:'🪴 Indoor'},
+      {key:'tools',label:'🔧 Tools & Supplies'}
+    ];
+    const products = [
+      {id:1,name:'Rose Plant',rfid:'RFID-OM-1001',stage:'Adult',price:299,category:'flowering',image:'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=600&q=80',care:['Needs 5-6 hours sunlight','Water 4 times a week','Use well-drained loamy soil','Prune dry flowers weekly'],benefits:['Adds fragrance and color','Good for ornamental gardening','Can be used in bouquets'],scientific:'Rosa rubiginosa'},
+      {id:2,name:'Tulsi Plant',rfid:'RFID-OM-1002',stage:'Child',price:199,category:'medicinal',image:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80',care:['Morning sunlight is best','Water when top soil is dry','Avoid water logging','Pinch flowers to encourage leaves'],benefits:['Medicinal and spiritual value','Air-purifying household plant','Easy to maintain'],scientific:'Ocimum tenuiflorum'},
+      {id:3,name:'Mango Tree',rfid:'RFID-OM-1003',stage:'Sapling',price:499,category:'fruit',image:'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80',care:['Needs 6-8 hours sunlight','Deep watering twice a week','Needs open space','Use organic manure monthly'],benefits:['Long-term fruit plant','Provides shade when mature','High value farm plant'],scientific:'Mangifera indica'},
+      {id:4,name:'Aloe Vera',rfid:'RFID-OM-1004',stage:'Adult',price:249,category:'medicinal',image:'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=600&q=80',care:['Water once a week','Avoid overwatering','Keep in indirect sunlight','Use sandy soil'],benefits:['Medicinal gel plant','Low maintenance','Good indoor plant'],scientific:'Aloe barbadensis miller'},
+      {id:5,name:'Money Plant',rfid:'RFID-OM-1005',stage:'Child',price:179,category:'indoor',image:'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80',care:['Bright indirect light','Water twice a week','Clean leaves gently','Use support for vines'],benefits:['Indoor decoration','Easy growth','Popular vastu plant'],scientific:'Epipremnum aureum'},
+      {id:6,name:'Jasmine Plant',rfid:'RFID-OM-1006',stage:'Adult',price:349,category:'flowering',image:'https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&fit=crop&w=600&q=80',care:['Needs full to partial sun','Keep soil moist','Prune after flowering','Use compost monthly'],benefits:['Beautiful fragrance','Good balcony plant','Attracts pollinators'],scientific:'Jasminum'},
+      {id:7,name:'Guava Plant',rfid:'RFID-OM-1007',stage:'Sapling',price:399,category:'fruit',image:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80',care:['Needs full sunlight','Water 2-3 times weekly','Pest check is important','Needs medium open space'],benefits:['Fruit-bearing plant','Good for farms and homes','Hardy and reliable'],scientific:'Psidium guajava'},
+      {id:8,name:'Areca Palm',rfid:'RFID-OM-1008',stage:'Adult',price:599,category:'indoor',image:'https://images.unsplash.com/photo-1509423350716-97f2360af9e4?auto=format&fit=crop&w=600&q=80',care:['Bright indirect sunlight','Water when soil is semi-dry','Mist leaves weekly','Avoid harsh afternoon sun'],benefits:['Premium indoor plant','Improves ambience','Good for office spaces'],scientific:'Dypsis lutescens'},
+      {id:9,name:'Garden Trowel',rfid:'TOOL-OM-2001',stage:'Tool',price:149,category:'tools',image:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80',care:['Clean after use','Keep away from water','Store safely','Use for potting soil'],benefits:['Useful for planting','Easy soil handling','Reusable tool'],scientific:'Gardening Essential'},
+      {id:10,name:'Organic Compost',rfid:'SUP-OM-2002',stage:'Supply',price:220,category:'tools',image:'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80',care:['Use once in 15-30 days','Do not overuse','Mix with top soil','Store in dry area'],benefits:['Improves soil quality','Supports plant growth','Organic nutrition'],scientific:'Soil Nutrition'}
+    ];
+
+    let customer = null;
+    let cart = [
+      {...products[0],quantity:1,source:'RFID Scan'},
+      {...products[1],quantity:2,source:'RFID Scan'},
+      {...products[2],quantity:1,source:'RFID Scan'}
+    ];
+    let tickets = [];
+    let selectedTicketId = null;
+    let currentSupervisor = '';
+    let currentBillNo = 234;
+    let currentReviewRatings = {product:0,display:0,supervisor:0};
+
+    function escapeHtml(value){
+      return String(value ?? '').replace(/[&<>'"]/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char];});
+    }
+
+    function money(value){return '₹' + Number(value || 0).toLocaleString('en-IN');}
+    function subtotal(){return cart.reduce((sum,item)=>sum + item.price * item.quantity,0);}
+    function gstAmount(){return Math.round(subtotal() * 0.05);}
+    function grandTotal(){return subtotal() + gstAmount();}
+    function totalQty(){return cart.reduce((sum,item)=>sum + item.quantity,0);}
+
+    function showToast(message){
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(()=>toast.classList.remove('show'),2600);
+    }
+
+    function jumpToSection(sectionId,btn){
+      const el = document.getElementById(sectionId);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+      document.querySelectorAll('.nav-tabs button').forEach(b=>b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      else{
+        const map = {registrationSection:0,cartSection:1,storeSection:2,checkoutSection:3,counterSection:4};
+        const buttons = document.querySelectorAll('.nav-tabs button');
+        if(buttons[map[sectionId]]) buttons[map[sectionId]].classList.add('active');
+      }
+    }
+
+    function fillDemoCustomer(){
+      document.getElementById('custName').value = 'Aakash Patil';
+      document.getElementById('custEmail').value = 'aakash.patil@example.com';
+      document.getElementById('custMobile').value = '9876543210';
+      document.getElementById('custCity').value = 'Pune';
+      showToast('Demo customer details filled.');
+    }
+
+    function registerCustomer(goToCart=false){
+      const data = {
+        name:document.getElementById('custName').value.trim(),
+        email:document.getElementById('custEmail').value.trim(),
+        mobile:document.getElementById('custMobile').value.trim(),
+        city:document.getElementById('custCity').value.trim()
+      };
+      if(Object.values(data).some(value=>!value)){showToast('Please fill Name, Email, Phone Number and City.');return;}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){showToast('Enter a valid email address.');return;}
+      if(!/^\d{10}$/.test(data.mobile)){showToast('Enter a valid 10 digit phone number.');return;}
+      customer = data;
+      renderProfile();
+      renderCart();
+      showToast('Customer registered successfully.');
+      if(goToCart) jumpToSection('cartSection');
+    }
+
+    function renderProfile(){
+      const card = document.getElementById('profileCard');
+      if(!customer){card.style.display='none';return;}
+      card.style.display='block';
+      card.innerHTML = `
+        <h3>✅ Customer Profile Created</h3>
+        <div class="grid grid-2">
+          <div>
+            <div class="profile-row"><strong>Name</strong><span>${escapeHtml(customer.name)}</span></div>
+            <div class="profile-row"><strong>Email</strong><span>${escapeHtml(customer.email)}</span></div>
+          </div>
+          <div>
+            <div class="profile-row"><strong>Phone Number</strong><span>${escapeHtml(customer.mobile)}</span></div>
+            <div class="profile-row"><strong>City</strong><span>${escapeHtml(customer.city)}</span></div>
+          </div>
+        </div>`;
+    }
+
+    function renderCart(){
+      const grid = document.getElementById('cartProductGrid');
+      grid.innerHTML = cart.length ? cart.map(item=>productCard(item,true)).join('') : '<div class="empty">Cart is empty. Add plants from store or simulate RFID scan.</div>';
+      document.getElementById('summaryCustomer').textContent = customer ? customer.name : 'Not registered';
+      document.getElementById('summaryItems').textContent = totalQty();
+      document.getElementById('summarySubtotal').textContent = money(subtotal());
+      document.getElementById('summaryGst').textContent = money(gstAmount());
+      document.getElementById('summaryTotal').textContent = money(grandTotal());
+      renderCounter();
+    }
+
+    function productCard(item,isCart){
+      return `
+      <div class="product-card" onclick="openProductModal(${item.id})">
+        <img src="${item.image}" alt="${escapeHtml(item.name)}" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80'">
+        <div class="product-info">
+          <div class="product-name">${escapeHtml(item.name)}</div>
+          <div class="product-meta">RFID No: <strong>${escapeHtml(item.rfid)}</strong></div>
+          <div class="product-meta">Stage: <strong>${escapeHtml(item.stage)}</strong> · Source: ${escapeHtml(item.source || 'Store')}</div>
+          <div class="product-price">${money(item.price)}</div>
+          <div class="pill-row"><span class="pill">🌱 ${escapeHtml(item.stage)}</span><span class="pill gold">Qty ${item.quantity || 1}</span></div>
+          ${isCart ? `<div class="qty-control" onclick="event.stopPropagation()"><button onclick="changeQty(${item.id},-1)">−</button><span>${item.quantity}</span><button onclick="changeQty(${item.id},1)">+</button><button style="background:#fff0ef;color:#9e1f14" onclick="removeFromCart(${item.id})">×</button></div>` : `<button class="btn btn-green" style="width:100%;margin-top:12px" onclick="event.stopPropagation();addToCart(${item.id})">🛒 Add to Cart</button>`}
+        </div>
+      </div>`;
+    }
+
+    function changeQty(id,delta){
+      const item = cart.find(x=>x.id===id);
+      if(!item) return;
+      item.quantity += delta;
+      if(item.quantity<=0) cart = cart.filter(x=>x.id!==id);
+      renderCart();
+    }
+
+    function removeFromCart(id){cart = cart.filter(item=>item.id!==id);renderCart();showToast('Item removed from cart.');}
+
+    function addToCart(id){
+      const product = products.find(p=>p.id===id);
+      if(!product) return;
+      const existing = cart.find(x=>x.id===id);
+      if(existing) existing.quantity += 1;
+      else cart.push({...product,quantity:1,source:'Store'});
+      renderCart();
+      showToast(product.name + ' added to cart.');
+    }
+
+    function addRandomScannedProduct(){
+      const pool = products.filter(p=>p.category!=='tools');
+      const product = pool[Math.floor(Math.random()*pool.length)];
+      const existing = cart.find(x=>x.id===product.id);
+      if(existing){existing.quantity+=1;existing.source='RFID Scan';}
+      else cart.push({...product,quantity:1,source:'RFID Scan'});
+      renderCart();
+      showToast('RFID scanned: ' + product.name);
+    }
+
+    function openProductModal(id){
+      const product = products.find(p=>p.id===id) || cart.find(p=>p.id===id);
+      if(!product) return;
+      document.getElementById('modalTitle').textContent = product.name + ' Details';
+      document.getElementById('modalBody').innerHTML = `
+        <img class="detail-img" src="${product.image}" alt="${escapeHtml(product.name)}">
+        <div class="grid grid-2">
+          <div class="info-panel"><h4>🌱 Product Details</h4><div class="profile-row"><strong>Plant Name</strong><span>${escapeHtml(product.name)}</span></div><div class="profile-row"><strong>Scientific Name</strong><span>${escapeHtml(product.scientific)}</span></div><div class="profile-row"><strong>RFID No</strong><span>${escapeHtml(product.rfid)}</span></div><div class="profile-row"><strong>Stage</strong><span>${escapeHtml(product.stage)}</span></div><div class="profile-row"><strong>Price</strong><span>${money(product.price)}</span></div></div>
+          <div class="info-panel"><h4>💚 Benefits</h4><div class="info-list">${product.benefits.map(x=>`<div>✅ <span>${escapeHtml(x)}</span></div>`).join('')}</div></div>
+          <div class="info-panel" style="grid-column:1/-1"><h4>🪴 Care Details</h4><div class="info-list">${product.care.map(x=>`<div>🌿 <span>${escapeHtml(x)}</span></div>`).join('')}</div></div>
+        </div>
+        <div class="actions"><button class="btn btn-green" onclick="addToCart(${product.id});closeProductModal()">🛒 Add One More To Cart</button></div>`;
+      document.getElementById('productModal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeProductModal(){document.getElementById('productModal').classList.remove('open');document.body.style.overflow='auto';}
+
+    function renderStore(category='all'){
+      document.getElementById('categoryBar').innerHTML = categories.map(cat=>`<button class="${cat.key===category?'active':''}" onclick="renderStore('${cat.key}')">${cat.label}</button>`).join('');
+      const data = category==='all' ? products : products.filter(p=>p.category===category);
+      document.getElementById('storeGrid').innerHTML = data.map(item=>productCard({...item,quantity:1,source:'Store'},false)).join('');
+    }
+
+    function populateSupervisors(){
+      const select = document.getElementById('counterSupervisor');
+      select.innerHTML = '<option value="">Select supervisor</option>' + supervisors.map(name=>`<option>${name}</option>`).join('');
+    }
+
+    function ensureReadyForCheckout(){
+      if(!customer){showToast('Please register the customer first.');jumpToSection('registrationSection');return false;}
+      if(!cart.length){showToast('Cart is empty. Add products first.');jumpToSection('cartSection');return false;}
+      return true;
+    }
+
+    function resetCheckoutBoxes(){
+      ['counterForm','invoiceBox','feedbackBox','completionBox'].forEach(id=>{
+        const box = document.getElementById(id);
+        box.classList.remove('active');
+        if(id!=='counterForm') box.innerHTML='';
+      });
+      document.getElementById('checkoutEmpty').style.display='none';
+      updateSteps('stepCart');
+    }
+
+    function updateSteps(activeId){
+      ['stepCart','stepSupervisor','stepInvoice','stepFeedback','stepComplete'].forEach(id=>document.getElementById(id).classList.remove('active'));
+      document.getElementById(activeId).classList.add('active');
+    }
+
+    function startCounterCheckout(){
+      if(!ensureReadyForCheckout()) return;
+      resetCheckoutBoxes();
+      document.getElementById('counterForm').classList.add('active');
+      updateSteps('stepSupervisor');
+      jumpToSection('checkoutSection');
+    }
+
+    function createCounterTicket(){
+      const supervisor = document.getElementById('counterSupervisor').value;
+      if(!supervisor){showToast('Please select supervisor name.');return;}
+      currentSupervisor = supervisor;
+      const ticket = buildTicket({billNo:String(currentBillNo),status:'pending',mode:'Pay at Counter',supervisor,paymentStatus:'Pending'});
+      const existingIndex = tickets.findIndex(t=>String(t.billNo)===String(currentBillNo));
+      if(existingIndex>=0) tickets.splice(existingIndex,1);
+      tickets.unshift(ticket);
+      selectedTicketId = ticket.id;
+      renderInvoice(ticket,true);
+      renderFeedback(ticket);
+      document.getElementById('counterForm').classList.remove('active');
+      renderCounter();
+      updateSteps('stepInvoice');
+      showToast('Counter bill ' + currentBillNo + ' generated.');
+    }
+
+    function buildTicket({billNo,status,mode,supervisor,paymentStatus}){
+      return {
+        id:'T'+Date.now()+Math.floor(Math.random()*999),
+        billNo,status,mode,supervisor,paymentStatus,
+        customer:{...customer},
+        items:cart.map(item=>({...item})),
+        subtotal:subtotal(),gstAmount:gstAmount(),total:grandTotal(),
+        createdAt:new Date().toLocaleString('en-IN'),
+        cancellationReason:'',reviews:null
+      };
+    }
+
+    function renderInvoice(ticket,showDownload){
+      const box = document.getElementById('invoiceBox');
+      box.classList.add('active');
+      box.innerHTML = `
+        <div class="invoice" id="invoicePrintable">
+          <div class="invoice-top">
+            <div><h3>OM Farm & Nursery</h3><div style="color:#5a6f5a;font-weight:700">Counter Bill / Client Demo</div></div>
+            <div style="text-align:right;color:#5a6f5a;font-weight:700"><div><strong style="color:#1a4d2a">Bill:</strong> ${escapeHtml(ticket.billNo)}</div><div><strong style="color:#1a4d2a">Date:</strong> ${escapeHtml(ticket.createdAt)}</div><div><strong style="color:#1a4d2a">Status:</strong> ${escapeHtml(ticket.paymentStatus)}</div></div>
+          </div>
+          <div class="info-panel">
+            <h4>Customer Details</h4>
+            <div class="grid grid-2">
+              <div><div class="profile-row"><strong>Name</strong><span>${escapeHtml(ticket.customer.name)}</span></div><div class="profile-row"><strong>Email</strong><span>${escapeHtml(ticket.customer.email)}</span></div></div>
+              <div><div class="profile-row"><strong>Phone Number</strong><span>${escapeHtml(ticket.customer.mobile)}</span></div><div class="profile-row"><strong>City</strong><span>${escapeHtml(ticket.customer.city)}</span></div></div>
+            </div>
+          </div>
+          <div class="customer-only-note">The bill contains exactly four customer fields: Name, Email, Phone Number and City.</div>
+          <table class="invoice-table"><thead><tr><th>Product</th><th>RFID</th><th>Stage</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>${ticket.items.map(item=>`<tr><td>${escapeHtml(item.name)}</td><td>${escapeHtml(item.rfid)}</td><td>${escapeHtml(item.stage)}</td><td>${item.quantity}</td><td>${money(item.price)}</td><td>${money(item.price*item.quantity)}</td></tr>`).join('')}</tbody></table>
+          <div class="grid grid-2" style="margin-top:16px">
+            <div class="info-panel"><h4>Counter Information</h4><div class="profile-row"><strong>Supervisor</strong><span>${escapeHtml(ticket.supervisor)}</span></div><div class="profile-row"><strong>Checkout Mode</strong><span>${escapeHtml(ticket.mode)}</span></div><div class="profile-row"><strong>Payment Status</strong><span>${escapeHtml(ticket.paymentStatus)}</span></div></div>
+            <div style="align-self:end"><div class="cart-line" style="color:#5a6f5a;border-color:#e6eee6"><span>Subtotal</span><strong style="color:#1a4d2a">${money(ticket.subtotal)}</strong></div><div class="cart-line" style="color:#5a6f5a;border-color:#e6eee6"><span>GST Demo</span><strong style="color:#1a4d2a">${money(ticket.gstAmount)}</strong></div><div class="cart-total"><span>Total</span><span>${money(ticket.total)}</span></div></div>
+          </div>
+        </div>
+        ${showDownload?`<div class="actions"><button class="btn btn-green" onclick="downloadInvoice('${ticket.id}')">⬇️ Download Bill</button><button class="btn btn-light" onclick="jumpToSection('counterSection')">Open Counter</button></div>`:''}`;
+    }
+
+    function renderStars(rating){
+      const safeRating = Math.max(0,Math.min(5,Number(rating)||0));
+      return `<span class="star-display">${'★'.repeat(safeRating)}${'☆'.repeat(5-safeRating)}</span>`;
+    }
+
+    function renderFeedback(ticket){
+      currentReviewRatings = {product:0,display:0,supervisor:0};
+      const box = document.getElementById('feedbackBox');
+      box.classList.add('active');
+      box.innerHTML = `
+        <h3 class="section-title" style="font-size:21px">⭐ Customer Reviews</h3>
+        <p class="section-sub">Complete Product Review, Display Review and Supervisor Review before submitting.</p>
+        <div class="review-layout">
+          <div class="review-card">
+            <div class="review-card-grid">
+              <div>
+                <h4>🌱 Product Review</h4>
+                <p class="small-note">Rate the purchased products and share your product experience.</p>
+              </div>
+              <div class="review-field">
+                <label>Product Rating *</label>
+                <div class="rating-grid">${Array.from({length:5},(_,i)=>`<button type="button" id="productRatingBtn${i+1}" aria-label="Select product star rating" onclick="selectReviewRating('product',${i+1})">★</button>`).join('')}</div>
+              </div>
+              <div class="review-field review-comment-field">
+                <label>Product Comment</label>
+                <textarea id="productReviewComment" placeholder="Plant quality, health, packaging, value..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-card-grid">
+              <div>
+                <h4>🪴 Display Review</h4>
+                <p class="small-note">Review nursery display and product presentation.</p>
+              </div>
+              <div class="review-field">
+                <label>Display Rating *</label>
+                <div class="rating-grid">${Array.from({length:5},(_,i)=>`<button type="button" id="displayRatingBtn${i+1}" aria-label="Select display star rating" onclick="selectReviewRating('display',${i+1})">★</button>`).join('')}</div>
+              </div>
+              <div class="review-field review-comment-field">
+                <label>Display Comment</label>
+                <textarea id="displayReviewComment" placeholder="Arrangement, cleanliness, labels, ambience..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-card-grid">
+              <div class="review-field">
+                <h4>👨‍💼 Supervisor Review</h4>
+                <p class="small-note">Supervisor auto-fetched from checkout.</p>
+                <label style="margin-top:7px">Supervisor Name</label>
+                <input value="${escapeHtml(ticket.supervisor)}" disabled>
+              </div>
+              <div class="review-field">
+                <label>Supervisor Rating *</label>
+                <div class="rating-grid">${Array.from({length:5},(_,i)=>`<button type="button" id="supervisorRatingBtn${i+1}" aria-label="Select supervisor star rating" onclick="selectReviewRating('supervisor',${i+1})">★</button>`).join('')}</div>
+              </div>
+              <div class="review-field review-comment-field">
+                <label>Supervisor Comment</label>
+                <textarea id="supervisorReviewComment" placeholder="Guidance, knowledge, behaviour, service..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="actions review-submit-actions"><button class="btn btn-green" onclick="submitFeedback('${ticket.id}')">Submit All Reviews</button></div>`;
+      updateSteps('stepFeedback');
+    }
+
+    function selectReviewRating(type,value){
+      currentReviewRatings[type]=value;
+      for(let i=1;i<=5;i++){
+        const button = document.getElementById(type+'RatingBtn'+i);
+        if(button) button.classList.toggle('active',i<=value);
+      }
+    }
+
+    function submitFeedback(ticketId){
+      if(!currentReviewRatings.product || !currentReviewRatings.display || !currentReviewRatings.supervisor){showToast('Please provide all three star ratings.');return;}
+      const ticket = tickets.find(t=>t.id===ticketId);
+      if(!ticket){showToast('Ticket not found.');return;}
+      ticket.reviews = {
+        product:{rating:currentReviewRatings.product,comment:document.getElementById('productReviewComment').value.trim()},
+        display:{rating:currentReviewRatings.display,comment:document.getElementById('displayReviewComment').value.trim()},
+        supervisor:{name:ticket.supervisor,rating:currentReviewRatings.supervisor,comment:document.getElementById('supervisorReviewComment').value.trim()}
+      };
+      const box = document.getElementById('completionBox');
+      box.classList.add('active');
+      box.innerHTML = `<div class="success-box">🎉 Thank you. Product Review, Display Review and Supervisor Review have been submitted successfully for Bill #${escapeHtml(ticket.billNo)}.</div><div class="review-summary"><div class="review-summary-card"><strong>Product Review</strong>${renderStars(ticket.reviews.product.rating)}<div class="small-note">${escapeHtml(ticket.reviews.product.comment || 'No comment')}</div></div><div class="review-summary-card"><strong>Display Review</strong>${renderStars(ticket.reviews.display.rating)}<div class="small-note">${escapeHtml(ticket.reviews.display.comment || 'No comment')}</div></div><div class="review-summary-card"><strong>Supervisor Review</strong><div style="color:#5a6f5a;font-weight:750;margin-bottom:5px">${escapeHtml(ticket.supervisor)}</div>${renderStars(ticket.reviews.supervisor.rating)}<div class="small-note">${escapeHtml(ticket.reviews.supervisor.comment || 'No comment')}</div></div></div>`;
+      updateSteps('stepComplete');
+      renderCounter();
+      showToast('All three reviews submitted.');
+    }
+
+    function downloadInvoice(ticketId){
+      const ticket = tickets.find(t=>t.id===ticketId);
+      if(!ticket){showToast('Bill not found.');return;}
+      const lines = [];
+      lines.push('OM Farm & Nursery - Counter Bill');
+      lines.push('Bill No: ' + ticket.billNo);
+      lines.push('Date: ' + ticket.createdAt);
+      lines.push('Status: ' + ticket.paymentStatus);
+      lines.push('');
+      lines.push('Customer Details');
+      lines.push('Name: ' + ticket.customer.name);
+      lines.push('Email: ' + ticket.customer.email);
+      lines.push('Phone Number: ' + ticket.customer.mobile);
+      lines.push('City: ' + ticket.customer.city);
+      lines.push('');
+      lines.push('Counter Information');
+      lines.push('Supervisor: ' + ticket.supervisor);
+      lines.push('Checkout Mode: ' + ticket.mode);
+      lines.push('');
+      lines.push('Items:');
+      ticket.items.forEach(item=>lines.push(`${item.name} | ${item.rfid} | ${item.stage} | Qty ${item.quantity} | ${money(item.price*item.quantity)}`));
+      lines.push('');
+      lines.push('Subtotal: ' + money(ticket.subtotal));
+      lines.push('GST Demo: ' + money(ticket.gstAmount));
+      lines.push('Total: ' + money(ticket.total));
+      const blob = new Blob([lines.join('\n')],{type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href=url;
+      a.download='Bill-'+ticket.billNo+'-OM-Nursery.txt';
+      document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+      showToast('Bill downloaded.');
+    }
+
+    function seedCounterTicket(){
+      if(!customer){fillDemoCustomer();registerCustomer(false);}
+      if(!cart.length) cart.push({...products[0],quantity:1,source:'RFID Scan'});
+      const ticket = buildTicket({billNo:'234',status:'pending',mode:'Pay at Counter',supervisor:'Ramesh',paymentStatus:'Pending'});
+      const existingIndex = tickets.findIndex(t=>String(t.billNo)==='234');
+      if(existingIndex>=0) tickets.splice(existingIndex,1);
+      tickets.unshift(ticket);
+      selectedTicketId=ticket.id;
+      renderCounter();
+      showToast('Sample ticket 234 added.');
+    }
+
+    function renderCounter(){
+      renderTicketList();renderInvoiceChart();renderCancelList();
+      if(selectedTicketId) renderCounterDetail(selectedTicketId);
+    }
+
+    function renderTicketList(){
+      const list = document.getElementById('ticketList');
+      if(!tickets.length){list.innerHTML='<div class="empty">No counter tickets yet. Generate a counter bill or add sample ticket 234.</div>';return;}
+      list.innerHTML=tickets.map(t=>`<div class="ticket ${selectedTicketId===t.id?'active':''}" onclick="selectTicket('${t.id}')"><div class="ticket-top"><div class="ticket-no">Bill #${escapeHtml(t.billNo)}</div><span class="status ${t.status}">${escapeHtml(t.status)}</span></div><div class="ticket-meta">${escapeHtml(t.customer.name)} · ${escapeHtml(t.customer.city)}<br>${totalTicketQty(t)} items · ${money(t.total)}<br>Supervisor: ${escapeHtml(t.supervisor)}</div></div>`).join('');
+    }
+
+    function totalTicketQty(ticket){return ticket.items.reduce((sum,item)=>sum+item.quantity,0);}
+    function selectTicket(id){selectedTicketId=id;renderCounter();}
+
+    function renderCounterDetail(id){
+      const ticket=tickets.find(t=>t.id===id);
+      const box=document.getElementById('counterDetail');
+      if(!ticket){box.innerHTML='<div class="empty">Ticket not found.</div>';return;}
+      const reviews = ticket.reviews ? `<div class="review-summary"><div class="review-summary-card"><strong>Product Review</strong>${renderStars(ticket.reviews.product.rating)}<div class="small-note">${escapeHtml(ticket.reviews.product.comment || 'No comment')}</div></div><div class="review-summary-card"><strong>Display Review</strong>${renderStars(ticket.reviews.display.rating)}<div class="small-note">${escapeHtml(ticket.reviews.display.comment || 'No comment')}</div></div><div class="review-summary-card"><strong>Supervisor Review</strong><div style="color:#5a6f5a;font-weight:750;margin-bottom:5px">${escapeHtml(ticket.reviews.supervisor.name)}</div>${renderStars(ticket.reviews.supervisor.rating)}<div class="small-note">${escapeHtml(ticket.reviews.supervisor.comment || 'No comment')}</div></div></div>` : '<div class="empty" style="margin-top:14px">Reviews not submitted yet.</div>';
+      box.innerHTML=`
+        <div class="section-head" style="margin-bottom:14px"><div><h3 class="section-title" style="font-size:22px">Bill #${escapeHtml(ticket.billNo)}</h3><p class="section-sub">Created: ${escapeHtml(ticket.createdAt)}</p></div><span class="status ${ticket.status}">${escapeHtml(ticket.status)}</span></div>
+        <div class="grid grid-2">
+          <div class="info-panel"><h4>Customer Details</h4><div class="profile-row"><strong>Name</strong><span>${escapeHtml(ticket.customer.name)}</span></div><div class="profile-row"><strong>Email</strong><span>${escapeHtml(ticket.customer.email)}</span></div><div class="profile-row"><strong>Phone Number</strong><span>${escapeHtml(ticket.customer.mobile)}</span></div><div class="profile-row"><strong>City</strong><span>${escapeHtml(ticket.customer.city)}</span></div></div>
+          <div class="info-panel"><h4>Order Details</h4><div class="profile-row"><strong>Mode</strong><span>${escapeHtml(ticket.mode)}</span></div><div class="profile-row"><strong>Payment</strong><span>${escapeHtml(ticket.paymentStatus)}</span></div><div class="profile-row"><strong>Supervisor</strong><span>${escapeHtml(ticket.supervisor)}</span></div><div class="profile-row"><strong>Total</strong><span>${money(ticket.total)}</span></div></div>
+        </div>
+        <h4 style="color:#1a4d2a;font-weight:900;margin-top:18px">Items</h4>
+        <div class="order-items">${ticket.items.map(item=>`<div class="order-item"><img src="${item.image}" alt="${escapeHtml(item.name)}"><div style="flex:1"><div style="color:#1a4d2a;font-weight:900">${escapeHtml(item.name)}</div><div style="color:#5a6f5a;font-size:13px;font-weight:700">${escapeHtml(item.rfid)} · ${escapeHtml(item.stage)} · Qty ${item.quantity}</div></div><strong style="color:#1a4d2a">${money(item.price*item.quantity)}</strong></div>`).join('')}</div>
+        <h4 style="color:#1a4d2a;font-weight:900;margin-top:18px">Reviews</h4>
+        ${reviews}
+        ${ticket.cancellationReason?`<div class="cancel-item" style="margin-top:14px">Cancellation Reason: ${escapeHtml(ticket.cancellationReason)}</div>`:''}
+        <div class="actions"><button class="btn btn-light" onclick="updateTicketStatus('${ticket.id}','pending')">Mark Pending</button><button class="btn btn-gold" onclick="updateTicketStatus('${ticket.id}','paid')">Mark Paid</button><button class="btn btn-green" onclick="updateTicketStatus('${ticket.id}','completed')">Mark Completed</button><button class="btn btn-red" onclick="cancelTicket('${ticket.id}')">Cancel</button></div>`;
+    }
+
+    function updateTicketStatus(id,status){
+      const ticket=tickets.find(t=>t.id===id);if(!ticket)return;
+      ticket.status=status;
+      ticket.paymentStatus=(status==='paid'||status==='completed')?'Paid':'Pending';
+      if(status!=='cancelled') ticket.cancellationReason='';
+      renderCounter();showToast('Ticket marked as '+status+'.');
+    }
+
+    function cancelTicket(id){
+      const reason=prompt('Enter cancellation reason:');
+      if(!reason||!reason.trim()){showToast('Cancellation reason is required.');return;}
+      const ticket=tickets.find(t=>t.id===id);if(!ticket)return;
+      ticket.status='cancelled';ticket.paymentStatus='Cancelled';ticket.cancellationReason=reason.trim();
+      renderCounter();showToast('Ticket cancelled with reason.');
+    }
+
+    function renderInvoiceChart(){
+      const statuses=['completed','pending','paid','cancelled'];
+      const counts=statuses.map(status=>({status,count:tickets.filter(t=>t.status===status).length}));
+      const max=Math.max(1,...counts.map(x=>x.count));
+      document.getElementById('invoiceChart').innerHTML=`<h3 style="color:#1a4d2a;font-weight:900;margin-bottom:8px">Invoice Status Chart</h3>${counts.map(row=>`<div class="bar-row"><span>${row.status}</span><div class="bar-bg"><div class="bar-fill" style="width:${(row.count/max)*100}%"></div></div><strong>${row.count}</strong></div>`).join('')}`;
+    }
+
+    function renderCancelList(){
+      const cancelled=tickets.filter(t=>t.status==='cancelled');
+      document.getElementById('cancelList').innerHTML=`<h3 style="color:#1a4d2a;font-weight:900;margin-bottom:8px">Cancellations & Reasons</h3>${cancelled.length?`<div class="cancel-list">${cancelled.map(t=>`<div class="cancel-item"><strong>Bill #${escapeHtml(t.billNo)}</strong> · ${escapeHtml(t.customer.name)}<br>${escapeHtml(t.cancellationReason)}</div>`).join('')}</div>`:'<div class="empty">No cancellations yet.</div>'}`;
+    }
+
+    document.getElementById('productModal').addEventListener('click',function(e){if(e.target===this) closeProductModal();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape') closeProductModal();});
+
+    populateSupervisors();
+    renderStore('all');
+    renderCart();
+    renderCounter();
+
+    window.jumpToSection=jumpToSection;
+    window.fillDemoCustomer=fillDemoCustomer;
+    window.registerCustomer=registerCustomer;
+    window.addRandomScannedProduct=addRandomScannedProduct;
+    window.changeQty=changeQty;
+    window.removeFromCart=removeFromCart;
+    window.addToCart=addToCart;
+    window.openProductModal=openProductModal;
+    window.closeProductModal=closeProductModal;
+    window.renderStore=renderStore;
+    window.startCounterCheckout=startCounterCheckout;
+    window.createCounterTicket=createCounterTicket;
+    window.selectReviewRating=selectReviewRating;
+    window.submitFeedback=submitFeedback;
+    window.downloadInvoice=downloadInvoice;
+    window.seedCounterTicket=seedCounterTicket;
+    window.selectTicket=selectTicket;
+    window.updateTicketStatus=updateTicketStatus;
+    window.cancelTicket=cancelTicket;
+  </script>
+</body></html>
+

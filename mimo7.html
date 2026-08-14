@@ -1,0 +1,3670 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a4d2a">
+  <title>OM Nursery · RFID Plant Identification</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --green-900: #0d321a;
+      --green-800: #123d20;
+      --green-700: #1a4d2a;
+      --green-600: #2d6e3e;
+      --green-500: #3f8a52;
+      --green-100: #eaf4eb;
+      --green-050: #f4f8f4;
+      --gold-500: #f5c542;
+      --gold-600: #d9a91f;
+      --ink: #1e2e24;
+      --muted: #5a6f5a;
+      --border: #e1ebe2;
+      --danger: #b42331;
+      --blue: #1363a5;
+      --shadow-sm: 0 10px 24px rgba(0, 20, 0, 0.05);
+      --shadow-md: 0 16px 34px rgba(0, 20, 0, 0.09);
+      --shadow-lg: 0 24px 52px rgba(0, 20, 0, 0.16);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(63, 138, 82, 0.08), transparent 25%),
+        radial-gradient(circle at 96% 14%, rgba(245, 197, 66, 0.09), transparent 20%),
+        #f4f7f5;
+      color: var(--ink);
+      padding: 28px 18px 46px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1450px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, var(--green-700) 0%, var(--green-600) 100%);
+      border-radius: 32px;
+      padding: 40px 46px;
+      box-shadow: 0 20px 42px rgba(0, 20, 0, 0.15);
+      margin-bottom: 26px;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 290px;
+      height: 290px;
+      right: -74px;
+      top: -105px;
+      border-radius: 50%;
+      border: 52px solid rgba(255, 255, 255, 0.05);
+      z-index: -1;
+    }
+
+    .hero::after {
+      content: "🌿";
+      position: absolute;
+      right: 28px;
+      bottom: -28px;
+      font-size: 154px;
+      line-height: 1;
+      opacity: 0.1;
+      transform: rotate(8deg);
+      z-index: -1;
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 17px;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon {
+      width: 62px;
+      height: 62px;
+      flex: 0 0 62px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      color: #fff;
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      font-weight: 900;
+    }
+
+    h1 span {
+      color: var(--gold-500);
+    }
+
+    .subhead {
+      max-width: 980px;
+      margin-top: 11px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      line-height: 1.58;
+      font-weight: 560;
+      border-left: 4px solid var(--gold-500);
+      padding-left: 16px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 19px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 760;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+      margin-top: 20px;
+    }
+
+    .timeline-step {
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-radius: 17px;
+      padding: 12px 13px;
+      min-height: 74px;
+    }
+
+    .timeline-step strong {
+      display: block;
+      color: var(--gold-500);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      margin-bottom: 5px;
+    }
+
+    .timeline-step span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 650;
+      opacity: 0.94;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .metric-card {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 23px;
+      padding: 20px;
+      min-height: 132px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+      margin-bottom: 24px;
+    }
+
+    .metric-value {
+      color: var(--green-700);
+      font-size: 28px;
+      font-weight: 930;
+      letter-spacing: -0.03em;
+    }
+
+    .metric-caption {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .metric-icon {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: var(--green-100);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+    }
+
+    .section-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0, 20, 0, 0.06);
+      margin-bottom: 26px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green-700);
+      font-size: 23px;
+      font-weight: 880;
+      letter-spacing: -0.025em;
+    }
+
+    .section-title .title-icon {
+      color: #b68b40;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.62;
+      font-weight: 600;
+      max-width: 860px;
+      margin-top: 7px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 20px;
+      min-height: 43px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-size: 13.5px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:focus-visible,
+    input:focus-visible,
+    .plant-result-card:focus-visible {
+      outline: 3px solid rgba(245, 197, 66, 0.65);
+      outline-offset: 3px;
+    }
+
+    .btn-green {
+      color: #fff;
+      background: var(--green-700);
+      box-shadow: 0 9px 20px rgba(26, 77, 42, 0.2);
+    }
+
+    .btn-green:hover {
+      background: var(--green-800);
+    }
+
+    .btn-gold {
+      color: var(--ink);
+      background: var(--gold-500);
+      box-shadow: 0 9px 20px rgba(245, 197, 66, 0.24);
+    }
+
+    .btn-gold:hover {
+      background: #f7cd58;
+    }
+
+    .btn-light {
+      color: var(--green-700);
+      background: #eef6ef;
+      border: 1px solid #d9e9d9;
+    }
+
+    .btn-blue {
+      color: #134f7a;
+      background: #edf6ff;
+      border: 1px solid #d6eaff;
+    }
+
+    .btn-small {
+      min-height: 37px;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .start-panel {
+      border-radius: 24px;
+      padding: 25px;
+      background:
+        linear-gradient(135deg, rgba(26, 77, 42, 0.98), rgba(45, 110, 62, 0.95)),
+        url("https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1400&q=80") center/cover;
+      color: #fff;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.65fr);
+      gap: 24px;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .start-panel::after {
+      content: "RFID";
+      position: absolute;
+      right: 22px;
+      bottom: -18px;
+      color: rgba(255, 255, 255, 0.06);
+      font-size: clamp(76px, 10vw, 148px);
+      font-weight: 950;
+      letter-spacing: -0.08em;
+    }
+
+    .start-copy,
+    .start-action {
+      position: relative;
+      z-index: 2;
+    }
+
+    .start-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 11.5px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .start-copy h2 {
+      font-size: clamp(25px, 4vw, 37px);
+      line-height: 1.12;
+      font-weight: 920;
+      letter-spacing: -0.035em;
+      margin-top: 14px;
+      max-width: 720px;
+    }
+
+    .start-copy p {
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 600;
+      max-width: 690px;
+      margin-top: 10px;
+    }
+
+    .start-action {
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 21px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .start-action .btn {
+      width: 100%;
+      min-height: 54px;
+      font-size: 15px;
+    }
+
+    .start-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 11.5px;
+      line-height: 1.45;
+      font-weight: 650;
+      margin-top: 12px;
+    }
+
+    .scan-workspace {
+      display: none;
+      margin-top: 22px;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    .scan-workspace.show {
+      display: block;
+      animation: workspaceIn 0.34s ease forwards;
+    }
+
+    @keyframes workspaceIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scan-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.45fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .scanner-card {
+      border: 1px solid #dce9dd;
+      border-radius: 23px;
+      background: linear-gradient(145deg, #fbfdfb 0%, #f3f8f3 100%);
+      padding: 21px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanner-card::after {
+      content: "⌁";
+      position: absolute;
+      right: 20px;
+      top: 12px;
+      font-size: 72px;
+      color: rgba(26, 77, 42, 0.05);
+      transform: rotate(-16deg);
+    }
+
+    .scanner-heading {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .scanner-symbol {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--green-100);
+      font-size: 21px;
+      flex: 0 0 auto;
+    }
+
+    .scanner-heading h3 {
+      color: var(--green-700);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .scanner-heading p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
+      font-weight: 610;
+    }
+
+    .scan-line-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-input-wrap::before {
+      content: "⌕";
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--green-700);
+      font-size: 20px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .rfid-input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid #d5e4d6;
+      border-radius: 16px;
+      padding: 13px 15px 13px 46px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.035em;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.02);
+    }
+
+    .rfid-input:focus {
+      border-color: var(--green-700);
+      box-shadow: 0 0 0 4px rgba(26, 77, 42, 0.08);
+    }
+
+    .scan-status {
+      min-height: 44px;
+      margin-top: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+      font-weight: 680;
+      position: relative;
+      z-index: 2;
+    }
+
+    .scan-status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #b8c8b8;
+      box-shadow: 0 0 0 5px rgba(184, 200, 184, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .scan-status.scanning .scan-status-dot {
+      background: var(--gold-500);
+      box-shadow: 0 0 0 5px rgba(245, 197, 66, 0.18);
+      animation: pulse 0.8s infinite alternate;
+    }
+
+    .scan-status.success .scan-status-dot {
+      background: #0f8f55;
+      box-shadow: 0 0 0 5px rgba(15, 143, 85, 0.14);
+    }
+
+    .scan-status.error .scan-status-dot {
+      background: #d13c4b;
+      box-shadow: 0 0 0 5px rgba(209, 60, 75, 0.13);
+    }
+
+    @keyframes pulse {
+      from { transform: scale(0.8); }
+      to { transform: scale(1.25); }
+    }
+
+    .quick-code-card {
+      border: 1px solid #e2ece3;
+      background: #fff;
+      border-radius: 23px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-code-card h3 {
+      color: var(--green-700);
+      font-size: 15px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .quick-code-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 620;
+      margin-bottom: 14px;
+    }
+
+    .quick-code-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .quick-code {
+      width: 100%;
+      border: 1px solid #e1ebe2;
+      background: #f8fbf8;
+      color: var(--green-700);
+      border-radius: 13px;
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 820;
+      letter-spacing: 0.02em;
+      transition: all 0.2s ease;
+    }
+
+    .quick-code:hover {
+      background: var(--green-700);
+      border-color: var(--green-700);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .result-area {
+      margin-top: 20px;
+    }
+
+    .empty-state {
+      border: 1px dashed #bdd1bf;
+      background: #f8fbf8;
+      border-radius: 22px;
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 680;
+    }
+
+    .empty-state-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      background: #eaf3ea;
+      font-size: 28px;
+    }
+
+    .plant-result-card {
+      display: none;
+      grid-template-columns: 230px minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      border: 1px solid #dbe8dc;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .plant-result-card.show {
+      display: grid;
+      animation: resultIn 0.32s ease;
+    }
+
+    @keyframes resultIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .plant-result-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--green-700);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .result-image-wrap {
+      height: 205px;
+      position: relative;
+      overflow: hidden;
+      background: #eaf3ea;
+    }
+
+    .result-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .plant-result-card:hover .result-image {
+      transform: scale(1.045);
+    }
+
+    .result-image-badge {
+      position: absolute;
+      left: 13px;
+      bottom: 13px;
+      background: rgba(13, 50, 26, 0.88);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 10.5px;
+      font-weight: 850;
+      backdrop-filter: blur(7px);
+    }
+
+    .result-main {
+      padding: 18px 0;
+      min-width: 0;
+    }
+
+    .result-topline {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 9px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: #dcf7ea;
+      color: #0f7a45;
+    }
+
+    .status-stage {
+      background: #fff4d8;
+      color: #8a6100;
+    }
+
+    .status-health {
+      background: #edf6ff;
+      color: #134f7a;
+    }
+
+    .result-main h3 {
+      color: var(--green-700);
+      font-size: 23px;
+      font-weight: 930;
+      letter-spacing: -0.025em;
+    }
+
+    .botanical-name {
+      color: var(--muted);
+      font-size: 12.5px;
+      font-style: italic;
+      font-weight: 640;
+      margin-top: 4px;
+    }
+
+    .result-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .result-meta-item {
+      border: 1px solid #e4ede5;
+      background: #f8fbf8;
+      border-radius: 14px;
+      padding: 10px 11px;
+      min-width: 0;
+    }
+
+    .result-meta-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+      margin-bottom: 4px;
+    }
+
+    .result-meta-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .result-arrow {
+      margin-right: 22px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--green-700);
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: 0 10px 22px rgba(26, 77, 42, 0.2);
+      transition: transform 0.22s ease;
+    }
+
+    .plant-result-card:hover .result-arrow {
+      transform: translateX(4px);
+    }
+
+    .no-result {
+      display: none;
+      border: 1px solid #ffd4cf;
+      background: #fff5f4;
+      border-radius: 20px;
+      padding: 18px;
+      color: #8e2b22;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .no-result.show {
+      display: block;
+    }
+
+    .details-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .details-section.show {
+      display: block;
+      animation: detailsIn 0.4s ease forwards;
+    }
+
+    @keyframes detailsIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .details-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .selected-rfid {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      background: var(--green-700);
+      border-radius: 13px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+    }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(310px, 0.75fr) minmax(0, 1.25fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .plant-visual-card {
+      border: 1px solid #dfeadf;
+      border-radius: 25px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 18px;
+    }
+
+    .plant-hero-image {
+      width: 100%;
+      height: 390px;
+      display: block;
+      object-fit: cover;
+      background: #eaf3ea;
+    }
+
+    .plant-visual-overlay {
+      padding: 18px;
+    }
+
+    .plant-visual-overlay h3 {
+      color: var(--green-700);
+      font-size: 24px;
+      font-weight: 930;
+      letter-spacing: -0.025em;
+    }
+
+    .plant-visual-overlay p {
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 620;
+      line-height: 1.5;
+      margin-top: 5px;
+    }
+
+    .visual-status-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .health-progress-wrap {
+      margin-top: 16px;
+      padding-top: 15px;
+      border-top: 1px solid #e7efe7;
+    }
+
+    .health-progress-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .health-progress-head strong {
+      color: var(--green-700);
+      font-size: 13px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e7efe7;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--green-600), #6cae77);
+      border-radius: inherit;
+      transition: width 0.7s ease;
+    }
+
+    .detail-content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .info-panel {
+      background: #f8fbf8;
+      border: 1px solid #e1ebe2;
+      border-radius: 23px;
+      padding: 19px;
+    }
+
+    .info-panel h3 {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--green-700);
+      font-size: 16px;
+      font-weight: 910;
+      margin-bottom: 14px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .detail-item {
+      background: #fff;
+      border: 1px solid #e4ede5;
+      border-radius: 15px;
+      padding: 12px;
+      min-height: 77px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12.5px;
+      line-height: 1.4;
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .growth-stage-track {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .growth-stage {
+      position: relative;
+      border: 1px solid #e2ece3;
+      border-radius: 16px;
+      padding: 13px 10px;
+      text-align: center;
+      background: #fff;
+      color: var(--muted);
+      min-height: 93px;
+    }
+
+    .growth-stage.active {
+      color: #fff;
+      background: linear-gradient(145deg, var(--green-700), var(--green-600));
+      border-color: var(--green-700);
+      box-shadow: 0 10px 22px rgba(26, 77, 42, 0.14);
+    }
+
+    .growth-stage.done {
+      color: var(--green-700);
+      background: var(--green-100);
+      border-color: #cfe1d0;
+    }
+
+    .growth-stage-icon {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 6px;
+    }
+
+    .growth-stage strong {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 900;
+    }
+
+    .growth-stage small {
+      display: block;
+      font-size: 9.5px;
+      font-weight: 720;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    .maintenance-box {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .maintenance-card {
+      border: 1px solid #e2ece3;
+      background: #fff;
+      border-radius: 16px;
+      padding: 13px;
+    }
+
+    .maintenance-card .maintenance-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 11px;
+      background: var(--green-100);
+      display: grid;
+      place-items: center;
+      margin-bottom: 9px;
+    }
+
+    .maintenance-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+    }
+
+    .maintenance-card strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 850;
+      margin-top: 4px;
+    }
+
+    .action-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      background: linear-gradient(145deg, #f3f8f3, #fff);
+      border: 1px solid #dfeadf;
+      border-radius: 21px;
+      padding: 17px;
+    }
+
+    .action-strip-copy h4 {
+      color: var(--green-700);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .action-strip-copy p {
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 620;
+      line-height: 1.45;
+      margin-top: 4px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .recent-table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e1ebe2;
+      border-radius: 22px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    thead th {
+      background: #f0f5f0;
+      color: var(--green-700);
+      padding: 13px 15px;
+      text-align: left;
+      font-size: 11.5px;
+      font-weight: 850;
+      border-bottom: 2px solid #d4e4d4;
+    }
+
+    tbody td {
+      padding: 13px 15px;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 650;
+      border-bottom: 1px solid #eaf0ea;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover {
+      background: #f8fbf8;
+    }
+
+    .table-rfid {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      background: var(--green-700);
+      border-radius: 10px;
+      padding: 5px 9px;
+      font-size: 10.5px;
+      font-weight: 850;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 10000;
+      max-width: min(430px, calc(100vw - 36px));
+      background: var(--green-700);
+      color: #fff;
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: 0 14px 34px rgba(0, 20, 0, 0.22);
+      transform: translateY(90px);
+      opacity: 0;
+      transition: 0.28s ease;
+      font-size: 12.5px;
+      line-height: 1.5;
+      font-weight: 760;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast strong {
+      color: var(--gold-500);
+      margin-right: 7px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1120px) {
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .start-panel,
+      .scan-shell,
+      .detail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .plant-visual-card {
+        position: static;
+      }
+
+      .plant-hero-image {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 18px 12px 38px;
+      }
+
+      .hero {
+        padding: 30px 24px;
+        border-radius: 27px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .section-card {
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .plant-result-card {
+        grid-template-columns: 180px minmax(0, 1fr);
+      }
+
+      .result-image-wrap {
+        height: 220px;
+      }
+
+      .result-arrow {
+        display: none;
+      }
+
+      .result-main {
+        padding-right: 16px;
+      }
+
+      .detail-grid,
+      .maintenance-box {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hero-icon {
+        width: 52px;
+        height: 52px;
+        flex-basis: 52px;
+        font-size: 28px;
+      }
+
+      .timeline,
+      .metric-grid,
+      .detail-grid,
+      .maintenance-box,
+      .growth-stage-track {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head .btn {
+        width: 100%;
+      }
+
+      .start-panel {
+        padding: 21px;
+      }
+
+      .scan-line-wrap {
+        flex-direction: column;
+      }
+
+      .scan-line-wrap .btn {
+        width: 100%;
+      }
+
+      .plant-result-card {
+        grid-template-columns: 1fr;
+      }
+
+      .result-image-wrap {
+        height: 240px;
+      }
+
+      .result-main {
+        padding: 17px;
+      }
+
+      .result-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .plant-hero-image {
+        height: 320px;
+      }
+
+      .actions,
+      .action-strip {
+        align-items: stretch;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .selected-rfid {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .toast {
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        max-width: none;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .hero,
+      .metric-grid,
+      #scanSection,
+      #recentSection,
+      .details-topbar .actions,
+      .action-strip,
+      .toast {
+        display: none !important;
+      }
+
+      .details-section {
+        display: block !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .section-card {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 10px;
+      }
+
+      .plant-visual-card {
+        position: static;
+        box-shadow: none;
+      }
+    }
+  
+    /* DUAL RFID SIMULATION TABS */
+
+    .simulation-switch-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      padding: 11px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 26px;
+    }
+
+    .simulation-tab-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .simulation-tab-button {
+      appearance: none;
+      border: 1px solid #dce9dd;
+      border-radius: 18px;
+      background: #f8fbf8;
+      color: var(--green-700);
+      padding: 17px 18px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.22s ease;
+      min-height: 82px;
+    }
+
+    .simulation-tab-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--green-700);
+      box-shadow: 0 10px 22px rgba(0, 20, 0, 0.07);
+    }
+
+    .simulation-tab-button.active {
+      color: #fff;
+      background: linear-gradient(145deg, var(--green-700), var(--green-600));
+      border-color: var(--green-700);
+      box-shadow: 0 12px 26px rgba(26, 77, 42, 0.18);
+    }
+
+    .simulation-tab-icon {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: var(--green-100);
+      font-size: 22px;
+    }
+
+    .simulation-tab-button.active .simulation-tab-icon {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .simulation-tab-copy strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 920;
+      margin-bottom: 4px;
+    }
+
+    .simulation-tab-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.4;
+      font-weight: 650;
+    }
+
+    .simulation-tab-button.active .simulation-tab-copy span {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .simulation-pane {
+      display: none;
+    }
+
+    .simulation-pane.active {
+      display: block;
+      animation: simulationPaneIn 0.28s ease;
+    }
+
+    @keyframes simulationPaneIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .group-result-card .result-image-badge {
+      background: rgba(138, 97, 0, 0.92);
+    }
+
+    .group-quantity-badge {
+      position: absolute;
+      right: 13px;
+      top: 13px;
+      min-width: 76px;
+      min-height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 8px;
+      color: var(--ink);
+      background: var(--gold-500);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+      font-size: 11px;
+      font-weight: 850;
+      line-height: 1.2;
+      z-index: 2;
+    }
+
+    .group-quantity-badge strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 950;
+      margin-bottom: 3px;
+    }
+
+    .group-summary-banner {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 15px;
+      align-items: center;
+      color: #fff;
+      background: linear-gradient(145deg, var(--green-700), var(--green-600));
+      border-radius: 21px;
+      padding: 17px;
+      margin-bottom: 17px;
+      box-shadow: 0 12px 26px rgba(26, 77, 42, 0.15);
+    }
+
+    .group-summary-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 25px;
+    }
+
+    .group-summary-banner h4 {
+      font-size: 15px;
+      font-weight: 920;
+      margin-bottom: 4px;
+    }
+
+    .group-summary-banner p {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 11.5px;
+      line-height: 1.45;
+      font-weight: 620;
+    }
+
+    .group-summary-total {
+      color: var(--ink);
+      background: var(--gold-500);
+      border-radius: 15px;
+      padding: 10px 13px;
+      text-align: center;
+      min-width: 96px;
+      font-size: 10.5px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .group-summary-total strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .group-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .group-stat-card {
+      background: #fff;
+      border: 1px solid #e2ece3;
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 92px;
+    }
+
+    .group-stat-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 830;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+    }
+
+    .group-stat-card strong {
+      display: block;
+      color: var(--green-700);
+      font-size: 23px;
+      font-weight: 940;
+      margin-top: 7px;
+    }
+
+    .group-stat-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+      font-weight: 650;
+      margin-top: 3px;
+    }
+
+    .group-unit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .group-unit-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 104px;
+      border: 1px solid #e1ebe2;
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .group-unit-card::after {
+      content: "🌱";
+      position: absolute;
+      right: -5px;
+      bottom: -12px;
+      font-size: 49px;
+      opacity: 0.08;
+      transform: rotate(-8deg);
+    }
+
+    .group-unit-index {
+      position: relative;
+      z-index: 2;
+      color: var(--green-700);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .group-unit-id {
+      position: relative;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.4;
+      font-weight: 700;
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .group-unit-status {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      margin-top: 8px;
+      color: #0f7a45;
+      background: #dcf7ea;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 9px;
+      font-weight: 850;
+    }
+
+    .group-more-card {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(145deg, var(--green-700), var(--green-600));
+      border-color: var(--green-700);
+    }
+
+    .group-more-card strong {
+      display: block;
+      font-size: 23px;
+      font-weight: 950;
+    }
+
+    .group-more-card span {
+      display: block;
+      font-size: 10.5px;
+      line-height: 1.4;
+      font-weight: 680;
+      opacity: 0.84;
+      margin-top: 3px;
+    }
+
+    .group-visual-quantity {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e7efe7;
+    }
+
+    .group-visual-quantity div {
+      border: 1px solid #e2ece3;
+      background: #f8fbf8;
+      border-radius: 14px;
+      padding: 11px;
+    }
+
+    .group-visual-quantity span {
+      display: block;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .group-visual-quantity strong {
+      display: block;
+      color: var(--green-700);
+      font-size: 17px;
+      font-weight: 930;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 960px) {
+      .group-stat-grid,
+      .group-unit-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .simulation-tab-list,
+      .group-stat-grid,
+      .group-unit-grid,
+      .group-visual-quantity {
+        grid-template-columns: 1fr;
+      }
+
+      .simulation-tab-button {
+        min-height: auto;
+      }
+
+      .group-summary-banner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .group-summary-icon {
+        margin: 0 auto;
+      }
+
+      .group-summary-total {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      .simulation-switch-card {
+        display: none !important;
+      }
+
+      #groupSimulationPane:not(.active),
+      #individualSimulationPane:not(.active) {
+        display: none !important;
+      }
+
+      #groupScanSection,
+      #groupRecentSection {
+        display: none !important;
+      }
+
+      #groupDetailsSection.show {
+        display: block !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+</style>
+<style id="vvvebjs-styles"></style></head><body>
+  <main class="container">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-icon" aria-hidden="true">🏷️</div>
+        <div>
+          <h1>OM Nursery · <span>RFID Plant Identification</span></h1>
+          <p class="subhead">
+            Use two separate RFID simulations: identify an individual tagged plant exactly as before, or scan a group RFID to view the complete group of plants assigned to that tag.
+          </p>
+        </div>
+      </div>
+
+      <div class="badge-row" aria-label="RFID page capabilities">
+        <span class="hero-badge">📡 Individual RFID Simulation</span>
+        <span class="hero-badge">🌿 Group RFID Simulation</span>
+        <span class="hero-badge">🔎 Plant Search</span>
+        <span class="hero-badge">📍 Location Traceability</span>
+        <span class="hero-badge">🌱 Growth Stage</span>
+        <span class="hero-badge">📏 Plant Measurements</span>
+      </div>
+
+      <div class="timeline" aria-label="RFID workflow">
+        <div class="timeline-step">
+          <strong>STEP 01</strong>
+          <span>Click Simulate RFID Scan</span>
+        </div>
+        <div class="timeline-step">
+          <strong>STEP 02</strong>
+          <span>RFID code appears in search</span>
+        </div>
+        <div class="timeline-step">
+          <strong>STEP 03</strong>
+          <span>Search and select the plant</span>
+        </div>
+        <div class="timeline-step">
+          <strong>STEP 04</strong>
+          <span>Review complete plant details</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="metric-grid" aria-label="RFID overview metrics">
+      <article class="metric-card">
+        <div class="metric-label">RFID Reader</div>
+        <div class="metric-icon" aria-hidden="true">📡</div>
+        <div class="metric-value">Online</div>
+        <span class="metric-caption">Gate 02 · Nursery Inventory</span>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-label">Plants Tagged</div>
+        <div class="metric-icon" aria-hidden="true">🏷️</div>
+        <div class="metric-value">12,486</div>
+        <span class="metric-caption">Across active farm locations</span>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-label">Scans This Session</div>
+        <div class="metric-icon" aria-hidden="true">🔍</div>
+        <div class="metric-value" id="sessionScanMetric">0</div>
+        <span class="metric-caption">Successful RFID lookups</span>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-label">Current Farm</div>
+        <div class="metric-icon" aria-hidden="true">📍</div>
+        <div class="metric-value" id="currentFarmMetric">—</div>
+        <span class="metric-caption" id="currentBlockMetric">Scan a plant to locate it</span>
+      </article>
+    </section>
+
+    
+    <section class="simulation-switch-card" aria-label="Choose RFID simulation type">
+      <div class="simulation-tab-list" role="tablist">
+        <button class="simulation-tab-button active" id="individualSimulationTab" type="button" role="tab" aria-selected="true" aria-controls="individualSimulationPane" onclick="switchSimulation('individual')">
+          <span class="simulation-tab-icon" aria-hidden="true">🌱</span>
+          <span class="simulation-tab-copy">
+            <strong>Individual RFID Simulation</strong>
+            <span>Existing one-RFID-to-one-plant scan and identification workflow.</span>
+          </span>
+        </button>
+
+        <button class="simulation-tab-button" id="groupSimulationTab" type="button" role="tab" aria-selected="false" aria-controls="groupSimulationPane" onclick="switchSimulation('group')">
+          <span class="simulation-tab-icon" aria-hidden="true">🌿</span>
+          <span class="simulation-tab-copy">
+            <strong>Group RFID Simulation</strong>
+            <span>Scan one RFID and view the complete group of plants mapped to it.</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <div class="simulation-pane active" id="individualSimulationPane" role="tabpanel" aria-labelledby="individualSimulationTab">
+
+    <section class="section-card" id="scanSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title"><span class="title-icon">📡</span> RFID Scan Workspace</h2>
+          <p class="section-subtitle">
+            This demo imitates a handheld RFID reader. The simulated scan inserts a valid OM Nursery RFID code, after which the user can search and open the plant record.
+          </p>
+        </div>
+        <button class="btn btn-light" type="button" onclick="resetDemo()">↻ Reset Demo</button>
+      </div>
+
+      <div class="start-panel">
+        <div class="start-copy">
+          <span class="start-kicker">● Reader Ready</span>
+          <h2>Identify any tagged plant in a few seconds.</h2>
+          <p>
+            Start the scan simulation. The system will detect a nearby RFID tag and place the code in the search field. You can also enter another demo code manually.
+          </p>
+        </div>
+
+        <div class="start-action">
+          <button class="btn btn-gold" id="simulateButton" type="button" onclick="simulateRFIDScan()">
+            <span aria-hidden="true">📡</span>
+            Simulate RFID Scan
+          </button>
+          <div class="start-hint">
+            <span aria-hidden="true">ℹ️</span>
+            Demo code generated: OM-KAMSHET-0234
+          </div>
+        </div>
+      </div>
+
+      <div class="scan-workspace" id="scanWorkspace">
+        <div class="scan-shell">
+          <div class="scanner-card">
+            <div class="scanner-heading">
+              <div class="scanner-symbol" aria-hidden="true">🏷️</div>
+              <div>
+                <h3>RFID Code Search</h3>
+                <p>Search by scanned tag number or enter a valid OM Nursery code.</p>
+              </div>
+            </div>
+
+            <div class="scan-line-wrap">
+              <div class="search-input-wrap">
+                <input class="rfid-input" id="rfidSearchInput" type="text" autocomplete="off" spellcheck="false" aria-label="RFID code" placeholder="Example: OM-KAMSHET-0234" oninput="normaliseRFIDInput()" onkeydown="handleSearchKey(event)">
+              </div>
+              <button class="btn btn-green" type="button" onclick="searchPlant()">
+                <span aria-hidden="true">🔎</span>
+                Search Plant
+              </button>
+            </div>
+
+            <div class="scan-status" id="scanStatus" aria-live="polite">
+              <span class="scan-status-dot" aria-hidden="true"></span>
+              <span id="scanStatusText">RFID reader is ready. Start a scan or enter a code.</span>
+            </div>
+          </div>
+
+          <aside class="quick-code-card">
+            <h3>Try Other Demo Codes</h3>
+            <p>Select any code to test another farm, block, stage and plant profile.</p>
+            <div class="quick-code-list" id="quickCodeList">
+          <button class="quick-code" type="button" onclick="useQuickCode('OM-KAMSHET-0234')">
+            OM-KAMSHET-0234<br>
+            <span style="font-weight:650;opacity:.72;">Mango Plant · Adult</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useQuickCode('OM-KAMSHET-0188')">
+            OM-KAMSHET-0188<br>
+            <span style="font-weight:650;opacity:.72;">Areca Palm · Sapling</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useQuickCode('OM-KARLA-0112')">
+            OM-KARLA-0112<br>
+            <span style="font-weight:650;opacity:.72;">Rose Plant · Adult</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useQuickCode('OM-VADEGAON-0451')">
+            OM-VADEGAON-0451<br>
+            <span style="font-weight:650;opacity:.72;">Guava Plant · Child</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useQuickCode('OM-RATNAGIRI-0307')">
+            OM-RATNAGIRI-0307<br>
+            <span style="font-weight:650;opacity:.72;">Coconut Plant · Sapling</span>
+          </button>
+        </div>
+          </aside>
+        </div>
+
+        <div class="result-area" id="resultArea">
+          <div class="empty-state" id="emptyResultState">
+            <div class="empty-state-icon" aria-hidden="true">🌱</div>
+            Search an RFID code to display the matching plant below.
+          </div>
+
+          <div class="no-result" id="noResultBox" role="alert"></div>
+
+          <article class="plant-result-card" id="plantResultCard" role="button" tabindex="0" aria-label="Open plant details" onclick="openPlantDetails()" onkeydown="handlePlantCardKey(event)">
+            <div class="result-image-wrap">
+              <img class="result-image" id="resultImage" src="data:image/svg+xml;charset=UTF-8,%0A%20%20%20%20%20%20%20%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23eaf4eb%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23cfe3d1%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22leaf%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%221030%22%20cy%3D%22130%22%20r%3D%22230%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.22%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22170%22%20cy%3D%22770%22%20r%3D%22260%22%20fill%3D%22%23f5c542%22%20opacity%3D%22.11%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M603%20680%20C590%20530%20600%20390%20605%20230%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M610%20415%20C470%20380%20405%20300%20395%20185%20C520%20190%20610%20270%20610%20415Z%22%20fill%3D%22url(%23leaf)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M608%20505%20C740%20470%20810%20385%20820%20275%20C695%20286%20610%20370%20608%20505Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M605%20325%20C695%20295%20750%20225%20760%20130%20C665%20140%20605%20205%20605%20325Z%22%20fill%3D%22%235c9d69%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22440%22%20y%3D%22655%22%20width%3D%22330%22%20height%3D%22115%22%20rx%3D%2230%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22605%22%20y%3D%22723%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2238%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Plant%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22605%22%20y%3D%22815%22%20text-anchor%3D%22middle%22%20fill%3D%22%231a4d2a%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EOM%20Nursery%20RFID%20Plant%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%3C%2Fsvg%3E%0A%20%20%20%20%20%20" alt="Plant" onerror="setPlantImageFallback(this)">
+              <span class="result-image-badge">RFID MATCH FOUND</span>
+            </div>
+
+            <div class="result-main">
+              <div class="result-topline">
+                <span class="status-pill status-active">● Active Tag</span>
+                <span class="status-pill status-stage" id="resultStagePill">Stage</span>
+                <span class="status-pill status-health" id="resultHealthPill">Health</span>
+              </div>
+              <h3 id="resultPlantName">Plant Name</h3>
+              <div class="botanical-name" id="resultBotanicalName">Botanical name</div>
+
+              <div class="result-meta">
+                <div class="result-meta-item">
+                  <span>RFID Code</span>
+                  <strong id="resultRFID">—</strong>
+                </div>
+                <div class="result-meta-item">
+                  <span>Location</span>
+                  <strong id="resultLocation">—</strong>
+                </div>
+                <div class="result-meta-item">
+                  <span>Batch</span>
+                  <strong id="resultBatch">—</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-arrow" aria-hidden="true">›</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card details-section" id="detailsSection">
+      <div class="details-topbar">
+        <div>
+          <h2 class="section-title"><span class="title-icon">🌿</span> Complete Plant Details</h2>
+          <p class="section-subtitle">RFID-linked identity, physical measurements, production stage, health indicators and maintenance history.</p>
+        </div>
+
+        <div class="actions">
+          <span class="selected-rfid" id="selectedRFIDBadge">🏷️ —</span>
+          <button class="btn btn-light btn-small" type="button" onclick="scrollToScanner()">← Scan Another</button>
+        </div>
+      </div>
+
+      <div class="detail-layout">
+        <article class="plant-visual-card">
+          <img class="plant-hero-image" id="detailImage" src="data:image/svg+xml;charset=UTF-8,%0A%20%20%20%20%20%20%20%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23eaf4eb%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23cfe3d1%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22leaf%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%221030%22%20cy%3D%22130%22%20r%3D%22230%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.22%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22170%22%20cy%3D%22770%22%20r%3D%22260%22%20fill%3D%22%23f5c542%22%20opacity%3D%22.11%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M603%20680%20C590%20530%20600%20390%20605%20230%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M610%20415%20C470%20380%20405%20300%20395%20185%20C520%20190%20610%20270%20610%20415Z%22%20fill%3D%22url(%23leaf)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M608%20505%20C740%20470%20810%20385%20820%20275%20C695%20286%20610%20370%20608%20505Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M605%20325%20C695%20295%20750%20225%20760%20130%20C665%20140%20605%20205%20605%20325Z%22%20fill%3D%22%235c9d69%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22440%22%20y%3D%22655%22%20width%3D%22330%22%20height%3D%22115%22%20rx%3D%2230%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22605%22%20y%3D%22723%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2238%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Plant%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22605%22%20y%3D%22815%22%20text-anchor%3D%22middle%22%20fill%3D%22%231a4d2a%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EOM%20Nursery%20RFID%20Plant%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%3C%2Fsvg%3E%0A%20%20%20%20%20%20" alt="Selected plant" onerror="setPlantImageFallback(this)">
+          <div class="plant-visual-overlay">
+            <h3 id="detailPlantName">Plant Name</h3>
+            <p id="detailBotanicalName">Botanical name</p>
+
+            <div class="visual-status-row">
+              <span class="status-pill status-stage" id="detailStagePill">Stage</span>
+              <span class="status-pill status-active">RFID Verified</span>
+              <span class="status-pill status-health" id="detailHealthPill">Healthy</span>
+            </div>
+
+            <div class="health-progress-wrap">
+              <div class="health-progress-head">
+                <span>Overall Plant Health Score</span>
+                <strong id="healthScoreLabel">0%</strong>
+              </div>
+              <div class="progress-track" aria-label="Plant health score">
+                <div class="progress-fill" id="healthProgressFill"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="detail-content">
+          <article class="info-panel">
+            <h3>📍 Identity &amp; Location</h3>
+            <div class="detail-grid">
+              <div class="detail-item"><span>RFID Number</span><strong id="detailRFID">—</strong></div>
+              <div class="detail-item"><span>Plant ID</span><strong id="detailPlantID">—</strong></div>
+              <div class="detail-item"><span>Farm Location</span><strong id="detailFarm">—</strong></div>
+              <div class="detail-item"><span>Block</span><strong id="detailBlock">—</strong></div>
+              <div class="detail-item"><span>Batch</span><strong id="detailBatch">—</strong></div>
+              <div class="detail-item"><span>Bed / Row</span><strong id="detailRow">—</strong></div>
+            </div>
+          </article>
+
+          <article class="info-panel">
+            <h3>📏 Physical &amp; Production Details</h3>
+            <div class="detail-grid">
+              <div class="detail-item"><span>Current Stage</span><strong id="detailStage">—</strong></div>
+              <div class="detail-item"><span>Height</span><strong id="detailHeight">—</strong></div>
+              <div class="detail-item"><span>Width / Canopy</span><strong id="detailWidth">—</strong></div>
+              <div class="detail-item"><span>Plant Age</span><strong id="detailAge">—</strong></div>
+              <div class="detail-item"><span>Container</span><strong id="detailContainer">—</strong></div>
+              <div class="detail-item"><span>Planting Date</span><strong id="detailPlantingDate">—</strong></div>
+              <div class="detail-item"><span>Propagation Type</span><strong id="detailPropagation">—</strong></div>
+              <div class="detail-item"><span>Grade</span><strong id="detailGrade">—</strong></div>
+              <div class="detail-item"><span>Sellable Status</span><strong id="detailSellable">—</strong></div>
+            </div>
+          </article>
+
+          <article class="info-panel">
+            <h3>🌱 Growth Stage Journey</h3>
+            <div class="growth-stage-track" id="growthStageTrack"></div>
+          </article>
+
+          <article class="info-panel">
+            <h3>💧 Health &amp; Maintenance</h3>
+            <div class="maintenance-box">
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">💧</div>
+                <span>Soil Moisture</span>
+                <strong id="detailMoisture">—</strong>
+              </div>
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">🧪</div>
+                <span>Last Fertilisation</span>
+                <strong id="detailFertilisation">—</strong>
+              </div>
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">✂️</div>
+                <span>Last Pruning</span>
+                <strong id="detailPruning">—</strong>
+              </div>
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">🛡️</div>
+                <span>Pest Inspection</span>
+                <strong id="detailPest">—</strong>
+              </div>
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">📅</div>
+                <span>Next Action</span>
+                <strong id="detailNextAction">—</strong>
+              </div>
+              <div class="maintenance-card">
+                <div class="maintenance-icon" aria-hidden="true">👤</div>
+                <span>Responsible Person</span>
+                <strong id="detailOwner">—</strong>
+              </div>
+            </div>
+          </article>
+
+          <div class="action-strip">
+            <div class="action-strip-copy">
+              <h4>Plant record verified through RFID</h4>
+              <p>Use the available actions to record inspection or print the plant identification view.</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-blue" type="button" onclick="markInspected()">✓ Mark Inspected</button>
+              <button class="btn btn-green" type="button" onclick="printPlantTag()">🖨 Print Plant Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="recentSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title"><span class="title-icon">🕘</span> Recent RFID Scans</h2>
+          <p class="section-subtitle">Successful scans from the current demo session are recorded here for quick traceability.</p>
+        </div>
+        <button class="btn btn-light btn-small" type="button" onclick="clearRecentScans()">Clear History</button>
+      </div>
+
+      <div class="recent-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>RFID Code</th>
+              <th>Plant</th>
+              <th>Stage</th>
+              <th>Farm / Location</th>
+              <th>Batch</th>
+              <th>Scan Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentScansTableBody">
+          <tr>
+            <td colspan="7" style="text-align:center;color:#5a6f5a;padding:24px;">
+              No RFID scans recorded in this session.
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+    </section>
+  
+    </div>
+
+    <div class="simulation-pane" id="groupSimulationPane" role="tabpanel" aria-labelledby="groupSimulationTab">
+      <section class="section-card" id="groupScanSection">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title"><span class="title-icon">📡</span> Group RFID Scan Workspace</h2>
+            <p class="section-subtitle">
+              This simulation reads one RFID assigned to a complete plant group. Search the detected group RFID to see its plant variety, stage, farm, block, grow bag, quantity and mapped plant group.
+            </p>
+          </div>
+          <button class="btn btn-light" type="button" onclick="resetGroupDemo()">↻ Reset Group Demo</button>
+        </div>
+
+        <div class="start-panel">
+          <div class="start-copy">
+            <span class="start-kicker">● Group Reader Ready</span>
+            <h2>Identify a complete mapped plant group with one RFID scan.</h2>
+            <p>
+              Start the group scan simulation. The system will detect a group RFID and display every key mapping detail, including the total number of plants represented by the tag.
+            </p>
+          </div>
+
+          <div class="start-action">
+            <button class="btn btn-gold" id="groupSimulateButton" type="button" onclick="simulateGroupRFIDScan()">
+              <span aria-hidden="true">📡</span>
+              Simulate Group RFID Scan
+            </button>
+            <div class="start-hint">
+              <span aria-hidden="true">ℹ️</span>
+              Demo group code generated: GRP-KAMSHET-1001
+            </div>
+          </div>
+        </div>
+
+        <div class="scan-workspace" id="groupScanWorkspace">
+          <div class="scan-shell">
+            <div class="scanner-card">
+              <div class="scanner-heading">
+                <div class="scanner-symbol" aria-hidden="true">🌿</div>
+                <div>
+                  <h3>Group RFID Code Search</h3>
+                  <p>Search the scanned group tag or enter a valid OM Nursery group RFID code.</p>
+                </div>
+              </div>
+
+              <div class="scan-line-wrap">
+                <div class="search-input-wrap">
+                  <input class="rfid-input" id="groupRFIDSearchInput" type="text" autocomplete="off" spellcheck="false" aria-label="Group RFID code" placeholder="Example: GRP-KAMSHET-1001" oninput="normaliseGroupRFIDInput()" onkeydown="handleGroupSearchKey(event)">
+                </div>
+                <button class="btn btn-green" type="button" onclick="searchPlantGroup()">
+                  <span aria-hidden="true">🔎</span>
+                  Search Plant Group
+                </button>
+              </div>
+
+              <div class="scan-status" id="groupScanStatus" aria-live="polite">
+                <span class="scan-status-dot" aria-hidden="true"></span>
+                <span id="groupScanStatusText">Group RFID reader is ready. Start a scan or enter a code.</span>
+              </div>
+            </div>
+
+            <aside class="quick-code-card">
+              <h3>Try Group Demo Codes</h3>
+              <p>Select a code to test another farm, block, plant variety, stage and quantity.</p>
+              <div class="quick-code-list" id="groupQuickCodeList">
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('GRP-KAMSHET-1001')">
+            GRP-KAMSHET-1001<br>
+            <span style="font-weight:650;opacity:.72;">Mango Hapoos · Sapling · 120 plants</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('GRP-KAMSHET-1005')">
+            GRP-KAMSHET-1005<br>
+            <span style="font-weight:650;opacity:.72;">Mango Pairi · Adult · 95 plants</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('GRP-KARLA-1002')">
+            GRP-KARLA-1002<br>
+            <span style="font-weight:650;opacity:.72;">Rose Red · Adult · 75 plants</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('GRP-VADEGAON-1003')">
+            GRP-VADEGAON-1003<br>
+            <span style="font-weight:650;opacity:.72;">Areca Palm · Child · 180 plants</span>
+          </button>
+        
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('GRP-TALEGAON-1004')">
+            GRP-TALEGAON-1004<br>
+            <span style="font-weight:650;opacity:.72;">Guava Lucknow 49 · Sapling · 140 plants</span>
+          </button>
+        </div>
+            </aside>
+          </div>
+
+          <div class="result-area" id="groupResultArea">
+            <div class="empty-state" id="groupEmptyResultState">
+              <div class="empty-state-icon" aria-hidden="true">🌿</div>
+              Search a group RFID code to display the plants assigned to it.
+            </div>
+
+            <div class="no-result" id="groupNoResultBox" role="alert"></div>
+
+            <article class="plant-result-card group-result-card" id="groupResultCard" role="button" tabindex="0" aria-label="Open plant group details" onclick="openGroupDetails()" onkeydown="handleGroupCardKey(event)">
+              <div class="result-image-wrap">
+                <img class="result-image" id="groupResultImage" src="data:image/svg+xml;charset=UTF-8,%0A%20%20%20%20%20%20%20%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22groupBg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23eaf4eb%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23cfe3d1%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23groupBg)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%221050%22%20cy%3D%22130%22%20r%3D%22230%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.24%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%22760%22%20r%3D%22260%22%20fill%3D%22%23f5c542%22%20opacity%3D%22.14%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate(230%20165)%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M170%20455%20C160%20345%20168%20230%20172%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M175%20255%20C75%20230%2028%20165%2020%2080%20C112%2084%20175%20145%20175%20255Z%22%20fill%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M173%20330%20C270%20300%20320%20238%20327%20155%20C235%20165%20175%20225%20173%20330Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M430%20455%20C420%20345%20428%20230%20432%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M435%20255%20C335%20230%20288%20165%20280%2080%20C372%2084%20435%20145%20435%20255Z%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M433%20330%20C530%20300%20580%20238%20587%20155%20C495%20165%20435%20225%20433%20330Z%22%20fill%3D%22%235c9d69%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M690%20455%20C680%20345%20688%20230%20692%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M695%20255%20C595%20230%20548%20165%20540%2080%20C632%2084%20695%20145%20695%20255Z%22%20fill%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M693%20330%20C790%20300%20840%20238%20847%20155%20C755%20165%20695%20225%20693%20330Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22365%22%20y%3D%22670%22%20width%3D%22470%22%20height%3D%22105%22%20rx%3D%2228%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22600%22%20y%3D%22728%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2236%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Plant%20Group%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22600%22%20y%3D%22825%22%20text-anchor%3D%22middle%22%20fill%3D%22%231a4d2a%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Group%20RFID%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%3C%2Fsvg%3E%0A%20%20%20%20%20%20" alt="Plant group" onerror="setGroupImageFallback(this)">
+                <span class="result-image-badge">GROUP RFID MATCH FOUND</span>
+                <span class="group-quantity-badge"><span><strong id="groupResultQuantityBadge">0</strong>PLANTS</span></span>
+              </div>
+
+              <div class="result-main">
+                <div class="result-topline">
+                  <span class="status-pill status-active">● Active Group Tag</span>
+                  <span class="status-pill status-stage" id="groupResultStagePill">Stage</span>
+                  <span class="status-pill status-health" id="groupResultHealthPill">Health</span>
+                </div>
+                <h3 id="groupResultPlantName">Plant Variety</h3>
+                <div class="botanical-name" id="groupResultBotanicalName">Botanical name</div>
+
+                <div class="result-meta">
+                  <div class="result-meta-item">
+                    <span>Group RFID</span>
+                    <strong id="groupResultRFID">—</strong>
+                  </div>
+                  <div class="result-meta-item">
+                    <span>Location</span>
+                    <strong id="groupResultLocation">—</strong>
+                  </div>
+                  <div class="result-meta-item">
+                    <span>Mapped Quantity</span>
+                    <strong id="groupResultQuantity">—</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="result-arrow" aria-hidden="true">›</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card details-section" id="groupDetailsSection">
+        <div class="details-topbar">
+          <div>
+            <h2 class="section-title"><span class="title-icon">🌿</span> Complete Group RFID Details</h2>
+            <p class="section-subtitle">RFID-linked group identity, mapped quantity, location, stock composition, representative plant units and group maintenance information.</p>
+          </div>
+
+          <div class="actions">
+            <span class="selected-rfid" id="selectedGroupRFIDBadge">🏷️ —</span>
+            <button class="btn btn-light btn-small" type="button" onclick="scrollToGroupScanner()">← Scan Another Group</button>
+          </div>
+        </div>
+
+        <div class="detail-layout">
+          <article class="plant-visual-card">
+            <div style="position:relative;">
+              <img class="plant-hero-image" id="groupDetailImage" src="data:image/svg+xml;charset=UTF-8,%0A%20%20%20%20%20%20%20%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22groupBg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23eaf4eb%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23cfe3d1%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23groupBg)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%221050%22%20cy%3D%22130%22%20r%3D%22230%22%20fill%3D%22%23ffffff%22%20opacity%3D%22.24%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%22160%22%20cy%3D%22760%22%20r%3D%22260%22%20fill%3D%22%23f5c542%22%20opacity%3D%22.14%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cg%20transform%3D%22translate(230%20165)%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M170%20455%20C160%20345%20168%20230%20172%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M175%20255%20C75%20230%2028%20165%2020%2080%20C112%2084%20175%20145%20175%20255Z%22%20fill%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M173%20330%20C270%20300%20320%20238%20327%20155%20C235%20165%20175%20225%20173%20330Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M430%20455%20C420%20345%20428%20230%20432%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M435%20255%20C335%20230%20288%20165%20280%2080%20C372%2084%20435%20145%20435%20255Z%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M433%20330%20C530%20300%20580%20238%20587%20155%20C495%20165%20435%20225%20433%20330Z%22%20fill%3D%22%235c9d69%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M690%20455%20C680%20345%20688%20230%20692%20105%22%20fill%3D%22none%22%20stroke%3D%22%236c8d70%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M695%20255%20C595%20230%20548%20165%20540%2080%20C632%2084%20695%20145%20695%20255Z%22%20fill%3D%22%232d6e3e%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M693%20330%20C790%20300%20840%20238%20847%20155%20C755%20165%20695%20225%20693%20330Z%22%20fill%3D%22%233f8a52%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20x%3D%22365%22%20y%3D%22670%22%20width%3D%22470%22%20height%3D%22105%22%20rx%3D%2228%22%20fill%3D%22%231a4d2a%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22600%22%20y%3D%22728%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2236%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Plant%20Group%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctext%20x%3D%22600%22%20y%3D%22825%22%20text-anchor%3D%22middle%22%20fill%3D%22%231a4d2a%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EOM%20Nursery%20Group%20RFID%3C%2Ftext%3E%0A%20%20%20%20%20%20%20%20%3C%2Fsvg%3E%0A%20%20%20%20%20%20" alt="Selected plant group" onerror="setGroupImageFallback(this)">
+              <span class="group-quantity-badge" style="top:16px;right:16px;">
+                <span><strong id="groupDetailQuantityBadge">0</strong>PLANTS</span>
+              </span>
+            </div>
+
+            <div class="plant-visual-overlay">
+              <h3 id="groupDetailPlantName">Plant Variety</h3>
+              <p id="groupDetailBotanicalName">Botanical name</p>
+
+              <div class="visual-status-row">
+                <span class="status-pill status-stage" id="groupDetailStagePill">Stage</span>
+                <span class="status-pill status-active">Group RFID Verified</span>
+                <span class="status-pill status-health" id="groupDetailHealthPill">Healthy Group</span>
+              </div>
+
+              <div class="health-progress-wrap">
+                <div class="health-progress-head">
+                  <span>Overall Group Health Score</span>
+                  <strong id="groupHealthScoreLabel">0%</strong>
+                </div>
+                <div class="progress-track" aria-label="Plant group health score">
+                  <div class="progress-fill" id="groupHealthProgressFill"></div>
+                </div>
+              </div>
+
+              <div class="group-visual-quantity">
+                <div>
+                  <span>Mapped Quantity</span>
+                  <strong id="groupVisualMappedQuantity">—</strong>
+                </div>
+                <div>
+                  <span>Grow Bag Size</span>
+                  <strong id="groupVisualGrowBag">—</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="detail-content">
+            <div class="group-summary-banner">
+              <div class="group-summary-icon" aria-hidden="true">🏷️</div>
+              <div>
+                <h4 id="groupSummaryTitle">One RFID represents this complete plant group</h4>
+                <p id="groupSummaryText">The mapped group information will appear here.</p>
+              </div>
+              <div class="group-summary-total"><strong id="groupSummaryQuantity">0</strong>Total Plants</div>
+            </div>
+
+            <article class="info-panel">
+              <h3>📍 Group Identity &amp; Location</h3>
+              <div class="detail-grid">
+                <div class="detail-item"><span>Group RFID</span><strong id="groupDetailRFID">—</strong></div>
+                <div class="detail-item"><span>Group Mapping ID</span><strong id="groupDetailMappingID">—</strong></div>
+                <div class="detail-item"><span>Plant Variety</span><strong id="groupDetailVariety">—</strong></div>
+                <div class="detail-item"><span>Plant Stage</span><strong id="groupDetailStage">—</strong></div>
+                <div class="detail-item"><span>Farm Location</span><strong id="groupDetailFarm">—</strong></div>
+                <div class="detail-item"><span>Block Location</span><strong id="groupDetailBlock">—</strong></div>
+                <div class="detail-item"><span>Zone / Row</span><strong id="groupDetailZone">—</strong></div>
+                <div class="detail-item"><span>Batch</span><strong id="groupDetailBatch">—</strong></div>
+                <div class="detail-item"><span>Grow Bag Size</span><strong id="groupDetailGrowBag">—</strong></div>
+                <div class="detail-item"><span>Mapped Quantity</span><strong id="groupDetailQuantity">—</strong></div>
+                <div class="detail-item"><span>Mapped On</span><strong id="groupDetailMappedDate">—</strong></div>
+                <div class="detail-item"><span>Mapped By</span><strong id="groupDetailOwner">—</strong></div>
+              </div>
+            </article>
+
+            <article class="info-panel">
+              <h3>📊 Group Inventory Summary</h3>
+              <div class="group-stat-grid">
+                <div class="group-stat-card">
+                  <span>Total Mapped</span>
+                  <strong id="groupStatTotal">0</strong>
+                  <small>Plants represented by this RFID</small>
+                </div>
+                <div class="group-stat-card">
+                  <span>Available</span>
+                  <strong id="groupStatAvailable">0</strong>
+                  <small>Currently available in the block</small>
+                </div>
+                <div class="group-stat-card">
+                  <span>Reserved</span>
+                  <strong id="groupStatReserved">0</strong>
+                  <small>Reserved for orders or transfer</small>
+                </div>
+                <div class="group-stat-card">
+                  <span>Under Care</span>
+                  <strong id="groupStatCare">0</strong>
+                  <small>Plants requiring current attention</small>
+                </div>
+              </div>
+            </article>
+
+            <article class="info-panel">
+              <h3>🌱 Plants Assigned to This RFID Group</h3>
+              <p class="section-subtitle" style="margin:-6px 0 14px;">
+                Representative plant units are shown below. All plants share the same group RFID, variety, stage, farm and block mapping.
+              </p>
+              <div class="group-unit-grid" id="groupUnitGrid"></div>
+            </article>
+
+            <article class="info-panel">
+              <h3>💧 Group Care &amp; Operations</h3>
+              <div class="maintenance-box">
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">💧</div>
+                  <span>Irrigation</span>
+                  <strong id="groupDetailIrrigation">—</strong>
+                </div>
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">🧪</div>
+                  <span>Last Fertilisation</span>
+                  <strong id="groupDetailFertilisation">—</strong>
+                </div>
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">🛡️</div>
+                  <span>Pest Inspection</span>
+                  <strong id="groupDetailPest">—</strong>
+                </div>
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">📅</div>
+                  <span>Next Group Action</span>
+                  <strong id="groupDetailNextAction">—</strong>
+                </div>
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">📦</div>
+                  <span>Stock Status</span>
+                  <strong id="groupDetailStockStatus">—</strong>
+                </div>
+                <div class="maintenance-card">
+                  <div class="maintenance-icon" aria-hidden="true">👤</div>
+                  <span>Responsible Person</span>
+                  <strong id="groupDetailResponsible">—</strong>
+                </div>
+              </div>
+            </article>
+
+            <div class="action-strip">
+              <div class="action-strip-copy">
+                <h4>Plant group verified through RFID</h4>
+                <p>Use the available actions to record a group inspection or print the complete group identification view.</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-blue" type="button" onclick="markGroupInspected()">✓ Mark Group Inspected</button>
+                <button class="btn btn-green" type="button" onclick="printGroupDetails()">🖨 Print Group Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card" id="groupRecentSection">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title"><span class="title-icon">🕘</span> Recent Group RFID Scans</h2>
+            <p class="section-subtitle">Successful group scans from the current demo session are recorded separately from individual plant scans.</p>
+          </div>
+          <button class="btn btn-light btn-small" type="button" onclick="clearGroupRecentScans()">Clear Group History</button>
+        </div>
+
+        <div class="recent-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Group RFID</th>
+                <th>Plant Variety</th>
+                <th>Stage</th>
+                <th>Farm / Block</th>
+                <th>Quantity</th>
+                <th>Scan Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="groupRecentScansTableBody">
+          <tr>
+            <td colspan="7" style="text-align:center;color:#5a6f5a;padding:24px;">
+              No group RFID scans recorded in this session.
+            </td>
+          </tr>
+        </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong>✓</strong><span id="toastText">Done</span>
+  </div>
+
+  <script>
+    const plantDatabase = {
+      "OM-KAMSHET-0234": {
+        rfid: "OM-KAMSHET-0234",
+        plantId: "PL-KAM-MAN-0234",
+        name: "Mango Plant",
+        botanicalName: "Mangifera indica",
+        farm: "Kamshet",
+        block: "Block A",
+        batch: "Batch 2",
+        row: "Bed A-07 · Row 04",
+        stage: "Adult",
+        height: "168 cm",
+        width: "92 cm canopy",
+        age: "26 months",
+        container: "24-inch grow bag",
+        plantingDate: "18 June 2024",
+        propagation: "Grafted",
+        grade: "Grade A",
+        sellable: "Ready for sale",
+        health: "Healthy",
+        healthScore: 94,
+        moisture: "68% · Optimal",
+        fertilisation: "28 July 2026 · NPK + compost",
+        pruning: "19 July 2026",
+        pest: "Clear · Inspected 1 August 2026",
+        nextAction: "Canopy shaping · 8 August 2026",
+        owner: "Ramesh Jadhav",
+        image: "https://images.unsplash.com/photo-1599598177991-ec67b5c37318?auto=format&fit=crop&w=1200&q=86"
+      },
+      "OM-KAMSHET-0188": {
+        rfid: "OM-KAMSHET-0188",
+        plantId: "PL-KAM-ARE-0188",
+        name: "Areca Palm",
+        botanicalName: "Dypsis lutescens",
+        farm: "Kamshet",
+        block: "Block C",
+        batch: "Batch 5",
+        row: "Shade Area C-03 · Row 08",
+        stage: "Sapling",
+        height: "74 cm",
+        width: "46 cm spread",
+        age: "8 months",
+        container: "12-inch nursery pot",
+        plantingDate: "4 December 2025",
+        propagation: "Seed propagated",
+        grade: "Grade A",
+        sellable: "Hardening in progress",
+        health: "Healthy",
+        healthScore: 91,
+        moisture: "72% · Optimal",
+        fertilisation: "25 July 2026 · Organic liquid feed",
+        pruning: "Not required",
+        pest: "Clear · Inspected 31 July 2026",
+        nextAction: "Move to hardening zone · 10 August 2026",
+        owner: "Suresh More",
+        image: "https://images.unsplash.com/photo-1593691509543-c55fb32d8de5?auto=format&fit=crop&w=1200&q=86"
+      },
+      "OM-KARLA-0112": {
+        rfid: "OM-KARLA-0112",
+        plantId: "PL-KAR-ROS-0112",
+        name: "Rose Plant",
+        botanicalName: "Rosa indica",
+        farm: "Karla",
+        block: "Block B",
+        batch: "Batch 3",
+        row: "Mother Plant Area · Row 02",
+        stage: "Adult",
+        height: "96 cm",
+        width: "61 cm canopy",
+        age: "18 months",
+        container: "18-inch grow bag",
+        plantingDate: "12 February 2025",
+        propagation: "Stem cutting",
+        grade: "Premium",
+        sellable: "Ready for sale",
+        health: "Flowering",
+        healthScore: 96,
+        moisture: "65% · Optimal",
+        fertilisation: "30 July 2026 · Bloom booster",
+        pruning: "24 July 2026",
+        pest: "Clear · Inspected 2 August 2026",
+        nextAction: "Flower quality check · 6 August 2026",
+        owner: "Sunil More",
+        image: "https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&w=1200&q=86"
+      },
+      "OM-VADEGAON-0451": {
+        rfid: "OM-VADEGAON-0451",
+        plantId: "PL-VAD-GUA-0451",
+        name: "Guava Plant",
+        botanicalName: "Psidium guajava",
+        farm: "Vadegaon",
+        block: "Block A",
+        batch: "Batch 6",
+        row: "Nursery Row 1 · Bed 05",
+        stage: "Child",
+        height: "112 cm",
+        width: "58 cm canopy",
+        age: "14 months",
+        container: "16-inch grow bag",
+        plantingDate: "23 May 2025",
+        propagation: "Air layering",
+        grade: "Grade B+",
+        sellable: "Ready in 30–40 days",
+        health: "Healthy",
+        healthScore: 88,
+        moisture: "61% · Acceptable",
+        fertilisation: "27 July 2026 · Farmyard manure",
+        pruning: "16 July 2026",
+        pest: "Minor leaf spot treated · 29 July 2026",
+        nextAction: "Disease follow-up · 5 August 2026",
+        owner: "Nitin Shinde",
+        image: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=1200&q=86"
+      },
+      "OM-RATNAGIRI-0307": {
+        rfid: "OM-RATNAGIRI-0307",
+        plantId: "PL-RAT-COC-0307",
+        name: "Coconut Plant",
+        botanicalName: "Cocos nucifera",
+        farm: "Ratnagiri",
+        block: "Block A",
+        batch: "Batch 1",
+        row: "Coastal Plant Section · Row 11",
+        stage: "Sapling",
+        height: "138 cm",
+        width: "78 cm spread",
+        age: "16 months",
+        container: "22-inch grow bag",
+        plantingDate: "9 April 2025",
+        propagation: "Seed nut",
+        grade: "Grade A",
+        sellable: "Ready for dispatch",
+        health: "Healthy",
+        healthScore: 93,
+        moisture: "74% · Optimal",
+        fertilisation: "21 July 2026 · Organic compost",
+        pruning: "Dry leaf removal · 26 July 2026",
+        pest: "Clear · Inspected 1 August 2026",
+        nextAction: "Dispatch readiness check · 7 August 2026",
+        owner: "Rakesh Sawant",
+        image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=86"
+      }
+    };
+
+    const growthStages = [
+      { name: "Seed / Cutting", icon: "🌰", note: "Propagation" },
+      { name: "Sapling", icon: "🌱", note: "Early growth" },
+      { name: "Child", icon: "🪴", note: "Developing" },
+      { name: "Adult", icon: "🌳", note: "Mature plant" }
+    ];
+
+    let selectedPlant = null;
+    let sessionScans = [];
+    let scanCounter = 0;
+    let scanTimer = null;
+
+    function normaliseRFIDInput() {
+      const input = document.getElementById("rfidSearchInput");
+      input.value = input.value.toUpperCase().replace(/\s+/g, "");
+    }
+
+    function handleSearchKey(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        searchPlant();
+      }
+    }
+
+    function handlePlantCardKey(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPlantDetails();
+      }
+    }
+
+    function renderQuickCodes() {
+      const quickCodeList = document.getElementById("quickCodeList");
+      quickCodeList.innerHTML = Object.keys(plantDatabase).map(code => {
+        const plant = plantDatabase[code];
+        return `
+          <button class="quick-code" type="button" onclick="useQuickCode('${code}')">
+            ${code}<br>
+            <span style="font-weight:650;opacity:.72;">${plant.name} · ${plant.stage}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function useQuickCode(code) {
+      revealScanner();
+      const input = document.getElementById("rfidSearchInput");
+      input.value = code;
+      input.focus();
+      updateScanStatus("Ready to search selected demo code.", "");
+    }
+
+    function revealScanner() {
+      const workspace = document.getElementById("scanWorkspace");
+      if (!workspace.classList.contains("show")) {
+        workspace.classList.add("show");
+      }
+    }
+
+    function simulateRFIDScan() {
+      revealScanner();
+      clearTimeout(scanTimer);
+
+      const button = document.getElementById("simulateButton");
+      const input = document.getElementById("rfidSearchInput");
+      const code = "OM-KAMSHET-0234";
+
+      button.disabled = true;
+      button.style.opacity = "0.78";
+      button.innerHTML = "<span aria-hidden='true'>⌁</span> Scanning Nearby Tag...";
+      input.value = "";
+      hideSearchResults();
+      updateScanStatus("RFID reader is scanning the nearby plant tag...", "scanning");
+
+      let index = 0;
+      const typeNextCharacter = () => {
+        if (index < code.length) {
+          input.value += code[index];
+          index += 1;
+          scanTimer = setTimeout(typeNextCharacter, 58);
+          return;
+        }
+
+        updateScanStatus("RFID tag detected successfully. Click Search Plant to open the record.", "success");
+        button.disabled = false;
+        button.style.opacity = "1";
+        button.innerHTML = "<span aria-hidden='true'>📡</span> Simulate RFID Scan";
+        input.focus();
+        showToast("RFID tag OM-KAMSHET-0234 detected.");
+      };
+
+      scanTimer = setTimeout(typeNextCharacter, 350);
+      setTimeout(() => {
+        document.getElementById("scanWorkspace").scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 120);
+    }
+
+    function updateScanStatus(message, stateClass) {
+      const status = document.getElementById("scanStatus");
+      status.classList.remove("scanning", "success", "error");
+      if (stateClass) status.classList.add(stateClass);
+      document.getElementById("scanStatusText").textContent = message;
+    }
+
+    function hideSearchResults() {
+      document.getElementById("plantResultCard").classList.remove("show");
+      document.getElementById("noResultBox").classList.remove("show");
+      document.getElementById("emptyResultState").classList.remove("hidden");
+    }
+
+    function searchPlant() {
+      revealScanner();
+      const input = document.getElementById("rfidSearchInput");
+      const code = input.value.trim().toUpperCase();
+
+      if (!code) {
+        updateScanStatus("Please scan or enter an RFID code before searching.", "error");
+        showToast("Enter an RFID code to continue.");
+        input.focus();
+        return;
+      }
+
+      updateScanStatus("Searching the nursery RFID inventory...", "scanning");
+      document.getElementById("plantResultCard").classList.remove("show");
+      document.getElementById("noResultBox").classList.remove("show");
+      document.getElementById("emptyResultState").classList.add("hidden");
+
+      setTimeout(() => {
+        const plant = plantDatabase[code];
+
+        if (!plant) {
+          selectedPlant = null;
+          document.getElementById("noResultBox").innerHTML = `
+            <strong>No plant found for ${escapeHtml(code)}.</strong><br>
+            Check the RFID code or use one of the demo codes shown in the right panel.
+          `;
+          document.getElementById("noResultBox").classList.add("show");
+          document.getElementById("detailsSection").classList.remove("show");
+          updateScanStatus("No matching RFID tag was found in the demo inventory.", "error");
+          showToast("No matching plant found.");
+          return;
+        }
+
+        selectedPlant = plant;
+        renderPlantResult(plant);
+        addRecentScan(plant);
+        updateScanStatus("Plant found. Click the plant card to view complete details.", "success");
+        showToast(`${plant.name} found at ${plant.farm}, ${plant.block}.`);
+      }, 520);
+    }
+
+    function renderPlantResult(plant) {
+      document.getElementById("resultImage").src = plant.image;
+      document.getElementById("resultImage").alt = plant.name;
+      document.getElementById("resultStagePill").textContent = plant.stage;
+      document.getElementById("resultHealthPill").textContent = `${plant.healthScore}% Health`;
+      document.getElementById("resultPlantName").textContent = plant.name;
+      document.getElementById("resultBotanicalName").textContent = plant.botanicalName;
+      document.getElementById("resultRFID").textContent = plant.rfid;
+      document.getElementById("resultLocation").textContent = `${plant.farm} · ${plant.block}`;
+      document.getElementById("resultBatch").textContent = plant.batch;
+
+      document.getElementById("noResultBox").classList.remove("show");
+      document.getElementById("plantResultCard").classList.add("show");
+    }
+
+    function openPlantDetails() {
+      if (!selectedPlant) return;
+
+      const plant = selectedPlant;
+      document.getElementById("selectedRFIDBadge").textContent = `🏷️ ${plant.rfid}`;
+      document.getElementById("detailImage").src = plant.image;
+      document.getElementById("detailImage").alt = plant.name;
+      document.getElementById("detailPlantName").textContent = plant.name;
+      document.getElementById("detailBotanicalName").textContent = plant.botanicalName;
+      document.getElementById("detailStagePill").textContent = plant.stage;
+      document.getElementById("detailHealthPill").textContent = plant.health;
+      document.getElementById("healthScoreLabel").textContent = `${plant.healthScore}%`;
+
+      setDetail("detailRFID", plant.rfid);
+      setDetail("detailPlantID", plant.plantId);
+      setDetail("detailFarm", plant.farm);
+      setDetail("detailBlock", plant.block);
+      setDetail("detailBatch", plant.batch);
+      setDetail("detailRow", plant.row);
+      setDetail("detailStage", plant.stage);
+      setDetail("detailHeight", plant.height);
+      setDetail("detailWidth", plant.width);
+      setDetail("detailAge", plant.age);
+      setDetail("detailContainer", plant.container);
+      setDetail("detailPlantingDate", plant.plantingDate);
+      setDetail("detailPropagation", plant.propagation);
+      setDetail("detailGrade", plant.grade);
+      setDetail("detailSellable", plant.sellable);
+      setDetail("detailMoisture", plant.moisture);
+      setDetail("detailFertilisation", plant.fertilisation);
+      setDetail("detailPruning", plant.pruning);
+      setDetail("detailPest", plant.pest);
+      setDetail("detailNextAction", plant.nextAction);
+      setDetail("detailOwner", plant.owner);
+
+      renderGrowthStages(plant.stage);
+
+      const detailsSection = document.getElementById("detailsSection");
+      detailsSection.classList.add("show");
+      requestAnimationFrame(() => {
+        document.getElementById("healthProgressFill").style.width = `${plant.healthScore}%`;
+      });
+
+      document.getElementById("currentFarmMetric").textContent = plant.farm;
+      document.getElementById("currentBlockMetric").textContent = `${plant.block} · ${plant.batch}`;
+
+      setTimeout(() => {
+        detailsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    }
+
+    function setDetail(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function renderGrowthStages(currentStage) {
+      const orderMap = {
+        "Seed / Cutting": 0,
+        "Sapling": 1,
+        "Child": 2,
+        "Adult": 3
+      };
+      const currentIndex = orderMap[currentStage] ?? 0;
+
+      document.getElementById("growthStageTrack").innerHTML = growthStages.map((stage, index) => {
+        const stateClass = index < currentIndex ? "done" : index === currentIndex ? "active" : "";
+        const note = index < currentIndex ? "Completed" : index === currentIndex ? "Current stage" : stage.note;
+        return `
+          <div class="growth-stage ${stateClass}">
+            <span class="growth-stage-icon" aria-hidden="true">${stage.icon}</span>
+            <strong>${stage.name}</strong>
+            <small>${note}</small>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function addRecentScan(plant) {
+      scanCounter += 1;
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      sessionScans = sessionScans.filter(scan => scan.rfid !== plant.rfid);
+      sessionScans.unshift({ ...plant, time });
+      sessionScans = sessionScans.slice(0, 8);
+
+      updateCombinedScanMetric();
+      document.getElementById("currentFarmMetric").textContent = plant.farm;
+      document.getElementById("currentBlockMetric").textContent = `${plant.block} · ${plant.batch}`;
+      renderRecentScans();
+    }
+
+    function renderRecentScans() {
+      const tbody = document.getElementById("recentScansTableBody");
+
+      if (!sessionScans.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center;color:#5a6f5a;padding:24px;">
+              No RFID scans recorded in this session.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = sessionScans.map(scan => `
+        <tr>
+          <td><span class="table-rfid">🏷️ ${scan.rfid}</span></td>
+          <td><strong>${scan.name}</strong><br><span style="color:#5a6f5a;font-size:11px;font-style:italic;">${scan.botanicalName}</span></td>
+          <td><span class="status-pill status-stage">${scan.stage}</span></td>
+          <td>${scan.farm} · ${scan.block}</td>
+          <td>${scan.batch}</td>
+          <td>${scan.time}</td>
+          <td><span class="status-pill status-active">Verified</span></td>
+        </tr>
+      `).join("");
+    }
+
+    function markInspected() {
+      if (!selectedPlant) return;
+      const today = new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+      setDetail("detailPest", `Clear · RFID inspection recorded ${today}`);
+      showToast(`${selectedPlant.rfid} marked as inspected.`);
+    }
+
+    function printPlantTag() {
+      if (!selectedPlant) return;
+      showToast("Opening print view for the selected plant.");
+      setTimeout(() => window.print(), 180);
+    }
+
+    function scrollToScanner() {
+      document.getElementById("scanSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => document.getElementById("rfidSearchInput").focus(), 420);
+    }
+
+    function clearRecentScans() {
+      sessionScans = [];
+      scanCounter = 0;
+      updateCombinedScanMetric();
+      renderRecentScans();
+      showToast("Recent scan history cleared.");
+    }
+
+    function resetDemo() {
+      clearTimeout(scanTimer);
+      selectedPlant = null;
+      document.getElementById("rfidSearchInput").value = "";
+      document.getElementById("scanWorkspace").classList.remove("show");
+      document.getElementById("detailsSection").classList.remove("show");
+      document.getElementById("healthProgressFill").style.width = "0";
+      document.getElementById("currentFarmMetric").textContent = "—";
+      document.getElementById("currentBlockMetric").textContent = "Scan a plant to locate it";
+      hideSearchResults();
+      updateScanStatus("RFID reader is ready. Start a scan or enter a code.", "");
+
+      const button = document.getElementById("simulateButton");
+      button.disabled = false;
+      button.style.opacity = "1";
+      button.innerHTML = "<span aria-hidden='true'>📡</span> Simulate RFID Scan";
+
+      document.getElementById("scanSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      showToast("RFID demo reset successfully.");
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastText").textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove("show"), 2800);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>'"]/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#39;",
+        '"': "&quot;"
+      })[character]);
+    }
+
+    function setPlantImageFallback(imageElement) {
+      const label = selectedPlant?.name || "OM Nursery Plant";
+      const safeLabel = label.replace(/[&<>"]/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;"
+      })[character]);
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#eaf4eb"/>
+              <stop offset="1" stop-color="#cfe3d1"/>
+            </linearGradient>
+            <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2d6e3e"/>
+              <stop offset="1" stop-color="#1a4d2a"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="900" fill="url(#bg)"/>
+          <circle cx="1030" cy="130" r="230" fill="#ffffff" opacity=".22"/>
+          <circle cx="170" cy="770" r="260" fill="#f5c542" opacity=".11"/>
+          <path d="M603 680 C590 530 600 390 605 230" fill="none" stroke="#6c8d70" stroke-width="24" stroke-linecap="round"/>
+          <path d="M610 415 C470 380 405 300 395 185 C520 190 610 270 610 415Z" fill="url(#leaf)"/>
+          <path d="M608 505 C740 470 810 385 820 275 C695 286 610 370 608 505Z" fill="#3f8a52"/>
+          <path d="M605 325 C695 295 750 225 760 130 C665 140 605 205 605 325Z" fill="#5c9d69"/>
+          <rect x="440" y="655" width="330" height="115" rx="30" fill="#1a4d2a"/>
+          <text x="605" y="723" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="38" font-weight="700">${safeLabel}</text>
+          <text x="605" y="815" text-anchor="middle" fill="#1a4d2a" font-family="Arial, sans-serif" font-size="28" font-weight="700">OM Nursery RFID Plant</text>
+        </svg>
+      `;
+
+      imageElement.onerror = null;
+      imageElement.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+
+
+    /* GROUP RFID SIMULATION */
+
+    const groupRFIDDatabase = {
+      "GRP-KAMSHET-1001": {
+        rfid: "GRP-KAMSHET-1001",
+        mappingId: "GRP-MAP-2026-1001",
+        name: "Mango Hapoos",
+        botanicalName: "Mangifera indica · Alphonso",
+        stage: "Sapling",
+        farm: "Kamshet",
+        block: "Block A",
+        zone: "Front Polyhouse · Row A-04",
+        batch: "Batch 4",
+        growBag: "12 × 12 inch",
+        quantity: 120,
+        available: 108,
+        reserved: 8,
+        underCare: 4,
+        mappedDate: "5 August 2026",
+        owner: "Ajay Patil",
+        responsible: "Ramesh Jadhav",
+        health: "Healthy Group",
+        healthScore: 92,
+        irrigation: "Drip cycle · Twice daily",
+        fertilisation: "30 July 2026 · NPK + compost",
+        pest: "Clear · Group checked 3 August 2026",
+        nextAction: "Uniform growth grading · 9 August 2026",
+        stockStatus: "108 available · 8 reserved",
+        image: "https://images.unsplash.com/photo-1599598177991-ec67b5c37318?auto=format&fit=crop&w=1200&q=86"
+      },
+      "GRP-KAMSHET-1005": {
+        rfid: "GRP-KAMSHET-1005",
+        mappingId: "GRP-MAP-2026-1005",
+        name: "Mango Pairi",
+        botanicalName: "Mangifera indica · Pairi",
+        stage: "Adult",
+        farm: "Kamshet",
+        block: "Block B",
+        zone: "Shade Net Area · Row B-09",
+        batch: "Batch 7",
+        growBag: "24 × 24 inch",
+        quantity: 95,
+        available: 82,
+        reserved: 10,
+        underCare: 3,
+        mappedDate: "4 August 2026",
+        owner: "Ajay Patil",
+        responsible: "Suresh More",
+        health: "Healthy Group",
+        healthScore: 89,
+        irrigation: "Drip cycle · Morning",
+        fertilisation: "27 July 2026 · Organic compost",
+        pest: "Clear · Group checked 2 August 2026",
+        nextAction: "Canopy inspection · 8 August 2026",
+        stockStatus: "82 available · 10 reserved",
+        image: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=1200&q=86"
+      },
+      "GRP-KARLA-1002": {
+        rfid: "GRP-KARLA-1002",
+        mappingId: "GRP-MAP-2026-1002",
+        name: "Rose Red",
+        botanicalName: "Rosa indica · Red Variety",
+        stage: "Adult",
+        farm: "Karla",
+        block: "Block B",
+        zone: "Mother Plant Area · Row B-03",
+        batch: "Batch 3",
+        growBag: "18 × 18 inch",
+        quantity: 75,
+        available: 61,
+        reserved: 12,
+        underCare: 2,
+        mappedDate: "3 August 2026",
+        owner: "Sunil More",
+        responsible: "Pankaj Shinde",
+        health: "Flowering Group",
+        healthScore: 95,
+        irrigation: "Micro sprinkler · Daily",
+        fertilisation: "31 July 2026 · Bloom booster",
+        pest: "Clear · Group checked 4 August 2026",
+        nextAction: "Flower quality grading · 7 August 2026",
+        stockStatus: "61 available · 12 reserved",
+        image: "https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&w=1200&q=86"
+      },
+      "GRP-VADEGAON-1003": {
+        rfid: "GRP-VADEGAON-1003",
+        mappingId: "GRP-MAP-2026-1003",
+        name: "Areca Palm",
+        botanicalName: "Dypsis lutescens",
+        stage: "Child",
+        farm: "Vadegaon",
+        block: "Block C",
+        zone: "Hardening Area · Row C-06",
+        batch: "Batch 8",
+        growBag: "16 × 16 inch",
+        quantity: 180,
+        available: 164,
+        reserved: 10,
+        underCare: 6,
+        mappedDate: "2 August 2026",
+        owner: "Nitin Shinde",
+        responsible: "Mahesh Pawar",
+        health: "Healthy Group",
+        healthScore: 90,
+        irrigation: "Mist irrigation · Twice daily",
+        fertilisation: "26 July 2026 · Organic liquid feed",
+        pest: "Clear · Group checked 1 August 2026",
+        nextAction: "Hardening review · 10 August 2026",
+        stockStatus: "164 available · 10 reserved",
+        image: "https://images.unsplash.com/photo-1593691509543-c55fb32d8de5?auto=format&fit=crop&w=1200&q=86"
+      },
+      "GRP-TALEGAON-1004": {
+        rfid: "GRP-TALEGAON-1004",
+        mappingId: "GRP-MAP-2026-1004",
+        name: "Guava Lucknow 49",
+        botanicalName: "Psidium guajava · Lucknow 49",
+        stage: "Sapling",
+        farm: "Talegaon",
+        block: "Block A",
+        zone: "Fruit Sapling Yard · Row A-11",
+        batch: "Batch 6",
+        growBag: "14 × 14 inch",
+        quantity: 140,
+        available: 126,
+        reserved: 9,
+        underCare: 5,
+        mappedDate: "1 August 2026",
+        owner: "Vishal Jagtap",
+        responsible: "Nilesh Kadam",
+        health: "Healthy Group",
+        healthScore: 88,
+        irrigation: "Drip cycle · Daily",
+        fertilisation: "24 July 2026 · Farmyard manure",
+        pest: "Minor leaf spot monitored · 2 August 2026",
+        nextAction: "Disease follow-up · 6 August 2026",
+        stockStatus: "126 available · 9 reserved",
+        image: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=1200&q=86"
+      }
+    };
+
+    let selectedGroup = null;
+    let groupSessionScans = [];
+    let groupScanCounter = 0;
+    let groupScanTimer = null;
+
+    function switchSimulation(type) {
+      const individualActive = type === "individual";
+
+      document.getElementById("individualSimulationTab").classList.toggle("active", individualActive);
+      document.getElementById("groupSimulationTab").classList.toggle("active", !individualActive);
+      document.getElementById("individualSimulationTab").setAttribute("aria-selected", String(individualActive));
+      document.getElementById("groupSimulationTab").setAttribute("aria-selected", String(!individualActive));
+
+      document.getElementById("individualSimulationPane").classList.toggle("active", individualActive);
+      document.getElementById("groupSimulationPane").classList.toggle("active", !individualActive);
+
+      const target = individualActive ? "scanSection" : "groupScanSection";
+      setTimeout(() => {
+        document.getElementById(target).scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 40);
+    }
+
+    function updateCombinedScanMetric() {
+      document.getElementById("sessionScanMetric").textContent = scanCounter + groupScanCounter;
+    }
+
+    function normaliseGroupRFIDInput() {
+      const input = document.getElementById("groupRFIDSearchInput");
+      input.value = input.value.toUpperCase().replace(/\s+/g, "");
+    }
+
+    function handleGroupSearchKey(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        searchPlantGroup();
+      }
+    }
+
+    function handleGroupCardKey(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openGroupDetails();
+      }
+    }
+
+    function renderGroupQuickCodes() {
+      const quickCodeList = document.getElementById("groupQuickCodeList");
+      quickCodeList.innerHTML = Object.keys(groupRFIDDatabase).map(code => {
+        const group = groupRFIDDatabase[code];
+        return `
+          <button class="quick-code" type="button" onclick="useGroupQuickCode('${code}')">
+            ${code}<br>
+            <span style="font-weight:650;opacity:.72;">${group.name} · ${group.stage} · ${group.quantity} plants</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function useGroupQuickCode(code) {
+      revealGroupScanner();
+      const input = document.getElementById("groupRFIDSearchInput");
+      input.value = code;
+      input.focus();
+      updateGroupScanStatus("Ready to search the selected group RFID code.", "");
+    }
+
+    function revealGroupScanner() {
+      const workspace = document.getElementById("groupScanWorkspace");
+      if (!workspace.classList.contains("show")) {
+        workspace.classList.add("show");
+      }
+    }
+
+    function simulateGroupRFIDScan() {
+      revealGroupScanner();
+      clearTimeout(groupScanTimer);
+
+      const button = document.getElementById("groupSimulateButton");
+      const input = document.getElementById("groupRFIDSearchInput");
+      const code = "GRP-KAMSHET-1001";
+
+      button.disabled = true;
+      button.style.opacity = "0.78";
+      button.innerHTML = "<span aria-hidden='true'>⌁</span> Scanning Group Tag...";
+      input.value = "";
+      hideGroupSearchResults();
+      updateGroupScanStatus("RFID reader is scanning for a mapped plant group...", "scanning");
+
+      let index = 0;
+      const typeNextCharacter = () => {
+        if (index < code.length) {
+          input.value += code[index];
+          index += 1;
+          groupScanTimer = setTimeout(typeNextCharacter, 58);
+          return;
+        }
+
+        updateGroupScanStatus("Group RFID detected successfully. Click Search Plant Group to open the mapping.", "success");
+        button.disabled = false;
+        button.style.opacity = "1";
+        button.innerHTML = "<span aria-hidden='true'>📡</span> Simulate Group RFID Scan";
+        input.focus();
+        showToast("Group RFID GRP-KAMSHET-1001 detected.");
+      };
+
+      groupScanTimer = setTimeout(typeNextCharacter, 350);
+      setTimeout(() => {
+        document.getElementById("groupScanWorkspace").scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 120);
+    }
+
+    function updateGroupScanStatus(message, stateClass) {
+      const status = document.getElementById("groupScanStatus");
+      status.classList.remove("scanning", "success", "error");
+      if (stateClass) status.classList.add(stateClass);
+      document.getElementById("groupScanStatusText").textContent = message;
+    }
+
+    function hideGroupSearchResults() {
+      document.getElementById("groupResultCard").classList.remove("show");
+      document.getElementById("groupNoResultBox").classList.remove("show");
+      document.getElementById("groupEmptyResultState").classList.remove("hidden");
+    }
+
+    function searchPlantGroup() {
+      revealGroupScanner();
+      const input = document.getElementById("groupRFIDSearchInput");
+      const code = input.value.trim().toUpperCase();
+
+      if (!code) {
+        updateGroupScanStatus("Please scan or enter a group RFID code before searching.", "error");
+        showToast("Enter a group RFID code to continue.");
+        input.focus();
+        return;
+      }
+
+      updateGroupScanStatus("Searching the nursery group RFID inventory...", "scanning");
+      document.getElementById("groupResultCard").classList.remove("show");
+      document.getElementById("groupNoResultBox").classList.remove("show");
+      document.getElementById("groupEmptyResultState").classList.add("hidden");
+
+      setTimeout(() => {
+        const group = groupRFIDDatabase[code];
+
+        if (!group) {
+          selectedGroup = null;
+          document.getElementById("groupNoResultBox").innerHTML = `
+            <strong>No plant group found for ${escapeHtml(code)}.</strong><br>
+            Check the group RFID code or use one of the demo codes shown in the right panel.
+          `;
+          document.getElementById("groupNoResultBox").classList.add("show");
+          document.getElementById("groupDetailsSection").classList.remove("show");
+          updateGroupScanStatus("No matching group RFID was found in the demo inventory.", "error");
+          showToast("No matching plant group found.");
+          return;
+        }
+
+        selectedGroup = group;
+        renderGroupResult(group);
+        addGroupRecentScan(group);
+        updateGroupScanStatus("Plant group found. Click the result card to view every mapped detail.", "success");
+        showToast(`${group.quantity} ${group.name} plants found at ${group.farm}, ${group.block}.`);
+      }, 520);
+    }
+
+    function renderGroupResult(group) {
+      document.getElementById("groupResultImage").src = group.image;
+      document.getElementById("groupResultImage").alt = `${group.name} plant group`;
+      document.getElementById("groupResultQuantityBadge").textContent = group.quantity;
+      document.getElementById("groupResultStagePill").textContent = group.stage;
+      document.getElementById("groupResultHealthPill").textContent = `${group.healthScore}% Group Health`;
+      document.getElementById("groupResultPlantName").textContent = `${group.name} Plant Group`;
+      document.getElementById("groupResultBotanicalName").textContent = group.botanicalName;
+      document.getElementById("groupResultRFID").textContent = group.rfid;
+      document.getElementById("groupResultLocation").textContent = `${group.farm} · ${group.block}`;
+      document.getElementById("groupResultQuantity").textContent = `${group.quantity} plants`;
+
+      document.getElementById("groupNoResultBox").classList.remove("show");
+      document.getElementById("groupResultCard").classList.add("show");
+    }
+
+    function openGroupDetails() {
+      if (!selectedGroup) return;
+
+      const group = selectedGroup;
+      document.getElementById("selectedGroupRFIDBadge").textContent = `🏷️ ${group.rfid}`;
+      document.getElementById("groupDetailImage").src = group.image;
+      document.getElementById("groupDetailImage").alt = `${group.name} plant group`;
+      document.getElementById("groupDetailQuantityBadge").textContent = group.quantity;
+      document.getElementById("groupDetailPlantName").textContent = `${group.name} Group`;
+      document.getElementById("groupDetailBotanicalName").textContent = group.botanicalName;
+      document.getElementById("groupDetailStagePill").textContent = group.stage;
+      document.getElementById("groupDetailHealthPill").textContent = group.health;
+      document.getElementById("groupHealthScoreLabel").textContent = `${group.healthScore}%`;
+      document.getElementById("groupVisualMappedQuantity").textContent = `${group.quantity} plants`;
+      document.getElementById("groupVisualGrowBag").textContent = group.growBag;
+
+      document.getElementById("groupSummaryTitle").textContent = `${group.rfid} represents one complete ${group.name} group`;
+      document.getElementById("groupSummaryText").textContent =
+        `${group.quantity} ${group.stage.toLowerCase()}-stage plants are mapped together at ${group.farm}, ${group.block}, ${group.zone}.`;
+      document.getElementById("groupSummaryQuantity").textContent = group.quantity;
+
+      setDetail("groupDetailRFID", group.rfid);
+      setDetail("groupDetailMappingID", group.mappingId);
+      setDetail("groupDetailVariety", group.name);
+      setDetail("groupDetailStage", group.stage);
+      setDetail("groupDetailFarm", group.farm);
+      setDetail("groupDetailBlock", group.block);
+      setDetail("groupDetailZone", group.zone);
+      setDetail("groupDetailBatch", group.batch);
+      setDetail("groupDetailGrowBag", group.growBag);
+      setDetail("groupDetailQuantity", `${group.quantity} plants`);
+      setDetail("groupDetailMappedDate", group.mappedDate);
+      setDetail("groupDetailOwner", group.owner);
+      setDetail("groupStatTotal", group.quantity);
+      setDetail("groupStatAvailable", group.available);
+      setDetail("groupStatReserved", group.reserved);
+      setDetail("groupStatCare", group.underCare);
+      setDetail("groupDetailIrrigation", group.irrigation);
+      setDetail("groupDetailFertilisation", group.fertilisation);
+      setDetail("groupDetailPest", group.pest);
+      setDetail("groupDetailNextAction", group.nextAction);
+      setDetail("groupDetailStockStatus", group.stockStatus);
+      setDetail("groupDetailResponsible", group.responsible);
+
+      renderGroupUnitCards(group);
+
+      const detailsSection = document.getElementById("groupDetailsSection");
+      detailsSection.classList.add("show");
+      requestAnimationFrame(() => {
+        document.getElementById("groupHealthProgressFill").style.width = `${group.healthScore}%`;
+      });
+
+      document.getElementById("currentFarmMetric").textContent = group.farm;
+      document.getElementById("currentBlockMetric").textContent = `${group.block} · ${group.quantity} grouped plants`;
+
+      setTimeout(() => {
+        detailsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    }
+
+    function renderGroupUnitCards(group) {
+      const visibleUnits = Math.min(group.quantity, 11);
+      const cards = [];
+
+      for (let index = 1; index <= visibleUnits; index += 1) {
+        const unitNumber = String(index).padStart(3, "0");
+        cards.push(`
+          <div class="group-unit-card">
+            <div class="group-unit-index">Plant ${unitNumber}</div>
+            <div class="group-unit-id">${group.mappingId}-P${unitNumber}<br>${group.name} · ${group.stage}</div>
+            <span class="group-unit-status">Included in Group</span>
+          </div>
+        `);
+      }
+
+      const remaining = group.quantity - visibleUnits;
+      if (remaining > 0) {
+        cards.push(`
+          <div class="group-unit-card group-more-card">
+            <div>
+              <strong>+${remaining}</strong>
+              <span>additional plants mapped to the same RFID group</span>
+            </div>
+          </div>
+        `);
+      }
+
+      document.getElementById("groupUnitGrid").innerHTML = cards.join("");
+    }
+
+    function addGroupRecentScan(group) {
+      groupScanCounter += 1;
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      groupSessionScans = groupSessionScans.filter(scan => scan.rfid !== group.rfid);
+      groupSessionScans.unshift({ ...group, time });
+      groupSessionScans = groupSessionScans.slice(0, 8);
+
+      updateCombinedScanMetric();
+      document.getElementById("currentFarmMetric").textContent = group.farm;
+      document.getElementById("currentBlockMetric").textContent = `${group.block} · ${group.quantity} grouped plants`;
+      renderGroupRecentScans();
+    }
+
+    function renderGroupRecentScans() {
+      const tbody = document.getElementById("groupRecentScansTableBody");
+
+      if (!groupSessionScans.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center;color:#5a6f5a;padding:24px;">
+              No group RFID scans recorded in this session.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = groupSessionScans.map(scan => `
+        <tr>
+          <td><span class="table-rfid">🌿 ${scan.rfid}</span></td>
+          <td><strong>${scan.name}</strong><br><span style="color:#5a6f5a;font-size:11px;font-style:italic;">${scan.botanicalName}</span></td>
+          <td><span class="status-pill status-stage">${scan.stage}</span></td>
+          <td>${scan.farm} · ${scan.block}</td>
+          <td><strong>${scan.quantity} plants</strong></td>
+          <td>${scan.time}</td>
+          <td><span class="status-pill status-active">Group Verified</span></td>
+        </tr>
+      `).join("");
+    }
+
+    function markGroupInspected() {
+      if (!selectedGroup) return;
+      const today = new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+      setDetail("groupDetailPest", `Clear · Group RFID inspection recorded ${today}`);
+      showToast(`${selectedGroup.rfid} plant group marked as inspected.`);
+    }
+
+    function printGroupDetails() {
+      if (!selectedGroup) return;
+      showToast("Opening print view for the selected plant group.");
+      setTimeout(() => window.print(), 180);
+    }
+
+    function scrollToGroupScanner() {
+      document.getElementById("groupScanSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => document.getElementById("groupRFIDSearchInput").focus(), 420);
+    }
+
+    function clearGroupRecentScans() {
+      groupSessionScans = [];
+      groupScanCounter = 0;
+      updateCombinedScanMetric();
+      renderGroupRecentScans();
+      showToast("Recent group scan history cleared.");
+    }
+
+    function resetGroupDemo() {
+      clearTimeout(groupScanTimer);
+      selectedGroup = null;
+      document.getElementById("groupRFIDSearchInput").value = "";
+      document.getElementById("groupScanWorkspace").classList.remove("show");
+      document.getElementById("groupDetailsSection").classList.remove("show");
+      document.getElementById("groupHealthProgressFill").style.width = "0";
+      document.getElementById("currentFarmMetric").textContent = "—";
+      document.getElementById("currentBlockMetric").textContent = "Scan a plant to locate it";
+      hideGroupSearchResults();
+      updateGroupScanStatus("Group RFID reader is ready. Start a scan or enter a code.", "");
+
+      const button = document.getElementById("groupSimulateButton");
+      button.disabled = false;
+      button.style.opacity = "1";
+      button.innerHTML = "<span aria-hidden='true'>📡</span> Simulate Group RFID Scan";
+
+      document.getElementById("groupScanSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      showToast("Group RFID demo reset successfully.");
+    }
+
+    function setGroupImageFallback(imageElement) {
+      const label = selectedGroup?.name || "OM Nursery Plant Group";
+      const safeLabel = label.replace(/[&<>"]/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;"
+      })[character]);
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+          <defs>
+            <linearGradient id="groupBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#eaf4eb"/>
+              <stop offset="1" stop-color="#cfe3d1"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="900" fill="url(#groupBg)"/>
+          <circle cx="1050" cy="130" r="230" fill="#ffffff" opacity=".24"/>
+          <circle cx="160" cy="760" r="260" fill="#f5c542" opacity=".14"/>
+          <g transform="translate(230 165)">
+            <path d="M170 455 C160 345 168 230 172 105" fill="none" stroke="#6c8d70" stroke-width="20" stroke-linecap="round"/>
+            <path d="M175 255 C75 230 28 165 20 80 C112 84 175 145 175 255Z" fill="#2d6e3e"/>
+            <path d="M173 330 C270 300 320 238 327 155 C235 165 175 225 173 330Z" fill="#3f8a52"/>
+            <path d="M430 455 C420 345 428 230 432 105" fill="none" stroke="#6c8d70" stroke-width="20" stroke-linecap="round"/>
+            <path d="M435 255 C335 230 288 165 280 80 C372 84 435 145 435 255Z" fill="#1a4d2a"/>
+            <path d="M433 330 C530 300 580 238 587 155 C495 165 435 225 433 330Z" fill="#5c9d69"/>
+            <path d="M690 455 C680 345 688 230 692 105" fill="none" stroke="#6c8d70" stroke-width="20" stroke-linecap="round"/>
+            <path d="M695 255 C595 230 548 165 540 80 C632 84 695 145 695 255Z" fill="#2d6e3e"/>
+            <path d="M693 330 C790 300 840 238 847 155 C755 165 695 225 693 330Z" fill="#3f8a52"/>
+          </g>
+          <rect x="365" y="670" width="470" height="105" rx="28" fill="#1a4d2a"/>
+          <text x="600" y="728" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="36" font-weight="700">${safeLabel}</text>
+          <text x="600" y="825" text-anchor="middle" fill="#1a4d2a" font-family="Arial, sans-serif" font-size="28" font-weight="700">OM Nursery Group RFID</text>
+        </svg>
+      `;
+
+      imageElement.onerror = null;
+      imageElement.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+
+    renderQuickCodes();
+    renderRecentScans();
+    renderGroupQuickCodes();
+    renderGroupRecentScans();
+    updateCombinedScanMetric();
+  </script>
+</body></html>
+

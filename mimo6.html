@@ -1,0 +1,1952 @@
+<html><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OM Nursery · Customer Review Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',Arial,sans-serif;background:#f4f7f5;color:#1e2e24;padding:28px 18px}
+  .container{max-width:1350px;margin:0 auto}
+  .hero{background:linear-gradient(145deg,#1a4d2a 0%,#2d6e3e 100%);border-radius:32px;padding:38px 44px;margin-bottom:28px;box-shadow:0 20px 42px rgba(0,20,0,.15);position:relative;overflow:hidden}
+  .hero:after{content:'📊';position:absolute;right:24px;bottom:-18px;font-size:150px;opacity:.1;transform:rotate(10deg)}
+  .hero-inner{position:relative;z-index:2;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .hero-icon{font-size:48px;line-height:1}
+  h1{font-size:40px;line-height:1.05;color:#fff;font-weight:850;letter-spacing:-.04em;margin-bottom:10px}
+  h1 span{color:#f5c542}
+  .subhead{max-width:900px;color:rgba(255,255,255,.9);font-size:17px;line-height:1.55;border-left:4px solid #f5c542;padding-left:16px}
+  .badges{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;padding:7px 14px;border-radius:40px;font-size:13px;font-weight:700}
+  .nav-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}
+  .nav-tabs button{border:2px solid #d9e9d9;background:#fff;color:#1a4d2a;border-radius:999px;padding:11px 17px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,20,0,.05);transition:.2s}
+  .nav-tabs button:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,20,0,.1)}
+  .nav-tabs button.active{background:#1a4d2a;color:#fff;border-color:#1a4d2a}
+  .section{background:#fff;border:1px solid #e6eee6;border-radius:28px;padding:28px;margin-bottom:26px;box-shadow:0 12px 30px rgba(0,20,0,.06)}
+  .section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px}
+  .section-title{color:#1a4d2a;font-size:24px;font-weight:850;letter-spacing:-.02em;margin:0}
+  .section-sub{color:#5a6f5a;font-weight:600;font-size:14px;line-height:1.6;margin-top:7px;max-width:780px}
+  .grid{display:grid;gap:16px}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .btn{border:none;border-radius:999px;padding:10px 18px;font-weight:850;cursor:pointer;transition:.2s;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-green{background:#1a4d2a;color:#fff;box-shadow:0 8px 18px rgba(26,77,42,.18)}
+  .btn-light{background:#eef6ef;color:#1a4d2a;border:1px solid #d9e9d9}
+  .btn-gold{background:#f5c542;color:#1e2e24}
+  .mini-stat{background:#f8fbf8;border:1px solid #e6eee6;border-radius:22px;padding:18px;position:relative;overflow:hidden}
+  .mini-stat.hero-stat{background:linear-gradient(145deg,#1a4d2a,#2d6e3e);border:none;color:#fff}
+  .mini-stat.hero-stat .lbl{color:rgba(255,255,255,.78)}
+  .mini-stat.hero-stat .num{color:#f5c542}
+  .mini-stat .icon-flag{position:absolute;right:12px;top:12px;font-size:20px;opacity:.5}
+  .mini-stat .num{font-size:28px;color:#1a4d2a;font-weight:900;line-height:1}
+  .mini-stat .lbl{color:#5a6f5a;font-size:12.5px;font-weight:750;margin-top:7px}
+  .mini-stat .sub{font-size:11.5px;color:#7c8f7c;font-weight:700;margin-top:4px}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:#eaf3ea;color:#1a4d2a;border:1px solid #dcebdc;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+  .pill.gold{background:#fff8df;color:#7a5a0c;border-color:#f2dfa2}
+  .pill.blue{background:#edf6ff;color:#134f7a;border-color:#d6eaff}
+  .pill.crown{background:#fff8df;color:#7a5a0c;border-color:#f2dfa2}
+  .rank-list{display:grid;gap:10px}
+  .rank-item{display:flex;align-items:center;gap:14px;background:#f8fbf8;border:1px solid #e6eee6;border-radius:18px;padding:13px 16px;transition:.2s}
+  .rank-item.top{background:linear-gradient(145deg,#fffaf0,#fff);border-color:#f2dfa2}
+  .rank-pos{width:34px;height:34px;border-radius:50%;background:#1a4d2a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex:none}
+  .rank-item.top .rank-pos{background:#f5c542;color:#1e2e24}
+  .rank-body{flex:1;min-width:0}
+  .rank-name{font-weight:900;color:#1a4d2a;font-size:15px;display:flex;align-items:center;gap:8px}
+  .rank-meta{font-size:12.5px;color:#5a6f5a;font-weight:650;margin-top:3px}
+  .rank-score{text-align:right;flex:none}
+  .rank-score .val{font-size:17px;font-weight:950;color:#1a4d2a;white-space:nowrap}
+  .rank-score .stars{font-size:11px;color:#c99a1a;font-weight:800}
+  .stars-row{color:#f5c542;letter-spacing:1px}
+  .chart-card{background:#f8fbf8;border:1px solid #e6eee6;border-radius:24px;padding:20px}
+  .chart-card h4{color:#1a4d2a;font-weight:900;margin-bottom:4px;font-size:16px}
+  .chart-card .chart-note{font-size:12px;color:#5a6f5a;font-weight:650;margin-bottom:14px}
+  .bar-row{display:grid;grid-template-columns:118px 1fr 42px;align-items:center;gap:10px;margin:12px 0;color:#5a6f5a;font-weight:800;font-size:12.5px}
+  .bar-bg{height:14px;background:#e6eee6;border-radius:999px;overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,#1a4d2a,#2fc389);border-radius:999px;min-width:4px;transition:width .6s ease}
+  .bar-fill.gold{background:linear-gradient(90deg,#c99a1a,#f5c542)}
+  .pie-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center}
+  .pie-legend{display:grid;gap:8px;flex:1;min-width:160px}
+  .pie-legend-item{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:750;color:#5a6f5a}
+  .pie-dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:18px}
+  .product-card{background:#fff;border:1px solid #e6eee6;border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(0,20,0,.06);position:relative}
+  .product-card img{width:100%;height:140px;object-fit:cover;background:#eaf3ea;display:block}
+  .sold-ribbon{position:absolute;top:12px;left:12px;background:#1a4d2a;color:#fff;font-size:11px;font-weight:900;padding:6px 11px;border-radius:999px;box-shadow:0 6px 14px rgba(0,20,0,.2)}
+  .sold-ribbon.first{background:#f5c542;color:#1e2e24}
+  .product-info{padding:15px}
+  .product-name{font-size:16px;font-weight:850;color:#1a4d2a;margin-bottom:6px}
+  .product-meta{font-size:12px;color:#5a6f5a;font-weight:700;line-height:1.6}
+  .customer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .customer-card{background:#f8fbf8;border:1px solid #e6eee6;border-radius:22px;padding:18px;transition:.2s}
+  .customer-card:hover{box-shadow:0 12px 26px rgba(0,20,0,.08);transform:translateY(-2px)}
+  .customer-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex:none}
+  .customer-name{font-weight:900;color:#1a4d2a;font-size:15.5px}
+  .customer-sub{font-size:12px;color:#5a6f5a;font-weight:650}
+  .customer-tags{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+  .cart-chip-row{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+  .cart-chip{background:#fff;border:1px solid #e6eee6;border-radius:999px;padding:5px 10px;font-size:11.5px;font-weight:750;color:#1a4d2a}
+  .review-quote{background:#fff;border:1px solid #e6eee6;border-left:4px solid #f5c542;border-radius:14px;padding:11px 14px;font-size:13px;color:#3f5346;font-weight:600;font-style:italic;line-height:1.5;margin-top:10px}
+  .review-quote .rate-line{font-style:normal;font-weight:900;color:#1a4d2a;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+  .customer-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #e6eee6;font-size:12.5px;color:#5a6f5a;font-weight:800}
+  .customer-foot strong{color:#1a4d2a;font-size:16px}
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .filter-bar select{border:1px solid #dbe8db;background:#fff;border-radius:14px;padding:9px 12px;font:inherit;font-weight:700;color:#1a4d2a;font-size:13px}
+
+  .review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .review-entry{background:#f8fbf8;border:1px solid #e6eee6;border-radius:22px;padding:18px;transition:.2s;position:relative;overflow:hidden}
+  .review-entry:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,20,0,.08)}
+  .review-entry:after{content:'⭐';position:absolute;right:12px;bottom:-8px;font-size:58px;opacity:.045}
+  .review-entry-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px;position:relative;z-index:1}
+  .review-entry-title{font-size:16px;font-weight:900;color:#1a4d2a}
+  .review-entry-meta{font-size:12px;color:#5a6f5a;font-weight:700;line-height:1.55;margin-top:4px}
+  .score-badge{background:#f5c542;color:#1e2e24;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:950;white-space:nowrap}
+  .review-copy{background:#fff;border:1px solid #e6eee6;border-left:4px solid #f5c542;border-radius:15px;padding:12px 14px;font-size:13px;line-height:1.55;color:#3f5346;font-weight:650;position:relative;z-index:1}
+  .review-kind{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#1a4d2a;margin-bottom:7px}
+  .criteria-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px}
+  .criteria-item{background:#fff;border:1px solid #e6eee6;border-radius:18px;padding:15px;text-align:center}
+  .criteria-item .criteria-score{font-size:20px;font-weight:950;color:#1a4d2a;white-space:nowrap}
+  .criteria-item .criteria-label{font-size:11.5px;font-weight:800;color:#5a6f5a;margin-top:5px}
+  .review-triple{display:grid;gap:9px;margin-top:10px}
+  .review-quote.product{border-left-color:#2fc389}
+  .review-quote.display{border-left-color:#134f7a}
+  .review-quote.supervisor{border-left-color:#f5c542}
+  .review-label{font-style:normal;text-transform:uppercase;letter-spacing:.04em;font-size:10.5px;font-weight:950;color:#1a4d2a;margin-bottom:4px}
+  @media(max-width:980px){.grid-2,.grid-3,.grid-4,.grid-5,.customer-grid,.review-list,.criteria-grid{grid-template-columns:1fr}.hero{padding:28px 24px}h1{font-size:30px}.subhead{font-size:15px}}
+  @media(max-width:560px){body{padding:18px 12px}.section{padding:20px;border-radius:22px}.bar-row{grid-template-columns:90px 1fr 34px}}
+</style>
+<style id="vvvebjs-styles"></style></head><body>
+<div class="container">
+<div class="hero">
+<div class="hero-inner">
+<div class="hero-icon">📊</div>
+<div>
+<h1>OM <span>Nursery</span> · Customer Review Dashboard</h1>
+<div class="subhead">Master metrics, product reviews, nursery display reviews, supervisor rankings, sales performance and recent customer feedback for OM Farm &amp; Nursery — all in one management dashboard.</div>
+</div>
+</div>
+<div class="badges">
+<span class="badge">🌱 Product Reviews</span>
+<span class="badge">🖼️ Display Reviews</span>
+<span class="badge">🧑‍🌾 Supervisor Reviews</span>
+<span class="badge">🛒 Sales Insights</span>
+</div>
+</div>
+<div class="nav-tabs">
+<button class="active" onclick="jump('metricsSection',this)">1. Master Metrics</button>
+<button onclick="jump('rankingSection',this)">2. Farm &amp; Supervisor Ranking</button>
+<button onclick="jump('chartsSection',this)">3. Charts</button>
+<button onclick="jump('productsSection',this)">4. Top Selling Products</button>
+<button onclick="jump('productReviewsSection',this)">5. Product Reviews</button>
+<button onclick="jump('displayReviewsSection',this)">6. Display Reviews</button>
+<button onclick="jump('customersSection',this)">7. Recent Customers</button>
+</div>
+<section class="section" id="metricsSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">📌 Master Metrics</h2>
+<p class="section-sub">Overall business health of OM Farm &amp; Nursery across all branches, computed from customer reviews and completed orders.</p>
+</div>
+</div>
+<div class="grid grid-4" id="masterMetrics">
+      <div class="mini-stat hero-stat">
+        <div class="icon-flag">⭐</div>
+        <div class="num" style="">4.5 / 5</div>
+        <div class="lbl">Overall Average Rating</div>
+        <div class="sub">15 reviews collected</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">🧾</div>
+        <div class="num" style="">15</div>
+        <div class="lbl">Total Orders / Reviews</div>
+        <div class="sub">Across all branches</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">💰</div>
+        <div class="num" style="">₹11,483</div>
+        <div class="lbl">Total Revenue (Demo)</div>
+        <div class="sub">Avg order value ₹766</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">👥</div>
+        <div class="num" style="">12</div>
+        <div class="lbl">Unique Customers</div>
+        <div class="sub">3 repeat visits</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">😊</div>
+        <div class="num" style="">53%</div>
+        <div class="lbl">High Satisfaction Rate</div>
+        <div class="sub">Customers rating 5 out of 5</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">🌾</div>
+        <div class="num" style="font-size:19px">OM Farm - Kamshet</div>
+        <div class="lbl">Highest Rated Branch</div>
+        <div class="sub">4.8 / 5 avg rating</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">🧑‍🌾</div>
+        <div class="num" style="font-size:19px">Ramesh</div>
+        <div class="lbl">Best Performing Supervisor</div>
+        <div class="sub">5.0 / 5 avg rating</div>
+      </div>
+      <div class="mini-stat ">
+        <div class="icon-flag">📦</div>
+        <div class="num" style="">10</div>
+        <div class="lbl">Products in Catalog</div>
+        <div class="sub">Plants, saplings &amp; supplies</div>
+      </div></div>
+</section>
+<section class="section" id="rankingSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">🏆 Farm &amp; Supervisor Ranking</h2>
+<p class="section-sub">Branches and supervisors ranked by average customer rating, review volume and revenue generated.</p>
+</div>
+</div>
+<div class="grid grid-2">
+<div>
+<h3 style="color:#1a4d2a;font-weight:900;margin-bottom:12px;font-size:16px">🌾 All Farms / Branches Ranking</h3>
+<div class="rank-list" id="farmRanking">
+      <div class="rank-item top">
+        <div class="rank-pos">🏆</div>
+        <div class="rank-body">
+          <div class="rank-name">🌾 OM Farm - Kamshet <span class="pill crown">Top Performer</span></div>
+          <div class="rank-meta">5 reviews · ₹4,343 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.8 / 5</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">2</div>
+        <div class="rank-body">
+          <div class="rank-name">🌾 OM Nursery - Talegaon </div>
+          <div class="rank-meta">5 reviews · ₹3,654 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.6 / 5</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">3</div>
+        <div class="rank-body">
+          <div class="rank-name">🌾 OM Farm - Karla </div>
+          <div class="rank-meta">5 reviews · ₹3,486 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.0 / 5</div>
+          <div class="stars">★★★★☆</div>
+        </div>
+      </div></div>
+</div>
+<div>
+<h3 style="color:#1a4d2a;font-weight:900;margin-bottom:12px;font-size:16px">🧑‍🌾 All Supervisors Ranking</h3>
+<div class="rank-list" id="supervisorRanking">
+      <div class="rank-item top">
+        <div class="rank-pos">🏆</div>
+        <div class="rank-body">
+          <div class="rank-name">🧑‍🌾 Ramesh <span class="pill crown">Top Performer</span></div>
+          <div class="rank-meta">4 reviews · ₹3,401 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">5.0 / 5</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">2</div>
+        <div class="rank-body">
+          <div class="rank-name">🧑‍🌾 Dharmesh </div>
+          <div class="rank-meta">3 reviews · ₹2,481 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">5.0 / 5</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">3</div>
+        <div class="rank-body">
+          <div class="rank-name">🧑‍🌾 Suresh </div>
+          <div class="rank-meta">3 reviews · ₹2,081 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.0 / 5</div>
+          <div class="stars">★★★★☆</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">4</div>
+        <div class="rank-body">
+          <div class="rank-name">🧑‍🌾 Rajesh </div>
+          <div class="rank-meta">3 reviews · ₹2,347 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.0 / 5</div>
+          <div class="stars">★★★★☆</div>
+        </div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">5</div>
+        <div class="rank-body">
+          <div class="rank-name">🧑‍🌾 Jiggesh </div>
+          <div class="rank-meta">2 reviews · ₹1,173 revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">4.0 / 5</div>
+          <div class="stars">★★★★☆</div>
+        </div>
+      </div></div>
+</div>
+</div>
+</section>
+<section class="section" id="chartsSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">📈 Visual Analytics</h2>
+<p class="section-sub">Same underlying data, visualised as bar charts and pie charts for quick reading.</p>
+</div>
+</div>
+<div class="grid grid-2">
+<div class="chart-card">
+<h4>Average Rating by Branch</h4>
+<div class="chart-note">Out of 5, based on all customer reviews per branch</div>
+<div id="chartFarmBar">
+      <div class="bar-row">
+        <span>OM Farm - Kamshet</span>
+        <div class="bar-bg"><div class="bar-fill gold" style="width:96%"></div></div>
+        <strong>4.8 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>OM Nursery - Talegaon</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:92%"></div></div>
+        <strong>4.6 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>OM Farm - Karla</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:80%"></div></div>
+        <strong>4.0 / 5</strong>
+      </div></div>
+</div>
+<div class="chart-card">
+<h4>Average Rating by Supervisor</h4>
+<div class="chart-note">Out of 5, based on all customer reviews per supervisor</div>
+<div id="chartSupervisorBar">
+      <div class="bar-row">
+        <span>Ramesh</span>
+        <div class="bar-bg"><div class="bar-fill gold" style="width:100%"></div></div>
+        <strong>5.0 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Dharmesh</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:100%"></div></div>
+        <strong>5.0 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Suresh</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:80%"></div></div>
+        <strong>4.0 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Rajesh</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:80%"></div></div>
+        <strong>4.0 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Jiggesh</span>
+        <div class="bar-bg"><div class="bar-fill " style="width:80%"></div></div>
+        <strong>4.0 / 5</strong>
+      </div></div>
+</div>
+<div class="chart-card">
+<h4>Review Share by Supervisor</h4>
+<div class="chart-note">Percentage of total reviews handled by each supervisor</div>
+<div id="chartSupervisorPie">
+      <div class="pie-wrap">
+        <svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="#1a4d2a" stroke-width="26" stroke-dasharray="100.53096491487337 276.46015351590177" stroke-dashoffset="0" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#2fc389" stroke-width="26" stroke-dasharray="75.39822368615503 301.59289474462014" stroke-dashoffset="-100.53096491487337" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#f5c542" stroke-width="26" stroke-dasharray="75.39822368615503 301.59289474462014" stroke-dashoffset="-175.9291886010284" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#134f7a" stroke-width="26" stroke-dasharray="75.39822368615503 301.59289474462014" stroke-dashoffset="-251.32741228718342" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#9e1f14" stroke-width="26" stroke-dasharray="50.26548245743668 326.72563597333846" stroke-dashoffset="-326.72563597333846" transform="rotate(-90 80 80)"></circle></svg>
+        <div class="pie-legend">
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#1a4d2a"></span>Ramesh — 27%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#2fc389"></span>Suresh — 20%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#f5c542"></span>Dharmesh — 20%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#134f7a"></span>Rajesh — 20%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#9e1f14"></span>Jiggesh — 13%</div></div>
+      </div></div>
+</div>
+<div class="chart-card">
+<h4>Revenue Share by Branch</h4>
+<div class="chart-note">Percentage of total revenue contributed by each branch</div>
+<div id="chartFarmPie">
+      <div class="pie-wrap">
+        <svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="#1a4d2a" stroke-width="26" stroke-dasharray="142.58228924016862 234.40882919060653" stroke-dashoffset="0" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#2fc389" stroke-width="26" stroke-dasharray="114.44666366364906 262.54445476712607" stroke-dashoffset="-142.58228924016862" transform="rotate(-90 80 80)"></circle><circle cx="80" cy="80" r="60" fill="none" stroke="#f5c542" stroke-width="26" stroke-dasharray="119.96216552695746 257.0289529038177" stroke-dashoffset="-257.0289529038177" transform="rotate(-90 80 80)"></circle></svg>
+        <div class="pie-legend">
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#1a4d2a"></span>OM Farm - Kamshet — 38%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#2fc389"></span>OM Farm - Karla — 30%</div>
+      <div class="pie-legend-item"><span class="pie-dot" style="background:#f5c542"></span>OM Nursery - Talegaon — 32%</div></div>
+      </div></div>
+</div>
+<div class="chart-card" style="grid-column:1/-1">
+<h4>Rating Distribution (1–5)</h4>
+<div class="chart-note">How many customers gave each score out of 5, across all branches</div>
+<div id="chartRatingDist"><div class="grid grid-5" style="gap:10px">
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>1/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div>
+        <strong>0</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>2/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div>
+        <strong>0</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>3/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:12.5%"></div></div>
+        <strong>1</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>4/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div>
+        <strong>6</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>5/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+        <strong>8</strong>
+      </div></div></div>
+</div>
+</div>
+</section>
+<section class="section" id="productsSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">🌱 Highest Sold B2C Products</h2>
+<p class="section-sub">Ranked by total quantity sold across all customer orders, with revenue contribution.</p>
+</div>
+</div>
+<div class="product-grid" id="topProducts">
+      <div class="product-card">
+        <div class="sold-ribbon first">🥇 #1 Best Seller</div>
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Rose Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Rose Plant</div>
+          <div class="product-meta">Units Sold: <strong>7</strong></div>
+          <div class="product-meta">Revenue: <strong>₹2,093</strong></div>
+          <div class="product-meta">Price: ₹299 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="sold-ribbon ">🥈 #2</div>
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Tulsi Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Tulsi Plant</div>
+          <div class="product-meta">Units Sold: <strong>5</strong></div>
+          <div class="product-meta">Revenue: <strong>₹995</strong></div>
+          <div class="product-meta">Price: ₹199 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="sold-ribbon ">🥉 #3</div>
+        <img src="https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Jasmine Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Jasmine Plant</div>
+          <div class="product-meta">Units Sold: <strong>5</strong></div>
+          <div class="product-meta">Revenue: <strong>₹1,745</strong></div>
+          <div class="product-meta">Price: ₹349 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Garden Trowel" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Garden Trowel</div>
+          <div class="product-meta">Units Sold: <strong>4</strong></div>
+          <div class="product-meta">Revenue: <strong>₹596</strong></div>
+          <div class="product-meta">Price: ₹149 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Organic Compost" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Organic Compost</div>
+          <div class="product-meta">Units Sold: <strong>4</strong></div>
+          <div class="product-meta">Revenue: <strong>₹880</strong></div>
+          <div class="product-meta">Price: ₹220 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Money Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Money Plant</div>
+          <div class="product-meta">Units Sold: <strong>3</strong></div>
+          <div class="product-meta">Revenue: <strong>₹537</strong></div>
+          <div class="product-meta">Price: ₹179 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Areca Palm" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Areca Palm</div>
+          <div class="product-meta">Units Sold: <strong>3</strong></div>
+          <div class="product-meta">Revenue: <strong>₹1,797</strong></div>
+          <div class="product-meta">Price: ₹599 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Mango Tree" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Mango Tree</div>
+          <div class="product-meta">Units Sold: <strong>2</strong></div>
+          <div class="product-meta">Revenue: <strong>₹998</strong></div>
+          <div class="product-meta">Price: ₹499 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Aloe Vera" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Aloe Vera</div>
+          <div class="product-meta">Units Sold: <strong>2</strong></div>
+          <div class="product-meta">Revenue: <strong>₹498</strong></div>
+          <div class="product-meta">Price: ₹249 / unit</div>
+        </div>
+      </div>
+      <div class="product-card">
+        
+        <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Guava Plant" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=600&amp;q=80'">
+        <div class="product-info">
+          <div class="product-name">Guava Plant</div>
+          <div class="product-meta">Units Sold: <strong>2</strong></div>
+          <div class="product-meta">Revenue: <strong>₹798</strong></div>
+          <div class="product-meta">Price: ₹399 / unit</div>
+        </div>
+      </div></div>
+</section>
+<section class="section" id="productReviewsSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">🌱 Product Reviews</h2>
+<p class="section-sub">Independent customer feedback about plant health, quality, packaging, value and overall product satisfaction. Product scores are kept separate from display and supervisor scores.</p>
+</div>
+</div>
+<div class="grid grid-4" id="productReviewMetrics">
+      <div class="mini-stat hero-stat"><div class="icon-flag">🌱</div><div class="num">4.6 / 5</div><div class="lbl">Average Product Rating</div><div class="sub">Across 15 completed orders</div></div>
+      <div class="mini-stat"><div class="icon-flag">🏆</div><div class="num" style="font-size:19px">Rose Plant</div><div class="lbl">Highest Rated Product</div><div class="sub">5.0 / 5 from 4 orders</div></div>
+      <div class="mini-stat"><div class="icon-flag">😊</div><div class="num">67%</div><div class="lbl">Excellent Product Reviews</div><div class="sub">Ratings of 5 out of 5</div></div>
+      <div class="mini-stat"><div class="icon-flag">⚠️</div><div class="num">1</div><div class="lbl">Needs Attention</div><div class="sub">Product ratings of 3 or below</div></div></div>
+<div class="grid grid-2" style="margin-top:20px">
+<div class="chart-card">
+<h4>Highest Rated Products</h4>
+<div class="chart-note">Average product rating out of 5 from orders containing each product</div>
+<div class="rank-list" id="productReviewRanking">
+      <div class="rank-item top">
+        <div class="rank-pos">🏆</div>
+        <div class="rank-body"><div class="rank-name">🌿 Rose Plant</div><div class="rank-meta">4 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">5.0 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">2</div>
+        <div class="rank-body"><div class="rank-name">🌿 Jasmine Plant</div><div class="rank-meta">4 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">5.0 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">3</div>
+        <div class="rank-body"><div class="rank-name">🌿 Aloe Vera</div><div class="rank-meta">2 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">5.0 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">4</div>
+        <div class="rank-body"><div class="rank-name">🌿 Areca Palm</div><div class="rank-meta">3 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">4.7 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">5</div>
+        <div class="rank-body"><div class="rank-name">🌿 Garden Trowel</div><div class="rank-meta">3 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">4.7 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">6</div>
+        <div class="rank-body"><div class="rank-name">🌿 Mango Tree</div><div class="rank-meta">2 reviewed orders</div></div>
+        <div class="rank-score"><div class="val">4.5 / 5</div><div class="stars">★★★★★</div></div>
+      </div></div>
+</div>
+<div class="chart-card">
+<h4>Product Rating Distribution</h4>
+<div class="chart-note">Number of product reviews received for each score out of 5</div>
+<div id="productRatingDistribution">
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>1/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div>
+        <strong>0</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>2/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div>
+        <strong>0</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>3/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:10%"></div></div>
+        <strong>1</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>4/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:40%"></div></div>
+        <strong>4</strong>
+      </div>
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>5/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+        <strong>10</strong>
+      </div></div>
+</div>
+</div>
+<div class="section-head" style="margin-top:24px;margin-bottom:14px">
+<div>
+<h3 style="color:#1a4d2a;font-weight:900;font-size:17px">Recent Product Feedback</h3>
+<p class="section-sub">Filter feedback by purchased product and rating.</p>
+</div>
+</div>
+<div class="filter-bar">
+<select id="productReviewProductFilter" onchange="renderProductReviews()"><option value="">All Products</option><option value="1">Rose Plant</option><option value="2">Tulsi Plant</option><option value="3">Mango Tree</option><option value="4">Aloe Vera</option><option value="5">Money Plant</option><option value="6">Jasmine Plant</option><option value="7">Guava Plant</option><option value="8">Areca Palm</option><option value="9">Garden Trowel</option><option value="10">Organic Compost</option></select>
+<select id="productReviewRatingFilter" onchange="renderProductReviews()">
+<option value="">All Ratings</option>
+<option value="5">5/5 Excellent</option>
+<option value="4">4/5 Good</option>
+<option value="1">1–3/5 Needs Attention</option>
+</select>
+<select id="productReviewSort" onchange="renderProductReviews()">
+<option value="date">Most Recent</option>
+<option value="high">Highest Rating</option>
+<option value="low">Lowest Rating</option>
+</select>
+</div>
+<div class="review-list" id="productReviewList">
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Aakash Patil</div><div class="review-entry-meta">09 Jul 2026 · OM Farm - Kamshet<br>Rose Plant × 1, Tulsi Plant × 2</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Rose and Tulsi plants were fresh, healthy and properly packed.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Sneha Kulkarni</div><div class="review-entry-meta">08 Jul 2026 · OM Farm - Karla<br>Money Plant × 2, Areca Palm × 1</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Indoor plants were healthy, though the outer packaging can be made stronger.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Rohit Deshmukh</div><div class="review-entry-meta">07 Jul 2026 · OM Nursery - Talegaon<br>Mango Tree × 1, Garden Trowel × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“The mango sapling was strong, well-rooted and looked carefully maintained.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Priya Joshi</div><div class="review-entry-meta">07 Jul 2026 · OM Farm - Kamshet<br>Jasmine Plant × 1, Aloe Vera × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Jasmine was fragrant and Aloe Vera was healthy with no damaged leaves.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Vikram Shinde</div><div class="review-entry-meta">06 Jul 2026 · OM Farm - Karla<br>Guava Plant × 1, Organic Compost × 2</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Guava plant and compost quality were good and matched expectations.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Anjali Rane</div><div class="review-entry-meta">05 Jul 2026 · OM Nursery - Talegaon<br>Areca Palm × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Areca Palm was healthy, full and ready for indoor placement.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Aakash Patil</div><div class="review-entry-meta">04 Jul 2026 · OM Farm - Kamshet<br>Rose Plant × 2, Jasmine Plant × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Both Rose and Jasmine plants had consistently excellent quality.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Meera Kale</div><div class="review-entry-meta">04 Jul 2026 · OM Farm - Karla<br>Tulsi Plant × 3</div></div>
+          <div class="score-badge">3/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Tulsi leaves were slightly wilted, although replacement support was quick.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Nikhil Bhosale</div><div class="review-entry-meta">03 Jul 2026 · OM Nursery - Talegaon<br>Guava Plant × 1, Organic Compost × 1, Garden Trowel × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Guava sapling, compost and trowel were a useful and good-quality combination.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Kavita Pawar</div><div class="review-entry-meta">02 Jul 2026 · OM Farm - Kamshet<br>Rose Plant × 3</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Rose plants were healthy and bloomed quickly after purchase.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Suresh Nair</div><div class="review-entry-meta">01 Jul 2026 · OM Farm - Karla<br>Aloe Vera × 1, Money Plant × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Aloe Vera and Money Plant both arrived in excellent condition.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Priya Joshi</div><div class="review-entry-meta">30 Jun 2026 · OM Farm - Kamshet<br>Jasmine Plant × 2, Rose Plant × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Jasmine and Rose quality remained excellent across repeat purchases.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Omkar Gaikwad</div><div class="review-entry-meta">29 Jun 2026 · OM Nursery - Talegaon<br>Garden Trowel × 2, Organic Compost × 1</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Garden trowel was sturdy and compost packaging was practical.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Isha Deshpande</div><div class="review-entry-meta">28 Jun 2026 · OM Farm - Karla<br>Mango Tree × 1</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Mango sapling looked healthy and suitable for long-term growth.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Rohit Deshmukh</div><div class="review-entry-meta">27 Jun 2026 · OM Nursery - Talegaon<br>Areca Palm × 1, Jasmine Plant × 1</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“Areca Palm and Jasmine were both healthy and suitable for office décor.”</div>
+      </div></div>
+</section>
+<section class="section" id="displayReviewsSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">🖼️ Display Reviews</h2>
+<p class="section-sub">Customer feedback about nursery cleanliness, product arrangement, signage, movement accessibility and overall display ambience at each branch.</p>
+</div>
+</div>
+<div class="grid grid-4" id="displayReviewMetrics">
+      <div class="mini-stat hero-stat"><div class="icon-flag">🖼️</div><div class="num">4.4 / 5</div><div class="lbl">Average Display Rating</div><div class="sub">Across all nursery visits</div></div>
+      <div class="mini-stat"><div class="icon-flag">🌾</div><div class="num" style="font-size:18px">OM Farm - Kamshet</div><div class="lbl">Best Display Branch</div><div class="sub">4.8 / 5 average</div></div>
+      <div class="mini-stat"><div class="icon-flag">✨</div><div class="num">47%</div><div class="lbl">Excellent Display Reviews</div><div class="sub">Ratings of 5 out of 5</div></div>
+      <div class="mini-stat"><div class="icon-flag">🛠️</div><div class="num">1</div><div class="lbl">Display Improvements</div><div class="sub">Ratings of 3 or below</div></div></div>
+<div class="grid grid-2" style="margin-top:20px">
+<div class="chart-card">
+<h4>Display Rating by Branch</h4>
+<div class="chart-note">Average display score out of 5 for each OM Farm or Nursery location</div>
+<div class="rank-list" id="displayBranchRanking">
+      <div class="rank-item top">
+        <div class="rank-pos">🏆</div>
+        <div class="rank-body"><div class="rank-name">🌾 OM Farm - Kamshet</div><div class="rank-meta">5 display reviews</div></div>
+        <div class="rank-score"><div class="val">4.8 / 5</div><div class="stars">★★★★★</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">2</div>
+        <div class="rank-body"><div class="rank-name">🌾 OM Nursery - Talegaon</div><div class="rank-meta">5 display reviews</div></div>
+        <div class="rank-score"><div class="val">4.4 / 5</div><div class="stars">★★★★☆</div></div>
+      </div>
+      <div class="rank-item ">
+        <div class="rank-pos">3</div>
+        <div class="rank-body"><div class="rank-name">🌾 OM Farm - Karla</div><div class="rank-meta">5 display reviews</div></div>
+        <div class="rank-score"><div class="val">4.0 / 5</div><div class="stars">★★★★☆</div></div>
+      </div></div>
+</div>
+<div class="chart-card">
+<h4>Display Criteria Performance</h4>
+<div class="chart-note">Average rating out of 5 across the five display parameters</div>
+<div id="displayCriteriaBars">
+      <div class="bar-row">
+        <span>Cleanliness</span><div class="bar-bg"><div class="bar-fill" style="width:93.33333333333334%"></div></div><strong>4.7 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Arrangement</span><div class="bar-bg"><div class="bar-fill" style="width:90.66666666666666%"></div></div><strong>4.5 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Signage</span><div class="bar-bg"><div class="bar-fill" style="width:86.66666666666666%"></div></div><strong>4.3 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Accessibility</span><div class="bar-bg"><div class="bar-fill" style="width:86.66666666666666%"></div></div><strong>4.3 / 5</strong>
+      </div>
+      <div class="bar-row">
+        <span>Ambience</span><div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div><strong>4.4 / 5</strong>
+      </div></div>
+</div>
+</div>
+<div class="criteria-grid" id="displayCriteriaCards">
+      <div class="criteria-item"><div class="criteria-score">4.7 / 5</div><div class="criteria-label">Cleanliness</div></div>
+      <div class="criteria-item"><div class="criteria-score">4.5 / 5</div><div class="criteria-label">Arrangement</div></div>
+      <div class="criteria-item"><div class="criteria-score">4.3 / 5</div><div class="criteria-label">Signage</div></div>
+      <div class="criteria-item"><div class="criteria-score">4.3 / 5</div><div class="criteria-label">Accessibility</div></div>
+      <div class="criteria-item"><div class="criteria-score">4.4 / 5</div><div class="criteria-label">Ambience</div></div></div>
+<div class="section-head" style="margin-top:24px;margin-bottom:14px">
+<div>
+<h3 style="color:#1a4d2a;font-weight:900;font-size:17px">Recent Display Feedback</h3>
+<p class="section-sub">Filter display reviews by branch and rating.</p>
+</div>
+</div>
+<div class="filter-bar">
+<select id="displayReviewFarmFilter" onchange="renderDisplayReviews()"><option value="">All Branches</option><option>OM Farm - Kamshet</option><option>OM Farm - Karla</option><option>OM Nursery - Talegaon</option></select>
+<select id="displayReviewRatingFilter" onchange="renderDisplayReviews()">
+<option value="">All Ratings</option>
+<option value="5">5/5 Excellent</option>
+<option value="4">4/5 Good</option>
+<option value="1">1–3/5 Needs Attention</option>
+</select>
+<select id="displayReviewSort" onchange="renderDisplayReviews()">
+<option value="date">Most Recent</option>
+<option value="high">Highest Rating</option>
+<option value="low">Lowest Rating</option>
+</select>
+</div>
+<div class="review-list" id="displayReviewList">
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Aakash Patil</div><div class="review-entry-meta">09 Jul 2026 · OM Farm - Kamshet<br>Supervisor: Ramesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Plants were arranged category-wise and the display was clean and easy to explore.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Sneha Kulkarni</div><div class="review-entry-meta">08 Jul 2026 · OM Farm - Karla<br>Supervisor: Suresh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Indoor plant section looked attractive but category labels could be larger.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Rohit Deshmukh</div><div class="review-entry-meta">07 Jul 2026 · OM Nursery - Talegaon<br>Supervisor: Dharmesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Fruit saplings were neatly displayed with enough walking space.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Priya Joshi</div><div class="review-entry-meta">07 Jul 2026 · OM Farm - Kamshet<br>Supervisor: Ramesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Flowering and medicinal sections were colourful, clean and easy to identify.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Vikram Shinde</div><div class="review-entry-meta">06 Jul 2026 · OM Farm - Karla<br>Supervisor: Rajesh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Product display was good but the counter-side movement area felt crowded.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Anjali Rane</div><div class="review-entry-meta">05 Jul 2026 · OM Nursery - Talegaon<br>Supervisor: Jiggesh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“The indoor section was visually good, but more care labels would help.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Aakash Patil</div><div class="review-entry-meta">04 Jul 2026 · OM Farm - Kamshet<br>Supervisor: Ramesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“The nursery looked premium, organised and very easy to browse.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Meera Kale</div><div class="review-entry-meta">04 Jul 2026 · OM Farm - Karla<br>Supervisor: Suresh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Medicinal plant display was organised and labels were understandable.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Nikhil Bhosale</div><div class="review-entry-meta">03 Jul 2026 · OM Nursery - Talegaon<br>Supervisor: Dharmesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Related products were displayed together, making selection simple.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Kavita Pawar</div><div class="review-entry-meta">02 Jul 2026 · OM Farm - Kamshet<br>Supervisor: Rajesh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Flower display was appealing, though price labels could be more visible.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Suresh Nair</div><div class="review-entry-meta">01 Jul 2026 · OM Farm - Karla<br>Supervisor: Suresh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Indoor and medicinal plants were easy to compare side by side.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Priya Joshi</div><div class="review-entry-meta">30 Jun 2026 · OM Farm - Kamshet<br>Supervisor: Ramesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Display was fresh, well maintained and visually welcoming.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Omkar Gaikwad</div><div class="review-entry-meta">29 Jun 2026 · OM Nursery - Talegaon<br>Supervisor: Jiggesh</div></div>
+          <div class="score-badge">3/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“The tools section needs clearer signage and a more structured arrangement.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Isha Deshpande</div><div class="review-entry-meta">28 Jun 2026 · OM Farm - Karla<br>Supervisor: Rajesh</div></div>
+          <div class="score-badge">4/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Fruit plant section was clean and had adequate viewing space.”</div>
+      </div>
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">Rohit Deshmukh</div><div class="review-entry-meta">27 Jun 2026 · OM Nursery - Talegaon<br>Supervisor: Dharmesh</div></div>
+          <div class="score-badge">5/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“Indoor and flowering display combination was attractive and professional.”</div>
+      </div></div>
+</section>
+<section class="section" id="customersSection">
+<div class="section-head">
+<div>
+<h2 class="section-title">🧾 Recent Customers</h2>
+<p class="section-sub">Purchase date, cart details, branch, supervisor and separate product, display and supervisor reviews left after each visit.</p>
+</div>
+</div>
+<div class="filter-bar">
+<select id="farmFilter" onchange="renderCustomers()"><option value="">All Branches</option><option>OM Farm - Kamshet</option><option>OM Farm - Karla</option><option>OM Nursery - Talegaon</option></select>
+<select id="supervisorFilter" onchange="renderCustomers()"><option value="">All Supervisors</option><option>Ramesh</option><option>Suresh</option><option>Dharmesh</option><option>Rajesh</option><option>Jiggesh</option></select>
+<select id="sortFilter" onchange="renderCustomers()">
+<option value="date">Sort: Most Recent</option>
+<option value="rating_desc">Sort: Highest Supervisor Rating</option>
+<option value="rating_asc">Sort: Lowest Supervisor Rating</option>
+<option value="total_desc">Sort: Highest Order Value</option>
+</select>
+</div>
+<div class="customer-grid" id="customerList">
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">AP</div>
+          <div>
+            <div class="customer-name">Aakash Patil</div>
+            <div class="customer-sub">Pune, Maharashtra · 9876543210</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 09 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Kamshet</span>
+          <span class="pill gold">🧑‍🌾 Ramesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Rose Plant × 1</span><span class="cart-chip">Tulsi Plant × 2</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Rose and Tulsi plants were fresh, healthy and properly packed.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Plants were arranged category-wise and the display was clean and easy to explore.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Healthy plants and a very polite supervisor. Delivery was quick and on time.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1001</span>
+          <strong>₹732</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">SK</div>
+          <div>
+            <div class="customer-name">Sneha Kulkarni</div>
+            <div class="customer-sub">Pimpri, Maharashtra · 9822011234</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 08 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Karla</span>
+          <span class="pill gold">🧑‍🌾 Suresh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Money Plant × 2</span><span class="cart-chip">Areca Palm × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Indoor plants were healthy, though the outer packaging can be made stronger.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Indoor plant section looked attractive but category labels could be larger.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Good variety of indoor plants. Packaging could be a little sturdier.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1002</span>
+          <strong>₹1,005</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">RD</div>
+          <div>
+            <div class="customer-name">Rohit Deshmukh</div>
+            <div class="customer-sub">Talegaon, Maharashtra · 9765412398</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 07 Jul 2026</span>
+          <span class="pill blue">🌾 OM Nursery - Talegaon</span>
+          <span class="pill gold">🧑‍🌾 Dharmesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Mango Tree × 1</span><span class="cart-chip">Garden Trowel × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “The mango sapling was strong, well-rooted and looked carefully maintained.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Fruit saplings were neatly displayed with enough walking space.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Best nursery experience so far — mango sapling looked very well cared for.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1003</span>
+          <strong>₹680</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">PJ</div>
+          <div>
+            <div class="customer-name">Priya Joshi</div>
+            <div class="customer-sub">Chinchwad, Maharashtra · 9890123456</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 07 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Kamshet</span>
+          <span class="pill gold">🧑‍🌾 Ramesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Jasmine Plant × 1</span><span class="cart-chip">Aloe Vera × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Jasmine was fragrant and Aloe Vera was healthy with no damaged leaves.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Flowering and medicinal sections were colourful, clean and easy to identify.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Loved the jasmine plant, fragrance is amazing. Staff explained care tips well.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1004</span>
+          <strong>₹628</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">VS</div>
+          <div>
+            <div class="customer-name">Vikram Shinde</div>
+            <div class="customer-sub">Hinjewadi, Maharashtra · 9834567123</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 06 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Karla</span>
+          <span class="pill gold">🧑‍🌾 Rajesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Guava Plant × 1</span><span class="cart-chip">Organic Compost × 2</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Guava plant and compost quality were good and matched expectations.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Product display was good but the counter-side movement area felt crowded.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Plants were good but had to wait a while at the counter during checkout.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1005</span>
+          <strong>₹881</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">AR</div>
+          <div>
+            <div class="customer-name">Anjali Rane</div>
+            <div class="customer-sub">Wakad, Maharashtra · 9911223344</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 05 Jul 2026</span>
+          <span class="pill blue">🌾 OM Nursery - Talegaon</span>
+          <span class="pill gold">🧑‍🌾 Jiggesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Areca Palm × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Areca Palm was healthy, full and ready for indoor placement.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “The indoor section was visually good, but more care labels would help.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Areca palm is thriving already. Would recommend to friends.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1006</span>
+          <strong>₹629</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">AP</div>
+          <div>
+            <div class="customer-name">Aakash Patil</div>
+            <div class="customer-sub">Pune, Maharashtra · 9876543210</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 04 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Kamshet</span>
+          <span class="pill gold">🧑‍🌾 Ramesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Rose Plant × 2</span><span class="cart-chip">Jasmine Plant × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Both Rose and Jasmine plants had consistently excellent quality.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “The nursery looked premium, organised and very easy to browse.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Second order and still consistent quality. Ramesh remembered our last purchase!”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1007</span>
+          <strong>₹994</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">MK</div>
+          <div>
+            <div class="customer-name">Meera Kale</div>
+            <div class="customer-sub">Baner, Maharashtra · 9823456712</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 04 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Karla</span>
+          <span class="pill gold">🧑‍🌾 Suresh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Tulsi Plant × 3</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★☆☆ <span style="color:#c99a1a">3/5</span></div>
+            “Tulsi leaves were slightly wilted, although replacement support was quick.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Medicinal plant display was organised and labels were understandable.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★☆☆ <span style="color:#c99a1a">3/5</span></div>
+            “Tulsi plant leaves were slightly wilted on arrival, but replaced quickly on request.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1008</span>
+          <strong>₹627</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">NB</div>
+          <div>
+            <div class="customer-name">Nikhil Bhosale</div>
+            <div class="customer-sub">Lonavala, Maharashtra · 9765098123</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 03 Jul 2026</span>
+          <span class="pill blue">🌾 OM Nursery - Talegaon</span>
+          <span class="pill gold">🧑‍🌾 Dharmesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Guava Plant × 1</span><span class="cart-chip">Organic Compost × 1</span><span class="cart-chip">Garden Trowel × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Guava sapling, compost and trowel were a useful and good-quality combination.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Related products were displayed together, making selection simple.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Guava sapling and compost combo was a great suggestion by the supervisor.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1009</span>
+          <strong>₹806</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">KP</div>
+          <div>
+            <div class="customer-name">Kavita Pawar</div>
+            <div class="customer-sub">Aundh, Maharashtra · 9845123467</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 02 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Kamshet</span>
+          <span class="pill gold">🧑‍🌾 Rajesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Rose Plant × 3</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Rose plants were healthy and bloomed quickly after purchase.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Flower display was appealing, though price labels could be more visible.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Rose plants bloomed within two weeks. Very satisfied with the after-sale advice.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1010</span>
+          <strong>₹942</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">SN</div>
+          <div>
+            <div class="customer-name">Suresh Nair</div>
+            <div class="customer-sub">Karla, Maharashtra · 9900112233</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 01 Jul 2026</span>
+          <span class="pill blue">🌾 OM Farm - Karla</span>
+          <span class="pill gold">🧑‍🌾 Suresh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Aloe Vera × 1</span><span class="cart-chip">Money Plant × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Aloe Vera and Money Plant both arrived in excellent condition.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Indoor and medicinal plants were easy to compare side by side.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Aloe vera and money plant combo, both arrived in great condition.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1011</span>
+          <strong>₹449</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">PJ</div>
+          <div>
+            <div class="customer-name">Priya Joshi</div>
+            <div class="customer-sub">Chinchwad, Maharashtra · 9890123456</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 30 Jun 2026</span>
+          <span class="pill blue">🌾 OM Farm - Kamshet</span>
+          <span class="pill gold">🧑‍🌾 Ramesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Jasmine Plant × 2</span><span class="cart-chip">Rose Plant × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Jasmine and Rose quality remained excellent across repeat purchases.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Display was fresh, well maintained and visually welcoming.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Coming back for the third time now. Ramesh and team never disappoint.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1012</span>
+          <strong>₹1,047</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">OG</div>
+          <div>
+            <div class="customer-name">Omkar Gaikwad</div>
+            <div class="customer-sub">Talegaon, Maharashtra · 9812345098</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 29 Jun 2026</span>
+          <span class="pill blue">🌾 OM Nursery - Talegaon</span>
+          <span class="pill gold">🧑‍🌾 Jiggesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Garden Trowel × 2</span><span class="cart-chip">Organic Compost × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Garden trowel was sturdy and compost packaging was practical.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★☆☆ <span style="color:#c99a1a">3/5</span></div>
+            “The tools section needs clearer signage and a more structured arrangement.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Good tools section, garden trowel is sturdy. Nursery could use better signage.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1013</span>
+          <strong>₹544</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">ID</div>
+          <div>
+            <div class="customer-name">Isha Deshpande</div>
+            <div class="customer-sub">Wagholi, Maharashtra · 9877651234</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 28 Jun 2026</span>
+          <span class="pill blue">🌾 OM Farm - Karla</span>
+          <span class="pill gold">🧑‍🌾 Rajesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Mango Tree × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Mango sapling looked healthy and suitable for long-term growth.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Fruit plant section was clean and had adequate viewing space.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★☆ <span style="color:#c99a1a">4/5</span></div>
+            “Mango tree sapling looks healthy, hoping it fruits well in a couple of years.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1014</span>
+          <strong>₹524</strong>
+        </div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">RD</div>
+          <div>
+            <div class="customer-name">Rohit Deshmukh</div>
+            <div class="customer-sub">Talegaon, Maharashtra · 9765412398</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 27 Jun 2026</span>
+          <span class="pill blue">🌾 OM Nursery - Talegaon</span>
+          <span class="pill gold">🧑‍🌾 Dharmesh</span>
+        </div>
+        <div class="cart-chip-row">
+          <span class="cart-chip">Areca Palm × 1</span><span class="cart-chip">Jasmine Plant × 1</span>
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Areca Palm and Jasmine were both healthy and suitable for office décor.”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Indoor and flowering display combination was attractive and professional.”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">★★★★★ <span style="color:#c99a1a">5/5</span></div>
+            “Ordered again for the office lobby — areca palm and jasmine combo was perfect.”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. INV-1015</span>
+          <strong>₹995</strong>
+        </div>
+      </div></div>
+</section>
+</div>
+<script>
+  // ---------- static reference data (mirrors the main OM Nursery demo) ----------
+  const FARMS = ['OM Farm - Kamshet','OM Farm - Karla','OM Nursery - Talegaon'];
+  const SUPERVISORS = ['Ramesh','Suresh','Dharmesh','Rajesh','Jiggesh'];
+
+  const CATALOG = [
+    {id:1,name:'Rose Plant',price:299,image:'https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=600&q=80'},
+    {id:2,name:'Tulsi Plant',price:199,image:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80'},
+    {id:3,name:'Mango Tree',price:499,image:'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80'},
+    {id:4,name:'Aloe Vera',price:249,image:'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=600&q=80'},
+    {id:5,name:'Money Plant',price:179,image:'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80'},
+    {id:6,name:'Jasmine Plant',price:349,image:'https://images.unsplash.com/photo-1533038590840-1cde6e668a91?auto=format&fit=crop&w=600&q=80'},
+    {id:7,name:'Guava Plant',price:399,image:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80'},
+    {id:8,name:'Areca Palm',price:599,image:'https://images.unsplash.com/photo-1509423350716-97f2360af9e4?auto=format&fit=crop&w=600&q=80'},
+    {id:9,name:'Garden Trowel',price:149,image:'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80'},
+    {id:10,name:'Organic Compost',price:220,image:'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80'}
+  ];
+  const catalogMap = Object.fromEntries(CATALOG.map(p=>[p.id,p]));
+
+  // ---------- demo order + review dataset ----------
+  const ORDERS = [
+    {id:'INV-1001',customer:{name:'Aakash Patil',email:'aakash.patil@example.com',mobile:'9876543210',city:'Pune, Maharashtra'},date:'2026-07-09',farm:'OM Farm - Kamshet',supervisor:'Ramesh',rating:5,comment:'Healthy plants and a very polite supervisor. Delivery was quick and on time.',items:[{id:1,qty:1},{id:2,qty:2}]},
+    {id:'INV-1002',customer:{name:'Sneha Kulkarni',email:'sneha.k@example.com',mobile:'9822011234',city:'Pimpri, Maharashtra'},date:'2026-07-08',farm:'OM Farm - Karla',supervisor:'Suresh',rating:4,comment:'Good variety of indoor plants. Packaging could be a little sturdier.',items:[{id:5,qty:2},{id:8,qty:1}]},
+    {id:'INV-1003',customer:{name:'Rohit Deshmukh',email:'rohit.d@example.com',mobile:'9765412398',city:'Talegaon, Maharashtra'},date:'2026-07-07',farm:'OM Nursery - Talegaon',supervisor:'Dharmesh',rating:5,comment:'Best nursery experience so far — mango sapling looked very well cared for.',items:[{id:3,qty:1},{id:9,qty:1}]},
+    {id:'INV-1004',customer:{name:'Priya Joshi',email:'priya.joshi@example.com',mobile:'9890123456',city:'Chinchwad, Maharashtra'},date:'2026-07-07',farm:'OM Farm - Kamshet',supervisor:'Ramesh',rating:5,comment:'Loved the jasmine plant, fragrance is amazing. Staff explained care tips well.',items:[{id:6,qty:1},{id:4,qty:1}]},
+    {id:'INV-1005',customer:{name:'Vikram Shinde',email:'vikram.shinde@example.com',mobile:'9834567123',city:'Hinjewadi, Maharashtra'},date:'2026-07-06',farm:'OM Farm - Karla',supervisor:'Rajesh',rating:4,comment:'Plants were good but had to wait a while at the counter during checkout.',items:[{id:7,qty:1},{id:10,qty:2}]},
+    {id:'INV-1006',customer:{name:'Anjali Rane',email:'anjali.rane@example.com',mobile:'9911223344',city:'Wakad, Maharashtra'},date:'2026-07-05',farm:'OM Nursery - Talegaon',supervisor:'Jiggesh',rating:4,comment:'Areca palm is thriving already. Would recommend to friends.',items:[{id:8,qty:1}]},
+    {id:'INV-1007',customer:{name:'Aakash Patil',email:'aakash.patil@example.com',mobile:'9876543210',city:'Pune, Maharashtra'},date:'2026-07-04',farm:'OM Farm - Kamshet',supervisor:'Ramesh',rating:5,comment:'Second order and still consistent quality. Ramesh remembered our last purchase!',items:[{id:1,qty:2},{id:6,qty:1}]},
+    {id:'INV-1008',customer:{name:'Meera Kale',email:'meera.kale@example.com',mobile:'9823456712',city:'Baner, Maharashtra'},date:'2026-07-04',farm:'OM Farm - Karla',supervisor:'Suresh',rating:3,comment:'Tulsi plant leaves were slightly wilted on arrival, but replaced quickly on request.',items:[{id:2,qty:3}]},
+    {id:'INV-1009',customer:{name:'Nikhil Bhosale',email:'nikhil.b@example.com',mobile:'9765098123',city:'Lonavala, Maharashtra'},date:'2026-07-03',farm:'OM Nursery - Talegaon',supervisor:'Dharmesh',rating:5,comment:'Guava sapling and compost combo was a great suggestion by the supervisor.',items:[{id:7,qty:1},{id:10,qty:1},{id:9,qty:1}]},
+    {id:'INV-1010',customer:{name:'Kavita Pawar',email:'kavita.pawar@example.com',mobile:'9845123467',city:'Aundh, Maharashtra'},date:'2026-07-02',farm:'OM Farm - Kamshet',supervisor:'Rajesh',rating:4,comment:'Rose plants bloomed within two weeks. Very satisfied with the after-sale advice.',items:[{id:1,qty:3}]},
+    {id:'INV-1011',customer:{name:'Suresh Nair',email:'suresh.nair@example.com',mobile:'9900112233',city:'Karla, Maharashtra'},date:'2026-07-01',farm:'OM Farm - Karla',supervisor:'Suresh',rating:5,comment:'Aloe vera and money plant combo, both arrived in great condition.',items:[{id:4,qty:1},{id:5,qty:1}]},
+    {id:'INV-1012',customer:{name:'Priya Joshi',email:'priya.joshi@example.com',mobile:'9890123456',city:'Chinchwad, Maharashtra'},date:'2026-06-30',farm:'OM Farm - Kamshet',supervisor:'Ramesh',rating:5,comment:'Coming back for the third time now. Ramesh and team never disappoint.',items:[{id:6,qty:2},{id:1,qty:1}]},
+    {id:'INV-1013',customer:{name:'Omkar Gaikwad',email:'omkar.g@example.com',mobile:'9812345098',city:'Talegaon, Maharashtra'},date:'2026-06-29',farm:'OM Nursery - Talegaon',supervisor:'Jiggesh',rating:4,comment:'Good tools section, garden trowel is sturdy. Nursery could use better signage.',items:[{id:9,qty:2},{id:10,qty:1}]},
+    {id:'INV-1014',customer:{name:'Isha Deshpande',email:'isha.d@example.com',mobile:'9877651234',city:'Wagholi, Maharashtra'},date:'2026-06-28',farm:'OM Farm - Karla',supervisor:'Rajesh',rating:4,comment:'Mango tree sapling looks healthy, hoping it fruits well in a couple of years.',items:[{id:3,qty:1}]},
+    {id:'INV-1015',customer:{name:'Rohit Deshmukh',email:'rohit.d@example.com',mobile:'9765412398',city:'Talegaon, Maharashtra'},date:'2026-06-27',farm:'OM Nursery - Talegaon',supervisor:'Dharmesh',rating:5,comment:'Ordered again for the office lobby — areca palm and jasmine combo was perfect.',items:[{id:8,qty:1},{id:6,qty:1}]}
+  ];
+
+  // Separate review data: existing rating/comment remains Supervisor Review.
+  const REVIEW_DETAILS = {
+    'INV-1001':{productRating:5,productComment:'Rose and Tulsi plants were fresh, healthy and properly packed.',displayRating:5,displayComment:'Plants were arranged category-wise and the display was clean and easy to explore.',displayCriteria:{cleanliness:5,arrangement:5,signage:4,accessibility:5,ambience:5}},
+    'INV-1002':{productRating:4,productComment:'Indoor plants were healthy, though the outer packaging can be made stronger.',displayRating:4,displayComment:'Indoor plant section looked attractive but category labels could be larger.',displayCriteria:{cleanliness:5,arrangement:4,signage:4,accessibility:4,ambience:4}},
+    'INV-1003':{productRating:5,productComment:'The mango sapling was strong, well-rooted and looked carefully maintained.',displayRating:5,displayComment:'Fruit saplings were neatly displayed with enough walking space.',displayCriteria:{cleanliness:5,arrangement:5,signage:4,accessibility:5,ambience:5}},
+    'INV-1004':{productRating:5,productComment:'Jasmine was fragrant and Aloe Vera was healthy with no damaged leaves.',displayRating:5,displayComment:'Flowering and medicinal sections were colourful, clean and easy to identify.',displayCriteria:{cleanliness:5,arrangement:5,signage:5,accessibility:5,ambience:5}},
+    'INV-1005':{productRating:4,productComment:'Guava plant and compost quality were good and matched expectations.',displayRating:4,displayComment:'Product display was good but the counter-side movement area felt crowded.',displayCriteria:{cleanliness:4,arrangement:4,signage:4,accessibility:3,ambience:4}},
+    'INV-1006':{productRating:5,productComment:'Areca Palm was healthy, full and ready for indoor placement.',displayRating:4,displayComment:'The indoor section was visually good, but more care labels would help.',displayCriteria:{cleanliness:5,arrangement:4,signage:4,accessibility:4,ambience:4}},
+    'INV-1007':{productRating:5,productComment:'Both Rose and Jasmine plants had consistently excellent quality.',displayRating:5,displayComment:'The nursery looked premium, organised and very easy to browse.',displayCriteria:{cleanliness:5,arrangement:5,signage:5,accessibility:5,ambience:5}},
+    'INV-1008':{productRating:3,productComment:'Tulsi leaves were slightly wilted, although replacement support was quick.',displayRating:4,displayComment:'Medicinal plant display was organised and labels were understandable.',displayCriteria:{cleanliness:4,arrangement:4,signage:4,accessibility:4,ambience:4}},
+    'INV-1009':{productRating:5,productComment:'Guava sapling, compost and trowel were a useful and good-quality combination.',displayRating:5,displayComment:'Related products were displayed together, making selection simple.',displayCriteria:{cleanliness:5,arrangement:5,signage:5,accessibility:5,ambience:4}},
+    'INV-1010':{productRating:5,productComment:'Rose plants were healthy and bloomed quickly after purchase.',displayRating:4,displayComment:'Flower display was appealing, though price labels could be more visible.',displayCriteria:{cleanliness:5,arrangement:5,signage:4,accessibility:4,ambience:4}},
+    'INV-1011':{productRating:5,productComment:'Aloe Vera and Money Plant both arrived in excellent condition.',displayRating:4,displayComment:'Indoor and medicinal plants were easy to compare side by side.',displayCriteria:{cleanliness:4,arrangement:5,signage:4,accessibility:4,ambience:4}},
+    'INV-1012':{productRating:5,productComment:'Jasmine and Rose quality remained excellent across repeat purchases.',displayRating:5,displayComment:'Display was fresh, well maintained and visually welcoming.',displayCriteria:{cleanliness:5,arrangement:5,signage:5,accessibility:5,ambience:5}},
+    'INV-1013':{productRating:4,productComment:'Garden trowel was sturdy and compost packaging was practical.',displayRating:3,displayComment:'The tools section needs clearer signage and a more structured arrangement.',displayCriteria:{cleanliness:4,arrangement:3,signage:5,accessibility:3,ambience:4}},
+    'INV-1014':{productRating:4,productComment:'Mango sapling looked healthy and suitable for long-term growth.',displayRating:4,displayComment:'Fruit plant section was clean and had adequate viewing space.',displayCriteria:{cleanliness:4,arrangement:4,signage:4,accessibility:4,ambience:4}},
+    'INV-1015':{productRating:5,productComment:'Areca Palm and Jasmine were both healthy and suitable for office décor.',displayRating:5,displayComment:'Indoor and flowering display combination was attractive and professional.',displayCriteria:{cleanliness:5,arrangement:5,signage:4,accessibility:5,ambience:5}}
+  };
+  ORDERS.forEach(order=>Object.assign(order,REVIEW_DETAILS[order.id]));
+
+  function money(v){return '₹' + Math.round(v).toLocaleString('en-IN');}
+  function initials(name){return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+  function starString(rating){const full=Math.max(0,Math.min(5,Math.round(Number(rating)||0)));return '★'.repeat(full) + '☆'.repeat(5-full);}
+  function formatDate(iso){return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+
+  function orderTotals(order){
+    const items = order.items.map(it=>{
+      const p = catalogMap[it.id];
+      return {...p,qty:it.qty,lineTotal:p.price*it.qty};
+    });
+    const subtotal = items.reduce((s,i)=>s+i.lineTotal,0);
+    const gst = Math.round(subtotal*0.05);
+    return {items,subtotal,gst,total:subtotal+gst};
+  }
+
+  // enrich orders once
+  ORDERS.forEach(o=>{ const t = orderTotals(o); o._items=t.items; o._subtotal=t.subtotal; o._gst=t.gst; o._total=t.total; });
+
+  // ---------- aggregations ----------
+  function computeMasterMetrics(){
+    const totalReviews = ORDERS.length;
+    const overallAvg = ORDERS.reduce((s,o)=>s+o.rating,0)/totalReviews;
+    const totalRevenue = ORDERS.reduce((s,o)=>s+o._total,0);
+    const distinctCustomers = new Set(ORDERS.map(o=>o.customer.email)).size;
+    const repeatCustomers = distinctCustomers - new Set(ORDERS.map(o=>o.customer.email)).size + (ORDERS.length - distinctCustomers);
+    const avgOrderValue = totalRevenue/totalReviews;
+    const fiveStarPlus = ORDERS.filter(o=>o.rating===5).length;
+    const satisfactionRate = (fiveStarPlus/totalReviews)*100;
+    const farmStats = groupStats('farm');
+    const supStats = groupStats('supervisor');
+    const topFarm = [...farmStats].sort((a,b)=>b.avgRating-a.avgRating)[0];
+    const topSup = [...supStats].sort((a,b)=>b.avgRating-a.avgRating)[0];
+    return {totalReviews,overallAvg,totalRevenue,distinctCustomers,avgOrderValue,satisfactionRate,topFarm,topSup};
+  }
+
+  function groupStats(key){
+    const groups = {};
+    ORDERS.forEach(o=>{
+      const g = o[key];
+      if(!groups[g]) groups[g] = {name:g,count:0,ratingSum:0,revenue:0};
+      groups[g].count += 1;
+      groups[g].ratingSum += o.rating;
+      groups[g].revenue += o._total;
+    });
+    return Object.values(groups).map(g=>({...g,avgRating:g.ratingSum/g.count}));
+  }
+
+  function productSales(){
+    const map = {};
+    ORDERS.forEach(o=>o._items.forEach(it=>{
+      if(!map[it.id]) map[it.id] = {...catalogMap[it.id],qty:0,revenue:0};
+      map[it.id].qty += it.qty;
+      map[it.id].revenue += it.lineTotal;
+    }));
+    return Object.values(map).sort((a,b)=>b.qty-a.qty);
+  }
+
+  // ---------- renderers ----------
+  function jump(id,btn){
+    document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+    document.querySelectorAll('.nav-tabs button').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+  }
+
+  function renderMasterMetrics(){
+    const m = computeMasterMetrics();
+    const cards = [
+      {icon:'⭐',num:m.overallAvg.toFixed(1)+' / 5',lbl:'Overall Average Rating',sub:m.totalReviews+' reviews collected',hero:true},
+      {icon:'🧾',num:m.totalReviews,lbl:'Total Orders / Reviews',sub:'Across all branches'},
+      {icon:'💰',num:money(m.totalRevenue),lbl:'Total Revenue (Demo)',sub:'Avg order value '+money(m.avgOrderValue)},
+      {icon:'👥',num:m.distinctCustomers,lbl:'Unique Customers',sub:(m.totalReviews-m.distinctCustomers)+' repeat visits'},
+      {icon:'😊',num:m.satisfactionRate.toFixed(0)+'%',lbl:'High Satisfaction Rate',sub:'Customers rating 5 out of 5'},
+      {icon:'🌾',num:m.topFarm.name,lbl:'Highest Rated Branch',sub:m.topFarm.avgRating.toFixed(1)+' / 5 avg rating',small:true},
+      {icon:'🧑‍🌾',num:m.topSup.name,lbl:'Best Performing Supervisor',sub:m.topSup.avgRating.toFixed(1)+' / 5 avg rating',small:true},
+      {icon:'📦',num:CATALOG.length,lbl:'Products in Catalog',sub:'Plants, saplings &amp; supplies'}
+    ];
+    document.getElementById('masterMetrics').innerHTML = cards.map(c=>`
+      <div class="mini-stat ${c.hero?'hero-stat':''}">
+        <div class="icon-flag">${c.icon}</div>
+        <div class="num" style="${c.small?'font-size:19px':''}">${c.num}</div>
+        <div class="lbl">${c.lbl}</div>
+        <div class="sub">${c.sub}</div>
+      </div>`).join('');
+  }
+
+  function renderRanking(containerId, stats, icon){
+    const sorted = [...stats].sort((a,b)=>b.avgRating-a.avgRating);
+    document.getElementById(containerId).innerHTML = sorted.map((s,i)=>`
+      <div class="rank-item ${i===0?'top':''}">
+        <div class="rank-pos">${i===0?'🏆':(i+1)}</div>
+        <div class="rank-body">
+          <div class="rank-name">${icon} ${s.name} ${i===0?'<span class="pill crown">Top Performer</span>':''}</div>
+          <div class="rank-meta">${s.count} reviews · ${money(s.revenue)} revenue</div>
+        </div>
+        <div class="rank-score">
+          <div class="val">${s.avgRating.toFixed(1)} / 5</div>
+          <div class="stars">${starString(s.avgRating)}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function bars(containerId, stats, key, max, goldTop){
+    const sorted = [...stats].sort((a,b)=>b[key]-a[key]);
+    document.getElementById(containerId).innerHTML = sorted.map((s,i)=>`
+      <div class="bar-row">
+        <span>${s.name}</span>
+        <div class="bar-bg"><div class="bar-fill ${goldTop&&i===0?'gold':''}" style="width:${(s[key]/max)*100}%"></div></div>
+        <strong>${key==='avgRating'?s[key].toFixed(1)+' / 5':s[key]}</strong>
+      </div>`).join('');
+  }
+
+  const PIE_COLORS = ['#1a4d2a','#2fc389','#f5c542','#134f7a','#9e1f14','#c99a1a'];
+  function renderPie(containerId, stats, valueKey){
+    const total = stats.reduce((s,x)=>s+x[valueKey],0);
+    const r = 60, c = 2*Math.PI*r;
+    let offset = 0;
+    const circles = stats.map((s,i)=>{
+      const frac = s[valueKey]/total;
+      const len = frac*c;
+      const circle = `<circle cx="80" cy="80" r="${r}" fill="none" stroke="${PIE_COLORS[i%PIE_COLORS.length]}" stroke-width="26" stroke-dasharray="${len} ${c-len}" stroke-dashoffset="${-offset}" transform="rotate(-90 80 80)"></circle>`;
+      offset += len;
+      return circle;
+    }).join('');
+    const legend = stats.map((s,i)=>`
+      <div class="pie-legend-item"><span class="pie-dot" style="background:${PIE_COLORS[i%PIE_COLORS.length]}"></span>${s.name} — ${((s[valueKey]/total)*100).toFixed(0)}%</div>`).join('');
+    document.getElementById(containerId).innerHTML = `
+      <div class="pie-wrap">
+        <svg width="160" height="160" viewBox="0 0 160 160">${circles}</svg>
+        <div class="pie-legend">${legend}</div>
+      </div>`;
+  }
+
+  function renderRatingDistribution(){
+    const counts = Array.from({length:5},(_,i)=>({name:(i+1)+'/5',count:ORDERS.filter(o=>o.rating===i+1).length}));
+    const max = Math.max(1,...counts.map(c=>c.count));
+    document.getElementById('chartRatingDist').innerHTML = `<div class="grid grid-5" style="gap:10px">` + counts.map(c=>`
+      <div class="bar-row" style="grid-template-columns:38px 1fr 22px">
+        <span>${c.name}</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:${(c.count/max)*100}%"></div></div>
+        <strong>${c.count}</strong>
+      </div>`).join('') + `</div>`;
+  }
+
+  function renderTopProducts(){
+    const sales = productSales();
+    document.getElementById('topProducts').innerHTML = sales.map((p,i)=>`
+      <div class="product-card">
+        ${i<3?`<div class="sold-ribbon ${i===0?'first':''}">${i===0?'🥇 #1 Best Seller':(i===1?'🥈 #2':'🥉 #3')}</div>`:''}
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80'">
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-meta">Units Sold: <strong>${p.qty}</strong></div>
+          <div class="product-meta">Revenue: <strong>${money(p.revenue)}</strong></div>
+          <div class="product-meta">Price: ${money(p.price)} / unit</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function populateFilters(){
+    const farmSel = document.getElementById('farmFilter');
+    const supSel = document.getElementById('supervisorFilter');
+    farmSel.innerHTML = '<option value="">All Branches</option>' + FARMS.map(f=>`<option>${f}</option>`).join('');
+    supSel.innerHTML = '<option value="">All Supervisors</option>' + SUPERVISORS.map(s=>`<option>${s}</option>`).join('');
+  }
+
+  function average(list,key){
+    return list.length ? list.reduce((sum,item)=>sum+Number(item[key]||0),0)/list.length : 0;
+  }
+
+  function ratingBandMatch(value,band){
+    if(!band) return true;
+    if(band==='5') return value===5;
+    if(band==='4') return value===4;
+    return value<=3;
+  }
+
+  function reviewDistribution(containerId,key){
+    const counts=Array.from({length:5},(_,index)=>({score:index+1,count:ORDERS.filter(order=>order[key]===index+1).length}));
+    const max=Math.max(1,...counts.map(item=>item.count));
+    document.getElementById(containerId).innerHTML=counts.map(item=>`
+      <div class="bar-row" style="grid-template-columns:45px 1fr 24px">
+        <span>${item.score}/5</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:${(item.count/max)*100}%"></div></div>
+        <strong>${item.count}</strong>
+      </div>`).join('');
+  }
+
+  function productReviewStats(){
+    const stats={};
+    ORDERS.forEach(order=>order._items.forEach(item=>{
+      if(!stats[item.id]) stats[item.id]={id:item.id,name:item.name,image:item.image,count:0,total:0};
+      stats[item.id].count+=1;
+      stats[item.id].total+=order.productRating;
+    }));
+    return Object.values(stats).map(item=>({...item,avgRating:item.total/item.count})).sort((a,b)=>b.avgRating-a.avgRating || b.count-a.count);
+  }
+
+  function renderProductReviewAnalytics(){
+    const avg=average(ORDERS,'productRating');
+    const excellent=ORDERS.filter(order=>order.productRating===5).length;
+    const attention=ORDERS.filter(order=>order.productRating<=3).length;
+    const stats=productReviewStats();
+    const top=stats[0];
+    document.getElementById('productReviewMetrics').innerHTML=`
+      <div class="mini-stat hero-stat"><div class="icon-flag">🌱</div><div class="num">${avg.toFixed(1)} / 5</div><div class="lbl">Average Product Rating</div><div class="sub">Across ${ORDERS.length} completed orders</div></div>
+      <div class="mini-stat"><div class="icon-flag">🏆</div><div class="num" style="font-size:19px">${top.name}</div><div class="lbl">Highest Rated Product</div><div class="sub">${top.avgRating.toFixed(1)} / 5 from ${top.count} orders</div></div>
+      <div class="mini-stat"><div class="icon-flag">😊</div><div class="num">${Math.round(excellent/ORDERS.length*100)}%</div><div class="lbl">Excellent Product Reviews</div><div class="sub">Ratings of 5 out of 5</div></div>
+      <div class="mini-stat"><div class="icon-flag">⚠️</div><div class="num">${attention}</div><div class="lbl">Needs Attention</div><div class="sub">Product ratings of 3 or below</div></div>`;
+
+    document.getElementById('productReviewRanking').innerHTML=stats.slice(0,6).map((item,index)=>`
+      <div class="rank-item ${index===0?'top':''}">
+        <div class="rank-pos">${index===0?'🏆':index+1}</div>
+        <div class="rank-body"><div class="rank-name">🌿 ${item.name}</div><div class="rank-meta">${item.count} reviewed orders</div></div>
+        <div class="rank-score"><div class="val">${item.avgRating.toFixed(1)} / 5</div><div class="stars">${starString(item.avgRating)}</div></div>
+      </div>`).join('');
+    reviewDistribution('productRatingDistribution','productRating');
+  }
+
+  function populateProductReviewFilter(){
+    document.getElementById('productReviewProductFilter').innerHTML='<option value="">All Products</option>'+CATALOG.map(product=>`<option value="${product.id}">${product.name}</option>`).join('');
+  }
+
+  function renderProductReviews(){
+    const productId=document.getElementById('productReviewProductFilter').value;
+    const band=document.getElementById('productReviewRatingFilter').value;
+    const sort=document.getElementById('productReviewSort').value;
+    let list=ORDERS.filter(order=>(!productId || order._items.some(item=>String(item.id)===productId)) && ratingBandMatch(order.productRating,band));
+    if(sort==='date') list=[...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    if(sort==='high') list=[...list].sort((a,b)=>b.productRating-a.productRating);
+    if(sort==='low') list=[...list].sort((a,b)=>a.productRating-b.productRating);
+    document.getElementById('productReviewList').innerHTML=list.length?list.map(order=>`
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">${order.customer.name}</div><div class="review-entry-meta">${formatDate(order.date)} · ${order.farm}<br>${order._items.map(item=>item.name+' × '+item.qty).join(', ')}</div></div>
+          <div class="score-badge">${order.productRating}/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🌱 Product Review</div>“${order.productComment}”</div>
+      </div>`).join(''):'<div class="mini-stat" style="grid-column:1/-1;text-align:center">No product reviews match this filter.</div>';
+  }
+
+  function displayBranchStats(){
+    return FARMS.map(farm=>{
+      const list=ORDERS.filter(order=>order.farm===farm);
+      return {name:farm,count:list.length,avgRating:average(list,'displayRating')};
+    }).sort((a,b)=>b.avgRating-a.avgRating);
+  }
+
+  function displayCriteriaAverages(){
+    const keys=[['cleanliness','Cleanliness'],['arrangement','Arrangement'],['signage','Signage'],['accessibility','Accessibility'],['ambience','Ambience']];
+    return keys.map(([key,label])=>({key,label,value:ORDERS.reduce((sum,order)=>sum+order.displayCriteria[key],0)/ORDERS.length}));
+  }
+
+  function renderDisplayReviewAnalytics(){
+    const avg=average(ORDERS,'displayRating');
+    const excellent=ORDERS.filter(order=>order.displayRating===5).length;
+    const attention=ORDERS.filter(order=>order.displayRating<=3).length;
+    const branchStats=displayBranchStats();
+    const top=branchStats[0];
+    document.getElementById('displayReviewMetrics').innerHTML=`
+      <div class="mini-stat hero-stat"><div class="icon-flag">🖼️</div><div class="num">${avg.toFixed(1)} / 5</div><div class="lbl">Average Display Rating</div><div class="sub">Across all nursery visits</div></div>
+      <div class="mini-stat"><div class="icon-flag">🌾</div><div class="num" style="font-size:18px">${top.name}</div><div class="lbl">Best Display Branch</div><div class="sub">${top.avgRating.toFixed(1)} / 5 average</div></div>
+      <div class="mini-stat"><div class="icon-flag">✨</div><div class="num">${Math.round(excellent/ORDERS.length*100)}%</div><div class="lbl">Excellent Display Reviews</div><div class="sub">Ratings of 5 out of 5</div></div>
+      <div class="mini-stat"><div class="icon-flag">🛠️</div><div class="num">${attention}</div><div class="lbl">Display Improvements</div><div class="sub">Ratings of 3 or below</div></div>`;
+
+    document.getElementById('displayBranchRanking').innerHTML=branchStats.map((item,index)=>`
+      <div class="rank-item ${index===0?'top':''}">
+        <div class="rank-pos">${index===0?'🏆':index+1}</div>
+        <div class="rank-body"><div class="rank-name">🌾 ${item.name}</div><div class="rank-meta">${item.count} display reviews</div></div>
+        <div class="rank-score"><div class="val">${item.avgRating.toFixed(1)} / 5</div><div class="stars">${starString(item.avgRating)}</div></div>
+      </div>`).join('');
+
+    const criteria=displayCriteriaAverages();
+    document.getElementById('displayCriteriaBars').innerHTML=criteria.map(item=>`
+      <div class="bar-row">
+        <span>${item.label}</span><div class="bar-bg"><div class="bar-fill" style="width:${item.value*20}%"></div></div><strong>${item.value.toFixed(1)} / 5</strong>
+      </div>`).join('');
+    document.getElementById('displayCriteriaCards').innerHTML=criteria.map(item=>`
+      <div class="criteria-item"><div class="criteria-score">${item.value.toFixed(1)} / 5</div><div class="criteria-label">${item.label}</div></div>`).join('');
+  }
+
+  function populateDisplayReviewFilter(){
+    document.getElementById('displayReviewFarmFilter').innerHTML='<option value="">All Branches</option>'+FARMS.map(farm=>`<option>${farm}</option>`).join('');
+  }
+
+  function renderDisplayReviews(){
+    const farm=document.getElementById('displayReviewFarmFilter').value;
+    const band=document.getElementById('displayReviewRatingFilter').value;
+    const sort=document.getElementById('displayReviewSort').value;
+    let list=ORDERS.filter(order=>(!farm || order.farm===farm) && ratingBandMatch(order.displayRating,band));
+    if(sort==='date') list=[...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    if(sort==='high') list=[...list].sort((a,b)=>b.displayRating-a.displayRating);
+    if(sort==='low') list=[...list].sort((a,b)=>a.displayRating-b.displayRating);
+    document.getElementById('displayReviewList').innerHTML=list.length?list.map(order=>`
+      <div class="review-entry">
+        <div class="review-entry-head">
+          <div><div class="review-entry-title">${order.customer.name}</div><div class="review-entry-meta">${formatDate(order.date)} · ${order.farm}<br>Supervisor: ${order.supervisor}</div></div>
+          <div class="score-badge">${order.displayRating}/5</div>
+        </div>
+        <div class="review-copy"><div class="review-kind">🖼️ Display Review</div>“${order.displayComment}”</div>
+      </div>`).join(''):'<div class="mini-stat" style="grid-column:1/-1;text-align:center">No display reviews match this filter.</div>';
+  }
+
+  function renderCustomers(){
+    const farmVal = document.getElementById('farmFilter').value;
+    const supVal = document.getElementById('supervisorFilter').value;
+    const sortVal = document.getElementById('sortFilter').value;
+    let list = ORDERS.filter(o=>(!farmVal || o.farm===farmVal) && (!supVal || o.supervisor===supVal));
+    if(sortVal==='date') list = [...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    if(sortVal==='rating_desc') list = [...list].sort((a,b)=>b.rating-a.rating);
+    if(sortVal==='rating_asc') list = [...list].sort((a,b)=>a.rating-b.rating);
+    if(sortVal==='total_desc') list = [...list].sort((a,b)=>b._total-a._total);
+
+    document.getElementById('customerList').innerHTML = list.length ? list.map(o=>`
+      <div class="customer-card">
+        <div class="customer-top">
+          <div class="avatar">${initials(o.customer.name)}</div>
+          <div>
+            <div class="customer-name">${o.customer.name}</div>
+            <div class="customer-sub">${o.customer.city} · ${o.customer.mobile}</div>
+          </div>
+        </div>
+        <div class="customer-tags">
+          <span class="pill">📅 ${formatDate(o.date)}</span>
+          <span class="pill blue">🌾 ${o.farm}</span>
+          <span class="pill gold">🧑‍🌾 ${o.supervisor}</span>
+        </div>
+        <div class="cart-chip-row">
+          ${o._items.map(it=>`<span class="cart-chip">${it.name} × ${it.qty}</span>`).join('')}
+        </div>
+        <div class="review-triple">
+          <div class="review-quote product">
+            <div class="review-label">🌱 Product Review</div>
+            <div class="rate-line">${starString(o.productRating)} <span style="color:#c99a1a">${o.productRating}/5</span></div>
+            “${o.productComment}”
+          </div>
+          <div class="review-quote display">
+            <div class="review-label">🖼️ Display Review</div>
+            <div class="rate-line">${starString(o.displayRating)} <span style="color:#c99a1a">${o.displayRating}/5</span></div>
+            “${o.displayComment}”
+          </div>
+          <div class="review-quote supervisor">
+            <div class="review-label">🧑‍🌾 Supervisor Review</div>
+            <div class="rate-line">${starString(o.rating)} <span style="color:#c99a1a">${o.rating}/5</span></div>
+            “${o.comment}”
+          </div>
+        </div>
+        <div class="customer-foot">
+          <span>Bill No. ${o.id}</span>
+          <strong>${money(o._total)}</strong>
+        </div>
+      </div>`).join('') : '<div class="mini-stat" style="grid-column:1/-1;text-align:center">No customers match this filter.</div>';
+  }
+
+  // ---------- init ----------
+  function init(){
+    renderMasterMetrics();
+    const farmStats = groupStats('farm');
+    const supStats = groupStats('supervisor');
+    renderRanking('farmRanking', farmStats, '🌾');
+    renderRanking('supervisorRanking', supStats, '🧑‍🌾');
+    bars('chartFarmBar', farmStats, 'avgRating', 5, true);
+    bars('chartSupervisorBar', supStats, 'avgRating', 5, true);
+    renderPie('chartSupervisorPie', supStats, 'count');
+    renderPie('chartFarmPie', farmStats, 'revenue');
+    renderRatingDistribution();
+    renderTopProducts();
+    renderProductReviewAnalytics();
+    populateProductReviewFilter();
+    renderProductReviews();
+    renderDisplayReviewAnalytics();
+    populateDisplayReviewFilter();
+    renderDisplayReviews();
+    populateFilters();
+    renderCustomers();
+  }
+  init();
+</script>
+</body></html>
+

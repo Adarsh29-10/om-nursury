@@ -1,0 +1,3166 @@
+<html><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Production Work Orders</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7f5;
+      color: #1e2e24;
+      padding: 30px 20px;
+    }
+
+    .container { max-width: 1450px; margin: 0 auto; }
+
+    .hero-section {
+      background: linear-gradient(145deg, #1a4d2a 0%, #2d6e3e 100%);
+      border-radius: 32px;
+      padding: 42px 50px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 40px rgba(0,20,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::after {
+      content: "🌿";
+      position: absolute;
+      right: 28px;
+      bottom: -10px;
+      font-size: 145px;
+      opacity: 0.10;
+      transform: rotate(8deg);
+    }
+
+    .hero-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .hero-icon { font-size: 52px; }
+
+    .hero-section h1 {
+      font-size: 43px;
+      font-weight: 850;
+      color: #fff;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-section h1 span { color: #f5c542; }
+
+    .sub-head {
+      color: rgba(255,255,255,0.88);
+      font-size: 17px;
+      margin-top: 10px;
+      border-left: 4px solid #f5c542;
+      padding-left: 16px;
+      max-width: 1050px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .badge-module {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 7px 16px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .step strong {
+      display: block;
+      color: #f5c542;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .step span {
+      font-size: 12px;
+      font-weight: 650;
+      opacity: 0.93;
+    }
+
+    .section-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0,20,0,0.06);
+      border: 1px solid #e6eee6;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      color: #1a4d2a;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i { color: #b68b40; }
+
+    .muted {
+      color: #5a6f5a;
+      font-weight: 560;
+      line-height: 1.55;
+    }
+
+    .grid { display: grid; gap: 18px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    label {
+      display: block;
+      color: #1a4d2a;
+      font-weight: 720;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid #dbe8db;
+      font-family: inherit;
+      font-weight: 560;
+      outline: none;
+      background: #fff;
+      color: #1e2e24;
+    }
+
+
+    textarea { resize: vertical; min-height: 96px; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #1a4d2a;
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08);
+    }
+
+    .multi-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .multi-dropdown-toggle {
+      width: 100%;
+      min-height: 47px;
+      border-radius: 16px;
+      padding: 11px 14px;
+      border: 1px solid #dbe8db;
+      font-family: inherit;
+      font-weight: 650;
+      outline: none;
+      background: #fff;
+      color: #1e2e24;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .multi-dropdown-toggle:hover,
+    .multi-dropdown.open .multi-dropdown-toggle {
+      border-color: #1a4d2a;
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08);
+    }
+
+    .multi-dropdown-toggle span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .multi-dropdown-toggle i {
+      color: #1a4d2a;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .multi-dropdown.open .multi-dropdown-toggle i { transform: rotate(180deg); }
+
+    .multi-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      max-height: 290px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #dbe8db;
+      border-radius: 18px;
+      padding: 8px;
+      box-shadow: 0 18px 40px rgba(0,20,0,0.16);
+    }
+
+    .multi-dropdown.open .multi-dropdown-menu { display: block; }
+
+    .multi-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 11px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #1e2e24;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0;
+      transition: background 0.16s;
+    }
+
+    .multi-option:hover { background: #eef6ef; }
+    .multi-option.select-all-option { background: #f8fbf8; color: #1a4d2a; font-weight: 820; }
+
+    .multi-option input {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      padding: 0;
+      margin: 0;
+      border-radius: 4px;
+      box-shadow: none;
+      accent-color: #1a4d2a;
+      cursor: pointer;
+    }
+
+    .multi-empty {
+      padding: 14px;
+      color: #708370;
+      font-size: 12px;
+      font-weight: 650;
+      text-align: center;
+    }
+
+    .field-note {
+      color: #708370;
+      font-size: 11px;
+      font-weight: 650;
+      margin-top: 7px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 40px;
+      padding: 10px 22px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-green { background: #1a4d2a; color: #fff; box-shadow: 0 8px 16px rgba(26,77,42,0.18); }
+    .btn-green:hover { background: #0f3a1e; }
+    .btn-gold { background: #f5c542; color: #1e2e24; box-shadow: 0 8px 16px rgba(245,197,66,0.22); }
+    .btn-light { background: #eef6ef; color: #1a4d2a; }
+    .btn-red { background: #ffe3e6; color: #b42331; }
+    .btn-blue { background: #e6f3ff; color: #1363a5; }
+    .btn-orange { background: #fff0d5; color: #9b5f00; }
+    .btn-purple { background: #efe5ff; color: #6733a6; }
+    .btn-small { padding: 8px 14px; font-size: 13px; }
+    .btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 13px; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .metric-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 142px;
+      box-shadow: 0 12px 30px rgba(0,20,0,0.06);
+      border: 1px solid #e6eee6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-label {
+      color: #5a6f5a;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+
+    .metric-number {
+      color: #0b1f3a;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .metric-icon {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 58px;
+      height: 58px;
+      background: #eef6ff;
+      border-radius: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #134f7a;
+      font-size: 24px;
+    }
+
+    .mini-badge, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-size: 12px;
+      font-weight: 820;
+    }
+
+    .mini-badge { margin-top: 12px; color: #fff; }
+    .green { background: #0f8f55; }
+    .blue { background: #17b7d9; }
+    .orange { background: #f7a614; }
+    .red { background: #e63946; }
+    .gold { background: #f5c542; color: #1e2e24; }
+
+    .status-pending { background: #fff4d8; color: #9b6b00; }
+    .status-approved { background: #dcf7ea; color: #0f7a45; }
+    .status-review { background: #e6f3ff; color: #1363a5; }
+    .status-danger { background: #ffe3e6; color: #b42331; }
+    .status-draft { background: #f0f5f0; color: #4f674f; }
+    .status-po { background: #ecdcff; color: #6733a6; }
+    .status-dark { background: #24392b; color: #fff; }
+
+    .farm-card {
+      background: #fff;
+      border: 1px solid #e6eee6;
+      border-radius: 24px;
+      padding: 22px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,20,0,0.05);
+      transition: all 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .farm-card::after {
+      content: "🌱";
+      position: absolute;
+      right: -8px;
+      bottom: -18px;
+      font-size: 70px;
+      opacity: 0.08;
+      transform: rotate(-15deg);
+    }
+
+    .farm-card:hover,
+    .farm-card.active {
+      transform: translateY(-4px);
+      background: linear-gradient(145deg, #1a4d2a 0%, #2d6e3e 100%);
+      color: #fff;
+      box-shadow: 0 16px 32px rgba(0,20,0,0.12);
+    }
+
+    .farm-card:hover .muted,
+    .farm-card.active .muted { color: rgba(255,255,255,0.82); }
+
+    .farm-card h3 {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .farm-card p {
+      font-size: 13px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .block-card {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 24px;
+      padding: 22px;
+      transition: all 0.22s;
+      cursor: pointer;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .block-card::after {
+      content: "☘";
+      position: absolute;
+      right: -12px;
+      bottom: -22px;
+      color: rgba(26,77,42,0.08);
+      font-size: 100px;
+      transform: rotate(-18deg);
+    }
+
+    .block-card:hover,
+    .block-card.active {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0,20,0,0.09);
+      border-color: #1a4d2a;
+      background: #ffffff;
+    }
+
+    .block-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .block-title { color: #1a4d2a; font-size: 22px; font-weight: 900; }
+    .block-zone { color: #5a6f5a; font-size: 13px; font-weight: 650; margin-top: 4px; }
+
+    .block-total {
+      background: #1a4d2a;
+      color: #fff;
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .plant-summary-list { display: grid; gap: 10px; position: relative; z-index: 2; }
+
+    .plant-summary-row {
+      background: #fff;
+      border: 1px solid #e6eee6;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .plant-summary-row strong { color: #1a4d2a; font-size: 14px; }
+    .stage-line { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+
+    .stage-chip {
+      background: #eef6ef;
+      color: #1a4d2a;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .table-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid #e6eee6;
+      box-shadow: 0 10px 24px rgba(0,20,0,0.05);
+      overflow-x: auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    .work-order-table { min-width: 3320px; }
+
+    .work-order-table th:first-child,
+    .work-order-table td:first-child {
+      position: sticky;
+      left: 0;
+      min-width: 175px;
+      z-index: 6;
+      background: #fff;
+    }
+
+    .work-order-table th:nth-child(2),
+    .work-order-table td:nth-child(2) {
+      position: sticky;
+      left: 175px;
+      min-width: 110px;
+      z-index: 6;
+      background: #fff;
+      box-shadow: 8px 0 14px rgba(0,20,0,0.05);
+    }
+
+    .work-order-table th:last-child,
+    .work-order-table td:last-child {
+      position: sticky;
+      right: 0;
+      min-width: 225px;
+      z-index: 6;
+      background: #fff;
+      box-shadow: -8px 0 14px rgba(0,20,0,0.06);
+    }
+
+    .work-order-table thead th:first-child,
+    .work-order-table thead th:nth-child(2),
+    .work-order-table thead th:last-child {
+      background: #e7f1e8;
+      z-index: 8;
+    }
+
+    .work-order-table tr.flagged-row td:first-child,
+    .work-order-table tr.flagged-row td:nth-child(2),
+    .work-order-table tr.flagged-row td:last-child { background: #fffaf0; }
+
+    .work-order-table tr.revoked-row td:first-child,
+    .work-order-table tr.revoked-row td:nth-child(2),
+    .work-order-table tr.revoked-row td:last-child { background: #fafafa; }
+
+    .flag-action-button {
+      min-width: 84px;
+      border: 1px solid #e0e9e0;
+    }
+
+    .efficiency-score {
+      font-size: 22px;
+      font-weight: 900;
+      color: #1a4d2a;
+      line-height: 1;
+    }
+
+    thead th {
+      background: #f0f5f0;
+      color: #1a4d2a;
+      font-weight: 800;
+      font-size: 13px;
+      text-align: left;
+      border-bottom: 2px solid #d4e4d4;
+      padding: 14px 16px;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #eaf0ea;
+      font-weight: 620;
+      color: #1e2e24;
+      vertical-align: top;
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    tbody tr:hover { background: #f8fbf8; }
+    tbody tr.flagged-row { background: #fffaf0; }
+    tbody tr.revoked-row { opacity: 0.66; background: #fafafa; }
+
+    .selected-pill {
+      background: #1a4d2a;
+      color: #fff;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-weight: 850;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .action-row { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+
+    .plant-card {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 22px;
+      overflow: hidden;
+      transition: all 0.22s;
+      position: relative;
+    }
+
+    .plant-card.selected {
+      border-color: #1a4d2a;
+      box-shadow: 0 0 0 4px rgba(26,77,42,0.08), 0 14px 28px rgba(0,20,0,0.08);
+    }
+
+    .plant-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,20,0,0.08); }
+    .plant-img { width: 100%; height: 145px; object-fit: cover; display: block; }
+    .plant-card-body { padding: 16px; }
+
+    .plant-card-body h4 {
+      color: #1a4d2a;
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .rfid-text {
+      color: #5a6f5a;
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .check-dot {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      background: #1a4d2a;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 14px;
+      box-shadow: 0 8px 16px rgba(0,20,0,0.18);
+      z-index: 3;
+    }
+
+    .plant-card.selected .check-dot { display: flex; }
+
+    .info-box {
+      background: #f8fbf8;
+      border: 1px dashed #b7cdb7;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .voucher-box {
+      background: linear-gradient(145deg, #f8fbf8, #ffffff);
+      border: 1px solid #d8ead8;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 12px 28px rgba(0,20,0,0.06);
+      margin-top: 18px;
+    }
+
+    .inventory-message {
+      display: none;
+      background: #dcf7ea;
+      color: #0f7a45;
+      border: 1px solid #b7e7ca;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 22px;
+      font-weight: 850;
+      box-shadow: 0 12px 28px rgba(15,122,69,0.09);
+    }
+
+    .inventory-message i { color: #0f7a45; margin-right: 8px; }
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1a4d2a;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,20,0,0.22);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 99999;
+      font-weight: 700;
+      max-width: 460px;
+      line-height: 1.45;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast i { color: #f5c542; margin-right: 8px; }
+    .divider { height: 1px; background: #eaf0ea; margin: 22px 0; }
+
+    .filter-panel {
+      background: #f8fbf8;
+      border: 1px solid #e1eee1;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+
+    .efficiency-wrap { min-width: 180px; }
+    .efficiency-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+
+    .efficiency-track {
+      height: 9px;
+      background: #e6eee6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .efficiency-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a4d2a, #59a96a);
+      border-radius: 999px;
+    }
+
+    .supervisor-message {
+      max-width: 270px;
+      white-space: normal;
+      color: #455b48;
+      font-weight: 620;
+    }
+
+    .rfid-preview { max-width: 250px; word-break: break-word; }
+
+    @media(max-width: 1150px) {
+      .grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media(max-width: 980px) {
+      .grid-5, .grid-4, .grid-3, .grid-2, .timeline { grid-template-columns: 1fr; }
+      .hero-section { padding: 30px 24px; }
+      .hero-section h1 { font-size: 31px; }
+      .section-card { padding: 22px; }
+      body { padding: 18px 12px; }
+    }
+  </style>
+<style id="vvvebjs-styles"></style></head><body>
+  <div class="container">
+    <div class="hero-section">
+      <div class="hero-row">
+        <div class="hero-icon">🪴</div>
+        <div>
+          <h1>Production Work <span>Module</span></h1>
+          <div class="sub-head">
+            Farm-wise plant selection, RFID-level work-order assignment, supervisor tracking, material allocation, transfer voucher creation, status monitoring, task flagging and work-order efficiency.
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge-module"><i class="fa fa-map-marker"></i> Farm Cards</span>
+        <span class="badge-module"><i class="fa fa-th-large"></i> Block Summary</span>
+        <span class="badge-module"><i class="fa fa-leaf"></i> Multi-Plant Selection</span>
+        <span class="badge-module"><i class="fa fa-tasks"></i> Work Orders</span>
+        <span class="badge-module"><i class="fa fa-flag"></i> Flag &amp; Review</span>
+      </div>
+
+      <div class="timeline">
+        <div class="step"><strong>Step 01</strong><span>Select farm card and production block</span></div>
+        <div class="step"><strong>Step 02</strong><span>Select multiple varieties and stages</span></div>
+        <div class="step"><strong>Step 03</strong><span>Choose RFID plants from matching results</span></div>
+        <div class="step"><strong>Step 04</strong><span>Assign supervisors, actions and schedule</span></div>
+        <div class="step"><strong>Step 05</strong><span>Track status, material and efficiency</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:28px;">
+      <div class="metric-card">
+        <div class="metric-label">Assigned Work Orders</div>
+        <div class="metric-icon"><i class="fa fa-tasks"></i></div>
+        <div class="metric-number" id="metricAssigned">4</div>
+        <span class="mini-badge green">Total</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Completed Work Orders</div>
+        <div class="metric-icon"><i class="fa fa-check-circle"></i></div>
+        <div class="metric-number" id="metricCompleted">1</div>
+        <span class="mini-badge blue">Completed</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">In-Progress Work</div>
+        <div class="metric-icon"><i class="fa fa-spinner"></i></div>
+        <div class="metric-number" id="metricInProgress">1</div>
+        <span class="mini-badge gold">Active</span>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Halted / Attention</div>
+        <div class="metric-icon"><i class="fa fa-exclamation-triangle"></i></div>
+        <div class="metric-number" id="metricExceptions">2</div>
+        <span class="mini-badge red">Review</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title"><i class="fa fa-map-marker"></i> Farm Workspace</h3>
+      <p class="muted">
+        Select a farm directly from the cards below. The redundant farm dropdown has been removed. Blocks, plant varieties and stage quantities update according to the selected farm.
+      </p>
+
+      <div class="grid grid-4" id="farmGrid" style="margin-top:22px;">
+          <div class="farm-card active" onclick="selectFarm('Kamshet')">
+            <h3>Kamshet</h3>
+            <p class="muted">Farm Manager: Ajay Patil</p>
+            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:2;">
+              <span class="status-pill status-draft">3 Blocks</span>
+              <span class="status-pill status-approved">423 Plants</span>
+            </div>
+          </div>
+        
+          <div class="farm-card " onclick="selectFarm('Karla')">
+            <h3>Karla</h3>
+            <p class="muted">Farm Manager: Sunil More</p>
+            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:2;">
+              <span class="status-pill status-draft">3 Blocks</span>
+              <span class="status-pill status-approved">419 Plants</span>
+            </div>
+          </div>
+        
+          <div class="farm-card " onclick="selectFarm('Vadegaon')">
+            <h3>Vadegaon</h3>
+            <p class="muted">Farm Manager: Nitin Shinde</p>
+            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:2;">
+              <span class="status-pill status-draft">3 Blocks</span>
+              <span class="status-pill status-approved">438 Plants</span>
+            </div>
+          </div>
+        
+          <div class="farm-card " onclick="selectFarm('Ratnagiri')">
+            <h3>Ratnagiri</h3>
+            <p class="muted">Farm Manager: Rakesh Sawant</p>
+            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:2;">
+              <span class="status-pill status-draft">3 Blocks</span>
+              <span class="status-pill status-approved">425 Plants</span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-th-large"></i> Block Layout Summary</h3>
+          <p class="muted" id="blockSummaryText">Kamshet has 3 active production blocks. Select any block to view its available plant varieties and RFID-level plants.</p>
+        </div>
+        <div style="text-align:right;">
+          <span class="selected-pill" id="selectedFarmPill"><i class="fa fa-map-marker"></i> Kamshet</span>
+        </div>
+      </div>
+
+      <div class="grid grid-3" id="blockGrid" style="margin-top:22px;">
+          <div class="block-card active" onclick="selectBlock('A')">
+            <div>
+              <div class="block-head">
+                <div>
+                  <div class="block-title">Block A</div>
+                  <div class="block-zone">Front Polyhouse</div>
+                </div>
+                <div class="block-total">142 Total</div>
+              </div>
+
+              <div class="plant-summary-list">
+                
+                  <div class="plant-summary-row">
+                    <strong>Tulsi · Total 55</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 20</span>
+                      <span class="stage-chip">Child 15</span>
+                      <span class="stage-chip">Adult 20</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Rose · Total 40</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 12</span>
+                      <span class="stage-chip">Child 18</span>
+                      <span class="stage-chip">Adult 10</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Aloe Vera · Total 47</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 22</span>
+                      <span class="stage-chip">Child 11</span>
+                      <span class="stage-chip">Adult 14</span>
+                    </div>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        
+          <div class="block-card " onclick="selectBlock('B')">
+            <div>
+              <div class="block-head">
+                <div>
+                  <div class="block-title">Block B</div>
+                  <div class="block-zone">Shade Net Area</div>
+                </div>
+                <div class="block-total">139 Total</div>
+              </div>
+
+              <div class="plant-summary-list">
+                
+                  <div class="plant-summary-row">
+                    <strong>Neem · Total 50</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 18</span>
+                      <span class="stage-chip">Child 20</span>
+                      <span class="stage-chip">Adult 12</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Jasmine · Total 46</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 15</span>
+                      <span class="stage-chip">Child 14</span>
+                      <span class="stage-chip">Adult 17</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Money Plant · Total 43</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 28</span>
+                      <span class="stage-chip">Child 9</span>
+                      <span class="stage-chip">Adult 6</span>
+                    </div>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        
+          <div class="block-card " onclick="selectBlock('C')">
+            <div>
+              <div class="block-head">
+                <div>
+                  <div class="block-title">Block C</div>
+                  <div class="block-zone">Open Bed Section</div>
+                </div>
+                <div class="block-total">142 Total</div>
+              </div>
+
+              <div class="plant-summary-list">
+                
+                  <div class="plant-summary-row">
+                    <strong>Hibiscus · Total 45</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 10</span>
+                      <span class="stage-chip">Child 16</span>
+                      <span class="stage-chip">Adult 19</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Marigold · Total 53</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 30</span>
+                      <span class="stage-chip">Child 18</span>
+                      <span class="stage-chip">Adult 5</span>
+                    </div>
+                  </div>
+                
+                  <div class="plant-summary-row">
+                    <strong>Areca Palm · Total 44</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling 8</span>
+                      <span class="stage-chip">Child 12</span>
+                      <span class="stage-chip">Adult 24</span>
+                    </div>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+      <div class="grid grid-2" style="align-items:start;">
+        <div>
+          <h3 class="section-title"><i class="fa fa-leaf"></i> Select Production Varieties &amp; Stages</h3>
+          <p class="muted" id="plantSelectorText">Kamshet · Block A. Open each dropdown and tick multiple plant varieties and stages.</p>
+          <div class="info-box" style="margin-top:16px;">
+            <strong style="color:#1a4d2a;">Checkbox multiselect enabled</strong>
+            <p class="muted" style="font-size:12px; margin-top:5px;">Open the dropdowns and tick one or more plant varieties and stages. Matching RFID plants will be shown together in the Choose Plants section without using Ctrl/Cmd.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label>Plant Variety</label>
+            <div id="plantSelect" class="multi-dropdown" data-placeholder="Select plant varieties" data-callback="changePlantOrStage">
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('plantSelect', event)">
+          <span id="plantSelectSummary">Tulsi · Total 55</span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Tulsi" checked="" onchange="changeMultiOption('plantSelect', 'Tulsi', this.checked)">
+              <span>Tulsi · Total 55</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Rose" onchange="changeMultiOption('plantSelect', 'Rose', this.checked)">
+              <span>Rose · Total 40</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Aloe%20Vera" onchange="changeMultiOption('plantSelect', 'Aloe%20Vera', this.checked)">
+              <span>Aloe Vera · Total 47</span>
+            </label>
+          
+        </div>
+      </div>
+            <div class="field-note">Click the dropdown and tick one or more plant varieties.</div>
+          </div>
+          <div>
+            <label>Stage</label>
+            <div id="stageSelect" class="multi-dropdown" data-placeholder="Select stages" data-callback="changePlantOrStage">
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('stageSelect', event)">
+          <span id="stageSelectSummary">Sapling</span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Sapling" checked="" onchange="changeMultiOption('stageSelect', 'Sapling', this.checked)">
+              <span>Sapling</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Child" onchange="changeMultiOption('stageSelect', 'Child', this.checked)">
+              <span>Child</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Adult" onchange="changeMultiOption('stageSelect', 'Adult', this.checked)">
+              <span>Adult</span>
+            </label>
+          
+        </div>
+      </div>
+            <div class="field-note">Click the dropdown and tick one or more stages.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="batchSection">
+      <div class="grid grid-2" style="align-items:start;">
+        <div>
+          <h3 class="section-title" style="margin-bottom:8px;"><i class="fa fa-tags"></i> Choose Plants</h3>
+          <p class="muted" id="batchSubText">
+        Showing <strong>20</strong> matching plants for
+        <strong>Tulsi</strong> at stages <strong>Sapling</strong>
+        in <strong>Kamshet · Block A</strong>.
+      </p>
+        </div>
+
+        <div>
+          <label>Select RFID Plants</label>
+          <div id="rfidMultiSelect" class="multi-dropdown" data-placeholder="Select RFID plants" data-callback="handleBatchSelection">
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('rfidMultiSelect', event)">
+          <span id="rfidMultiSelectSummary">Select RFID plants</span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          
+            <label class="multi-option select-all-option">
+              <input type="checkbox" data-select-all="true" onchange="toggleAllMultiOptions('rfidMultiSelect', this.checked)">
+              <span>Select All (20)</span>
+            </label>
+          
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-001" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-001', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-001</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-002" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-002', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-002</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-003" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-003', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-003</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-004" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-004', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-004</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-005" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-005', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-005</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-006" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-006', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-006</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-007" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-007', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-007</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-008" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-008', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-008</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-009" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-009', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-009</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-010" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-010', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-010</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-011" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-011', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-011</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-012" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-012', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-012</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-013" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-013', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-013</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-014" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-014', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-014</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-015" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-015', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-015</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-016" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-016', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-016</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-017" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-017', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-017</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-018" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-018', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-018</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-019" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-019', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-019</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="RFID-KAM-A-TULS-SAP-020" onchange="changeMultiOption('rfidMultiSelect', 'RFID-KAM-A-TULS-SAP-020', this.checked)">
+              <span>Tulsi · Sapling · RFID-KAM-A-TULS-SAP-020</span>
+            </label>
+          
+        </div>
+      </div>
+          <div class="field-note">Open the dropdown and tick plants normally; Ctrl/Cmd is not required.</div>
+          <div class="action-row" style="margin-top:12px;">
+            <button class="btn btn-light btn-small" onclick="selectAllPlants()"><i class="fa fa-check-square-o"></i> Select All</button>
+            <button class="btn btn-light btn-small" onclick="clearBatchSelection()"><i class="fa fa-refresh"></i> Clear Selection</button>
+            <span class="status-pill status-review" id="selectedCountPill">0 selected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-4" id="rfidPlantGrid" style="margin-top:24px;">
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-001')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #01</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-001<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-002')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #02</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-002<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-003')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #03</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-003<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-004')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #04</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-004<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-005')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #05</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-005<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-006')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #06</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-006<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-007')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #07</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-007<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-008')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #08</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-008<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-009')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #09</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-009<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-010')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #10</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-010<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-011')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #11</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-011<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-012')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #12</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-012<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-013')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #13</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-013<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-014')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #14</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-014<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-015')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #15</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-015<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-016')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #16</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-016<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-017')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #17</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-017<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-018')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #18</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-018<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-019')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #19</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-019<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      
+        <div class="plant-card " onclick="togglePlantCard('RFID-KAM-A-TULS-SAP-020')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Tulsi">
+          <div class="plant-card-body">
+            <h4>Tulsi #20</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>RFID-KAM-A-TULS-SAP-020<br>
+              <strong>Stage:</strong> Sapling
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title"><i class="fa fa-tasks"></i> Work Order Assignment</h3>
+      <p class="muted" style="margin-bottom:18px;">
+        Assign the selected RFID plants to one or more supervisors, choose multiple production actions, define the schedule, expected outcome, material status and remarks.
+      </p>
+
+      <div class="grid grid-4">
+        <div>
+          <label>Task Done By / Supervisors</label>
+          <div id="doneBySelect" class="multi-dropdown" data-placeholder="Select supervisors" data-callback="">
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('doneBySelect', event)">
+          <span id="doneBySelectSummary">Ramesh</span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Ramesh" checked="" onchange="changeMultiOption('doneBySelect', 'Ramesh', this.checked)">
+              <span>Ramesh</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Suresh" onchange="changeMultiOption('doneBySelect', 'Suresh', this.checked)">
+              <span>Suresh</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Dharmesh" onchange="changeMultiOption('doneBySelect', 'Dharmesh', this.checked)">
+              <span>Dharmesh</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Mahesh" onchange="changeMultiOption('doneBySelect', 'Mahesh', this.checked)">
+              <span>Mahesh</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Ganesh" onchange="changeMultiOption('doneBySelect', 'Ganesh', this.checked)">
+              <span>Ganesh</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Prakash" onchange="changeMultiOption('doneBySelect', 'Prakash', this.checked)">
+              <span>Prakash</span>
+            </label>
+          
+        </div>
+      </div>
+          <div class="field-note">Open the dropdown and tick every supervisor to assign.</div>
+        </div>
+
+        <div>
+          <label>Production Actions</label>
+          <div id="productionActionSelect" class="multi-dropdown" data-placeholder="Select production actions" data-callback="toggleLocationTransfer">
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('productionActionSelect', event)">
+          <span id="productionActionSelectSummary">Growth</span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Growth" checked="" onchange="changeMultiOption('productionActionSelect', 'Growth', this.checked)">
+              <span>Growth</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Maintenance" onchange="changeMultiOption('productionActionSelect', 'Maintenance', this.checked)">
+              <span>Maintenance</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Create%20Sellable%20Batch" onchange="changeMultiOption('productionActionSelect', 'Create%20Sellable%20Batch', this.checked)">
+              <span>Create Sellable Batch</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Mortality" onchange="changeMultiOption('productionActionSelect', 'Mortality', this.checked)">
+              <span>Mortality</span>
+            </label>
+          
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="Update%20Location" onchange="changeMultiOption('productionActionSelect', 'Update%20Location', this.checked)">
+              <span>Update Location</span>
+            </label>
+          
+        </div>
+      </div>
+          <div class="field-note">Open the dropdown and tick all required production actions.</div>
+        </div>
+
+        <div>
+          <label>Outcome</label>
+          <select id="outcomeSelect">
+            <option>Healthy growth expected</option>
+            <option>Maintenance to be completed</option>
+            <option>Plants to be prepared for sellable batch</option>
+            <option>Damaged plants to be inspected and removed</option>
+            <option>Location transfer to be completed</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Material Allocation</label>
+          <select id="materialAllocationSelect">
+            <option value="Allocated">Allocated</option>
+            <option value="Partially Allocated">Partially Allocated</option>
+            <option value="Pending">Pending</option>
+            <option value="Not Required">Not Required</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-4" style="margin-top:18px;">
+        <div>
+          <label>Start Date</label>
+          <input id="startDateInput" type="date">
+        </div>
+
+        <div>
+          <label>End Date</label>
+          <input id="endDateInput" type="date">
+        </div>
+
+        <div>
+          <label>Estimated Time</label>
+          <input id="estimatedTimeInput" placeholder="Example: 6 Hours / 2 Days" value="6 Hours">
+        </div>
+
+        <div>
+          <label>Remarks</label>
+          <input id="remarksInput" placeholder="Work instructions or remarks">
+        </div>
+      </div>
+
+      <div id="locationTransferSection" class="hidden" style="margin-top:26px;">
+        <div class="divider"></div>
+
+        <h3 class="section-title"><i class="fa fa-truck"></i> Update Location &amp; Create Transfer Voucher</h3>
+        <p class="muted" style="margin-bottom:18px;">
+          Update Location is included in the selected actions. Enter destination details and assign the driver for the transfer voucher.
+        </p>
+
+        <div class="grid grid-4">
+          <div>
+            <label>From Farm</label>
+            <input id="fromFarmInput" readonly="">
+          </div>
+
+          <div>
+            <label>From Block</label>
+            <input id="fromBlockInput" readonly="">
+          </div>
+
+          <div>
+            <label>To Farm</label>
+            <select id="toFarmSelect">
+              <option>Kamshet</option>
+              <option>Karla</option>
+              <option>Vadegaon</option>
+              <option>Ratnagiri</option>
+            </select>
+          </div>
+
+          <div>
+            <label>To Block / Location</label>
+            <input id="toBlockInput" placeholder="Example: Block C / Shade Area">
+          </div>
+
+          <div>
+            <label>Distance Between Farms</label>
+            <input id="distanceInput" type="number" placeholder="KM" value="42">
+          </div>
+
+          <div>
+            <label>Assign Driver</label>
+            <select id="driverSelect">
+              <option>Rakesh Driver</option>
+              <option>Mahadev Driver</option>
+              <option>Shankar Driver</option>
+              <option>Nilesh Driver</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Trip Status</label>
+            <select id="tripStatusSelect">
+              <option>Planned</option>
+              <option>Driver Assigned</option>
+              <option>In Transit</option>
+              <option>Delivered</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Voucher Preview</label>
+            <input id="voucherPreviewInput" readonly="">
+          </div>
+        </div>
+
+        <div id="transferVoucherBox" class="voucher-box hidden"></div>
+      </div>
+
+      <div class="action-row" style="margin-top:26px;">
+        <button class="btn btn-green" onclick="assignWorkOrder()">
+          <i class="fa fa-check-circle"></i> Assign Work Order
+        </button>
+        <button class="btn btn-light" onclick="resetAssignmentForm()">
+          <i class="fa fa-refresh"></i> Reset Assignment
+        </button>
+      </div>
+    </div>
+
+    <div id="inventoryMessage" class="inventory-message">
+      <i class="fa fa-check-circle"></i>
+      <span id="inventoryMessageText">Work order assigned successfully.</span>
+    </div>
+
+    <div class="section-card">
+      <h3 class="section-title"><i class="fa fa-list-ul"></i> Assigned Work Orders</h3>
+      <p class="muted" style="margin-bottom:18px;">
+        Review assigned work orders, supervisor messages, material allocation, completion timing, efficiency and work status. Flag, revoke and redo actions are available in separate columns.
+      </p>
+
+      <div class="filter-panel">
+        <div class="grid grid-5">
+          <div>
+            <label>Farm Filter</label>
+            <select id="filterFarm" onchange="renderWorkOrders()"><option value="">All Farms</option><option value="Kamshet">Kamshet</option><option value="Karla">Karla</option><option value="Ratnagiri">Ratnagiri</option><option value="Vadegaon">Vadegaon</option></select>
+          </div>
+
+          <div>
+            <label>Supervisor Filter</label>
+            <select id="filterSupervisor" onchange="renderWorkOrders()"><option value="">All Supervisors</option><option value="Dharmesh">Dharmesh</option><option value="Ganesh">Ganesh</option><option value="Mahesh">Mahesh</option><option value="Prakash">Prakash</option><option value="Ramesh">Ramesh</option><option value="Suresh">Suresh</option></select>
+          </div>
+
+          <div>
+            <label>Plant Filter</label>
+            <select id="filterPlant" onchange="renderWorkOrders()"><option value="">All Plants</option><option value="Aloe Vera">Aloe Vera</option><option value="Curry Leaf">Curry Leaf</option><option value="Guava Plant">Guava Plant</option><option value="Lemon Plant">Lemon Plant</option><option value="Rose">Rose</option><option value="Tulsi">Tulsi</option></select>
+          </div>
+
+          <div>
+            <label>Work Status</label>
+            <select id="filterStatus" onchange="renderWorkOrders()">
+              <option value="">All Statuses</option>
+              <option value="Completed">Completed</option>
+              <option value="In-Progress">In-Progress</option>
+              <option value="Halted">Halted</option>
+              <option value="Attention">Attention</option>
+              <option value="Revoked">Revoked</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Material Allocation</label>
+            <select id="filterMaterial" onchange="renderWorkOrders()">
+              <option value="">All Material Statuses</option>
+              <option value="Allocated">Allocated</option>
+              <option value="Partially Allocated">Partially Allocated</option>
+              <option value="Pending">Pending</option>
+              <option value="Not Required">Not Required</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:16px; align-items:end;">
+          <div>
+            <label>Flag Filter</label>
+            <select id="filterFlag" onchange="renderWorkOrders()">
+              <option value="">All Work Orders</option>
+              <option value="Flagged">Flagged Only</option>
+              <option value="Not Flagged">Not Flagged Only</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Search Work Order</label>
+            <input id="filterSearch" placeholder="Search number, action, message..." oninput="renderWorkOrders()">
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-light" onclick="clearFilters()"><i class="fa fa-refresh"></i> Clear Filters</button>
+            <span class="status-pill status-review" id="filterCountPill">4 work orders</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <table class="work-order-table">
+          <thead>
+            <tr>
+              <th>Work Order No.</th>
+              <th>Flag Task</th>
+              <th>Assigned Date &amp; Time</th>
+              <th>Farm / Block</th>
+              <th>Plant Batch</th>
+              <th>Selected RFID Plants</th>
+              <th>Supervisors</th>
+              <th>Production Actions</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Estimated Time</th>
+              <th>Outcome &amp; Remarks</th>
+              <th>Material Allocation</th>
+              <th>Transfer Voucher</th>
+              <th>Work Status</th>
+              <th>Supervisor Message</th>
+              <th>Completion Date &amp; Time</th>
+              <th>Revoke</th>
+              <th>Redo</th>
+              <th>Efficiency &amp; Work Status</th>
+            </tr>
+          </thead>
+          <tbody id="workOrderTableBody">
+          <tr class=" ">
+            <td>
+              <span class="selected-pill">WO-2026-1001</span>
+              
+            </td>
+            <td>
+              <button class="btn btn-light btn-small flag-action-button" onclick="toggleFlag('WO-2026-1001')">
+                <i class="fa fa-flag"></i> Flag
+              </button>
+              <div class="field-note">Click to flag</div>
+            </td>
+            <td>05 Aug 2026, 09:15 AM</td>
+            <td><strong>Kamshet</strong><br><span class="muted">Block A</span></td>
+            <td>
+              <strong>Tulsi</strong><br>
+              <span class="muted">Sapling · 12 plants</span>
+            </td>
+            <td class="rfid-preview">
+              RFID-KAM-A-TULS-SAP-001<br>RFID-KAM-A-TULS-SAP-002<br>RFID-KAM-A-TULS-SAP-003<br>RFID-KAM-A-TULS-SAP-004
+              <br><span class="status-pill status-draft">+8 more</span>
+            </td>
+            <td>Ramesh</td>
+            <td><span class="status-pill status-review" style="margin:2px;">Growth</span><span class="status-pill status-review" style="margin:2px;">Maintenance</span></td>
+            <td>05 Aug 2026</td>
+            <td>05 Aug 2026</td>
+            <td>6 Hours</td>
+            <td><strong>Healthy growth recorded</strong><br><span class="muted">Nutrition and pruning completed as planned.</span></td>
+            <td><span class="status-pill status-approved">Allocated</span></td>
+            <td>-</td>
+            <td><span class="status-pill status-approved">Completed</span></td>
+            <td><div class="supervisor-message">All 12 plants were serviced. No mortality or material variance was observed.</div></td>
+            <td>05 Aug 2026, 03:05 PM</td>
+            <td>
+              <button class="btn btn-red btn-small" onclick="revokeWorkOrder('WO-2026-1001')">
+                <i class="fa fa-ban"></i> Revoke
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-purple btn-small" onclick="redoWorkOrder('WO-2026-1001')">
+                <i class="fa fa-repeat"></i> Redo
+              </button>
+            </td>
+            <td>
+              <div class="efficiency-wrap">
+                <div class="efficiency-head">
+                  <span class="efficiency-score">96%</span>
+                  <span class="status-pill status-approved">Completed</span>
+                </div>
+                <div class="efficiency-track"><div class="efficiency-fill" style="width:96%;"></div></div>
+                <div class="field-note">Task completed with recorded efficiency.</div>
+              </div>
+            </td>
+          </tr>
+        
+          <tr class=" ">
+            <td>
+              <span class="selected-pill">WO-2026-1002</span>
+              
+            </td>
+            <td>
+              <button class="btn btn-light btn-small flag-action-button" onclick="toggleFlag('WO-2026-1002')">
+                <i class="fa fa-flag"></i> Flag
+              </button>
+              <div class="field-note">Click to flag</div>
+            </td>
+            <td>05 Aug 2026, 11:40 AM</td>
+            <td><strong>Karla</strong><br><span class="muted">Block B</span></td>
+            <td>
+              <strong>Rose, Curry Leaf</strong><br>
+              <span class="muted">Child, Adult · 18 plants</span>
+            </td>
+            <td class="rfid-preview">
+              RFID-KAR-B-ROSE-CHI-001<br>RFID-KAR-B-ROSE-CHI-002<br>RFID-KAR-B-CURR-ADU-001<br>RFID-KAR-B-CURR-ADU-002
+              <br><span class="status-pill status-draft">+14 more</span>
+            </td>
+            <td>Suresh, Ganesh</td>
+            <td><span class="status-pill status-review" style="margin:2px;">Maintenance</span></td>
+            <td>05 Aug 2026</td>
+            <td>06 Aug 2026</td>
+            <td>1.5 Days</td>
+            <td><strong>Maintenance to be completed</strong><br><span class="muted">Pruning, pest inspection and bag alignment.</span></td>
+            <td><span class="status-pill status-approved">Allocated</span></td>
+            <td>-</td>
+            <td><span class="status-pill status-review">In-Progress</span></td>
+            <td><div class="supervisor-message">First row is complete. Remaining plants are scheduled for the afternoon shift.</div></td>
+            <td>Pending</td>
+            <td>
+              <button class="btn btn-red btn-small" onclick="revokeWorkOrder('WO-2026-1002')">
+                <i class="fa fa-ban"></i> Revoke
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-purple btn-small" onclick="redoWorkOrder('WO-2026-1002')">
+                <i class="fa fa-repeat"></i> Redo
+              </button>
+            </td>
+            <td>
+              <div class="efficiency-wrap">
+                <div class="efficiency-head">
+                  <span class="efficiency-score">82%</span>
+                  <span class="status-pill status-review">In-Progress</span>
+                </div>
+                <div class="efficiency-track"><div class="efficiency-fill" style="width:82%;"></div></div>
+                <div class="field-note">Efficiency is provisional until completion.</div>
+              </div>
+            </td>
+          </tr>
+        
+          <tr class="flagged-row ">
+            <td>
+              <span class="selected-pill">WO-2026-1003</span>
+              <br><span class="status-pill status-pending" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</span>
+            </td>
+            <td>
+              <button class="btn btn-gold btn-small flag-action-button" onclick="toggleFlag('WO-2026-1003')">
+                <i class="fa fa-flag"></i> Unflag
+              </button>
+              <div class="field-note">Marked for review</div>
+            </td>
+            <td>06 Aug 2026, 08:30 AM</td>
+            <td><strong>Vadegaon</strong><br><span class="muted">Block A</span></td>
+            <td>
+              <strong>Aloe Vera</strong><br>
+              <span class="muted">Sapling, Child · 20 plants</span>
+            </td>
+            <td class="rfid-preview">
+              RFID-VAD-A-ALOE-SAP-001<br>RFID-VAD-A-ALOE-SAP-002<br>RFID-VAD-A-ALOE-CHI-001<br>RFID-VAD-A-ALOE-CHI-002
+              <br><span class="status-pill status-draft">+16 more</span>
+            </td>
+            <td>Dharmesh</td>
+            <td><span class="status-pill status-review" style="margin:2px;">Growth</span><span class="status-pill status-review" style="margin:2px;">Maintenance</span></td>
+            <td>06 Aug 2026</td>
+            <td>06 Aug 2026</td>
+            <td>8 Hours</td>
+            <td><strong>Healthy growth expected</strong><br><span class="muted">Apply feed and complete irrigation check.</span></td>
+            <td><span class="status-pill status-danger">Pending</span></td>
+            <td>-</td>
+            <td><span class="status-pill status-danger">Halted</span></td>
+            <td><div class="supervisor-message">Work is halted because the soluble feed is pending and the irrigation pump needs maintenance clearance.</div></td>
+            <td>Not Completed</td>
+            <td>
+              <button class="btn btn-red btn-small" onclick="revokeWorkOrder('WO-2026-1003')">
+                <i class="fa fa-ban"></i> Revoke
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-purple btn-small" onclick="redoWorkOrder('WO-2026-1003')">
+                <i class="fa fa-repeat"></i> Redo
+              </button>
+            </td>
+            <td>
+              <div class="efficiency-wrap">
+                <div class="efficiency-head">
+                  <span class="efficiency-score">48%</span>
+                  <span class="status-pill status-danger">Halted</span>
+                </div>
+                <div class="efficiency-track"><div class="efficiency-fill" style="width:48%;"></div></div>
+                <div class="field-note">Efficiency affected by halted execution.</div>
+              </div>
+            </td>
+          </tr>
+        
+          <tr class="flagged-row ">
+            <td>
+              <span class="selected-pill">WO-2026-1004</span>
+              <br><span class="status-pill status-pending" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</span>
+            </td>
+            <td>
+              <button class="btn btn-gold btn-small flag-action-button" onclick="toggleFlag('WO-2026-1004')">
+                <i class="fa fa-flag"></i> Unflag
+              </button>
+              <div class="field-note">Marked for review</div>
+            </td>
+            <td>06 Aug 2026, 10:05 AM</td>
+            <td><strong>Ratnagiri</strong><br><span class="muted">Block B</span></td>
+            <td>
+              <strong>Guava Plant, Lemon Plant</strong><br>
+              <span class="muted">Adult · 14 plants</span>
+            </td>
+            <td class="rfid-preview">
+              RFID-RAT-B-GUAV-ADU-001<br>RFID-RAT-B-GUAV-ADU-002<br>RFID-RAT-B-LEMO-ADU-001<br>RFID-RAT-B-LEMO-ADU-002
+              <br><span class="status-pill status-draft">+10 more</span>
+            </td>
+            <td>Mahesh, Prakash</td>
+            <td><span class="status-pill status-review" style="margin:2px;">Mortality</span><span class="status-pill status-review" style="margin:2px;">Maintenance</span></td>
+            <td>06 Aug 2026</td>
+            <td>07 Aug 2026</td>
+            <td>1 Day</td>
+            <td><strong>Damaged plants to be inspected and removed</strong><br><span class="muted">Check leaf damage and isolate affected units.</span></td>
+            <td><span class="status-pill status-pending">Partially Allocated</span></td>
+            <td>-</td>
+            <td><span class="status-pill status-pending">Attention</span></td>
+            <td><div class="supervisor-message">Three plants show unexpected leaf damage. Agronomist inspection and additional treatment material are required.</div></td>
+            <td>Pending Review</td>
+            <td>
+              <button class="btn btn-red btn-small" onclick="revokeWorkOrder('WO-2026-1004')">
+                <i class="fa fa-ban"></i> Revoke
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-purple btn-small" onclick="redoWorkOrder('WO-2026-1004')">
+                <i class="fa fa-repeat"></i> Redo
+              </button>
+            </td>
+            <td>
+              <div class="efficiency-wrap">
+                <div class="efficiency-head">
+                  <span class="efficiency-score">67%</span>
+                  <span class="status-pill status-pending">Attention</span>
+                </div>
+                <div class="efficiency-track"><div class="efficiency-fill" style="width:67%;"></div></div>
+                <div class="field-note">Supervisor intervention is required.</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <i class="fa fa-check-circle"></i>
+    <span id="toastText">Done</span>
+  </div>
+
+  <script>
+    let selectedFarmName = "Kamshet";
+    let selectedBlockId = "A";
+    let selectedPlantNames = ["Tulsi"];
+    let selectedStages = ["Sapling"];
+
+    const customSelections = {
+      plantSelect: ["Tulsi"],
+      stageSelect: ["Sapling"],
+      rfidMultiSelect: [],
+      doneBySelect: ["Ramesh"],
+      productionActionSelect: ["Growth"]
+    };
+
+    let currentPlantUnits = [];
+    let selectedRfids = [];
+    let voucherCounter = 8;
+    let workOrderCounter = 1005;
+
+    const plantImages = [
+      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=700&q=80"
+    ];
+
+    const productionData = {
+      Kamshet: {
+        manager: "Farm Manager: Ajay Patil",
+        blocks: [
+          {
+            id: "A",
+            zone: "Front Polyhouse",
+            plants: [
+              { name: "Tulsi", sapling: 20, child: 15, adult: 20 },
+              { name: "Rose", sapling: 12, child: 18, adult: 10 },
+              { name: "Aloe Vera", sapling: 22, child: 11, adult: 14 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Shade Net Area",
+            plants: [
+              { name: "Neem", sapling: 18, child: 20, adult: 12 },
+              { name: "Jasmine", sapling: 15, child: 14, adult: 17 },
+              { name: "Money Plant", sapling: 28, child: 9, adult: 6 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Open Bed Section",
+            plants: [
+              { name: "Hibiscus", sapling: 10, child: 16, adult: 19 },
+              { name: "Marigold", sapling: 30, child: 18, adult: 5 },
+              { name: "Areca Palm", sapling: 8, child: 12, adult: 24 }
+            ]
+          }
+        ]
+      },
+      Karla: {
+        manager: "Farm Manager: Sunil More",
+        blocks: [
+          {
+            id: "A",
+            zone: "Main Greenhouse",
+            plants: [
+              { name: "Tulsi", sapling: 25, child: 10, adult: 15 },
+              { name: "Bougainvillea", sapling: 16, child: 20, adult: 9 },
+              { name: "Snake Plant", sapling: 18, child: 14, adult: 11 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Mother Plant Area",
+            plants: [
+              { name: "Rose", sapling: 20, child: 16, adult: 18 },
+              { name: "Curry Leaf", sapling: 11, child: 13, adult: 22 },
+              { name: "Ficus", sapling: 9, child: 17, adult: 19 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Sapling Yard",
+            plants: [
+              { name: "Money Plant", sapling: 35, child: 12, adult: 8 },
+              { name: "Jasmine", sapling: 14, child: 18, adult: 13 },
+              { name: "Peace Lily", sapling: 17, child: 10, adult: 9 }
+            ]
+          }
+        ]
+      },
+      Vadegaon: {
+        manager: "Farm Manager: Nitin Shinde",
+        blocks: [
+          {
+            id: "A",
+            zone: "Nursery Row 1",
+            plants: [
+              { name: "Aloe Vera", sapling: 30, child: 15, adult: 10 },
+              { name: "Neem", sapling: 12, child: 15, adult: 25 },
+              { name: "Guava Plant", sapling: 18, child: 12, adult: 20 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Nursery Row 2",
+            plants: [
+              { name: "Tulsi", sapling: 20, child: 20, adult: 20 },
+              { name: "Mango Plant", sapling: 15, child: 13, adult: 12 },
+              { name: "Areca Palm", sapling: 11, child: 15, adult: 18 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Hardening Area",
+            plants: [
+              { name: "Hibiscus", sapling: 13, child: 18, adult: 17 },
+              { name: "Rose", sapling: 18, child: 14, adult: 16 },
+              { name: "Bamboo", sapling: 8, child: 12, adult: 21 }
+            ]
+          }
+        ]
+      },
+      Ratnagiri: {
+        manager: "Farm Manager: Rakesh Sawant",
+        blocks: [
+          {
+            id: "A",
+            zone: "Coastal Plant Section",
+            plants: [
+              { name: "Coconut Plant", sapling: 10, child: 16, adult: 18 },
+              { name: "Areca Palm", sapling: 14, child: 12, adult: 24 },
+              { name: "Mango Plant", sapling: 22, child: 18, adult: 14 }
+            ]
+          },
+          {
+            id: "B",
+            zone: "Fruit Plant Bed",
+            plants: [
+              { name: "Guava Plant", sapling: 25, child: 18, adult: 12 },
+              { name: "Lemon Plant", sapling: 20, child: 12, adult: 13 },
+              { name: "Chikoo Plant", sapling: 16, child: 14, adult: 19 }
+            ]
+          },
+          {
+            id: "C",
+            zone: "Shade Plant Area",
+            plants: [
+              { name: "Money Plant", sapling: 32, child: 10, adult: 8 },
+              { name: "Snake Plant", sapling: 18, child: 12, adult: 13 },
+              { name: "Peace Lily", sapling: 15, child: 11, adult: 9 }
+            ]
+          }
+        ]
+      }
+    };
+
+    let workOrders = [
+      {
+        id: "WO-2026-1001",
+        assignedAt: "05 Aug 2026, 09:15 AM",
+        farm: "Kamshet",
+        block: "Block A",
+        plants: ["Tulsi"],
+        stages: ["Sapling"],
+        count: 12,
+        rfids: ["RFID-KAM-A-TULS-SAP-001", "RFID-KAM-A-TULS-SAP-002", "RFID-KAM-A-TULS-SAP-003", "RFID-KAM-A-TULS-SAP-004"],
+        supervisors: ["Ramesh"],
+        actions: ["Growth", "Maintenance"],
+        startDate: "05 Aug 2026",
+        endDate: "05 Aug 2026",
+        estimatedTime: "6 Hours",
+        outcome: "Healthy growth recorded",
+        remarks: "Nutrition and pruning completed as planned.",
+        materialAllocation: "Allocated",
+        voucher: "-",
+        status: "Completed",
+        supervisorMessage: "All 12 plants were serviced. No mortality or material variance was observed.",
+        completionDateTime: "05 Aug 2026, 03:05 PM",
+        efficiency: 96,
+        flagged: false,
+        revoked: false
+      },
+      {
+        id: "WO-2026-1002",
+        assignedAt: "05 Aug 2026, 11:40 AM",
+        farm: "Karla",
+        block: "Block B",
+        plants: ["Rose", "Curry Leaf"],
+        stages: ["Child", "Adult"],
+        count: 18,
+        rfids: ["RFID-KAR-B-ROSE-CHI-001", "RFID-KAR-B-ROSE-CHI-002", "RFID-KAR-B-CURR-ADU-001", "RFID-KAR-B-CURR-ADU-002"],
+        supervisors: ["Suresh", "Ganesh"],
+        actions: ["Maintenance"],
+        startDate: "05 Aug 2026",
+        endDate: "06 Aug 2026",
+        estimatedTime: "1.5 Days",
+        outcome: "Maintenance to be completed",
+        remarks: "Pruning, pest inspection and bag alignment.",
+        materialAllocation: "Allocated",
+        voucher: "-",
+        status: "In-Progress",
+        supervisorMessage: "First row is complete. Remaining plants are scheduled for the afternoon shift.",
+        completionDateTime: "Pending",
+        efficiency: 82,
+        flagged: false,
+        revoked: false
+      },
+      {
+        id: "WO-2026-1003",
+        assignedAt: "06 Aug 2026, 08:30 AM",
+        farm: "Vadegaon",
+        block: "Block A",
+        plants: ["Aloe Vera"],
+        stages: ["Sapling", "Child"],
+        count: 20,
+        rfids: ["RFID-VAD-A-ALOE-SAP-001", "RFID-VAD-A-ALOE-SAP-002", "RFID-VAD-A-ALOE-CHI-001", "RFID-VAD-A-ALOE-CHI-002"],
+        supervisors: ["Dharmesh"],
+        actions: ["Growth", "Maintenance"],
+        startDate: "06 Aug 2026",
+        endDate: "06 Aug 2026",
+        estimatedTime: "8 Hours",
+        outcome: "Healthy growth expected",
+        remarks: "Apply feed and complete irrigation check.",
+        materialAllocation: "Pending",
+        voucher: "-",
+        status: "Halted",
+        supervisorMessage: "Work is halted because the soluble feed is pending and the irrigation pump needs maintenance clearance.",
+        completionDateTime: "Not Completed",
+        efficiency: 48,
+        flagged: true,
+        revoked: false
+      },
+      {
+        id: "WO-2026-1004",
+        assignedAt: "06 Aug 2026, 10:05 AM",
+        farm: "Ratnagiri",
+        block: "Block B",
+        plants: ["Guava Plant", "Lemon Plant"],
+        stages: ["Adult"],
+        count: 14,
+        rfids: ["RFID-RAT-B-GUAV-ADU-001", "RFID-RAT-B-GUAV-ADU-002", "RFID-RAT-B-LEMO-ADU-001", "RFID-RAT-B-LEMO-ADU-002"],
+        supervisors: ["Mahesh", "Prakash"],
+        actions: ["Mortality", "Maintenance"],
+        startDate: "06 Aug 2026",
+        endDate: "07 Aug 2026",
+        estimatedTime: "1 Day",
+        outcome: "Damaged plants to be inspected and removed",
+        remarks: "Check leaf damage and isolate affected units.",
+        materialAllocation: "Partially Allocated",
+        voucher: "-",
+        status: "Attention",
+        supervisorMessage: "Three plants show unexpected leaf damage. Agronomist inspection and additional treatment material are required.",
+        completionDateTime: "Pending Review",
+        efficiency: 67,
+        flagged: true,
+        revoked: false
+      }
+    ];
+
+    function getTotal(plant) {
+      return plant.sapling + plant.child + plant.adult;
+    }
+
+    function getSelectedFarmData() {
+      return productionData[selectedFarmName];
+    }
+
+    function getSelectedBlock() {
+      return getSelectedFarmData().blocks.find(block => block.id === selectedBlockId) || getSelectedFarmData().blocks[0];
+    }
+
+    function stageKey(stage) {
+      if (stage === "Sapling") return "sapling";
+      if (stage === "Child") return "child";
+      return "adult";
+    }
+
+    function plantCode(name) {
+      return name.replaceAll(" ", "").substring(0, 4).toUpperCase();
+    }
+
+    function farmCode(name) {
+      return name.substring(0, 3).toUpperCase();
+    }
+
+    function imageForIndex(index) {
+      return plantImages[index % plantImages.length];
+    }
+
+    function getMultiSelectValues(id) {
+      return [...(customSelections[id] || [])];
+    }
+
+    function setMultiSelectValues(id, values) {
+      customSelections[id] = [...values];
+      const container = document.getElementById(id);
+      if (!container) return;
+
+      container.querySelectorAll('input[data-multi-value]').forEach(input => {
+        input.checked = values.includes(decodeURIComponent(input.dataset.multiValue));
+      });
+
+      const selectAll = container.querySelector('input[data-select-all="true"]');
+      const optionInputs = Array.from(container.querySelectorAll('input[data-multi-value]'));
+      if (selectAll) {
+        selectAll.checked = optionInputs.length > 0 && optionInputs.every(input => input.checked);
+        selectAll.indeterminate = optionInputs.some(input => input.checked) && !selectAll.checked;
+      }
+
+      updateMultiDropdownSummary(id);
+    }
+
+    function renderMultiDropdown(id, options, selectedValues, placeholder, callbackName, includeSelectAll = false) {
+      customSelections[id] = [...selectedValues];
+      const container = document.getElementById(id);
+      if (!container) return;
+
+      const selectedSet = new Set(selectedValues);
+      const selectAllChecked = options.length > 0 && options.every(option => selectedSet.has(option.value));
+      const selectAllIndeterminate = options.some(option => selectedSet.has(option.value)) && !selectAllChecked;
+
+      container.dataset.placeholder = placeholder;
+      container.dataset.callback = callbackName || "";
+      container.innerHTML = `
+        <button type="button" class="multi-dropdown-toggle" onclick="toggleMultiDropdown('${id}', event)">
+          <span id="${id}Summary"></span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="multi-dropdown-menu" onclick="event.stopPropagation()">
+          ${includeSelectAll ? `
+            <label class="multi-option select-all-option">
+              <input type="checkbox" data-select-all="true" ${selectAllChecked ? "checked" : ""}
+                onchange="toggleAllMultiOptions('${id}', this.checked)">
+              <span>Select All (${options.length})</span>
+            </label>
+          ` : ""}
+          ${options.length ? options.map(option => `
+            <label class="multi-option">
+              <input type="checkbox" data-multi-value="${encodeURIComponent(option.value)}"
+                ${selectedSet.has(option.value) ? "checked" : ""}
+                onchange="changeMultiOption('${id}', '${encodeURIComponent(option.value)}', this.checked)">
+              <span>${escapeHtml(option.label)}</span>
+            </label>
+          `).join("") : '<div class="multi-empty">No options available.</div>'}
+        </div>
+      `;
+
+      const selectAllInput = container.querySelector('input[data-select-all="true"]');
+      if (selectAllInput) selectAllInput.indeterminate = selectAllIndeterminate;
+      updateMultiDropdownSummary(id);
+    }
+
+    function toggleMultiDropdown(id, event) {
+      if (event) event.stopPropagation();
+      const target = document.getElementById(id);
+      const willOpen = !target.classList.contains("open");
+      document.querySelectorAll(".multi-dropdown.open").forEach(dropdown => dropdown.classList.remove("open"));
+      if (willOpen) target.classList.add("open");
+    }
+
+    function changeMultiOption(id, encodedValue, checked) {
+      const value = decodeURIComponent(encodedValue);
+      const current = new Set(customSelections[id] || []);
+      if (checked) current.add(value); else current.delete(value);
+      customSelections[id] = Array.from(current);
+      setMultiSelectValues(id, customSelections[id]);
+      runMultiDropdownCallback(id);
+    }
+
+    function toggleAllMultiOptions(id, checked) {
+      const container = document.getElementById(id);
+      const values = Array.from(container.querySelectorAll('input[data-multi-value]'))
+        .map(input => decodeURIComponent(input.dataset.multiValue));
+      customSelections[id] = checked ? values : [];
+      setMultiSelectValues(id, customSelections[id]);
+      runMultiDropdownCallback(id);
+    }
+
+    function updateMultiDropdownSummary(id) {
+      const container = document.getElementById(id);
+      const summary = document.getElementById(`${id}Summary`);
+      if (!container || !summary) return;
+
+      const selected = customSelections[id] || [];
+      const placeholder = container.dataset.placeholder || "Select options";
+      if (!selected.length) {
+        summary.textContent = placeholder;
+        return;
+      }
+
+      const labels = selected.map(value => {
+        const input = Array.from(container.querySelectorAll('input[data-multi-value]'))
+          .find(item => decodeURIComponent(item.dataset.multiValue) === value);
+        return input ? input.closest("label").querySelector("span").textContent : value;
+      });
+
+      summary.textContent = labels.length <= 2 ? labels.join(", ") : `${labels.length} selected`;
+    }
+
+    function runMultiDropdownCallback(id) {
+      if (id === "plantSelect" || id === "stageSelect") changePlantOrStage();
+      if (id === "rfidMultiSelect") handleBatchSelection();
+      if (id === "productionActionSelect") toggleLocationTransfer();
+    }
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".multi-dropdown.open").forEach(dropdown => dropdown.classList.remove("open"));
+    });
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderFarms() {
+      document.getElementById("farmGrid").innerHTML = Object.keys(productionData).map(farm => {
+        const blockCount = productionData[farm].blocks.length;
+        const totalPlants = productionData[farm].blocks.reduce((sum, block) => {
+          return sum + block.plants.reduce((innerSum, plant) => innerSum + getTotal(plant), 0);
+        }, 0);
+
+        return `
+          <div class="farm-card ${farm === selectedFarmName ? "active" : ""}" onclick="selectFarm('${farm}')">
+            <h3>${farm}</h3>
+            <p class="muted">${productionData[farm].manager}</p>
+            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:2;">
+              <span class="status-pill status-draft">${blockCount} Blocks</span>
+              <span class="status-pill status-approved">${totalPlants} Plants</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderBlocks() {
+      const blocks = getSelectedFarmData().blocks;
+      document.getElementById("selectedFarmPill").innerHTML = `<i class="fa fa-map-marker"></i> ${selectedFarmName}`;
+      document.getElementById("blockSummaryText").textContent = `${selectedFarmName} has ${blocks.length} active production blocks. Select any block to view its available plant varieties and RFID-level plants.`;
+
+      document.getElementById("blockGrid").innerHTML = blocks.map(block => {
+        const blockTotal = block.plants.reduce((sum, plant) => sum + getTotal(plant), 0);
+
+        return `
+          <div class="block-card ${block.id === selectedBlockId ? "active" : ""}" onclick="selectBlock('${block.id}')">
+            <div>
+              <div class="block-head">
+                <div>
+                  <div class="block-title">Block ${block.id}</div>
+                  <div class="block-zone">${block.zone}</div>
+                </div>
+                <div class="block-total">${blockTotal} Total</div>
+              </div>
+
+              <div class="plant-summary-list">
+                ${block.plants.map(plant => `
+                  <div class="plant-summary-row">
+                    <strong>${plant.name} · Total ${getTotal(plant)}</strong>
+                    <div class="stage-line">
+                      <span class="stage-chip">Sapling ${plant.sapling}</span>
+                      <span class="stage-chip">Child ${plant.child}</span>
+                      <span class="stage-chip">Adult ${plant.adult}</span>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderPlantSelectors() {
+      const block = getSelectedBlock();
+      const availablePlants = block.plants.map(plant => plant.name);
+      selectedPlantNames = selectedPlantNames.filter(name => availablePlants.includes(name));
+
+      if (!selectedPlantNames.length) selectedPlantNames = [availablePlants[0]];
+      if (!selectedStages.length) selectedStages = ["Sapling"];
+
+      renderMultiDropdown(
+        "plantSelect",
+        block.plants.map(plant => ({ value: plant.name, label: `${plant.name} · Total ${getTotal(plant)}` })),
+        selectedPlantNames,
+        "Select plant varieties",
+        "changePlantOrStage"
+      );
+
+      renderMultiDropdown(
+        "stageSelect",
+        [
+          { value: "Sapling", label: "Sapling" },
+          { value: "Child", label: "Child" },
+          { value: "Adult", label: "Adult" }
+        ],
+        selectedStages,
+        "Select stages",
+        "changePlantOrStage"
+      );
+
+      document.getElementById("plantSelectorText").textContent = `${selectedFarmName} · Block ${selectedBlockId}. Open each dropdown and tick multiple plant varieties and stages.`;
+    }
+
+    function generatePlantUnits() {
+      const block = getSelectedBlock();
+      const units = [];
+      let imageIndex = 0;
+
+      selectedPlantNames.forEach(plantName => {
+        const plant = block.plants.find(item => item.name === plantName);
+        if (!plant) return;
+
+        selectedStages.forEach(stage => {
+          const count = plant[stageKey(stage)] || 0;
+          const plantShort = plantCode(plantName);
+          const farmShort = farmCode(selectedFarmName);
+          const stageShort = stage.substring(0, 3).toUpperCase();
+
+          for (let i = 1; i <= count; i++) {
+            imageIndex++;
+            units.push({
+              serial: i,
+              rfid: `RFID-${farmShort}-${selectedBlockId}-${plantShort}-${stageShort}-${String(i).padStart(3, "0")}`,
+              plant: plantName,
+              stage: stage,
+              farm: selectedFarmName,
+              block: `Block ${selectedBlockId}`,
+              image: imageForIndex(imageIndex)
+            });
+          }
+        });
+      });
+
+      currentPlantUnits = units;
+      selectedRfids = selectedRfids.filter(rfid => currentPlantUnits.some(unit => unit.rfid === rfid));
+    }
+
+    function renderBatchSelector() {
+      const plantText = selectedPlantNames.join(", ");
+      const stageText = selectedStages.join(", ");
+
+      document.getElementById("batchSubText").innerHTML = `
+        Showing <strong>${currentPlantUnits.length}</strong> matching plants for
+        <strong>${escapeHtml(plantText)}</strong> at stages <strong>${escapeHtml(stageText)}</strong>
+        in <strong>${selectedFarmName} · Block ${selectedBlockId}</strong>.
+      `;
+
+      renderMultiDropdown(
+        "rfidMultiSelect",
+        currentPlantUnits.map(unit => ({
+          value: unit.rfid,
+          label: `${unit.plant} · ${unit.stage} · ${unit.rfid}`
+        })),
+        selectedRfids,
+        "Select RFID plants",
+        "handleBatchSelection",
+        true
+      );
+
+      renderPlantCards();
+      updateSelectedCount();
+    }
+
+    function renderPlantCards() {
+      if (!currentPlantUnits.length) {
+        document.getElementById("rfidPlantGrid").innerHTML = `
+          <div class="info-box" style="grid-column:1/-1; text-align:center;">
+            <strong style="color:#1a4d2a;">No matching plants found.</strong>
+            <p class="muted" style="margin-top:6px;">Select at least one plant variety and one stage.</p>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById("rfidPlantGrid").innerHTML = currentPlantUnits.map(unit => `
+        <div class="plant-card ${selectedRfids.includes(unit.rfid) ? "selected" : ""}" onclick="togglePlantCard('${unit.rfid}')">
+          <div class="check-dot"><i class="fa fa-check"></i></div>
+          <img class="plant-img" src="${unit.image}" alt="${unit.plant}">
+          <div class="plant-card-body">
+            <h4>${unit.plant} #${String(unit.serial).padStart(2, "0")}</h4>
+            <div class="rfid-text">
+              <strong>RFID No:</strong><br>${unit.rfid}<br>
+              <strong>Stage:</strong> ${unit.stage}
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function handleBatchSelection() {
+      selectedRfids = getMultiSelectValues("rfidMultiSelect");
+      renderPlantCards();
+      updateSelectedCount();
+    }
+
+    function selectAllPlants() {
+      selectedRfids = currentPlantUnits.map(unit => unit.rfid);
+      setMultiSelectValues("rfidMultiSelect", selectedRfids);
+      renderPlantCards();
+      updateSelectedCount();
+      showToast(`${selectedRfids.length} matching plants selected`);
+    }
+
+    function togglePlantCard(rfid) {
+      if (selectedRfids.includes(rfid)) {
+        selectedRfids = selectedRfids.filter(id => id !== rfid);
+      } else {
+        selectedRfids.push(rfid);
+      }
+
+      setMultiSelectValues("rfidMultiSelect", selectedRfids);
+      renderPlantCards();
+      updateSelectedCount();
+    }
+
+    function clearBatchSelection(showMessage = true) {
+      selectedRfids = [];
+      setMultiSelectValues("rfidMultiSelect", []);
+      renderPlantCards();
+      updateSelectedCount();
+      if (showMessage) showToast("Plant selection cleared");
+    }
+
+    function updateSelectedCount() {
+      document.getElementById("selectedCountPill").textContent = `${selectedRfids.length} selected`;
+    }
+
+    function toggleLocationTransfer() {
+      const actions = getMultiSelectValues("productionActionSelect");
+      const transferSection = document.getElementById("locationTransferSection");
+
+      if (actions.includes("Update Location")) {
+        transferSection.classList.remove("hidden");
+        document.getElementById("fromFarmInput").value = selectedFarmName;
+        document.getElementById("fromBlockInput").value = `Block ${selectedBlockId}`;
+        document.getElementById("voucherPreviewInput").value = `TV-2026-${String(voucherCounter).padStart(3, "0")}`;
+        document.getElementById("transferVoucherBox").classList.add("hidden");
+      } else {
+        transferSection.classList.add("hidden");
+      }
+    }
+
+    function createTransferVoucherIfNeeded(actions) {
+      if (!actions.includes("Update Location")) return "-";
+
+      const voucherNo = `TV-2026-${String(voucherCounter).padStart(3, "0")}`;
+      voucherCounter++;
+
+      const fromFarm = document.getElementById("fromFarmInput").value;
+      const fromBlock = document.getElementById("fromBlockInput").value;
+      const toFarm = document.getElementById("toFarmSelect").value;
+      const toBlock = document.getElementById("toBlockInput").value.trim() || "New Production Location";
+      const distance = document.getElementById("distanceInput").value || "0";
+      const driver = document.getElementById("driverSelect").value;
+      const tripStatus = document.getElementById("tripStatusSelect").value;
+
+      document.getElementById("transferVoucherBox").classList.remove("hidden");
+      document.getElementById("transferVoucherBox").innerHTML = `
+        <h3 style="color:#1a4d2a; margin-bottom:8px;">Transfer Voucher Created ✅</h3>
+        <p class="muted" style="margin-bottom:16px;">
+          <strong>Voucher No:</strong> ${voucherNo} ·
+          <strong>Plants:</strong> ${selectedRfids.length} ·
+          <strong>Work Order:</strong> Pending assignment confirmation
+        </p>
+
+        <div class="table-card" style="box-shadow:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>From Farm</th>
+                <th>From Location</th>
+                <th>To Farm</th>
+                <th>To Location</th>
+                <th>Distance</th>
+                <th>Driver</th>
+                <th>Trip Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${escapeHtml(fromFarm)}</td>
+                <td>${escapeHtml(fromBlock)}</td>
+                <td>${escapeHtml(toFarm)}</td>
+                <td>${escapeHtml(toBlock)}</td>
+                <td>${escapeHtml(distance)} KM</td>
+                <td>${escapeHtml(driver)}</td>
+                <td><span class="status-pill status-review">${escapeHtml(tripStatus)}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      return voucherNo;
+    }
+
+    function formatDateForDisplay(value) {
+      if (!value) return "Not Set";
+      const date = new Date(`${value}T00:00:00`);
+      return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    function formatNow() {
+      return new Date().toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getSelectedUnits() {
+      return currentPlantUnits.filter(unit => selectedRfids.includes(unit.rfid));
+    }
+
+    function assignWorkOrder() {
+      const supervisors = getMultiSelectValues("doneBySelect");
+      const actions = getMultiSelectValues("productionActionSelect");
+      const startDateValue = document.getElementById("startDateInput").value;
+      const endDateValue = document.getElementById("endDateInput").value;
+      const estimatedTime = document.getElementById("estimatedTimeInput").value.trim();
+
+      if (!selectedRfids.length) {
+        alert("Please select at least one RFID plant before assigning the work order.");
+        return;
+      }
+
+      if (!supervisors.length) {
+        alert("Please select at least one supervisor in Task Done By.");
+        return;
+      }
+
+      if (!actions.length) {
+        alert("Please select at least one production action.");
+        return;
+      }
+
+      if (!startDateValue || !endDateValue) {
+        alert("Please select both start date and end date.");
+        return;
+      }
+
+      if (new Date(endDateValue) < new Date(startDateValue)) {
+        alert("End date cannot be earlier than start date.");
+        return;
+      }
+
+      if (!estimatedTime) {
+        alert("Please enter the estimated time.");
+        return;
+      }
+
+      const selectedUnits = getSelectedUnits();
+      const selectedPlantsForOrder = [...new Set(selectedUnits.map(unit => unit.plant))];
+      const selectedStagesForOrder = [...new Set(selectedUnits.map(unit => unit.stage))];
+      const voucherNo = createTransferVoucherIfNeeded(actions);
+      const workOrderNo = `WO-2026-${String(workOrderCounter).padStart(4, "0")}`;
+      workOrderCounter++;
+
+      const outcome = document.getElementById("outcomeSelect").value;
+      const remarks = document.getElementById("remarksInput").value.trim() || "No additional remarks.";
+      const materialAllocation = document.getElementById("materialAllocationSelect").value;
+
+      workOrders.unshift({
+        id: workOrderNo,
+        assignedAt: formatNow(),
+        farm: selectedFarmName,
+        block: `Block ${selectedBlockId}`,
+        plants: selectedPlantsForOrder,
+        stages: selectedStagesForOrder,
+        count: selectedRfids.length,
+        rfids: [...selectedRfids],
+        supervisors: supervisors,
+        actions: actions,
+        startDate: formatDateForDisplay(startDateValue),
+        endDate: formatDateForDisplay(endDateValue),
+        estimatedTime: estimatedTime,
+        outcome: outcome,
+        remarks: remarks,
+        materialAllocation: materialAllocation,
+        voucher: voucherNo,
+        status: "In-Progress",
+        supervisorMessage: "Work order assigned. Supervisor update is awaited after execution begins.",
+        completionDateTime: "Pending",
+        efficiency: null,
+        flagged: false,
+        revoked: false
+      });
+
+      document.getElementById("inventoryMessage").style.display = "block";
+      document.getElementById("inventoryMessageText").textContent = `${workOrderNo} assigned successfully to ${supervisors.join(", ")}.`;
+
+      renderFilterOptions();
+      renderWorkOrders();
+      renderMetrics();
+      showToast(`${workOrderNo} assigned successfully`);
+    }
+
+    function statusClass(status) {
+      if (status === "Completed") return "status-approved";
+      if (status === "In-Progress") return "status-review";
+      if (status === "Halted") return "status-danger";
+      if (status === "Attention") return "status-pending";
+      return "status-draft";
+    }
+
+    function materialClass(status) {
+      if (status === "Allocated") return "status-approved";
+      if (status === "Partially Allocated") return "status-pending";
+      if (status === "Pending") return "status-danger";
+      return "status-draft";
+    }
+
+    function getFilteredWorkOrders() {
+      const farm = document.getElementById("filterFarm").value;
+      const supervisor = document.getElementById("filterSupervisor").value;
+      const plant = document.getElementById("filterPlant").value;
+      const status = document.getElementById("filterStatus").value;
+      const material = document.getElementById("filterMaterial").value;
+      const flag = document.getElementById("filterFlag").value;
+      const search = document.getElementById("filterSearch").value.trim().toLowerCase();
+
+      return workOrders.filter(order => {
+        if (farm && order.farm !== farm) return false;
+        if (supervisor && !order.supervisors.includes(supervisor)) return false;
+        if (plant && !order.plants.includes(plant)) return false;
+        if (status && order.status !== status) return false;
+        if (material && order.materialAllocation !== material) return false;
+        if (flag === "Flagged" && !order.flagged) return false;
+        if (flag === "Not Flagged" && order.flagged) return false;
+
+        if (search) {
+          const haystack = [
+            order.id,
+            order.farm,
+            order.block,
+            order.plants.join(" "),
+            order.stages.join(" "),
+            order.supervisors.join(" "),
+            order.actions.join(" "),
+            order.outcome,
+            order.remarks,
+            order.supervisorMessage,
+            order.status,
+            order.materialAllocation
+          ].join(" ").toLowerCase();
+
+          if (!haystack.includes(search)) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderWorkOrders() {
+      const filteredOrders = getFilteredWorkOrders();
+      const tbody = document.getElementById("workOrderTableBody");
+      document.getElementById("filterCountPill").textContent = `${filteredOrders.length} work orders`;
+
+      if (!filteredOrders.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="20" style="text-align:center; color:#5a6f5a; padding:28px;">
+              No assigned work orders match the selected filters.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filteredOrders.map(order => {
+        const efficiencyValue = typeof order.efficiency === "number" ? Math.max(0, Math.min(100, order.efficiency)) : 0;
+        const efficiencyText = typeof order.efficiency === "number" ? `${order.efficiency}%` : "Pending";
+        const previewRfids = order.rfids.slice(0, 4);
+
+        return `
+          <tr class="${order.flagged ? "flagged-row" : ""} ${order.revoked ? "revoked-row" : ""}">
+            <td>
+              <span class="selected-pill">${escapeHtml(order.id)}</span>
+              ${order.flagged ? '<br><span class="status-pill status-pending" style="margin-top:8px;"><i class="fa fa-flag"></i> Flagged</span>' : ""}
+            </td>
+            <td>
+              <button class="btn ${order.flagged ? "btn-gold" : "btn-light"} btn-small flag-action-button" onclick="toggleFlag('${order.id}')">
+                <i class="fa fa-flag"></i> ${order.flagged ? "Unflag" : "Flag"}
+              </button>
+              <div class="field-note">${order.flagged ? "Marked for review" : "Click to flag"}</div>
+            </td>
+            <td>${escapeHtml(order.assignedAt)}</td>
+            <td><strong>${escapeHtml(order.farm)}</strong><br><span class="muted">${escapeHtml(order.block)}</span></td>
+            <td>
+              <strong>${escapeHtml(order.plants.join(", "))}</strong><br>
+              <span class="muted">${escapeHtml(order.stages.join(", "))} · ${order.count} plants</span>
+            </td>
+            <td class="rfid-preview">
+              ${previewRfids.map(rfid => escapeHtml(rfid)).join("<br>")}
+              ${order.count > previewRfids.length ? `<br><span class="status-pill status-draft">+${order.count - previewRfids.length} more</span>` : ""}
+            </td>
+            <td>${escapeHtml(order.supervisors.join(", "))}</td>
+            <td>${order.actions.map(action => `<span class="status-pill status-review" style="margin:2px;">${escapeHtml(action)}</span>`).join("")}</td>
+            <td>${escapeHtml(order.startDate)}</td>
+            <td>${escapeHtml(order.endDate)}</td>
+            <td>${escapeHtml(order.estimatedTime)}</td>
+            <td><strong>${escapeHtml(order.outcome)}</strong><br><span class="muted">${escapeHtml(order.remarks)}</span></td>
+            <td><span class="status-pill ${materialClass(order.materialAllocation)}">${escapeHtml(order.materialAllocation)}</span></td>
+            <td>${order.voucher === "-" ? "-" : `<span class="status-pill status-po">${escapeHtml(order.voucher)}</span>`}</td>
+            <td><span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span></td>
+            <td><div class="supervisor-message">${escapeHtml(order.supervisorMessage)}</div></td>
+            <td>${escapeHtml(order.completionDateTime)}</td>
+            <td>
+              <button class="btn btn-red btn-small" onclick="revokeWorkOrder('${order.id}')" ${order.revoked ? "disabled" : ""}>
+                <i class="fa fa-ban"></i> ${order.revoked ? "Revoked" : "Revoke"}
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-purple btn-small" onclick="redoWorkOrder('${order.id}')">
+                <i class="fa fa-repeat"></i> Redo
+              </button>
+            </td>
+            <td>
+              <div class="efficiency-wrap">
+                <div class="efficiency-head">
+                  <span class="efficiency-score">${efficiencyText}</span>
+                  <span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span>
+                </div>
+                <div class="efficiency-track"><div class="efficiency-fill" style="width:${efficiencyValue}%;"></div></div>
+                <div class="field-note">${efficiencySummary(order)}</div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function efficiencySummary(order) {
+      if (order.status === "Completed") return "Task completed with recorded efficiency.";
+      if (order.status === "In-Progress") return "Efficiency is provisional until completion.";
+      if (order.status === "Halted") return "Efficiency affected by halted execution.";
+      if (order.status === "Attention") return "Supervisor intervention is required.";
+      return "Work order has been revoked.";
+    }
+
+    function toggleFlag(id) {
+      const order = workOrders.find(item => item.id === id);
+      if (!order) return;
+      order.flagged = !order.flagged;
+      renderWorkOrders();
+      renderMetrics();
+      showToast(`${id} ${order.flagged ? "flagged for attention" : "flag removed"}`);
+    }
+
+    function revokeWorkOrder(id) {
+      const order = workOrders.find(item => item.id === id);
+      if (!order || order.revoked) return;
+
+      if (!confirm(`Revoke ${id}? The record will remain visible for audit history.`)) return;
+
+      order.revoked = true;
+      order.status = "Revoked";
+      order.supervisorMessage = "Work order revoked by management. No further execution is permitted under this work-order number.";
+      order.completionDateTime = `Revoked: ${formatNow()}`;
+      order.efficiency = 0;
+      renderWorkOrders();
+      renderMetrics();
+      showToast(`${id} revoked successfully`);
+    }
+
+    function redoWorkOrder(id) {
+      const source = workOrders.find(item => item.id === id);
+      if (!source) return;
+
+      const newId = `WO-2026-${String(workOrderCounter).padStart(4, "0")}`;
+      workOrderCounter++;
+
+      const clone = {
+        ...source,
+        id: newId,
+        assignedAt: formatNow(),
+        status: "In-Progress",
+        supervisorMessage: `Redo created from ${source.id}. Supervisors must repeat the work and submit a fresh completion update.`,
+        completionDateTime: "Pending",
+        efficiency: null,
+        flagged: false,
+        revoked: false,
+        rfids: [...source.rfids],
+        plants: [...source.plants],
+        stages: [...source.stages],
+        supervisors: [...source.supervisors],
+        actions: [...source.actions]
+      };
+
+      workOrders.unshift(clone);
+      renderFilterOptions();
+      renderWorkOrders();
+      renderMetrics();
+      showToast(`${newId} created as redo of ${source.id}`);
+    }
+
+    function renderMetrics() {
+      const activeOrders = workOrders.filter(order => !order.revoked);
+      document.getElementById("metricAssigned").textContent = workOrders.length;
+      document.getElementById("metricCompleted").textContent = activeOrders.filter(order => order.status === "Completed").length;
+      document.getElementById("metricInProgress").textContent = activeOrders.filter(order => order.status === "In-Progress").length;
+      document.getElementById("metricExceptions").textContent = activeOrders.filter(order => ["Halted", "Attention"].includes(order.status)).length;
+    }
+
+    function renderFilterOptions() {
+      const currentFarm = document.getElementById("filterFarm").value;
+      const currentSupervisor = document.getElementById("filterSupervisor").value;
+      const currentPlant = document.getElementById("filterPlant").value;
+
+      const farms = [...new Set(workOrders.map(order => order.farm))].sort();
+      const supervisors = [...new Set(workOrders.flatMap(order => order.supervisors))].sort();
+      const plants = [...new Set(workOrders.flatMap(order => order.plants))].sort();
+
+      document.getElementById("filterFarm").innerHTML = `<option value="">All Farms</option>${farms.map(item => `<option value="${item}">${item}</option>`).join("")}`;
+      document.getElementById("filterSupervisor").innerHTML = `<option value="">All Supervisors</option>${supervisors.map(item => `<option value="${item}">${item}</option>`).join("")}`;
+      document.getElementById("filterPlant").innerHTML = `<option value="">All Plants</option>${plants.map(item => `<option value="${item}">${item}</option>`).join("")}`;
+
+      document.getElementById("filterFarm").value = farms.includes(currentFarm) ? currentFarm : "";
+      document.getElementById("filterSupervisor").value = supervisors.includes(currentSupervisor) ? currentSupervisor : "";
+      document.getElementById("filterPlant").value = plants.includes(currentPlant) ? currentPlant : "";
+    }
+
+    function clearFilters() {
+      document.getElementById("filterFarm").value = "";
+      document.getElementById("filterSupervisor").value = "";
+      document.getElementById("filterPlant").value = "";
+      document.getElementById("filterStatus").value = "";
+      document.getElementById("filterMaterial").value = "";
+      document.getElementById("filterFlag").value = "";
+      document.getElementById("filterSearch").value = "";
+      renderWorkOrders();
+      showToast("Work-order filters cleared");
+    }
+
+    function selectFarm(farm) {
+      selectedFarmName = farm;
+      selectedBlockId = productionData[farm].blocks[0].id;
+      selectedPlantNames = [productionData[farm].blocks[0].plants[0].name];
+      selectedStages = ["Sapling"];
+      customSelections.plantSelect = [...selectedPlantNames];
+      customSelections.stageSelect = [...selectedStages];
+      document.getElementById("locationTransferSection").classList.add("hidden");
+      renderProductionWorkspace();
+      showToast(`Farm changed to ${farm}`);
+    }
+
+    function selectBlock(blockId) {
+      selectedBlockId = blockId;
+      selectedPlantNames = [getSelectedBlock().plants[0].name];
+      selectedStages = ["Sapling"];
+      customSelections.plantSelect = [...selectedPlantNames];
+      customSelections.stageSelect = [...selectedStages];
+      document.getElementById("locationTransferSection").classList.add("hidden");
+      renderProductionWorkspace();
+      showToast(`Block ${blockId} selected in ${selectedFarmName}`);
+    }
+
+    function changePlantOrStage() {
+      const plants = getMultiSelectValues("plantSelect");
+      const stages = getMultiSelectValues("stageSelect");
+
+      selectedPlantNames = plants.length ? plants : [getSelectedBlock().plants[0].name];
+      selectedStages = stages.length ? stages : ["Sapling"];
+
+      if (!plants.length) setMultiSelectValues("plantSelect", selectedPlantNames);
+      if (!stages.length) setMultiSelectValues("stageSelect", selectedStages);
+
+      document.getElementById("locationTransferSection").classList.add("hidden");
+      generatePlantUnits();
+      renderBatchSelector();
+      toggleLocationTransfer();
+      showToast(`${selectedPlantNames.length} variet${selectedPlantNames.length === 1 ? "y" : "ies"} and ${selectedStages.length} stage${selectedStages.length === 1 ? "" : "s"} loaded`);
+    }
+
+    function setDefaultDates() {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      const toInputDate = date => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      document.getElementById("startDateInput").value = toInputDate(today);
+      document.getElementById("endDateInput").value = toInputDate(tomorrow);
+    }
+
+    function resetAssignmentForm() {
+      clearBatchSelection(false);
+      setMultiSelectValues("doneBySelect", ["Ramesh"]);
+      setMultiSelectValues("productionActionSelect", ["Growth"]);
+      document.getElementById("outcomeSelect").selectedIndex = 0;
+      document.getElementById("materialAllocationSelect").value = "Allocated";
+      document.getElementById("estimatedTimeInput").value = "6 Hours";
+      document.getElementById("remarksInput").value = "";
+      document.getElementById("toBlockInput").value = "";
+      document.getElementById("transferVoucherBox").classList.add("hidden");
+      setDefaultDates();
+      toggleLocationTransfer();
+      showToast("Work-order assignment form reset");
+    }
+
+    function renderAssignmentDropdowns() {
+      renderMultiDropdown(
+        "doneBySelect",
+        ["Ramesh", "Suresh", "Dharmesh", "Mahesh", "Ganesh", "Prakash"].map(name => ({ value: name, label: name })),
+        getMultiSelectValues("doneBySelect"),
+        "Select supervisors",
+        ""
+      );
+
+      renderMultiDropdown(
+        "productionActionSelect",
+        ["Growth", "Maintenance", "Create Sellable Batch", "Mortality", "Update Location"].map(action => ({ value: action, label: action })),
+        getMultiSelectValues("productionActionSelect"),
+        "Select production actions",
+        "toggleLocationTransfer"
+      );
+    }
+
+    function renderProductionWorkspace() {
+      renderFarms();
+      renderBlocks();
+      renderPlantSelectors();
+      generatePlantUnits();
+      renderBatchSelector();
+      toggleLocationTransfer();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastText").textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => toast.classList.remove("show"), 2800);
+    }
+
+    function initializePage() {
+      setDefaultDates();
+      renderProductionWorkspace();
+      renderAssignmentDropdowns();
+      renderFilterOptions();
+      renderWorkOrders();
+      renderMetrics();
+      toggleLocationTransfer();
+    }
+
+    initializePage();
+  </script>
+</body></html>
+
