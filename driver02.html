@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Driver Dashboard</title>
+</head>
+
+<body style="margin:0;background:#f4f7f5;color:#1e2e24;font-family:Inter,Arial,sans-serif;min-height:100vh;">
+
+  <div id="app"></div>
+
+  <!-- ISSUE MODAL -->
+  <div id="issueModal"
+       onclick="if(event.target===this) closeIssueModal()"
+       style="display:none;position:fixed;inset:0;background:rgba(8,28,17,.65);backdrop-filter:blur(7px);z-index:9999;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;">
+
+    <div style="width:min(520px,100%);background:#fff;border-radius:26px;box-shadow:0 30px 90px rgba(0,20,0,.32);overflow:hidden;">
+
+      <div style="padding:21px 22px;background:linear-gradient(145deg,#8f201f,#b42331);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:15px;">
+        <div>
+          <div style="font-size:18px;font-weight:900;">⚠ Report Delivery Issue</div>
+          <div id="issueTaskNumber" style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;"></div>
+        </div>
+
+        <button onclick="closeIssueModal()"
+                style="border:none;width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.13);color:#fff;font-size:20px;cursor:pointer;">
+          ×
+        </button>
+      </div>
+
+      <div style="padding:22px;">
+
+        <label style="display:block;color:#1a4d2a;font-size:13px;font-weight:850;margin-bottom:7px;">
+          What is the issue?
+        </label>
+
+        <select id="issueReason"
+                style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:14px;padding:13px 14px;background:#fff;color:#1e2e24;font:inherit;font-size:14px;font-weight:650;outline:none;margin-bottom:16px;">
+          <option value="">Select issue</option>
+          <option>Traffic / Delivery Delay</option>
+          <option>Vehicle Breakdown</option>
+          <option>Customer Not Available</option>
+          <option>Wrong / Incomplete Address</option>
+          <option>Plant / Material Damage</option>
+          <option>Pickup Not Ready</option>
+          <option>Unable to Contact Customer</option>
+          <option>Other</option>
+        </select>
+
+        <label style="display:block;color:#1a4d2a;font-size:13px;font-weight:850;margin-bottom:7px;">
+          Short Note
+        </label>
+
+        <textarea id="issueNote"
+                  placeholder="Tell the supervisor what happened..."
+                  style="width:100%;min-height:100px;resize:vertical;box-sizing:border-box;border:1px solid #dbe8db;border-radius:14px;padding:13px 14px;background:#fff;color:#1e2e24;font:inherit;font-size:14px;font-weight:600;outline:none;"></textarea>
+
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;">
+
+          <button onclick="closeIssueModal()"
+                  style="flex:1;min-width:130px;border:1px solid #dbe8db;background:#fff;color:#1a4d2a;border-radius:999px;padding:13px 18px;font-weight:850;cursor:pointer;">
+            Cancel
+          </button>
+
+          <button onclick="submitIssue()"
+                  style="flex:1;min-width:180px;border:none;background:#b42331;color:#fff;border-radius:999px;padding:13px 18px;font-weight:900;cursor:pointer;box-shadow:0 8px 18px rgba(180,35,49,.2);">
+            Submit Issue
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK DETAIL MODAL -->
+  <div id="detailModal"
+       onclick="if(event.target===this) closeDetails()"
+       style="display:none;position:fixed;inset:0;background:rgba(8,28,17,.64);backdrop-filter:blur(7px);z-index:9998;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;">
+
+    <div id="detailModalContent"
+         style="width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:26px;box-shadow:0 30px 90px rgba(0,20,0,.3);">
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"
+       style="position:fixed;right:22px;bottom:22px;background:#1a4d2a;color:#fff;padding:14px 18px;border-radius:15px;box-shadow:0 12px 30px rgba(0,20,0,.25);font-size:13px;font-weight:800;z-index:10000;opacity:0;transform:translateY(70px);transition:.25s;max-width:calc(100vw - 44px);">
+  </div>
+
+
+  <script>
+
+    /*
+      ============================================================
+      DRIVER ROLE
+      ============================================================
+
+      Driver receives delivery work from:
+
+      MIMO 1:
+      Production Work -> Update Location -> Transfer Voucher
+
+      MIMO 2:
+      Material Allocation -> Internal Transfer -> Transfer Voucher
+
+      MIMO 4:
+      Confirmed B2C Order -> Customer Delivery Assignment
+
+      MIMO 5:
+      Finalized B2B Quotation -> Order -> Driver Assignment
+
+      IMPORTANT:
+      Driver sees only tasks where:
+      task.driverId === currentDriver.id
+    */
+
+    const currentDriver = {
+      id: "DRV-005",
+      employeeId: "EMP-DRV-005",
+      name: "Nilesh Patil",
+      shortName: "Nilesh",
+      initials: "NP",
+      phone: "+91 98765 22005",
+      alternatePhone: "+91 97655 22005",
+      email: "nilesh.patil@omnursery.in",
+      role: "Delivery Driver",
+      status: "Active",
+      baseBranch: "OM Nursery · Kamshet Farm",
+      joiningDate: "12 Jan 2025",
+      licenseNumber: "MH14 20220098765",
+      licenseValidity: "31 Dec 2028",
+      vehicle: "MH 14 KT 9081",
+      vehicleType: "Tata Ace",
+      vehicleCapacity: "1.2 Ton",
+      emergencyContact: "Mahesh Patil · +91 98220 11008"
+    };
+
+
+    const state = {
+      currentView: "dashboard",
+      loggedIn: true,
+      filter: "active",
+      issueTaskId: null,
+      detailTaskId: null,
+
+      tasks: [
+
+        /*
+          ========================================================
+          MIMO 1 — PRODUCTION WORK / UPDATE LOCATION
+          ========================================================
+        */
+        {
+          id: "DEL-2026-001",
+          driverId: "DRV-005",
+
+          source: "MIMO 1",
+          sourceType: "Production Transfer",
+          sourceIcon: "🌱",
+
+          reference: "TV-2026-008",
+          linkedReference: "WO-2026-1002",
+
+          title: "Move Selected Plants",
+          subtitle: "Production Work Location Transfer",
+
+          status: "Assigned",
+          previousStatus: null,
+
+          priority: "High",
+
+          assignedDate: "14 Aug 2026",
+          pickupTime: "09:30 AM",
+          deliveryBy: "11:30 AM",
+
+          pickupName: "OM Nursery · Kamshet Farm",
+          pickupAddress: "Block A · Front Polyhouse, Kamshet Farm",
+          pickupContact: "Ramesh",
+          pickupPhone: "+91 98765 10001",
+
+          deliveryName: "OM Nursery · Karla Farm",
+          deliveryAddress: "Block B · Mother Plant Area, Karla Farm",
+          deliveryContact: "Sunil More",
+          deliveryPhone: "+91 98765 10002",
+
+          distance: "38 KM",
+
+          items: [
+            {
+              name: "Tulsi",
+              detail: "Sapling",
+              qty: "8 Plants"
+            },
+            {
+              name: "Rose",
+              detail: "Child",
+              qty: "4 Plants"
+            }
+          ],
+
+          itemSummary: "12 RFID-mapped plants",
+
+          instructions:
+            "Handle the plants carefully during loading and unloading. Transfer is linked to the Production Work Order. Confirm pickup before leaving Kamshet Farm.",
+
+          supervisor: "Ramesh",
+          supervisorPhone: "+91 98765 10001",
+
+          customer: null,
+
+          history: [
+            {
+              status: "Assigned",
+              time: "14 Aug 2026 · 08:45 AM"
+            }
+          ],
+
+          issue: null
+        },
+
+
+        /*
+          ========================================================
+          MIMO 2 — MATERIAL ALLOCATION / INTERNAL TRANSFER
+          ========================================================
+        */
+        {
+          id: "DEL-2026-002",
+          driverId: "DRV-005",
+
+          source: "MIMO 2",
+          sourceType: "Internal Material Transfer",
+          sourceIcon: "📦",
+
+          reference: "TV-2026-004",
+          linkedReference: "WO-2026-002 · MA-2026-002",
+
+          title: "Internal Material Transfer",
+          subtitle: "Work Order Material Requirement",
+
+          status: "Going to Pickup",
+          previousStatus: null,
+
+          priority: "Normal",
+
+          assignedDate: "14 Aug 2026",
+          pickupTime: "11:45 AM",
+          deliveryBy: "02:00 PM",
+
+          pickupName: "OM Nursery · Vadegaon Farm",
+          pickupAddress: "Central Material Store, Vadegaon Farm",
+          pickupContact: "Nitin Shinde",
+          pickupPhone: "+91 98220 23004",
+
+          deliveryName: "OM Nursery · Karla Farm",
+          deliveryAddress: "Material Receiving Area · Karla Farm",
+          deliveryContact: "Dharmesh Patil",
+          deliveryPhone: "+91 98220 23005",
+
+          distance: "52 KM",
+
+          items: [
+            {
+              name: "Organic Fertilizer",
+              detail: "RM-007",
+              qty: "18 Kg"
+            },
+            {
+              name: "Labels & Plant Tags",
+              detail: "RM-008",
+              qty: "46 Pcs"
+            },
+            {
+              name: "Cocopeat Blocks",
+              detail: "RM-001",
+              qty: "5 Blocks"
+            }
+          ],
+
+          itemSummary: "3 material items",
+
+          instructions:
+            "Collect only the quantity mentioned in the transfer voucher. Material receiving confirmation is required at Karla Farm.",
+
+          supervisor: "Dharmesh Patil",
+          supervisorPhone: "+91 98220 23005",
+
+          customer: null,
+
+          history: [
+            {
+              status: "Assigned",
+              time: "14 Aug 2026 · 09:15 AM"
+            },
+            {
+              status: "Going to Pickup",
+              time: "14 Aug 2026 · 10:55 AM"
+            }
+          ],
+
+          issue: null
+        },
+
+
+        /*
+          ========================================================
+          MIMO 4 — B2C CUSTOMER DELIVERY
+          ========================================================
+        */
+        {
+          id: "DEL-2026-003",
+          driverId: "DRV-005",
+
+          source: "MIMO 4",
+          sourceType: "B2C Customer Delivery",
+          sourceIcon: "🛒",
+
+          reference: "BILL-234",
+          linkedReference: "Customer Counter Order",
+
+          title: "Deliver Customer Order",
+          subtitle: "B2C Nursery Order",
+
+          status: "Assigned",
+          previousStatus: null,
+
+          priority: "Normal",
+
+          assignedDate: "14 Aug 2026",
+          pickupTime: "03:00 PM",
+          deliveryBy: "05:30 PM",
+
+          pickupName: "OM Nursery · Kamshet Farm",
+          pickupAddress: "Customer Dispatch Counter · Kamshet Farm",
+          pickupContact: "Rajesh",
+          pickupPhone: "+91 98765 30011",
+
+          deliveryName: "Aakash Patil",
+          deliveryAddress: "Hinjewadi, Pune, Maharashtra",
+          deliveryContact: "Aakash Patil",
+          deliveryPhone: "9876543210",
+
+          distance: "42 KM",
+
+          items: [
+            {
+              name: "Rose Plant",
+              detail: "Adult · RFID-OM-1001",
+              qty: "1"
+            },
+            {
+              name: "Tulsi Plant",
+              detail: "Child · RFID-OM-1002",
+              qty: "2"
+            },
+            {
+              name: "Mango Tree",
+              detail: "Sapling · RFID-OM-1003",
+              qty: "1"
+            }
+          ],
+
+          itemSummary: "4 Plants · Bill #234",
+
+          instructions:
+            "Verify customer name and phone before handover. Keep plants upright during transportation. Customer order has already been confirmed.",
+
+          supervisor: "Rajesh",
+          supervisorPhone: "+91 98765 30011",
+
+          customer: {
+            name: "Aakash Patil",
+            phone: "9876543210",
+            email: "aakash.patil@example.com",
+            city: "Pune"
+          },
+
+          history: [
+            {
+              status: "Assigned",
+              time: "14 Aug 2026 · 12:20 PM"
+            }
+          ],
+
+          issue: null
+        },
+
+
+        /*
+          ========================================================
+          MIMO 5 — B2B ORDER DELIVERY
+          ========================================================
+        */
+        {
+          id: "DEL-2026-004",
+          driverId: "DRV-005",
+
+          source: "MIMO 5",
+          sourceType: "B2B Order Delivery",
+          sourceIcon: "🤝",
+
+          reference: "ORD-2026-001",
+          linkedReference: "QTN-2026-001-V1 · INQ-2026-001",
+
+          title: "Bulk Plant Delivery",
+          subtitle: "Finalized B2B Customer Order",
+
+          status: "Picked Up",
+          previousStatus: null,
+
+          priority: "High",
+
+          assignedDate: "14 Aug 2026",
+          pickupTime: "01:30 PM",
+          deliveryBy: "06:00 PM",
+
+          pickupName: "OM Nursery · Kamshet Farm",
+          pickupAddress: "B2B Dispatch Yard · Kamshet Farm",
+          pickupContact: "Ramesh",
+          pickupPhone: "+91 98765 10001",
+
+          deliveryName: "GreenScape Landscaping Pvt. Ltd.",
+          deliveryAddress: "Landscaping Site, Hinjewadi Phase 2, Pune",
+          deliveryContact: "Priya Deshmukh",
+          deliveryPhone: "9876543210",
+
+          distance: "47 KM",
+
+          items: [
+            {
+              name: "Tulsi",
+              detail: "Child",
+              qty: "50 Plants"
+            },
+            {
+              name: "Tomato Tree",
+              detail: "Adult",
+              qty: "70 Plants"
+            },
+            {
+              name: "Rose Plant",
+              detail: "Sapling",
+              qty: "25 Plants"
+            }
+          ],
+
+          itemSummary: "145 Plants",
+
+          instructions:
+            "Bulk customer order. Confirm count before leaving the dispatch yard. Contact Priya Deshmukh before reaching the customer site.",
+
+          supervisor: "Ramesh",
+          supervisorPhone: "+91 98765 10001",
+
+          customer: {
+            name: "GreenScape Landscaping Pvt. Ltd.",
+            contact: "Priya Deshmukh",
+            phone: "9876543210",
+            city: "Pune"
+          },
+
+          history: [
+            {
+              status: "Assigned",
+              time: "14 Aug 2026 · 11:10 AM"
+            },
+            {
+              status: "Going to Pickup",
+              time: "14 Aug 2026 · 12:50 PM"
+            },
+            {
+              status: "At Pickup",
+              time: "14 Aug 2026 · 01:22 PM"
+            },
+            {
+              status: "Picked Up",
+              time: "14 Aug 2026 · 01:38 PM"
+            }
+          ],
+
+          issue: null
+        },
+
+
+        /*
+          ========================================================
+          EXAMPLE TASK ASSIGNED TO ANOTHER DRIVER
+          This MUST NOT appear for Nilesh.
+          ========================================================
+        */
+        {
+          id: "DEL-2026-005",
+          driverId: "DRV-002",
+
+          source: "MIMO 5",
+          sourceType: "B2B Order Delivery",
+          sourceIcon: "🤝",
+
+          reference: "ORD-2026-002",
+          linkedReference: "QTN-2026-002-V1",
+
+          title: "Bulk Customer Delivery",
+          subtitle: "Assigned to another driver",
+
+          status: "Assigned",
+          priority: "Normal",
+
+          assignedDate: "14 Aug 2026",
+          pickupTime: "04:00 PM",
+          deliveryBy: "07:00 PM",
+
+          pickupName: "OM Nursery · Karla Farm",
+          pickupAddress: "Dispatch Yard, Karla Farm",
+          pickupContact: "Suresh",
+          pickupPhone: "+91 90000 00000",
+
+          deliveryName: "Demo Customer",
+          deliveryAddress: "Pune",
+          deliveryContact: "Demo Customer",
+          deliveryPhone: "+91 90000 00000",
+
+          distance: "40 KM",
+
+          items: [
+            {
+              name: "Areca Palm",
+              detail: "Adult",
+              qty: "20 Plants"
+            }
+          ],
+
+          itemSummary: "20 Plants",
+
+          instructions: "",
+
+          supervisor: "Suresh",
+          supervisorPhone: "+91 90000 00000",
+
+          customer: null,
+
+          history: [
+            {
+              status: "Assigned",
+              time: "14 Aug 2026 · 01:00 PM"
+            }
+          ],
+
+          issue: null
+        }
+
+      ]
+    };
+
+
+    const statusSequence = [
+      "Assigned",
+      "Going to Pickup",
+      "At Pickup",
+      "Picked Up",
+      "In Transit",
+      "Delivered"
+    ];
+
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+
+    function myTasks() {
+      return state.tasks.filter(task => task.driverId === currentDriver.id);
+    }
+
+
+    function filteredTasks() {
+
+      let tasks = myTasks();
+
+      if (state.filter === "active") {
+        tasks = tasks.filter(task =>
+          task.status !== "Delivered"
+        );
+      }
+
+      if (state.filter === "completed") {
+        tasks = tasks.filter(task =>
+          task.status === "Delivered"
+        );
+      }
+
+      if (state.filter === "issue") {
+        tasks = tasks.filter(task =>
+          task.status === "Issue"
+        );
+      }
+
+      return tasks;
+    }
+
+
+    function statusMeta(status) {
+
+      const map = {
+
+        "Assigned": {
+          bg: "#fff4d8",
+          color: "#8b6500",
+          icon: "📌",
+          label: "Assigned"
+        },
+
+        "Going to Pickup": {
+          bg: "#e6f3ff",
+          color: "#1363a5",
+          icon: "🚚",
+          label: "Going to Pickup"
+        },
+
+        "At Pickup": {
+          bg: "#efe5ff",
+          color: "#6733a6",
+          icon: "📍",
+          label: "At Pickup"
+        },
+
+        "Picked Up": {
+          bg: "#e8f5ea",
+          color: "#17643a",
+          icon: "📦",
+          label: "Picked Up"
+        },
+
+        "In Transit": {
+          bg: "#e6f3ff",
+          color: "#135d84",
+          icon: "🚚",
+          label: "In Transit"
+        },
+
+        "Delivered": {
+          bg: "#dcf7ea",
+          color: "#0f7a45",
+          icon: "✅",
+          label: "Delivered"
+        },
+
+        "Issue": {
+          bg: "#ffe3e6",
+          color: "#b42331",
+          icon: "⚠",
+          label: "Issue Reported"
+        }
+
+      };
+
+      return map[status] || map["Assigned"];
+    }
+
+
+    function priorityStyle(priority) {
+
+      if (priority === "High") {
+        return {
+          bg: "#fff0ef",
+          color: "#b42331",
+          icon: "●"
+        };
+      }
+
+      return {
+        bg: "#eef6ef",
+        color: "#1a4d2a",
+        icon: "●"
+      };
+    }
+
+
+    function nextAction(status) {
+
+      if (status === "Assigned") {
+        return {
+          label: "Start Trip",
+          icon: "🚚",
+          next: "Going to Pickup"
+        };
+      }
+
+      if (status === "Going to Pickup") {
+        return {
+          label: "I Reached Pickup",
+          icon: "📍",
+          next: "At Pickup"
+        };
+      }
+
+      if (status === "At Pickup") {
+        return {
+          label: "Confirm Pickup",
+          icon: "📦",
+          next: "Picked Up"
+        };
+      }
+
+      if (status === "Picked Up") {
+        return {
+          label: "Start Delivery",
+          icon: "🚚",
+          next: "In Transit"
+        };
+      }
+
+      if (status === "In Transit") {
+        return {
+          label: "Mark Delivered",
+          icon: "✅",
+          next: "Delivered"
+        };
+      }
+
+      if (status === "Issue") {
+        return {
+          label: "Resume Delivery",
+          icon: "↻",
+          next: null
+        };
+      }
+
+      return null;
+    }
+
+
+    function progressPercent(task) {
+
+      if (task.status === "Delivered") {
+        return 100;
+      }
+
+      if (task.status === "Issue") {
+        const status = task.previousStatus || "Assigned";
+        const index = statusSequence.indexOf(status);
+        return Math.max(8, (index / (statusSequence.length - 1)) * 100);
+      }
+
+      const index = statusSequence.indexOf(task.status);
+
+      if (index < 0) {
+        return 0;
+      }
+
+      return (index / (statusSequence.length - 1)) * 100;
+    }
+
+
+    function currentTime() {
+
+      return new Date().toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+
+    function showToast(message, error = false) {
+
+      const toast = document.getElementById("toast");
+
+      toast.textContent = (error ? "⚠ " : "✓ ") + message;
+
+      toast.style.background = error ? "#b42331" : "#1a4d2a";
+
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+
+      clearTimeout(toast.timer);
+
+      toast.timer = setTimeout(() => {
+
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(70px)";
+
+      }, 2600);
+    }
+
+
+    function metricCard(icon, label, value, note, bg = "#fff") {
+
+      return `
+        <div style="
+          background:${bg};
+          border:1px solid #e2ece3;
+          border-radius:20px;
+          padding:17px;
+          min-height:105px;
+          position:relative;
+          box-shadow:0 7px 20px rgba(0,20,0,.045);
+        ">
+
+          <div style="
+            width:42px;
+            height:42px;
+            border-radius:13px;
+            background:#eef6ef;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:20px;
+            position:absolute;
+            right:14px;
+            top:14px;
+          ">
+            ${icon}
+          </div>
+
+          <div style="
+            color:#637568;
+            font-size:11px;
+            font-weight:800;
+            padding-right:50px;
+          ">
+            ${label}
+          </div>
+
+          <div style="
+            color:#1a4d2a;
+            font-size:27px;
+            font-weight:950;
+            margin-top:17px;
+          ">
+            ${value}
+          </div>
+
+          <div style="
+            color:#829085;
+            font-size:10px;
+            font-weight:700;
+            margin-top:3px;
+          ">
+            ${note}
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function renderSummary() {
+
+      const tasks = myTasks();
+
+      const active = tasks.filter(task =>
+        task.status !== "Delivered"
+      ).length;
+
+      const transit = tasks.filter(task =>
+        [
+          "Going to Pickup",
+          "At Pickup",
+          "Picked Up",
+          "In Transit"
+        ].includes(task.status)
+      ).length;
+
+      const completed = tasks.filter(task =>
+        task.status === "Delivered"
+      ).length;
+
+      const issues = tasks.filter(task =>
+        task.status === "Issue"
+      ).length;
+
+      return `
+        <div style="
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px;
+          margin-bottom:22px;
+        ">
+
+          ${metricCard(
+            "📋",
+            "My Active Jobs",
+            active,
+            "Assigned to you"
+          )}
+
+          ${metricCard(
+            "🚚",
+            "On Route",
+            transit,
+            "Pickup / delivery"
+          )}
+
+          ${metricCard(
+            "✅",
+            "Completed",
+            completed,
+            "Delivery finished"
+          )}
+
+          ${metricCard(
+            "⚠",
+            "Issues",
+            issues,
+            "Needs attention",
+            issues ? "#fff7f6" : "#fff"
+          )}
+
+        </div>
+      `;
+    }
+
+
+    function filterButton(id, label, count) {
+
+      const active = state.filter === id;
+
+      return `
+        <button
+          onclick="state.filter='${id}';render()"
+          style="
+            border:1px solid ${active ? "#1a4d2a" : "#dce8dd"};
+            background:${active ? "#1a4d2a" : "#fff"};
+            color:${active ? "#fff" : "#4f6555"};
+            border-radius:999px;
+            padding:9px 14px;
+            font-size:11px;
+            font-weight:850;
+            cursor:pointer;
+            white-space:nowrap;
+          "
+        >
+          ${label}${count !== undefined ? ` · ${count}` : ""}
+        </button>
+      `;
+    }
+
+
+    function renderTaskCard(task) {
+
+      const status = statusMeta(task.status);
+      const priority = priorityStyle(task.priority);
+      const action = nextAction(task.status);
+      const progress = progressPercent(task);
+
+      return `
+        <div style="
+          background:#fff;
+          border:${task.status === "Issue"
+            ? "2px solid #efb9bf"
+            : task.priority === "High"
+              ? "1px solid #eadca8"
+              : "1px solid #e1ebe2"};
+          border-radius:18px;
+          margin-bottom:12px;
+          overflow:hidden;
+          box-shadow:0 7px 20px rgba(0,20,0,.045);
+        ">
+
+          <div style="
+            padding:14px 15px 12px;
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:10px;
+            border-bottom:1px solid #edf2ed;
+          ">
+
+            <div style="min-width:0;flex:1;">
+
+              <div style="
+                display:flex;
+                align-items:center;
+                gap:6px;
+                flex-wrap:wrap;
+                margin-bottom:5px;
+              ">
+
+                <span style="
+                  display:inline-flex;
+                  align-items:center;
+                  gap:4px;
+                  background:#eef6ef;
+                  color:#1a4d2a;
+                  border-radius:999px;
+                  padding:4px 7px;
+                  font-size:9px;
+                  font-weight:900;
+                ">
+                  ${task.sourceIcon} ${escapeHtml(task.sourceType)}
+                </span>
+
+                ${task.priority === "High" ? `
+                  <span style="
+                    background:${priority.bg};
+                    color:${priority.color};
+                    border-radius:999px;
+                    padding:4px 7px;
+                    font-size:9px;
+                    font-weight:900;
+                  ">
+                    ● High
+                  </span>
+                ` : ""}
+
+              </div>
+
+              <div style="
+                color:#173f24;
+                font-size:16px;
+                font-weight:950;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">
+                ${escapeHtml(task.title)}
+              </div>
+
+              <div style="
+                color:#7b897d;
+                font-size:9px;
+                font-weight:750;
+                margin-top:3px;
+              ">
+                ${escapeHtml(task.reference)} · ${escapeHtml(task.id)}
+              </div>
+
+            </div>
+
+            <span style="
+              display:inline-flex;
+              align-items:center;
+              gap:4px;
+              background:${status.bg};
+              color:${status.color};
+              border-radius:999px;
+              padding:6px 8px;
+              font-size:9px;
+              font-weight:900;
+              white-space:nowrap;
+            ">
+              ${status.icon} ${status.label}
+            </span>
+
+          </div>
+
+
+          <div style="
+            padding:12px 15px;
+            display:grid;
+            grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);
+            gap:8px;
+            align-items:center;
+          ">
+
+            <div style="min-width:0;">
+              <div style="
+                color:#849087;
+                font-size:8px;
+                font-weight:900;
+                text-transform:uppercase;
+                letter-spacing:.05em;
+              ">
+                Pickup
+              </div>
+              <div style="
+                color:#1a4d2a;
+                font-size:12px;
+                font-weight:950;
+                margin-top:3px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">
+                ${escapeHtml(task.pickupName)}
+              </div>
+              <div style="
+                color:#6f7f73;
+                font-size:9px;
+                font-weight:700;
+                margin-top:2px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">
+                ${escapeHtml(task.pickupAddress)}
+              </div>
+            </div>
+
+            <div style="
+              width:28px;
+              height:28px;
+              border-radius:50%;
+              background:#eef6ef;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              color:#1a4d2a;
+              font-size:12px;
+              font-weight:950;
+            ">
+              →
+            </div>
+
+            <div style="min-width:0;">
+              <div style="
+                color:#9a7b17;
+                font-size:8px;
+                font-weight:900;
+                text-transform:uppercase;
+                letter-spacing:.05em;
+              ">
+                Deliver To
+              </div>
+              <div style="
+                color:#594910;
+                font-size:12px;
+                font-weight:950;
+                margin-top:3px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">
+                ${escapeHtml(task.deliveryName)}
+              </div>
+              <div style="
+                color:#7c7049;
+                font-size:9px;
+                font-weight:700;
+                margin-top:2px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              ">
+                ${escapeHtml(task.deliveryAddress)}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div style="
+            padding:0 15px 12px;
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:6px;
+          ">
+
+            ${compactInfo("🕒","Pickup",task.pickupTime)}
+            ${compactInfo("⏱","Deliver",task.deliveryBy)}
+            ${compactInfo("📦","Load",task.itemSummary)}
+            ${compactInfo("🛣","Distance",task.distance)}
+
+          </div>
+
+
+          ${task.issue ? `
+            <div style="
+              margin:0 15px 11px;
+              padding:9px 10px;
+              background:#fff0ef;
+              border:1px solid #ffd2ce;
+              border-radius:11px;
+              color:#9e1f14;
+              font-size:9px;
+              line-height:1.45;
+              font-weight:800;
+            ">
+              ⚠ ${escapeHtml(task.issue.reason)}
+              ${task.issue.note ? ` · ${escapeHtml(task.issue.note)}` : ""}
+            </div>
+          ` : ""}
+
+
+          <div style="
+            height:5px;
+            background:#edf2ed;
+            overflow:hidden;
+          ">
+            <div style="
+              height:100%;
+              width:${progress}%;
+              background:${task.status === "Issue" ? "#b42331" : "#1a4d2a"};
+              transition:.3s;
+            "></div>
+          </div>
+
+
+          <div style="
+            padding:10px 15px 13px;
+            display:flex;
+            align-items:center;
+            gap:7px;
+            background:#fbfdfb;
+            flex-wrap:wrap;
+          ">
+
+            <button
+              onclick="openDetails('${task.id}')"
+              style="
+                border:1px solid #d8e5d9;
+                background:#fff;
+                color:#1a4d2a;
+                border-radius:11px;
+                padding:9px 11px;
+                font-size:9px;
+                font-weight:900;
+                cursor:pointer;
+              "
+            >
+              👁 View Details
+            </button>
+
+            <button
+              onclick="openRoute('${task.id}')"
+              style="
+                border:1px solid #d8e5d9;
+                background:#fff;
+                color:#1a4d2a;
+                border-radius:11px;
+                padding:9px 11px;
+                font-size:9px;
+                font-weight:900;
+                cursor:pointer;
+              "
+            >
+              🗺 Route
+            </button>
+
+            ${task.status !== "Delivered" && action ? `
+              <button
+                onclick="advanceTask('${task.id}')"
+                style="
+                  margin-left:auto;
+                  border:none;
+                  background:${task.status === "Issue" ? "#1363a5" : "#1a4d2a"};
+                  color:#fff;
+                  border-radius:11px;
+                  padding:10px 14px;
+                  font-size:10px;
+                  font-weight:950;
+                  cursor:pointer;
+                  box-shadow:0 6px 14px rgba(26,77,42,.14);
+                "
+              >
+                ${action.icon} ${action.label}
+              </button>
+
+              <button
+                onclick="openIssueModal('${task.id}')"
+                title="Report Issue"
+                style="
+                  border:1px solid #efc4c8;
+                  background:#fff0ef;
+                  color:#b42331;
+                  border-radius:11px;
+                  width:36px;
+                  height:36px;
+                  font-size:13px;
+                  font-weight:900;
+                  cursor:pointer;
+                "
+              >
+                ⚠
+              </button>
+            ` : `
+              <span style="
+                margin-left:auto;
+                background:#dcf7ea;
+                color:#0f7a45;
+                border-radius:999px;
+                padding:8px 11px;
+                font-size:9px;
+                font-weight:950;
+              ">
+                ✅ Completed
+              </span>
+            `}
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function compactInfo(icon, label, value) {
+      return `
+        <div style="
+          border:1px solid #e5ede6;
+          border-radius:10px;
+          padding:8px 8px;
+          background:#fff;
+          min-width:0;
+        ">
+          <div style="
+            color:#859288;
+            font-size:7px;
+            font-weight:900;
+            text-transform:uppercase;
+            white-space:nowrap;
+          ">
+            ${icon} ${label}
+          </div>
+          <div style="
+            color:#294631;
+            font-size:9px;
+            font-weight:900;
+            margin-top:4px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+          ">
+            ${escapeHtml(value)}
+          </div>
+        </div>
+      `;
+    }
+
+
+    function smallInfo(label, value) {
+
+      return `
+        <div style="
+          border:1px solid #e1ebe2;
+          border-radius:14px;
+          padding:11px 12px;
+          background:#fff;
+        ">
+
+          <div style="
+            color:#829085;
+            font-size:9px;
+            font-weight:850;
+            text-transform:uppercase;
+          ">
+            ${label}
+          </div>
+
+          <div style="
+            color:#243e2a;
+            font-size:12px;
+            font-weight:900;
+            margin-top:5px;
+          ">
+            ${escapeHtml(value)}
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function navbar(activeCount) {
+
+      return `
+        <div style="
+          position:sticky;
+          top:0;
+          z-index:200;
+          background:rgba(255,255,255,.96);
+          backdrop-filter:blur(14px);
+          -webkit-backdrop-filter:blur(14px);
+          border-bottom:1px solid #e2ebe3;
+          box-shadow:0 5px 22px rgba(0,20,0,.055);
+        ">
+
+          <div style="
+            width:min(1180px,calc(100% - 24px));
+            margin:0 auto;
+            min-height:66px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+          ">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:11px;
+              min-width:0;
+            ">
+
+              <div style="
+                width:38px;
+                height:38px;
+                min-width:38px;
+                border-radius:12px;
+                background:linear-gradient(145deg,#1a4d2a,#2d6e3e);
+                color:#fff;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:18px;
+                box-shadow:0 7px 16px rgba(26,77,42,.16);
+              ">
+                🚚
+              </div>
+
+              <div style="min-width:0;">
+                <div style="
+                  color:#78867b;
+                  font-size:8px;
+                  font-weight:900;
+                  text-transform:uppercase;
+                  letter-spacing:.07em;
+                ">
+                  OM Nursery Driver
+                </div>
+                <div style="
+                  color:#173f24;
+                  font-size:15px;
+                  font-weight:950;
+                  margin-top:2px;
+                  white-space:nowrap;
+                  overflow:hidden;
+                  text-overflow:ellipsis;
+                ">
+                  Hello, ${escapeHtml(currentDriver.shortName)} 👋
+                </div>
+              </div>
+
+            </div>
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:8px;
+            ">
+
+              ${state.currentView === "dashboard" ? `
+                <div style="
+                  background:#eef6ef;
+                  color:#1a4d2a;
+                  border:1px solid #dce9dd;
+                  border-radius:999px;
+                  padding:8px 10px;
+                  font-size:9px;
+                  font-weight:900;
+                  white-space:nowrap;
+                ">
+                  ${activeCount} Active
+                </div>
+              ` : `
+                <button
+                  onclick="openDashboard()"
+                  style="
+                    border:1px solid #dbe7dc;
+                    background:#fff;
+                    color:#1a4d2a;
+                    border-radius:11px;
+                    padding:9px 12px;
+                    font-size:9px;
+                    font-weight:900;
+                    cursor:pointer;
+                  "
+                >
+                  ← Deliveries
+                </button>
+              `}
+
+              <button
+                onclick="openProfile()"
+                title="Driver Profile"
+                style="
+                  border:${state.currentView === "profile" ? "1px solid #1a4d2a" : "1px solid #dbe7dc"};
+                  background:${state.currentView === "profile" ? "#eef6ef" : "#fff"};
+                  color:#1a4d2a;
+                  border-radius:13px;
+                  padding:6px 9px 6px 6px;
+                  display:flex;
+                  align-items:center;
+                  gap:7px;
+                  cursor:pointer;
+                  box-shadow:0 4px 12px rgba(0,20,0,.035);
+                "
+              >
+                <span style="
+                  width:31px;
+                  height:31px;
+                  border-radius:10px;
+                  background:#f5c542;
+                  color:#574700;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  font-size:10px;
+                  font-weight:950;
+                ">
+                  ${escapeHtml(currentDriver.initials)}
+                </span>
+                <span style="
+                  font-size:10px;
+                  font-weight:950;
+                ">
+                  Profile
+                </span>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function dashboardPage() {
+
+      const allMyTasks = myTasks();
+
+      const activeCount = allMyTasks.filter(task =>
+        task.status !== "Delivered"
+      ).length;
+
+      const completedCount = allMyTasks.filter(task =>
+        task.status === "Delivered"
+      ).length;
+
+      const issueCount = allMyTasks.filter(task =>
+        task.status === "Issue"
+      ).length;
+
+      const tasks = filteredTasks();
+
+      return `
+        ${navbar(activeCount)}
+
+        <div style="
+          width:min(1040px,calc(100% - 24px));
+          margin:0 auto;
+          padding:22px 0 42px;
+          box-sizing:border-box;
+        ">
+
+          <div style="
+            display:flex;
+            align-items:flex-end;
+            justify-content:space-between;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-bottom:14px;
+          ">
+
+            <div>
+              <div style="
+                color:#173f24;
+                font-size:22px;
+                font-weight:950;
+                letter-spacing:-.3px;
+              ">
+                My Deliveries
+              </div>
+
+              <div style="
+                color:#78867b;
+                font-size:10px;
+                font-weight:650;
+                margin-top:4px;
+              ">
+                Your assigned pickup and delivery work.
+              </div>
+            </div>
+
+            <div style="
+              display:flex;
+              gap:5px;
+              flex-wrap:wrap;
+            ">
+
+              ${filterButton(
+                "active",
+                "Active",
+                activeCount
+              )}
+
+              ${filterButton(
+                "all",
+                "All",
+                allMyTasks.length
+              )}
+
+              ${filterButton(
+                "completed",
+                "Completed",
+                completedCount
+              )}
+
+              ${issueCount
+                ? filterButton(
+                    "issue",
+                    "Issues",
+                    issueCount
+                  )
+                : ""}
+
+            </div>
+
+          </div>
+
+
+          <div>
+            ${tasks.length
+              ? tasks.map(renderTaskCard).join("")
+              : `
+                <div style="
+                  background:#fff;
+                  border:1px solid #e1ebe2;
+                  border-radius:20px;
+                  padding:42px 20px;
+                  text-align:center;
+                  box-shadow:0 8px 22px rgba(0,20,0,.045);
+                ">
+                  <div style="font-size:42px;margin-bottom:9px;">✅</div>
+                  <div style="
+                    color:#1a4d2a;
+                    font-size:17px;
+                    font-weight:950;
+                  ">
+                    No deliveries here
+                  </div>
+                  <div style="
+                    color:#718176;
+                    font-size:10px;
+                    font-weight:650;
+                    margin-top:5px;
+                  ">
+                    New work will appear when it is assigned to you.
+                  </div>
+                </div>
+              `
+            }
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function profileField(icon, label, value) {
+
+      return `
+        <div style="
+          border:1px solid #e2ebe3;
+          border-radius:14px;
+          padding:13px;
+          background:#fbfdfb;
+        ">
+          <div style="
+            color:#819086;
+            font-size:8px;
+            font-weight:900;
+            text-transform:uppercase;
+            letter-spacing:.045em;
+          ">
+            ${icon} ${escapeHtml(label)}
+          </div>
+          <div style="
+            color:#26442e;
+            font-size:11px;
+            font-weight:900;
+            line-height:1.45;
+            margin-top:5px;
+            word-break:break-word;
+          ">
+            ${escapeHtml(value)}
+          </div>
+        </div>
+      `;
+    }
+
+
+    function profilePage() {
+
+      const tasks = myTasks();
+
+      const completed = tasks.filter(task =>
+        task.status === "Delivered"
+      ).length;
+
+      const active = tasks.filter(task =>
+        task.status !== "Delivered"
+      ).length;
+
+      return `
+        ${navbar(active)}
+
+        <div style="
+          width:min(860px,calc(100% - 24px));
+          margin:0 auto;
+          padding:22px 0 42px;
+          box-sizing:border-box;
+        ">
+
+          <div style="
+            background:#fff;
+            border:1px solid #e1ebe2;
+            border-radius:22px;
+            overflow:hidden;
+            box-shadow:0 10px 28px rgba(0,20,0,.055);
+          ">
+
+            <div style="
+              background:linear-gradient(145deg,#1a4d2a,#2d6e3e);
+              padding:23px;
+              color:#fff;
+              display:flex;
+              align-items:center;
+              gap:15px;
+              position:relative;
+              overflow:hidden;
+            ">
+
+              <div style="
+                position:absolute;
+                right:20px;
+                bottom:-38px;
+                font-size:110px;
+                opacity:.07;
+              ">
+                🚚
+              </div>
+
+              <div style="
+                width:62px;
+                height:62px;
+                min-width:62px;
+                border-radius:19px;
+                background:#f5c542;
+                color:#594800;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:19px;
+                font-weight:950;
+                position:relative;
+                z-index:2;
+              ">
+                ${escapeHtml(currentDriver.initials)}
+              </div>
+
+              <div style="position:relative;z-index:2;">
+                <div style="
+                  font-size:21px;
+                  font-weight:950;
+                ">
+                  ${escapeHtml(currentDriver.name)}
+                </div>
+                <div style="
+                  font-size:11px;
+                  color:rgba(255,255,255,.8);
+                  font-weight:700;
+                  margin-top:4px;
+                ">
+                  ${escapeHtml(currentDriver.role)}
+                  ·
+                  ${escapeHtml(currentDriver.id)}
+                </div>
+                <span style="
+                  display:inline-flex;
+                  margin-top:8px;
+                  background:rgba(255,255,255,.13);
+                  border:1px solid rgba(255,255,255,.16);
+                  border-radius:999px;
+                  padding:5px 8px;
+                  font-size:9px;
+                  font-weight:900;
+                ">
+                  ● ${escapeHtml(currentDriver.status)}
+                </span>
+              </div>
+
+            </div>
+
+
+            <div style="padding:20px;">
+
+              <div style="
+                display:grid;
+                grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:10px;
+                margin-bottom:18px;
+              ">
+                ${profileField("🪪","Employee ID",currentDriver.employeeId)}
+                ${profileField("📞","Phone",currentDriver.phone)}
+                ${profileField("☎","Alternate Phone",currentDriver.alternatePhone)}
+                ${profileField("✉","Email",currentDriver.email)}
+                ${profileField("🏡","Base Branch",currentDriver.baseBranch)}
+                ${profileField("📅","Joined",currentDriver.joiningDate)}
+              </div>
+
+
+              <div style="
+                color:#1a4d2a;
+                font-size:13px;
+                font-weight:950;
+                margin:4px 0 10px;
+              ">
+                Vehicle & License
+              </div>
+
+              <div style="
+                display:grid;
+                grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:10px;
+                margin-bottom:18px;
+              ">
+                ${profileField("🚚","Vehicle",currentDriver.vehicle)}
+                ${profileField("🚛","Vehicle Type",currentDriver.vehicleType)}
+                ${profileField("⚖","Capacity",currentDriver.vehicleCapacity)}
+                ${profileField("🪪","License No.",currentDriver.licenseNumber)}
+                ${profileField("📅","License Validity",currentDriver.licenseValidity)}
+                ${profileField("🆘","Emergency Contact",currentDriver.emergencyContact)}
+              </div>
+
+
+              <div style="
+                display:grid;
+                grid-template-columns:repeat(2,minmax(0,1fr));
+                gap:10px;
+                margin-bottom:18px;
+              ">
+
+                <div style="
+                  border:1px solid #dce9dd;
+                  background:#eef6ef;
+                  border-radius:14px;
+                  padding:14px;
+                ">
+                  <div style="
+                    color:#728176;
+                    font-size:8px;
+                    font-weight:900;
+                    text-transform:uppercase;
+                  ">
+                    Active Deliveries
+                  </div>
+                  <div style="
+                    color:#1a4d2a;
+                    font-size:22px;
+                    font-weight:950;
+                    margin-top:5px;
+                  ">
+                    ${active}
+                  </div>
+                </div>
+
+                <div style="
+                  border:1px solid #dce9dd;
+                  background:#fff;
+                  border-radius:14px;
+                  padding:14px;
+                ">
+                  <div style="
+                    color:#728176;
+                    font-size:8px;
+                    font-weight:900;
+                    text-transform:uppercase;
+                  ">
+                    Completed Deliveries
+                  </div>
+                  <div style="
+                    color:#1a4d2a;
+                    font-size:22px;
+                    font-weight:950;
+                    margin-top:5px;
+                  ">
+                    ${completed}
+                  </div>
+                </div>
+
+              </div>
+
+
+              <div style="
+                display:flex;
+                justify-content:flex-end;
+                gap:9px;
+                flex-wrap:wrap;
+                padding-top:15px;
+                border-top:1px solid #edf2ed;
+              ">
+
+                <button
+                  onclick="openDashboard()"
+                  style="
+                    border:1px solid #d8e5d9;
+                    background:#fff;
+                    color:#1a4d2a;
+                    border-radius:999px;
+                    padding:11px 17px;
+                    font-size:10px;
+                    font-weight:900;
+                    cursor:pointer;
+                  "
+                >
+                  ← Back to Deliveries
+                </button>
+
+                <button
+                  onclick="logoutDriver()"
+                  style="
+                    border:none;
+                    background:#b42331;
+                    color:#fff;
+                    border-radius:999px;
+                    padding:11px 19px;
+                    font-size:10px;
+                    font-weight:950;
+                    cursor:pointer;
+                    box-shadow:0 7px 16px rgba(180,35,49,.16);
+                  "
+                >
+                  Logout
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function loggedOutPage() {
+
+      return `
+        <div style="
+          width:min(430px,calc(100% - 28px));
+          margin:80px auto;
+          background:#fff;
+          border:1px solid #e1ebe2;
+          border-radius:24px;
+          padding:30px;
+          box-sizing:border-box;
+          text-align:center;
+          box-shadow:0 14px 34px rgba(0,20,0,.07);
+        ">
+          <div style="
+            width:58px;
+            height:58px;
+            border-radius:18px;
+            background:#eef6ef;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto 13px;
+            font-size:27px;
+          ">
+            🚚
+          </div>
+          <div style="
+            color:#1a4d2a;
+            font-size:20px;
+            font-weight:950;
+          ">
+            Driver Logged Out
+          </div>
+          <div style="
+            color:#77867a;
+            font-size:11px;
+            font-weight:650;
+            line-height:1.55;
+            margin-top:7px;
+          ">
+            Your driver session has been closed.
+          </div>
+          <button
+            onclick="loginDriver()"
+            style="
+              margin-top:18px;
+              border:none;
+              background:#1a4d2a;
+              color:#fff;
+              border-radius:999px;
+              padding:11px 20px;
+              font-size:10px;
+              font-weight:950;
+              cursor:pointer;
+            "
+          >
+            Demo Login
+          </button>
+        </div>
+      `;
+    }
+
+
+    function render() {
+
+      if (!state.loggedIn) {
+        document.getElementById("app").innerHTML = loggedOutPage();
+        return;
+      }
+
+      document.getElementById("app").innerHTML =
+        state.currentView === "profile"
+          ? profilePage()
+          : dashboardPage();
+    }
+
+
+    function openProfile() {
+      if (!state.loggedIn) return;
+      state.currentView = "profile";
+      render();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+
+    function openDashboard() {
+      if (!state.loggedIn) return;
+      state.currentView = "dashboard";
+      render();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+
+    function logoutDriver() {
+      closeIssueModal();
+      closeDetails();
+      state.loggedIn = false;
+      state.currentView = "dashboard";
+      render();
+      showToast("Logged out successfully.");
+    }
+
+
+    function loginDriver() {
+      state.loggedIn = true;
+      state.currentView = "dashboard";
+      render();
+      showToast("Welcome back, " + currentDriver.shortName + ".");
+    }
+
+
+    function advanceTask(taskId) {
+
+      const task = state.tasks.find(item =>
+        item.id === taskId &&
+        item.driverId === currentDriver.id
+      );
+
+      if (!task) {
+        return;
+      }
+
+
+      if (task.status === "Issue") {
+
+        task.status = task.previousStatus || "Assigned";
+        task.previousStatus = null;
+        task.issue = null;
+
+        task.history.push({
+          status: "Issue Resolved / Delivery Resumed",
+          time: currentTime()
+        });
+
+        render();
+
+        showToast(
+          task.id + " delivery resumed."
+        );
+
+        return;
+      }
+
+
+      const currentIndex = statusSequence.indexOf(task.status);
+
+      if (currentIndex === -1 ||
+          currentIndex >= statusSequence.length - 1) {
+        return;
+      }
+
+
+      task.status = statusSequence[currentIndex + 1];
+
+      task.history.push({
+        status: task.status,
+        time: currentTime()
+      });
+
+
+      render();
+
+
+      if (task.status === "Delivered") {
+
+        showToast(
+          task.reference + " marked as delivered."
+        );
+
+      } else {
+
+        showToast(
+          "Status updated to " + task.status + "."
+        );
+      }
+    }
+
+
+    function openIssueModal(taskId) {
+
+      const task = state.tasks.find(item =>
+        item.id === taskId &&
+        item.driverId === currentDriver.id
+      );
+
+      if (!task) {
+        return;
+      }
+
+      state.issueTaskId = taskId;
+
+      document.getElementById("issueTaskNumber").textContent =
+        task.id + " · " + task.reference;
+
+      document.getElementById("issueReason").value = "";
+      document.getElementById("issueNote").value = "";
+
+      document.getElementById("issueModal").style.display = "flex";
+    }
+
+
+    function closeIssueModal() {
+
+      state.issueTaskId = null;
+
+      document.getElementById("issueModal").style.display = "none";
+    }
+
+
+    function submitIssue() {
+
+      const reason =
+        document.getElementById("issueReason").value;
+
+      const note =
+        document.getElementById("issueNote").value.trim();
+
+
+      if (!reason) {
+
+        showToast(
+          "Please select the issue.",
+          true
+        );
+
+        return;
+      }
+
+
+      const task = state.tasks.find(item =>
+        item.id === state.issueTaskId &&
+        item.driverId === currentDriver.id
+      );
+
+      if (!task) {
+        return;
+      }
+
+
+      if (task.status !== "Issue") {
+        task.previousStatus = task.status;
+      }
+
+
+      task.status = "Issue";
+
+      task.issue = {
+        reason: reason,
+        note: note,
+        reportedAt: currentTime()
+      };
+
+
+      task.history.push({
+        status: "Issue Reported · " + reason,
+        time: currentTime()
+      });
+
+
+      closeIssueModal();
+
+      render();
+
+      showToast(
+        "Issue reported to supervisor.",
+        true
+      );
+    }
+
+
+    function openRoute(taskId) {
+
+      const task = state.tasks.find(item =>
+        item.id === taskId &&
+        item.driverId === currentDriver.id
+      );
+
+      if (!task) {
+        return;
+      }
+
+
+      const destination =
+        encodeURIComponent(task.deliveryAddress);
+
+
+      window.open(
+        "https://www.google.com/maps/search/?api=1&query=" +
+        destination,
+        "_blank"
+      );
+    }
+
+
+    function callNumber(number) {
+
+      const safeNumber =
+        String(number || "").replace(/[^\d+]/g, "");
+
+      if (!safeNumber) {
+
+        showToast(
+          "Contact number is not available.",
+          true
+        );
+
+        return;
+      }
+
+      window.location.href = "tel:" + safeNumber;
+    }
+
+
+    function openDetails(taskId) {
+
+      const task = state.tasks.find(item =>
+        item.id === taskId &&
+        item.driverId === currentDriver.id
+      );
+
+      if (!task) {
+        return;
+      }
+
+      state.detailTaskId = taskId;
+
+      const status = statusMeta(task.status);
+
+
+      document.getElementById("detailModalContent").innerHTML = `
+
+        <div style="
+          background:linear-gradient(145deg,#1a4d2a,#2d6e3e);
+          color:#fff;
+          padding:21px 22px;
+          display:flex;
+          justify-content:space-between;
+          gap:15px;
+          align-items:flex-start;
+          position:sticky;
+          top:0;
+          z-index:5;
+        ">
+
+          <div>
+
+            <div style="
+              color:#f5c542;
+              font-size:10px;
+              font-weight:900;
+              letter-spacing:.08em;
+            ">
+              DELIVERY DETAILS
+            </div>
+
+            <div style="
+              font-size:20px;
+              font-weight:950;
+              margin-top:5px;
+            ">
+              ${escapeHtml(task.title)}
+            </div>
+
+            <div style="
+              font-size:11px;
+              color:rgba(255,255,255,.78);
+              margin-top:4px;
+            ">
+              ${escapeHtml(task.id)}
+              ·
+              ${escapeHtml(task.reference)}
+            </div>
+
+          </div>
+
+          <button
+            onclick="closeDetails()"
+            style="
+              border:none;
+              width:36px;
+              height:36px;
+              border-radius:11px;
+              background:rgba(255,255,255,.13);
+              color:#fff;
+              font-size:20px;
+              cursor:pointer;
+            "
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <div style="padding:20px;">
+
+          <div style="
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:16px;
+          ">
+
+            <span style="
+              background:#eef6ef;
+              color:#1a4d2a;
+              border-radius:999px;
+              padding:7px 10px;
+              font-size:10px;
+              font-weight:900;
+            ">
+              ${task.sourceIcon}
+              ${escapeHtml(task.sourceType)}
+            </span>
+
+            <span style="
+              background:${status.bg};
+              color:${status.color};
+              border-radius:999px;
+              padding:7px 10px;
+              font-size:10px;
+              font-weight:900;
+            ">
+              ${status.icon}
+              ${status.label}
+            </span>
+
+          </div>
+
+
+          <div style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+            gap:10px;
+          ">
+
+            ${detailBox(
+              "Task ID",
+              task.id
+            )}
+
+            ${detailBox(
+              "Main Reference",
+              task.reference
+            )}
+
+            ${detailBox(
+              "Linked Record",
+              task.linkedReference
+            )}
+
+            ${detailBox(
+              "Assigned Date",
+              task.assignedDate
+            )}
+
+            ${detailBox(
+              "Pickup Time",
+              task.pickupTime
+            )}
+
+            ${detailBox(
+              "Deliver By",
+              task.deliveryBy
+            )}
+
+            ${detailBox(
+              "Distance",
+              task.distance
+            )}
+
+            ${detailBox(
+              "Priority",
+              task.priority
+            )}
+
+          </div>
+
+
+          <div style="
+            margin-top:16px;
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+            gap:11px;
+          ">
+
+            <div style="
+              border:1px solid #e1eee1;
+              border-radius:17px;
+              padding:15px;
+              background:#f8fbf8;
+            ">
+
+              <div style="
+                color:#1a4d2a;
+                font-size:11px;
+                font-weight:950;
+                margin-bottom:8px;
+              ">
+                📍 Pickup
+              </div>
+
+              <div style="
+                font-size:14px;
+                font-weight:950;
+              ">
+                ${escapeHtml(task.pickupName)}
+              </div>
+
+              <div style="
+                color:#66796c;
+                font-size:11px;
+                line-height:1.5;
+                margin-top:5px;
+              ">
+                ${escapeHtml(task.pickupAddress)}
+              </div>
+
+              <div style="
+                color:#44594a;
+                font-size:11px;
+                margin-top:9px;
+                font-weight:750;
+              ">
+                ${escapeHtml(task.pickupContact)}
+                ·
+                ${escapeHtml(task.pickupPhone)}
+              </div>
+
+            </div>
+
+
+            <div style="
+              border:1px solid #f0dfa4;
+              border-radius:17px;
+              padding:15px;
+              background:#fff8df;
+            ">
+
+              <div style="
+                color:#78601b;
+                font-size:11px;
+                font-weight:950;
+                margin-bottom:8px;
+              ">
+                🏁 Delivery
+              </div>
+
+              <div style="
+                color:#514313;
+                font-size:14px;
+                font-weight:950;
+              ">
+                ${escapeHtml(task.deliveryName)}
+              </div>
+
+              <div style="
+                color:#766b44;
+                font-size:11px;
+                line-height:1.5;
+                margin-top:5px;
+              ">
+                ${escapeHtml(task.deliveryAddress)}
+              </div>
+
+              <div style="
+                color:#63582f;
+                font-size:11px;
+                margin-top:9px;
+                font-weight:750;
+              ">
+                ${escapeHtml(task.deliveryContact)}
+                ·
+                ${escapeHtml(task.deliveryPhone)}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div style="
+            margin-top:16px;
+            border:1px solid #e1ebe2;
+            border-radius:17px;
+            overflow:hidden;
+          ">
+
+            <div style="
+              padding:11px 14px;
+              background:#edf5ef;
+              color:#1a4d2a;
+              font-size:11px;
+              font-weight:950;
+            ">
+              📦 Delivery Items
+            </div>
+
+            ${task.items.map(item => `
+              <div style="
+                padding:11px 14px;
+                border-top:1px solid #e6eee6;
+                display:flex;
+                justify-content:space-between;
+                gap:10px;
+              ">
+
+                <div>
+
+                  <div style="
+                    font-size:12px;
+                    font-weight:900;
+                  ">
+                    ${escapeHtml(item.name)}
+                  </div>
+
+                  <div style="
+                    color:#78867b;
+                    font-size:10px;
+                    font-weight:700;
+                    margin-top:3px;
+                  ">
+                    ${escapeHtml(item.detail)}
+                  </div>
+
+                </div>
+
+                <strong style="
+                  color:#1a4d2a;
+                  font-size:11px;
+                  white-space:nowrap;
+                ">
+                  ${escapeHtml(item.qty)}
+                </strong>
+
+              </div>
+            `).join("")}
+
+          </div>
+
+
+          <div style="
+            margin-top:16px;
+            padding:14px;
+            border-radius:16px;
+            background:#f8fbf8;
+            border:1px solid #e1eee1;
+          ">
+
+            <div style="
+              color:#1a4d2a;
+              font-size:11px;
+              font-weight:950;
+            ">
+              📝 Driver Instructions
+            </div>
+
+            <div style="
+              color:#65776a;
+              font-size:11px;
+              font-weight:650;
+              line-height:1.6;
+              margin-top:6px;
+            ">
+              ${escapeHtml(task.instructions)}
+            </div>
+
+          </div>
+
+
+          <div style="
+            margin-top:16px;
+            padding:14px;
+            border-radius:16px;
+            background:#fff;
+            border:1px solid #e1eee1;
+          ">
+
+            <div style="
+              color:#1a4d2a;
+              font-size:11px;
+              font-weight:950;
+              margin-bottom:9px;
+            ">
+              👤 Supervisor
+            </div>
+
+            <div style="
+              font-size:12px;
+              font-weight:900;
+            ">
+              ${escapeHtml(task.supervisor)}
+            </div>
+
+            <button
+              onclick="callNumber('${escapeHtml(task.supervisorPhone)}')"
+              style="
+                margin-top:9px;
+                border:1px solid #d8e5d9;
+                background:#eef6ef;
+                color:#1a4d2a;
+                border-radius:999px;
+                padding:8px 13px;
+                font-size:10px;
+                font-weight:900;
+                cursor:pointer;
+              "
+            >
+              📞 Call Supervisor
+            </button>
+
+          </div>
+
+
+          <div style="
+            margin-top:16px;
+            border:1px solid #e1ebe2;
+            border-radius:17px;
+            overflow:hidden;
+          ">
+
+            <div style="
+              padding:11px 14px;
+              background:#edf5ef;
+              color:#1a4d2a;
+              font-size:11px;
+              font-weight:950;
+            ">
+              Delivery Status History
+            </div>
+
+            ${task.history.slice().reverse().map(row => `
+              <div style="
+                padding:10px 14px;
+                border-top:1px solid #e6eee6;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:12px;
+              ">
+
+                <span style="
+                  color:#304936;
+                  font-size:11px;
+                  font-weight:850;
+                ">
+                  ${escapeHtml(row.status)}
+                </span>
+
+                <span style="
+                  color:#849087;
+                  font-size:9px;
+                  font-weight:700;
+                  text-align:right;
+                ">
+                  ${escapeHtml(row.time)}
+                </span>
+
+              </div>
+            `).join("")}
+
+          </div>
+
+
+          <div style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+            gap:9px;
+            margin-top:17px;
+          ">
+
+            <button
+              onclick="openRoute('${task.id}')"
+              style="
+                border:1px solid #d8e5d9;
+                background:#fff;
+                color:#1a4d2a;
+                border-radius:999px;
+                padding:11px 14px;
+                font-size:11px;
+                font-weight:900;
+                cursor:pointer;
+              "
+            >
+              🗺 Open Route
+            </button>
+
+            <button
+              onclick="callNumber('${escapeHtml(task.deliveryPhone)}')"
+              style="
+                border:none;
+                background:#1a4d2a;
+                color:#fff;
+                border-radius:999px;
+                padding:11px 14px;
+                font-size:11px;
+                font-weight:900;
+                cursor:pointer;
+              "
+            >
+              📞 Call Delivery Contact
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+
+      document.getElementById("detailModal").style.display = "flex";
+    }
+
+
+    function detailBox(label, value) {
+
+      return `
+        <div style="
+          border:1px solid #e2ebe3;
+          border-radius:14px;
+          padding:11px;
+          background:#fbfdfb;
+        ">
+
+          <div style="
+            color:#809085;
+            font-size:9px;
+            font-weight:900;
+            text-transform:uppercase;
+          ">
+            ${escapeHtml(label)}
+          </div>
+
+          <div style="
+            color:#294631;
+            font-size:11px;
+            font-weight:900;
+            margin-top:5px;
+            word-break:break-word;
+          ">
+            ${escapeHtml(value)}
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function closeDetails() {
+
+      state.detailTaskId = null;
+
+      document.getElementById("detailModal").style.display = "none";
+    }
+
+
+    document.addEventListener("keydown", function(event) {
+
+      if (event.key === "Escape") {
+
+        closeIssueModal();
+        closeDetails();
+      }
+    });
+
+
+    render();
+
+  </script>
+
+</body>
+</html>
