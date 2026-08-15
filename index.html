@@ -291,9 +291,204 @@
       transform: translateY(-1px);
     }
 
+
+    /* ===== Role UI / Trial Pages ===== */
+    .role-section {
+      margin-top: 34px;
+      background:
+        linear-gradient(145deg, rgba(26,77,42,0.04), rgba(245,197,66,0.08)),
+        #ffffff;
+      border: 1px solid #dfe9df;
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .role-section::after {
+      content: "👤";
+      position: absolute;
+      right: 22px;
+      top: 8px;
+      font-size: 100px;
+      opacity: 0.035;
+      pointer-events: none;
+    }
+
+    .role-section-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .role-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #9a7512;
+      background: #fff8df;
+      border: 1px solid #f0dfa4;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 9px;
+    }
+
+    .role-title {
+      margin: 0;
+      color: var(--green);
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .role-subtext {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 600;
+      max-width: 760px;
+    }
+
+    .role-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .role-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 9px 22px rgba(15,58,30,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .role-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(15,58,30,0.09);
+      border-color: #cfe0d1;
+    }
+
+    .role-card-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .role-icon {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 50px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #eef6ef, #ffffff);
+      border: 1px solid #dfeadf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .role-name {
+      color: var(--green-dark);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .role-desc {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .role-status {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #eef6ef;
+      color: var(--green);
+      border: 1px solid #d8e8da;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .role-btn {
+      flex: 0 0 auto;
+      text-decoration: none;
+      background: var(--green);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      transition: .2s ease;
+    }
+
+    .role-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .future-role-card {
+      grid-column: 1 / -1;
+      border: 1px dashed #c8d9ca;
+      border-radius: 20px;
+      padding: 17px 20px;
+      background: rgba(248,251,248,.85);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .future-role-card strong {
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    .future-role-card span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
     @media (max-width: 900px) {
       .stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .role-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .future-role-card {
+        grid-column: auto;
       }
     }
 
@@ -322,6 +517,20 @@
 
       .subtext {
         font-size: 15px;
+      }
+
+      .role-section {
+        padding: 20px 18px;
+      }
+
+      .role-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .role-btn {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
@@ -470,5 +679,67 @@
       </div>
     </section>
   </div>
+
+    <!-- ===== ROLE-SPECIFIC UI TRIALS ===== -->
+    <section class="role-section">
+      <div class="role-section-header">
+        <div>
+          <div class="role-kicker">🧪 Trial UI</div>
+          <h2 class="role-title">Role Dashboard UI</h2>
+          <p class="role-subtext">
+            Separate role-specific interfaces are kept here so they do not mix with the main MIMO module pages.
+            Use this section for Driver, Supervisor, Store, Management and other role dashboards as they are finalized.
+          </p>
+        </div>
+
+        <span class="pill">Role-wise UI</span>
+      </div>
+
+      <div class="role-grid">
+
+        <div class="role-card">
+          <div class="role-card-left">
+            <div class="role-icon">🚚</div>
+            <div>
+              <div class="role-name">Driver UI · Version 01</div>
+              <div class="role-desc">
+                First driver dashboard trial for assigned deliveries, routes and delivery status updates.
+              </div>
+              <span class="role-status">Driver Role</span>
+            </div>
+          </div>
+
+          <a class="role-btn" href="driver01.html">Open UI</a>
+        </div>
+
+        <div class="role-card">
+          <div class="role-card-left">
+            <div class="role-icon">🚚</div>
+            <div>
+              <div class="role-name">Driver UI · Version 02</div>
+              <div class="role-desc">
+                Updated compact driver dashboard with modern navigation, profile page and delivery detail modal.
+              </div>
+              <span class="role-status">Driver Role</span>
+            </div>
+          </div>
+
+          <a class="role-btn" href="driver02.html">Open UI</a>
+        </div>
+
+        <div class="future-role-card">
+          <div>
+            <strong>＋ More Role Dashboards</strong>
+            <div style="margin-top:4px;">
+              <span>Add new role UI links here as Supervisor, Store, Management and other role pages are created.</span>
+            </div>
+          </div>
+
+          <span class="role-status">Coming Next</span>
+        </div>
+
+      </div>
+    </section>
+
 </body>
 </html>
