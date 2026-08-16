@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OM Nursery · Supervisor Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body style="margin:0;background:#f4f7f5;color:#1e2e24;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(100px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
+<div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
+<div id="modal" onclick="if(event.target===this)closeModal()" style="display:none;position:fixed;inset:0;background:rgba(8,28,17,.66);backdrop-filter:blur(7px);z-index:9999;align-items:flex-start;justify-content:center;padding:12px 12px calc(110px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;"><div id="modalBox" style="width:min(820px,100%);max-height:none;overflow:visible;background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(0,20,0,.34);margin:0 auto 24px;"></div></div>
+<div id="toast" style="position:fixed;left:14px;right:14px;bottom:14px;max-width:560px;margin:auto;background:#1a4d2a;color:#fff;border-radius:15px;padding:13px 16px;font-size:12px;font-weight:800;box-shadow:0 14px 35px rgba(0,20,0,.25);z-index:10000;opacity:0;transform:translateY(70px);transition:.25s;pointer-events:none;"></div>
+<script>
+const supervisor={id:'SUP-001',employeeId:'EMP-SUP-001',name:'Ramesh Jadhav',shortName:'Ramesh',phone:'+91 98765 10001',email:'ramesh.jadhav@omnursery.in',role:'Farm Supervisor',farm:'Kamshet',joined:'04 Mar 2024',status:'Active'};
+const state={view:'dashboard',loggedIn:true,woStatusFilter:'All',allocationDraft:{},rfidMode:'individual',selectedRfids:new Set(),individualLogs:[],groupLogs:[],inventory:{},identifyMode:'individual',currentIndividualCode:'',currentGroupCode:'',individualScans:[],groupScans:[],selectedPO:'PO-701',amountsUnlocked:false,varianceChart:null,qualityChart:null};
+const drivers=['Nilesh Patil','Akash','Prakash','Ekansh'];
+const workOrders=[
+{id:'WO-2026-1001',assignedOn:'05 Aug 2026, 09:20 AM',farm:'Kamshet',block:'Block A',plants:['Tulsi'],stages:['Sapling'],quantity:12,supervisors:['Ramesh'],actions:['Growth','Maintenance'],startDate:'2026-08-05',endDate:'2026-08-06',estimatedTime:'14 Hours',status:'Completed',message:'Scheduled maintenance and growth activity completed.',efficiency:96,allocationStatus:'Requirement Submitted',flagged:false,transfer:'—'},
+{id:'WO-2026-1002',assignedOn:'06 Aug 2026, 10:10 AM',farm:'Kamshet',block:'Block B',plants:['Rose','Curry Leaf'],stages:['Child','Adult'],quantity:18,supervisors:['Ramesh','Ganesh'],actions:['Maintenance','Update Location'],startDate:'2026-08-06',endDate:'2026-08-08',estimatedTime:'20 Hours',status:'In-Progress',message:'Maintenance is continuing; location transfer is pending.',efficiency:82,allocationStatus:'Pending',flagged:false,transfer:'TV-2026-008'},
+{id:'WO-2026-1003',assignedOn:'07 Aug 2026, 08:40 AM',farm:'Vadegaon',block:'Block A',plants:['Aloe Vera'],stages:['Sapling','Child'],quantity:20,supervisors:['Dharmesh'],actions:['Growth','Maintenance'],startDate:'2026-08-07',endDate:'2026-08-09',estimatedTime:'18 Hours',status:'Halted',message:'Work halted pending material availability.',efficiency:48,allocationStatus:'Pending',flagged:true,transfer:'—'},
+{id:'WO-2026-1004',assignedOn:'08 Aug 2026, 11:05 AM',farm:'Ratnagiri',block:'Block B',plants:['Guava','Lemon'],stages:['Adult'],quantity:14,supervisors:['Mahesh','Prakash'],actions:['Mortality','Maintenance'],startDate:'2026-08-08',endDate:'2026-08-10',estimatedTime:'16 Hours',status:'Attention',message:'Mortality variance requires supervisor review.',efficiency:67,allocationStatus:'Requirement Submitted',flagged:true,transfer:'—'}];
+const rawMaterials=[['RM-001','Cocopeat Blocks','Blocks'],['RM-002','Grow Bags 3x4','Bags'],['RM-003','Grow Bags 4x4','Bags'],['RM-004','Grow Bags 5x6','Bags'],['RM-005','Cutting Equipment','Sets'],['RM-006','Rooting Hormone','Bottles'],['RM-007','Organic Fertilizer','Kg'],['RM-008','Labels & Plant Tags','Pcs']].map(x=>({id:x[0],name:x[1],unit:x[2]}));
+const plants=['Mango Plant','Guava Plant','Rose Plant','Tulsi','Areca Palm','Aloe Vera','Neem','Jasmine','Hibiscus','Coconut Plant'];
+const farms=['Kamshet','Karla','Vadegaon','Ratnagiri'];const stages=['Sapling','Child','Adult'];const blocks=['A','B','C'];
+const availableRfids=Array.from({length:60},(_,i)=>'RFID-OM-'+String(i+1).padStart(4,'0'));const mappedRfidRegistry=new Set();
+const b2bOrders=[
+{id:'ORD-2026-001',inquiry:'INQ-2026-001',quotation:'QTN-2026-001-V1',company:'GreenScape Landscaping Pvt. Ltd.',contact:'Priya Deshmukh',mobile:'9876543210',farm:'Kamshet',supervisor:'Ramesh',driver:'Nilesh Patil',items:[['Tulsi','Child',50],['Tomato Tree','Adult',70],['Rose Plant','Sapling',25]],payment:'50% Advance Recorded',orderStatus:'In Progress',deliveryStatus:'Driver Assigned',address:'Hinjewadi Phase 2, Pune',requiredBy:'18 Aug 2026'},
+{id:'ORD-2026-002',inquiry:'INQ-2026-004',quotation:'QTN-2026-004-V2',company:'UrbanLeaf Developers',contact:'Amit Shah',mobile:'9822011122',farm:'Kamshet',supervisor:'Ramesh',driver:'',items:[['Areca Palm','Adult',40],['Money Plant','Child',80]],payment:'Advance Pending',orderStatus:'In Progress',deliveryStatus:'Pending Assignment',address:'Baner, Pune',requiredBy:'20 Aug 2026'},
+{id:'ORD-2026-003',inquiry:'INQ-2026-005',quotation:'QTN-2026-005-V1',company:'Konkan Resort Project',contact:'Megha Kulkarni',mobile:'9765512033',farm:'Karla',supervisor:'Suresh',driver:'Akash',items:[['Mango Tree','Adult',30]],payment:'Paid',orderStatus:'Completed',deliveryStatus:'Delivered',address:'Lonavala, Maharashtra',requiredBy:'12 Aug 2026'}];
+const plantDatabase={
+'OM-KAMSHET-0234':{rfid:'OM-KAMSHET-0234',plantId:'PL-KAM-MAN-0234',name:'Mango Plant',botanicalName:'Mangifera indica',farm:'Kamshet',block:'Block A',batch:'Batch 2',row:'Bed A-07 · Row 04',stage:'Adult',height:'168 cm',width:'92 cm canopy',age:'26 months',container:'24-inch grow bag',plantingDate:'18 June 2024',propagation:'Grafted',grade:'Grade A',sellable:'Ready for sale',health:'Healthy',healthScore:94,moisture:'68% · Optimal',fertilisation:'28 July 2026 · NPK + compost',pruning:'19 July 2026',pest:'Clear · Inspected 1 August 2026',nextAction:'Canopy shaping · 18 August 2026',owner:'Ramesh Jadhav',inspected:false},
+'OM-KAMSHET-0188':{rfid:'OM-KAMSHET-0188',plantId:'PL-KAM-ARE-0188',name:'Areca Palm',botanicalName:'Dypsis lutescens',farm:'Kamshet',block:'Block C',batch:'Batch 5',row:'Shade C-04 · Row 02',stage:'Sapling',height:'74 cm',width:'42 cm',age:'10 months',container:'12-inch grow bag',plantingDate:'14 October 2025',propagation:'Seed',grade:'Grade A',sellable:'Under growth',health:'Healthy',healthScore:91,moisture:'71% · Optimal',fertilisation:'02 August 2026 · Compost',pruning:'Not required',pest:'Clear',nextAction:'Growth check · 19 August 2026',owner:'Ramesh Jadhav',inspected:false},
+'OM-KARLA-0112':{rfid:'OM-KARLA-0112',plantId:'PL-KAR-ROS-0112',name:'Rose Plant',botanicalName:'Rosa',farm:'Karla',block:'Block B',batch:'Batch 3',row:'Bed B-03',stage:'Adult',height:'82 cm',width:'58 cm',age:'15 months',container:'18-inch grow bag',plantingDate:'11 May 2025',propagation:'Cutting',grade:'Grade A',sellable:'Ready for sale',health:'Healthy',healthScore:89,moisture:'64% · Normal',fertilisation:'30 July 2026',pruning:'25 July 2026',pest:'Clear',nextAction:'Flowering review',owner:'Suresh More',inspected:false}};
+const groupDatabase={
+'GRP-KAMSHET-1001':{rfid:'GRP-KAMSHET-1001',mappingId:'GRP-MAP-2026-1001',plant:'Mango Hapoos',stage:'Sapling',farm:'Kamshet',block:'Block A',batch:'Batch 4',bag:'12x12',qty:120,available:104,reserved:10,care:6,mappedOn:'02 Aug 2026',mappedBy:'Ramesh',irrigation:'Morning drip · 20 min',fertiliser:'Organic mix · weekly',health:'Good',healthScore:92,inspected:false},
+'GRP-KAMSHET-1005':{rfid:'GRP-KAMSHET-1005',mappingId:'GRP-MAP-2026-1005',plant:'Mango Pairi',stage:'Adult',farm:'Kamshet',block:'Block B',batch:'Batch 7',bag:'24x24',qty:95,available:80,reserved:8,care:7,mappedOn:'04 Aug 2026',mappedBy:'Ramesh',irrigation:'Alternate day drip',fertiliser:'NPK + compost',health:'Good',healthScore:90,inspected:false},
+'GRP-KARLA-1002':{rfid:'GRP-KARLA-1002',mappingId:'GRP-MAP-2026-1002',plant:'Rose Red',stage:'Adult',farm:'Karla',block:'Block B',batch:'Batch 3',bag:'18x18',qty:75,available:61,reserved:9,care:5,mappedOn:'03 Aug 2026',mappedBy:'Suresh',irrigation:'Daily light irrigation',fertiliser:'Bloom mix',health:'Healthy',healthScore:94,inspected:false}};
+const purchaseOrders=[
+{id:'PO-701',requisitionNo:'REQ-2401',farm:'Kamshet',status:'Partially Received',orderDate:'2026-07-02',expectedDelivery:'2026-07-07',amount:128500,vendor:{name:'Bloom Agro Suppliers',location:'Talegaon MIDC, Pune',gst:'27AABCB9487C1Z8',contact:'+91 98765 43120'},items:[{id:'rose',name:'Rose Plant',category:'Flowering Plant',requested:400,received:340,damaged:24},{id:'areca',name:'Areca Palm',category:'Indoor Plant',requested:120,received:110,damaged:5},{id:'pot12',name:'Grow Bag 12 inch',category:'Inventory',requested:500,received:470,damaged:12}],comment:'Shipment received with minor damage in rose plant trays.'},
+{id:'PO-702',requisitionNo:'REQ-2402',farm:'Karla',status:'Pending Slip',orderDate:'2026-07-04',expectedDelivery:'2026-07-09',amount:94200,vendor:{name:'GreenRoot Nursery Inputs',location:'Chakan, Pune',gst:'27AACCG5612K1Z3',contact:'+91 98220 77881'},items:[{id:'hibiscus',name:'Hibiscus Plant',category:'Flowering Plant',requested:260,received:0,damaged:0},{id:'coco',name:'Cocopeat Block',category:'Growing Media',requested:180,received:0,damaged:0},{id:'tray',name:'Propagation Tray',category:'Inventory',requested:220,received:0,damaged:0}],comment:''},
+{id:'PO-703',requisitionNo:'REQ-2403',farm:'Ratnagiri',status:'Received',orderDate:'2026-07-01',expectedDelivery:'2026-07-05',amount:176800,vendor:{name:'Konkan Plant Supply Co.',location:'Ratnagiri, Maharashtra',gst:'27AAICK2077P1Z1',contact:'+91 97655 12045'},items:[{id:'mango',name:'Mango Sapling',category:'Fruit Plant',requested:350,received:350,damaged:8},{id:'fert',name:'Organic Fertilizer Bag',category:'Fertilizer',requested:140,received:140,damaged:2}],comment:'Overall acceptable. Two fertilizer bags torn during unloading.'}];
+function esc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}function nowText(){return new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}function myWO(){return workOrders.filter(w=>w.supervisors.includes(supervisor.shortName))}function myB2B(){return b2bOrders.filter(o=>o.supervisor===supervisor.shortName)}
+function showToast(msg,error=false){const t=document.getElementById('toast');t.textContent=(error?'⚠ ':'✓ ')+msg;t.style.background=error?'#b42331':'#1a4d2a';t.style.opacity='1';t.style.transform='translateY(0)';clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(70px)'},2500)}
+function openModal(html,width='820px'){const m=document.getElementById('modal'),b=document.getElementById('modalBox');b.style.width=`min(${width},100%)`;b.innerHTML=html;m.style.display='flex'}function closeModal(){document.getElementById('modal').style.display='none';document.getElementById('modalBox').innerHTML=''}
+function headerBlock(title,sub,icon){return `<div style="margin-bottom:16px;"><div style="font-size:10px;color:#9a7512;font-weight:900;text-transform:uppercase;letter-spacing:.08em;">${icon} SUPERVISOR WORKSPACE</div><div style="font-size:22px;color:#1a4d2a;font-weight:950;margin-top:5px;">${title}</div><div style="font-size:11px;color:#6c7e71;line-height:1.55;margin-top:5px;">${sub}</div></div>`}function sectionCard(c){return `<section style="background:#fff;border:1px solid #e2ece3;border-radius:22px;padding:15px;box-shadow:0 8px 24px rgba(0,20,0,.05);margin-bottom:14px;">${c}</section>`}
+function pill(text,tone='green'){const c=tone==='red'?['#ffe3e6','#b42331']:tone==='gold'?['#fff4d8','#7a5c00']:tone==='blue'?['#e6f3ff','#1363a5']:['#e8f5ea','#17643a'];return `<span style="display:inline-flex;padding:5px 8px;border-radius:999px;background:${c[0]};color:${c[1]};font-size:9px;font-weight:900;white-space:nowrap;">${esc(text)}</span>`}function statusPill(s){const red=['Halted','Attention','Failed','Variance'].some(x=>String(s).includes(x)),blue=['In-Progress','In Transit','Driver Assigned'].some(x=>String(s).includes(x)),gold=['Pending','Partially','Assigned'].some(x=>String(s).includes(x));return pill(s,red?'red':blue?'blue':gold?'gold':'green')}
+function button(label,onclick,tone='green',extra=''){const bg=tone==='red'?'#b42331':tone==='gold'?'#f5c542':tone==='light'?'#fff':'#1a4d2a',color=tone==='gold'?'#1e2e24':tone==='light'?'#1a4d2a':'#fff',border=tone==='light'?'1px solid #d8e5d9':'none';return `<button onclick="${onclick}" style="border:${border};background:${bg};color:${color};border-radius:999px;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;${extra}">${label}</button>`}
+function navBtn(id,icon,label){const active=state.view===id;return `<button onclick="state.view='${id}';render()" style="border:${active?'1px solid #1a4d2a':'1px solid transparent'};background:${active?'#1a4d2a':'#f4f7f5'};color:${active?'#fff':'#47604e'};border-radius:13px;padding:10px 12px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;flex:0 0 auto;">${icon} ${label}</button>`}
+function metric(icon,label,value,note){return `<div style="background:#fff;border:1px solid #e2ece3;border-radius:17px;padding:13px;min-height:80px;box-shadow:0 7px 18px rgba(0,20,0,.04);"><div style="font-size:10px;color:#718176;font-weight:800;">${icon} ${label}</div><div style="font-size:22px;color:#1a4d2a;font-weight:950;margin-top:11px;">${value}</div><div style="font-size:8px;color:#8a978d;margin-top:3px;">${note}</div></div>`}
+function detail(label,value){return `<div style="border:1px solid #e2ebe3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="font-size:8px;color:#829085;font-weight:900;text-transform:uppercase;">${label}</div><div style="font-size:11px;color:#294631;font-weight:900;margin-top:4px;word-break:break-word;">${esc(value)}</div></div>`}
+function renderTop(){const activeWO=myWO().filter(w=>w.status!=='Completed').length;return `<div style="position:sticky;top:0;z-index:200;background:rgba(244,247,245,.96);backdrop-filter:blur(10px);padding:9px 0 7px;"><div style="background:#fff;border:1px solid #e1ebe2;border-radius:17px;padding:9px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 24px rgba(0,20,0,.06);"><div style="display:flex;align-items:center;gap:9px;min-width:0;"><div style="width:36px;height:36px;min-width:36px;border-radius:11px;background:#1a4d2a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;">🌿</div><div style="min-width:0;"><div style="font-size:8px;color:#728176;font-weight:800;">OM NURSERY · SUPERVISOR</div><div style="font-size:14px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hello, ${esc(supervisor.shortName)} 👋</div></div></div><div style="display:flex;gap:6px;align-items:center;"><span style="background:#eef6ef;color:#1a4d2a;border-radius:999px;padding:6px 8px;font-size:8px;font-weight:900;">${activeWO} Active WO</span>${button('👤 Profile','openProfile()','light')}</div></div><div style="display:flex;gap:5px;overflow-x:auto;padding:7px 1px 1px;scrollbar-width:none;">${navBtn('dashboard','⌂','Home')}${navBtn('workorders','🧾','Work Orders')}${navBtn('material','📦','Material')}${navBtn('rfidadd','🏷','RFID Add')}${navBtn('b2b','🤝','B2B Orders')}${navBtn('identify','📡','RFID Identify')}${navBtn('po','🚚','PO Receiving')}</div></div>`}
+function render(){if(!state.loggedIn){renderLoggedOut();return}let c=dashboardView();if(state.view==='workorders')c=workOrdersView();if(state.view==='material')c=materialView();if(state.view==='rfidadd')c=rfidAdditionView();if(state.view==='b2b')c=b2bView();if(state.view==='identify')c=identifyView();if(state.view==='po')c=poView();document.getElementById('app').innerHTML=`<div style="width:min(1200px,calc(100% - 16px));margin:0 auto;padding:0 0 30px;box-sizing:border-box;">${renderTop()}${c}</div>`;if(state.view==='po')setTimeout(drawVarianceCharts,80)}
+function dashboardView(){const mine=myWO(),b2b=myB2B();return `<div style="background:linear-gradient(145deg,#1a4d2a,#2d6e3e);border-radius:21px;padding:18px;margin:7px 0 14px;color:#fff;position:relative;overflow:hidden;box-shadow:0 16px 34px rgba(0,20,0,.14);"><div style="position:absolute;right:-10px;bottom:-35px;font-size:110px;opacity:.08;">🌿</div><div style="position:relative;z-index:2;"><div style="font-size:9px;color:#f5c542;font-weight:900;">TODAY'S SUPERVISOR WORK</div><div style="font-size:24px;font-weight:950;margin-top:4px;">Your assigned work in one place</div><div style="font-size:11px;line-height:1.55;color:rgba(255,255,255,.82);margin-top:6px;max-width:760px;">Work orders, materials, RFID operations, B2B deliveries and purchase receiving are grouped here according to the supervisor role.</div></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-bottom:14px;">${metric('🧾','My Work Orders',mine.length,'Assigned to Ramesh')}${metric('⚠','Needs Attention',mine.filter(w=>['Halted','Attention'].includes(w.status)).length,'Work exceptions')}${metric('🏷','RFID Mapped',state.individualLogs.length+state.groupLogs.length,'This session')}${metric('🤝','B2B Orders',b2b.length,'Assigned orders')}${metric('🚚','Open PO',purchaseOrders.filter(p=>p.status!=='Received').length,'Receiving pending')}</div>${sectionCard(`${headerBlock('Assigned Work Orders','Only work orders assigned to you are surfaced here.','🧾')}<div style="display:grid;gap:8px;">${mine.map(w=>`<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:12px;font-weight:950;color:#1a4d2a;">${w.id} · ${w.plants.join(', ')}</div><div style="font-size:9px;color:#758379;margin-top:3px;">${w.farm} · ${w.block} · ${w.quantity} plants · ${w.startDate} → ${w.endDate}</div></div>${statusPill(w.status)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;">${button('View Work Order',`openWorkOrder('${w.id}')`,'light')}${w.status!=='Completed'?button('Update Status',`openWOStatus('${w.id}')`):''}</div></div>`).join('')}</div>`)}${sectionCard(`${headerBlock('Quick Actions','Jump directly to your operational actions.','⚡')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;">${button('📦 Material Allocation',"state.view='material';render()",'green','width:100%;')}${button('🏷 RFID Inventory Add',"state.view='rfidadd';render()",'green','width:100%;')}${button('📡 Identify Plant',"state.view='identify';render()",'green','width:100%;')}${button('🚚 Receive Purchase',"state.view='po';render()",'green','width:100%;')}</div>`)}`}
+function workOrdersView(){
+  const rows=myWO().filter(w=>state.woStatusFilter==='All'||w.status===state.woStatusFilter);
+
+  return sectionCard(`
+    ${headerBlock(
+      'Work Order Status',
+      'Supervisor work-order status table. The Material Requirement column only shows whether your material requirement has been submitted. Stock availability and internal transfer information are not available in this role.',
+      '🧾'
+    )}
+
+    <div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+      ${['All','In-Progress','Completed','Halted','Attention'].map(s=>
+        button(s,`state.woStatusFilter='${s}';render()`,state.woStatusFilter===s?'green':'light')
+      ).join('')}
+    </div>
+
+    <div style="overflow-x:auto;border:1px solid #e1ebe2;border-radius:14px;-webkit-overflow-scrolling:touch;">
+      <table style="border-collapse:collapse;width:100%;min-width:1080px;font-size:10px;">
+        <thead>
+          <tr style="background:#edf5ef;color:#1a4d2a;text-align:left;">
+            ${[
+              'Work Order',
+              'Assigned On',
+              'Farm / Block',
+              'Plants & Stage',
+              'Actions',
+              'Schedule',
+              'Work Status',
+              'Efficiency',
+              'Material Requirement',
+              'Action'
+            ].map(h=>`<th style="padding:10px;border-bottom:1px solid #d7e5d9;white-space:nowrap;">${h}</th>`).join('')}
+          </tr>
+        </thead>
+
+        <tbody>
+          ${rows.map(w=>`
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;font-weight:950;color:#1a4d2a;white-space:nowrap;">${w.id}</td>
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;white-space:nowrap;">${w.assignedOn}</td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                <strong>${w.farm}</strong><br>${w.block}
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                <strong>${w.plants.join(', ')}</strong><br>
+                ${w.stages.join(', ')} · ${w.quantity}
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                ${w.actions.join('<br>')}
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;white-space:nowrap;">
+                ${w.startDate} → ${w.endDate}<br>${w.estimatedTime}
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                ${statusPill(w.status)}
+                <div style="max-width:210px;color:#6c7e71;margin-top:4px;line-height:1.4;">${w.message}</div>
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;font-weight:900;">
+                ${w.efficiency}%
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                ${statusPill(w.allocationStatus)}
+              </td>
+
+              <td style="padding:10px;border-bottom:1px solid #e7eee7;">
+                <div style="display:flex;gap:5px;align-items:center;white-space:nowrap;">
+                  ${button('View',`openWorkOrder('${w.id}')`,'light')}
+                  ${w.status!=='Completed'?button('Status',`openWOStatus('${w.id}')`):''}
+                  ${button('Materials',`openAllocation('${w.id}')`,'gold')}
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:9px;padding:9px 11px;background:#f8fbf8;border:1px solid #e2ebe3;border-radius:11px;color:#718176;font-size:9px;line-height:1.5;font-weight:700;">
+      Mobile: swipe horizontally to review all work-order columns.
+    </div>
+  `);
+}
+
+function openWorkOrder(id){
+  const w=workOrders.find(x=>x.id===id);
+  if(!w)return;
+
+  openModal(`
+    <div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+      <div>
+        <div style="font-size:9px;color:#f5c542;font-weight:900;">WORK ORDER</div>
+        <div style="font-size:18px;font-weight:950;margin-top:3px;">${w.id}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.78);margin-top:3px;">${w.farm} · ${w.block}</div>
+      </div>
+      ${button('×','closeModal()','light')}
+    </div>
+
+    <div style="padding:14px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;">
+        ${detail('Plants',w.plants.join(', '))}
+        ${detail('Stages',w.stages.join(', '))}
+        ${detail('Quantity',w.quantity+' plants')}
+        ${detail('Actions',w.actions.join(', '))}
+        ${detail('Start',w.startDate)}
+        ${detail('End',w.endDate)}
+        ${detail('Estimated',w.estimatedTime)}
+        ${detail('Efficiency',w.efficiency+'%')}
+        ${detail('Material Requirement',w.allocationStatus)}
+      </div>
+
+      <div style="margin-top:10px;padding:11px;border:1px solid #e1ebe2;border-radius:12px;background:#f8fbf8;">
+        <strong style="color:#1a4d2a;font-size:10px;">Supervisor Message</strong>
+        <div style="font-size:11px;line-height:1.5;color:#627568;margin-top:4px;">${w.message}</div>
+      </div>
+
+      <div style="margin-top:10px;padding:10px 11px;border:1px solid #f0dfa4;border-radius:12px;background:#fff8df;color:#6f5b1f;font-size:9px;line-height:1.5;font-weight:700;">
+        Supervisor material responsibility ends after submitting the required quantities. Stock checking, internal transfer and procurement are handled by HO / Admin.
+      </div>
+
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;">
+        ${w.status!=='Completed'?button('Update Work Status',`closeModal();openWOStatus('${w.id}')`):''}
+        ${button('Allocate Materials',`closeModal();openAllocation('${w.id}')`,'gold')}
+      </div>
+    </div>
+  `);
+}
+
+function openWOStatus(id){const w=workOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;gap:8px;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Update Work Order Status</div><div style="font-size:10px;color:#718176;margin-top:3px;">${w.id} · ${w.plants.join(', ')}</div></div>${button('×','closeModal()','light')}</div><label style="display:block;font-size:10px;color:#1a4d2a;font-weight:900;margin-top:14px;">Work Status</label><select id="woStatusNew" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;background:#fff;">${['Not Started','In-Progress','Completed','Halted','Attention'].map(s=>`<option ${s===w.status?'selected':''}>${s}</option>`).join('')}</select><label style="display:block;font-size:10px;color:#1a4d2a;font-weight:900;margin-top:10px;">Supervisor Message</label><textarea id="woMessageNew" style="width:100%;min-height:80px;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;">${esc(w.message)}</textarea><label style="display:block;font-size:10px;color:#1a4d2a;font-weight:900;margin-top:10px;">Efficiency %</label><input id="woEfficiencyNew" type="number" min="0" max="100" value="${w.efficiency}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;"><div style="margin-top:12px;">${button('Save Status',`saveWOStatus('${id}')`)}</div></div>`)}
+function saveWOStatus(id){const w=workOrders.find(x=>x.id===id);w.status=document.getElementById('woStatusNew').value;w.message=document.getElementById('woMessageNew').value.trim();w.efficiency=Math.max(0,Math.min(100,Number(document.getElementById('woEfficiencyNew').value||0)));closeModal();render();showToast(id+' work status updated.')}
+function materialView(){
+  return sectionCard(`
+    ${headerBlock(
+      'Material Allocation',
+      'Enter only the material quantities required for your assigned work orders. Stock levels, availability, other-farm inventory, procurement and internal transfer are intentionally hidden from the Supervisor role.',
+      '📦'
+    )}
+
+    <div style="padding:10px 11px;background:#fff8df;border:1px solid #f0dfa4;border-radius:12px;color:#6f5b1f;font-size:9px;line-height:1.55;font-weight:700;margin-bottom:11px;">
+      Supervisor flow: <strong>Work Order → Allocate Required Materials → Submit Requirement.</strong><br>
+      HO / Admin handles stock verification, internal transfer and procurement after submission.
+    </div>
+
+    <div style="display:grid;gap:8px;">
+      ${myWO().map(w=>{
+        const draft=state.allocationDraft[w.id];
+
+        const selectedCount=draft
+          ? rawMaterials.filter(m=>Number(draft[m.id]||0)>0).length
+          : 0;
+
+        const totalQty=draft
+          ? rawMaterials.reduce((sum,m)=>sum+Number(draft[m.id]||0),0)
+          : 0;
+
+        return `
+          <div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:12px;font-weight:950;color:#1a4d2a;">${w.id}</div>
+                <div style="font-size:9px;color:#728176;margin-top:3px;">
+                  ${w.farm} · ${w.block} · ${w.plants.join(', ')} · ${w.quantity} plants
+                </div>
+              </div>
+
+              ${statusPill(w.allocationStatus)}
+            </div>
+
+            ${draft ? `
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:9px;">
+                <div style="padding:8px;border:1px solid #e1ebe2;border-radius:10px;background:#fff;">
+                  <div style="font-size:8px;color:#829085;font-weight:900;text-transform:uppercase;">Materials Selected</div>
+                  <div style="font-size:14px;color:#1a4d2a;font-weight:950;margin-top:4px;">${selectedCount}</div>
+                </div>
+
+                <div style="padding:8px;border:1px solid #e1ebe2;border-radius:10px;background:#fff;">
+                  <div style="font-size:8px;color:#829085;font-weight:900;text-transform:uppercase;">Combined Qty</div>
+                  <div style="font-size:14px;color:#1a4d2a;font-weight:950;margin-top:4px;">${totalQty}</div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;">
+                ${rawMaterials
+                  .filter(m=>Number(draft[m.id]||0)>0)
+                  .slice(0,4)
+                  .map(m=>`
+                    <span style="background:#eef6ef;color:#1a4d2a;border:1px solid #dbe8dd;border-radius:999px;padding:5px 7px;font-size:8px;font-weight:850;">
+                      ${m.name}: ${draft[m.id]} ${m.unit}
+                    </span>
+                  `).join('')}
+
+                ${selectedCount>4
+                  ? `<span style="background:#f4f7f5;color:#617367;border-radius:999px;padding:5px 7px;font-size:8px;font-weight:850;">+${selectedCount-4} more</span>`
+                  : ''}
+              </div>
+            ` : `
+              <div style="margin-top:8px;color:#7a887d;font-size:9px;font-weight:700;">
+                Material requirement has not been submitted from this supervisor screen yet.
+              </div>
+            `}
+
+            <div style="margin-top:9px;">
+              ${button(
+                draft ? 'View / Edit Material Requirement' : 'Allocate Materials',
+                `openAllocation('${w.id}')`
+              )}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `);
+}
+
+function suggestedReq(w){
+  const q=w.quantity;
+  const adult=w.stages.includes('Adult');
+  const child=w.stages.includes('Child');
+
+  return {
+    'RM-001':Math.ceil(q/(adult?8:child?10:12)),
+    'RM-002':w.stages.includes('Sapling')?Math.ceil(q*.65):0,
+    'RM-003':child?Math.ceil(q*.55):0,
+    'RM-004':adult?Math.ceil(q*.55):0,
+    'RM-005':Math.max(1,Math.ceil(q/50)),
+    'RM-006':Math.ceil(q/28),
+    'RM-007':Math.ceil(q*.42),
+    'RM-008':q
+  };
+}
+
+function openAllocation(id){
+  const w=workOrders.find(x=>x.id===id);
+  if(!w)return;
+
+  if(!state.allocationDraft[id]){
+    state.allocationDraft[id]=suggestedReq(w);
+  }
+
+  const d=state.allocationDraft[id];
+
+  openModal(`
+    <div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+      <div>
+        <div style="font-size:9px;color:#f5c542;font-weight:900;">MATERIAL ALLOCATION</div>
+        <div style="font-size:18px;font-weight:950;margin-top:3px;">${id}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.8);margin-top:3px;">
+          ${w.farm} · ${w.block} · ${w.plants.join(', ')} · ${w.quantity} plants
+        </div>
+      </div>
+
+      ${button('×','closeModal()','light')}
+    </div>
+
+    <div style="padding:14px;">
+      <div style="padding:10px 11px;background:#fff8df;border:1px solid #f0dfa4;border-radius:11px;color:#6f5b1f;font-size:9px;line-height:1.55;font-weight:700;margin-bottom:11px;">
+        Enter only the quantity required for this work order. Current inventory and material availability are not shown to the Supervisor. HO / Admin handles stock and transfer/procurement decisions later.
+      </div>
+
+      <div style="display:grid;gap:8px;">
+        ${rawMaterials.map(m=>{
+          const qty=Number(d[m.id]||0);
+
+          return `
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #e2ebe3;border-radius:12px;padding:10px;background:#fbfdfb;">
+              <div style="min-width:0;">
+                <div style="font-size:11px;color:#1a4d2a;font-weight:950;">${m.name}</div>
+                <div style="font-size:8px;color:#829085;margin-top:3px;">${m.id} · Unit: ${m.unit}</div>
+              </div>
+
+              <div style="width:105px;flex:0 0 105px;">
+                <div style="font-size:8px;color:#718176;font-weight:900;margin-bottom:4px;text-align:center;">REQUIRED QTY</div>
+
+                <input
+                  id="req-${m.id}"
+                  type="number"
+                  min="0"
+                  value="${qty}"
+                  inputmode="numeric"
+                  style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:10px;padding:9px 7px;text-align:center;font-size:13px;font-weight:900;color:#1a4d2a;background:#fff;outline:none;"
+                >
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div style="margin-top:12px;padding:10px 11px;border:1px solid #dce9de;border-radius:11px;background:#f8fbf8;color:#617367;font-size:9px;line-height:1.5;font-weight:700;">
+        Saving this form only submits the <strong>material requirement</strong>. It does not reserve stock, check stock, create an internal transfer, assign a transfer driver, or create procurement.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:7px;margin-top:12px;">
+        ${button(
+          'Submit Material Requirement',
+          `saveAllocation('${id}')`,
+          'green',
+          'width:100%;padding:12px 14px;'
+        )}
+      </div>
+    </div>
+  `);
+}
+
+function syncAllocationInputs(id){
+  const d={};
+
+  rawMaterials.forEach(m=>{
+    d[m.id]=Math.max(
+      0,
+      Number(document.getElementById('req-'+m.id)?.value||0)
+    );
+  });
+
+  state.allocationDraft[id]=d;
+  return d;
+}
+
+function saveAllocation(id){
+  const w=workOrders.find(x=>x.id===id);
+  const d=syncAllocationInputs(id);
+
+  const selected=rawMaterials.filter(
+    m=>Number(d[m.id]||0)>0
+  );
+
+  if(!selected.length){
+    showToast('Enter at least one material quantity before submitting.',true);
+    return;
+  }
+
+  w.allocationStatus='Requirement Submitted';
+  w.materialRequirementUpdatedAt=nowText();
+
+  closeModal();
+  render();
+
+  showToast(
+    id+' material requirement submitted to HO / Admin.'
+  );
+}
+
+function rfidAdditionView(){return sectionCard(`${headerBlock('RFID Inventory Addition','Complete supervisor RFID mapping workspace: individual RFID mapping and group RFID mapping. New RFID additions are reflected only in the Updated Farm Inventory View below; no nursery-wide total plant number is changed or shown here.','🏷')}<div style="display:flex;gap:6px;margin-bottom:11px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;">${button('Individual RFID',"state.rfidMode='individual';render()",state.rfidMode==='individual'?'green':'light')}${button('Group RFID',"state.rfidMode='group';render()",state.rfidMode==='group'?'green':'light')}</div>${state.rfidMode==='individual'?individualRFIDView():groupRFIDView()}${renderUpdatedFarmInventory()}${renderRFIDLogs()}`)}
+function commonRFIDSelect(p){return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;"><label style="font-size:9px;color:#1a4d2a;font-weight:900;">Plant<select id="${p}Plant" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${plants.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:9px;color:#1a4d2a;font-weight:900;">Stage<select id="${p}Stage" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${stages.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:9px;color:#1a4d2a;font-weight:900;">Farm<select id="${p}Farm" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${farms.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:9px;color:#1a4d2a;font-weight:900;">Block<select id="${p}Block" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${blocks.map(x=>`<option>${x}</option>`).join('')}</select></label></div>`}
+function individualRFIDView(){const usable=availableRfids.filter(x=>!mappedRfidRegistry.has(x));return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">Individual RFID Map</div><div style="font-size:9px;color:#718176;margin-top:3px;">One selected RFID = one physical plant.</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin:9px 0;">${button('Select First 5','selectFirstRFIDs()','light')}${button('Clear','state.selectedRfids.clear();render()','light')}<span style="font-size:9px;font-weight:900;color:#1a4d2a;padding:8px;">${state.selectedRfids.size} selected</span></div><div style="max-height:165px;overflow:auto;display:flex;gap:5px;flex-wrap:wrap;padding:7px;border:1px solid #e3ece5;border-radius:11px;background:#fff;">${usable.map(r=>`<button onclick="toggleRFID('${r}')" style="border:1px solid ${state.selectedRfids.has(r)?'#1a4d2a':'#dfe8df'};background:${state.selectedRfids.has(r)?'#e8f5ea':'#fff'};color:#1a4d2a;border-radius:8px;padding:6px 7px;font-size:8px;font-weight:850;cursor:pointer;">${r}</button>`).join('')}</div><div style="margin-top:10px;">${commonRFIDSelect('ind')}<label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:7px;">Batch<select id="indBatch" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${Array.from({length:20},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label></div><div style="margin-top:10px;">${button('Submit Individual RFID Mapping','submitIndividualRFID()')}</div></div>`}
+function groupRFIDView(){return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">Group RFID Map</div><div style="font-size:9px;color:#718176;margin-top:3px;">One RFID represents a quantity of the same plant/stage/location group.</div><label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:10px;">Group RFID Code<input id="grpCode" placeholder="RFID-GRP-OM-0001" style="width:100%;box-sizing:border-box;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;"></label><div style="margin-top:8px;">${commonRFIDSelect('grp')}</div><label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:7px;">Quantity<input id="grpQty" type="number" min="1" placeholder="e.g. 120" style="width:100%;box-sizing:border-box;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;"></label><div style="margin-top:10px;">${button('Submit Group RFID Mapping','submitGroupRFID()')}</div></div>`}
+function toggleRFID(r){state.selectedRfids.has(r)?state.selectedRfids.delete(r):state.selectedRfids.add(r);render()}function selectFirstRFIDs(){state.selectedRfids=new Set(availableRfids.filter(x=>!mappedRfidRegistry.has(x)).slice(0,5));render()}function invKey(f,b,p,s){return [f,b,p,s].join('|')}function addInventory(f,b,p,s,q){const k=invKey(f,b,p,s);state.inventory[k]=(state.inventory[k]||0)+q}
+function submitIndividualRFID(){if(!state.selectedRfids.size){showToast('Select at least one RFID.',true);return}const p=document.getElementById('indPlant').value,s=document.getElementById('indStage').value,f=document.getElementById('indFarm').value,b=document.getElementById('indBlock').value,batch=document.getElementById('indBatch').value,rfids=[...state.selectedRfids];rfids.forEach(r=>mappedRfidRegistry.add(r));addInventory(f,b,p,s,rfids.length);const l={id:'INV-ADD-2026-'+String(state.individualLogs.length+1).padStart(3,'0'),rfids,plant:p,stage:s,farm:f,block:'Block '+b,batch,count:rfids.length,date:nowText()};state.individualLogs.unshift(l);state.selectedRfids.clear();render();showToast(l.id+' submitted. '+l.count+' plants added.')}
+function submitGroupRFID(){const r=document.getElementById('grpCode').value.trim().toUpperCase(),q=Number(document.getElementById('grpQty').value||0);if(!r){showToast('Enter Group RFID code.',true);return}if(mappedRfidRegistry.has(r)){showToast('RFID already mapped.',true);return}if(!Number.isInteger(q)||q<1){showToast('Enter valid group quantity.',true);return}const p=document.getElementById('grpPlant').value,s=document.getElementById('grpStage').value,f=document.getElementById('grpFarm').value,b=document.getElementById('grpBlock').value;mappedRfidRegistry.add(r);addInventory(f,b,p,s,q);const l={id:'GRP-RFID-2026-'+String(state.groupLogs.length+1).padStart(3,'0'),rfid:r,plant:p,stage:s,farm:f,block:'Block '+b,count:q,date:nowText()};state.groupLogs.unshift(l);render();showToast(l.id+' submitted. '+q+' plants added.')}
+
+function renderUpdatedFarmInventory(){
+  const rows=Object.entries(state.inventory).map(([key,qty])=>{
+    const parts=key.split('|');
+    return {
+      farm:parts[0]||'—',
+      block:parts[1]||'—',
+      plant:parts[2]||'—',
+      stage:parts[3]||'—',
+      updatedQty:Number(qty||0)
+    };
+  }).sort((a,b)=>a.farm.localeCompare(b.farm)||a.block.localeCompare(b.block)||a.plant.localeCompare(b.plant));
+
+  return `
+    <div style="margin-top:13px;border:1px solid #dfe9df;border-radius:14px;background:#fff;overflow:hidden;">
+      <div style="padding:11px 12px;background:linear-gradient(135deg,#eef6ef,#f8fbf8);border-bottom:1px solid #dfe9df;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:12px;color:#1a4d2a;font-weight:950;">🌿 Updated Farm Inventory View</div>
+            <div style="font-size:8px;color:#718176;line-height:1.5;margin-top:3px;font-weight:700;">
+              Shows only inventory quantities updated through RFID additions in this supervisor session.
+              This is not the nursery's total stock or total live plant count.
+            </div>
+          </div>
+
+          <span style="background:#fff8df;color:#7a5c00;border:1px solid #f0dfa4;border-radius:999px;padding:5px 7px;font-size:8px;font-weight:900;">
+            Updated Values Only
+          </span>
+        </div>
+      </div>
+
+      ${rows.length ? `
+        <div style="display:grid;gap:7px;padding:10px;">
+          ${rows.map(r=>`
+            <div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px 10px;background:#fbfdfb;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+                <div style="min-width:0;">
+                  <div style="font-size:11px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    ${esc(r.plant)}
+                  </div>
+
+                  <div style="font-size:8px;color:#77867b;font-weight:700;margin-top:3px;">
+                    ${esc(r.farm)} · Block ${esc(r.block)} · ${esc(r.stage)}
+                  </div>
+                </div>
+
+                <div style="text-align:right;flex:0 0 auto;">
+                  <div style="font-size:8px;color:#829085;font-weight:900;text-transform:uppercase;">Updated Qty</div>
+                  <div style="font-size:17px;color:#1a4d2a;font-weight:950;margin-top:2px;">+${r.updatedQty}</div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : `
+        <div style="padding:18px 12px;text-align:center;color:#7b897d;font-size:9px;font-weight:700;line-height:1.5;">
+          No farm inventory has been updated in this session yet.<br>
+          Submit an Individual or Group RFID mapping to see the updated values here.
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function renderRFIDLogs(){const logs=[...state.individualLogs.map(x=>({...x,type:'Individual',code:x.rfids.join(', ')})),...state.groupLogs.map(x=>({...x,type:'Group',code:x.rfid}))];return `<div style="margin-top:13px;"><div style="font-size:11px;color:#1a4d2a;font-weight:950;margin-bottom:6px;">Inventory Addition Log</div><div style="overflow-x:auto;border:1px solid #e2ebe3;border-radius:12px;-webkit-overflow-scrolling:touch;"><table style="width:100%;min-width:700px;border-collapse:collapse;font-size:9px;"><thead><tr style="background:#edf5ef;color:#1a4d2a;text-align:left;">${['Addition','Type','Plant','Stage','Farm / Block','Qty','RFID','Date'].map(h=>`<th style="padding:8px;">${h}</th>`).join('')}</tr></thead><tbody>${logs.length?logs.map(l=>`<tr><td style="padding:8px;border-top:1px solid #e7eee7;font-weight:900;color:#1a4d2a;">${l.id}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.type}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.plant}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.stage}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.farm} · ${l.block}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.count}</td><td style="padding:8px;border-top:1px solid #e7eee7;max-width:220px;">${esc(l.code)}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.date}</td></tr>`).join(''):`<tr><td colspan="8" style="padding:18px;text-align:center;color:#7b897d;">No RFID inventory addition submitted yet.</td></tr>`}</tbody></table></div></div>`}
+function b2bView(){return sectionCard(`${headerBlock('B2B Orders & Delivery','Only orders assigned to this supervisor are shown. Assign a driver and update order/delivery status from the same mobile-friendly cards.','🤝')}<div style="display:grid;gap:8px;">${myB2B().map(o=>`<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:7px;flex-wrap:wrap;"><div><div style="font-size:12px;color:#1a4d2a;font-weight:950;">${o.id} · ${o.company}</div><div style="font-size:9px;color:#748276;margin-top:3px;">${o.inquiry} · ${o.quotation} · ${o.farm}</div></div>${statusPill(o.orderStatus)}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px;margin-top:8px;">${detail('Customer',o.contact)}${detail('Required By',o.requiredBy)}${detail('Driver',o.driver||'Not Assigned')}${detail('Delivery',o.deliveryStatus)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">${button('View Order',`openB2B('${o.id}')`,'light')}${button(o.driver?'Change Driver':'Assign Driver',`openDriverAssign('${o.id}')`)}${button('Update Delivery',`openDeliveryStatus('${o.id}')`,'gold')}</div></div>`).join('')}</div>`)}
+function openB2B(id){const o=b2bOrders.find(x=>x.id===id);openModal(`<div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;"><div><div style="font-size:9px;color:#f5c542;font-weight:900;">B2B ORDER</div><div style="font-size:18px;font-weight:950;margin-top:3px;">${o.id}</div><div style="font-size:9px;color:rgba(255,255,255,.8);margin-top:3px;">${o.company}</div></div>${button('×','closeModal()','light')}</div><div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;">${detail('Inquiry',o.inquiry)}${detail('Quotation',o.quotation)}${detail('Contact',o.contact+' · '+o.mobile)}${detail('Delivery Address',o.address)}${detail('Payment',o.payment)}${detail('Driver',o.driver||'Not assigned')}${detail('Order Status',o.orderStatus)}${detail('Delivery Status',o.deliveryStatus)}</div><div style="margin-top:10px;border:1px solid #e2ebe3;border-radius:11px;overflow:hidden;"><div style="padding:8px;background:#edf5ef;color:#1a4d2a;font-size:9px;font-weight:900;">Order Items</div>${o.items.map(i=>`<div style="padding:8px 9px;border-top:1px solid #e7eee7;display:flex;justify-content:space-between;gap:8px;font-size:10px;"><span><strong>${i[0]}</strong> · ${i[1]}</span><strong>${i[2]} plants</strong></div>`).join('')}</div></div>`)}
+function openDriverAssign(id){const o=b2bOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Assign Delivery Driver</div><div style="font-size:10px;color:#718176;margin-top:3px;">${o.id} · ${o.company}</div></div>${button('×','closeModal()','light')}</div><select id="b2bDriver" style="width:100%;border:1px solid #dbe8db;border-radius:10px;padding:9px;margin-top:12px;background:#fff;"><option value="">Select Driver</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}</select><div style="margin-top:11px;">${button('Save Driver',`saveB2BDriver('${id}')`)}</div></div>`)}function saveB2BDriver(id){const o=b2bOrders.find(x=>x.id===id),d=document.getElementById('b2bDriver').value;if(!d){showToast('Select driver.',true);return}o.driver=d;o.deliveryStatus='Driver Assigned';closeModal();render();showToast(d+' assigned to '+id)}
+function openDeliveryStatus(id){const o=b2bOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Order & Delivery Status</div><div style="font-size:10px;color:#718176;margin-top:3px;">${o.id}</div></div>${button('×','closeModal()','light')}</div><label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:12px;">Order Status</label><select id="newOrderStatus" style="width:100%;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;background:#fff;">${['In Progress','Completed','Failed','Variance'].map(s=>`<option ${s===o.orderStatus?'selected':''}>${s}</option>`).join('')}</select><label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:9px;">Delivery Status</label><select id="newDeliveryStatus" style="width:100%;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;background:#fff;">${['Pending Assignment','Driver Assigned','In Transit','Delivered','Failed','Variance'].map(s=>`<option ${s===o.deliveryStatus?'selected':''}>${s}</option>`).join('')}</select><div style="margin-top:11px;">${button('Save Status',`saveDeliveryStatus('${id}')`)}</div></div>`)}function saveDeliveryStatus(id){const o=b2bOrders.find(x=>x.id===id);o.orderStatus=document.getElementById('newOrderStatus').value;o.deliveryStatus=document.getElementById('newDeliveryStatus').value;closeModal();render();showToast(id+' updated.')}
+function identifyView(){return sectionCard(`${headerBlock('RFID Plant Identification','Full supervisor RFID identification workspace with separate Individual and Group RFID simulations, inspection actions and scan history.','📡')}<div style="display:flex;gap:6px;margin-bottom:10px;">${button('Individual RFID',"state.identifyMode='individual';render()",state.identifyMode==='individual'?'green':'light')}${button('Group RFID',"state.identifyMode='group';render()",state.identifyMode==='group'?'green':'light')}</div>${state.identifyMode==='individual'?individualIdentify():groupIdentify()}`)}
+function individualIdentify(){const d=plantDatabase[state.currentIndividualCode];return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">Individual RFID Scan</div><div style="font-size:9px;color:#718176;margin-top:3px;">Simulate a scan or enter an individual RFID code.</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><input id="individualIdentifyInput" value="${esc(state.currentIndividualCode)}" placeholder="OM-KAMSHET-0234" style="flex:1;min-width:160px;border:1px solid #dbe8db;border-radius:999px;padding:9px 11px;">${button('Simulate Scan','simulateIndividualScan()','gold')}${button('Search','searchIndividual()')}</div>${d?renderIndividualDetails(d):''}${renderRecentIndividual()}</div>`}
+function simulateIndividualScan(){const k=Object.keys(plantDatabase),n=k[state.individualScans.length%k.length];state.currentIndividualCode=n;state.individualScans.unshift({code:n,time:nowText()});render();showToast(n+' detected.')}function searchIndividual(){const v=document.getElementById('individualIdentifyInput').value.trim().toUpperCase();if(!plantDatabase[v]){showToast('Individual RFID not found.',true);return}state.currentIndividualCode=v;state.individualScans.unshift({code:v,time:nowText()});render()}
+function renderIndividualDetails(d){return `<div style="margin-top:11px;border:1px solid #dfe9df;border-radius:13px;background:#fff;padding:11px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:15px;color:#1a4d2a;font-weight:950;">${d.name}</div><div style="font-size:9px;color:#748276;margin-top:2px;">${d.botanicalName} · ${d.rfid}</div></div>${pill(d.inspected?'Inspected':'Verified')}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px;margin-top:9px;">${detail('Plant ID',d.plantId)}${detail('Location',d.farm+' · '+d.block)}${detail('Batch / Row',d.batch+' · '+d.row)}${detail('Stage',d.stage)}${detail('Height',d.height)}${detail('Width',d.width)}${detail('Age',d.age)}${detail('Container',d.container)}${detail('Propagation',d.propagation)}${detail('Grade',d.grade)}${detail('Sellable',d.sellable)}${detail('Health',d.health+' · '+d.healthScore+'%')}${detail('Moisture',d.moisture)}${detail('Fertilisation',d.fertilisation)}${detail('Pruning',d.pruning)}${detail('Pest',d.pest)}${detail('Next Action',d.nextAction)}${detail('Owner',d.owner)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;">${button('✓ Mark Inspected',`markIndividualInspected('${d.rfid}')`,'gold')}${button('🖨 Print Plant Details',`printIdentification('individual','${d.rfid}')`,'light')}</div></div>`}
+function markIndividualInspected(c){plantDatabase[c].inspected=true;render();showToast(c+' marked inspected.')}function renderRecentIndividual(){return `<div style="margin-top:11px;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;">Recent Individual Scans</div><div style="display:grid;gap:5px;margin-top:6px;">${state.individualScans.length?state.individualScans.slice(0,6).map(s=>`<div style="padding:7px 8px;border:1px solid #e3ece5;border-radius:9px;background:#fff;font-size:9px;display:flex;justify-content:space-between;gap:7px;"><strong>${s.code}</strong><span style="color:#829085;">${s.time}</span></div>`).join(''):`<div style="font-size:9px;color:#829085;">No scans yet.</div>`}</div>${state.individualScans.length?`<div style="margin-top:6px;">${button('Clear History','state.individualScans=[];render()','light')}</div>`:''}</div>`}
+function groupIdentify(){const d=groupDatabase[state.currentGroupCode];return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">Group RFID Scan</div><div style="font-size:9px;color:#718176;margin-top:3px;">One group RFID represents the complete mapped plant group.</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><input id="groupIdentifyInput" value="${esc(state.currentGroupCode)}" placeholder="GRP-KAMSHET-1001" style="flex:1;min-width:160px;border:1px solid #dbe8db;border-radius:999px;padding:9px 11px;">${button('Simulate Scan','simulateGroupScan()','gold')}${button('Search','searchGroup()')}</div>${d?renderGroupDetails(d):''}${renderRecentGroup()}</div>`}
+function simulateGroupScan(){const k=Object.keys(groupDatabase),n=k[state.groupScans.length%k.length];state.currentGroupCode=n;state.groupScans.unshift({code:n,time:nowText()});render();showToast(n+' detected.')}function searchGroup(){const v=document.getElementById('groupIdentifyInput').value.trim().toUpperCase();if(!groupDatabase[v]){showToast('Group RFID not found.',true);return}state.currentGroupCode=v;state.groupScans.unshift({code:v,time:nowText()});render()}
+function renderGroupDetails(d){return `<div style="margin-top:11px;border:1px solid #dfe9df;border-radius:13px;background:#fff;padding:11px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:15px;color:#1a4d2a;font-weight:950;">${d.plant} · ${d.qty} Plants</div><div style="font-size:9px;color:#748276;margin-top:2px;">${d.rfid} · ${d.mappingId}</div></div>${pill(d.inspected?'Group Inspected':'Group Verified')}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-top:9px;">${detail('Farm / Block',d.farm+' · '+d.block)}${detail('Stage',d.stage)}${detail('Batch',d.batch)}${detail('Grow Bag',d.bag)}${detail('Total',d.qty)}${detail('Available',d.available)}${detail('Reserved',d.reserved)}${detail('Under Care',d.care)}${detail('Mapped On',d.mappedOn)}${detail('Mapped By',d.mappedBy)}${detail('Irrigation',d.irrigation)}${detail('Fertiliser',d.fertiliser)}${detail('Health',d.health+' · '+d.healthScore+'%')}</div><div style="margin-top:9px;padding:8px;border-radius:10px;background:#eef6ef;color:#1a4d2a;font-size:9px;font-weight:750;">Representative units belong to the same group RFID; they are not separate individual RFID tags.</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;">${button('✓ Mark Group Inspected',`markGroupInspected('${d.rfid}')`,'gold')}${button('🖨 Print Group Details',`printIdentification('group','${d.rfid}')`,'light')}</div></div>`}
+function markGroupInspected(c){groupDatabase[c].inspected=true;render();showToast(c+' group marked inspected.')}function renderRecentGroup(){return `<div style="margin-top:11px;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;">Recent Group Scans</div><div style="display:grid;gap:5px;margin-top:6px;">${state.groupScans.length?state.groupScans.slice(0,6).map(s=>`<div style="padding:7px 8px;border:1px solid #e3ece5;border-radius:9px;background:#fff;font-size:9px;display:flex;justify-content:space-between;gap:7px;"><strong>${s.code}</strong><span style="color:#829085;">${s.time}</span></div>`).join(''):`<div style="font-size:9px;color:#829085;">No group scans yet.</div>`}</div>${state.groupScans.length?`<div style="margin-top:6px;">${button('Clear Group History','state.groupScans=[];render()','light')}</div>`:''}</div>`}
+function printIdentification(type,code){const d=type==='group'?groupDatabase[code]:plantDatabase[code],w=window.open('','_blank');if(!w){showToast('Pop-up blocked by browser.',true);return}w.document.write(`<html><body style="font-family:Arial;padding:30px;"><h2>OM Nursery · ${type==='group'?'Group RFID':'Plant RFID'} Details</h2><pre style="white-space:pre-wrap;font-family:Arial;">${esc(JSON.stringify(d,null,2))}</pre><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
+function totalRequested(p){return p.items.reduce((s,i)=>s+Number(i.requested||0),0)}function totalReceived(p){return p.items.reduce((s,i)=>s+Number(i.received||0),0)}function totalDamaged(p){return p.items.reduce((s,i)=>s+Number(i.damaged||0),0)}function totalShort(p){return p.items.reduce((s,i)=>s+Math.max(0,Number(i.requested||0)-Number(i.received||0)),0)}
+function poView(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);return `${sectionCard(`${headerBlock('Purchase Order Receiving','Purchase order list and details from Propagation & Acquisition. Select a PO to record packing slip quantities and review variance.','🚚')}<div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;">${purchaseOrders.map(x=>`<button onclick="state.selectedPO='${x.id}';state.amountsUnlocked=false;render()" style="min-width:155px;text-align:left;border:${x.id===state.selectedPO?'2px solid #1a4d2a':'1px solid #e1ebe2'};background:${x.id===state.selectedPO?'#f1f8f1':'#fff'};border-radius:12px;padding:9px;cursor:pointer;"><strong style="font-size:10px;color:#1a4d2a;">${x.id}</strong><div style="font-size:8px;color:#728176;margin-top:3px;">${x.vendor.name}</div><div style="margin-top:5px;">${statusPill(x.status)}</div></button>`).join('')}</div>`) }${sectionCard(renderPODetails(p))}${sectionCard(renderPackingSlip(p))}${sectionCard(renderVariance(p))}`}
+function renderPODetails(p){return `${headerBlock('Purchase Order Details',`${p.id} · ${p.requisitionNo} · ${p.vendor.name}`,'🧾')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px;">${detail('Farm',p.farm)}${detail('Order Date',p.orderDate)}${detail('Expected Delivery',p.expectedDelivery)}${detail('PO Amount',state.amountsUnlocked?money(p.amount):'₹••••••')}</div><div style="display:flex;gap:6px;margin-top:8px;">${button(state.amountsUnlocked?'Amount Unlocked':'View PO Amount','openAmountAccess()','gold')}</div><div style="margin-top:10px;padding:10px;border:1px solid #e2ebe3;border-radius:12px;background:#f8fbf8;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;">Vendor Details</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:6px;">${detail('Vendor',p.vendor.name)}${detail('Location',p.vendor.location)}${detail('GST',p.vendor.gst)}${detail('Contact',p.vendor.contact)}</div></div><div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:6px;">${p.items.map(i=>`<div style="border:1px solid #e2ebe3;border-radius:11px;padding:9px;background:#fff;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;">${i.name}</div><div style="font-size:8px;color:#829085;margin-top:2px;">${i.category}</div><div style="font-size:9px;margin-top:6px;">Requested <strong>${i.requested}</strong> · Received <strong>${i.received}</strong> · Damaged <strong style="color:#b42331;">${i.damaged}</strong></div></div>`).join('')}</div>`}
+function openAmountAccess(){openModal(`<div style="padding:18px;text-align:center;"><div style="font-size:34px;">🔐</div><div style="font-size:18px;color:#1a4d2a;font-weight:950;margin-top:4px;">Amount Access</div><div style="font-size:10px;color:#718176;margin-top:4px;">Enter password to unmask PO amount.</div><input id="amountPass" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:10px;padding:10px;margin-top:12px;"><div style="display:flex;gap:6px;justify-content:center;margin-top:10px;">${button('Show Amounts','unlockAmount()')}${button('Cancel','closeModal()','light')}</div></div>`,'430px')}function unlockAmount(){if(document.getElementById('amountPass').value!=='fundsroom'){showToast('Incorrect password.',true);return}state.amountsUnlocked=true;closeModal();render();showToast('PO amount unlocked.')}
+function renderPackingSlip(p){return `${headerBlock('Packing Slip Entry',`Record actual received and damaged quantity for ${p.id}.`,'📄')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;">${p.items.map(i=>`<div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fbfdfb;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;">${i.name}</div><div style="font-size:8px;color:#829085;margin-top:2px;">Requested ${i.requested}</div><label style="display:block;font-size:8px;color:#1a4d2a;font-weight:900;margin-top:6px;">Actually Received<input id="recv-${i.id}" type="number" min="0" value="${i.received}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:8px;padding:7px;margin-top:3px;"></label><label style="display:block;font-size:8px;color:#1a4d2a;font-weight:900;margin-top:5px;">Damaged Qty<input id="dam-${i.id}" type="number" min="0" value="${i.damaged}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:8px;padding:7px;margin-top:3px;"></label></div>`).join('')}</div><label style="display:block;font-size:9px;color:#1a4d2a;font-weight:900;margin-top:9px;">Supervisor Comment<textarea id="poComment" style="width:100%;min-height:70px;box-sizing:border-box;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;">${esc(p.comment)}</textarea></label><div style="margin-top:9px;">${button('Submit Packing Slip','submitPackingSlip()')}</div>`}
+function submitPackingSlip(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);p.items.forEach(i=>{i.received=Number(document.getElementById('recv-'+i.id).value||0);i.damaged=Number(document.getElementById('dam-'+i.id).value||0)});p.comment=document.getElementById('poComment').value.trim();p.status=totalShort(p)===0?'Received':'Partially Received';render();showToast('Packing slip submitted; variance updated.')}
+function renderVariance(p){const req=totalRequested(p),rec=totalReceived(p),dam=totalDamaged(p),sh=totalShort(p),healthy=Math.max(0,rec-dam),ful=req?((rec/req)*100).toFixed(1):'0.0',dr=rec?((dam/rec)*100).toFixed(1):'0.0';return `<div id="varianceReport">${headerBlock('Variance Report',`${p.id} · ${p.vendor.name}`,'📊')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px;">${metric('📋','Requested',req,'Total requested')}${metric('📦','Received',rec,'Actual received')}${metric('⚠','Short',sh,'Not received')}${metric('💥','Damaged',dam,'Damaged stock')}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:10px;"><div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fff;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;margin-bottom:5px;">Received vs Short vs Damaged</div><canvas id="varianceChart" height="170"></canvas></div><div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fff;"><div style="font-size:10px;color:#1a4d2a;font-weight:950;margin-bottom:5px;">Stock Quality Split</div><canvas id="qualityChart" height="170"></canvas></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:10px;">${detail('Fulfilment Rate',ful+'%')}${detail('Damage Rate',dr+'%')}${detail('Healthy Stock',healthy)}${detail('Supervisor Comment',p.comment||'No comment')}</div><div style="overflow-x:auto;border:1px solid #e2ebe3;border-radius:12px;margin-top:10px;"><table style="width:100%;min-width:600px;border-collapse:collapse;font-size:9px;"><thead><tr style="background:#edf5ef;color:#1a4d2a;text-align:left;">${['Stock','Requested','Received','Short','Damaged','Status'].map(h=>`<th style="padding:8px;">${h}</th>`).join('')}</tr></thead><tbody>${p.items.map(i=>{const x=Math.max(0,i.requested-i.received),issue=x>0||i.damaged>0;return `<tr><td style="padding:8px;border-top:1px solid #e7eee7;font-weight:900;">${i.name}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.requested}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.received}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${x}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.damaged}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${issue?pill('Variance Found','red'):pill('Matched')}</td></tr>`}).join('')}</tbody></table></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">${button('Notify Head Of Operations',"showToast('Head Of Operations informed.')",'gold')}${button('Download PDF','downloadVariancePDF()')}</div></div>`}
+function drawVarianceCharts(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);if(!p||typeof Chart==='undefined')return;if(state.varianceChart)state.varianceChart.destroy();if(state.qualityChart)state.qualityChart.destroy();const a=document.getElementById('varianceChart'),b=document.getElementById('qualityChart');if(!a||!b)return;state.varianceChart=new Chart(a,{type:'bar',data:{labels:p.items.map(i=>i.name),datasets:[{label:'Received',data:p.items.map(i=>i.received)},{label:'Short',data:p.items.map(i=>Math.max(0,i.requested-i.received))},{label:'Damaged',data:p.items.map(i=>i.damaged)}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});state.qualityChart=new Chart(b,{type:'doughnut',data:{labels:['Healthy Received','Damaged','Short'],datasets:[{data:[Math.max(0,totalReceived(p)-totalDamaged(p)),totalDamaged(p),totalShort(p)]}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}})}
+async function downloadVariancePDF(){if(typeof html2canvas==='undefined'||!window.jspdf){showToast('PDF libraries not loaded.',true);return}const t=document.getElementById('varianceReport');showToast('Preparing PDF...');const c=await html2canvas(t,{scale:1.5,useCORS:true}),img=c.toDataURL('image/png'),{jsPDF}=window.jspdf,pdf=new jsPDF('p','mm','a4'),pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight(),iw=pw-14,ih=c.height*iw/c.width;let left=ih,pos=7;pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph;while(left>0){pos=left-ih+7;pdf.addPage();pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph}pdf.save(state.selectedPO+'_variance_report.pdf');showToast('Variance PDF downloaded.')}
+function openProfile(){openModal(`<div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;"><div><div style="font-size:9px;color:#f5c542;font-weight:900;">SUPERVISOR PROFILE</div><div style="font-size:19px;font-weight:950;margin-top:3px;">${supervisor.name}</div><div style="font-size:9px;color:rgba(255,255,255,.78);margin-top:3px;">${supervisor.role}</div></div>${button('×','closeModal()','light')}</div><div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:6px;">${detail('Employee ID',supervisor.employeeId)}${detail('Phone',supervisor.phone)}${detail('Email',supervisor.email)}${detail('Base Farm',supervisor.farm)}${detail('Joining Date',supervisor.joined)}${detail('Status',supervisor.status)}</div><div style="margin-top:12px;">${button('Logout','logout()','red')}</div></div>`)}function logout(){closeModal();state.loggedIn=false;render()}function renderLoggedOut(){document.getElementById('app').innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;"><div style="width:min(390px,100%);background:#fff;border:1px solid #e2ebe3;border-radius:20px;padding:22px;text-align:center;box-shadow:0 16px 38px rgba(0,20,0,.08);"><div style="font-size:38px;">🌿</div><div style="font-size:20px;color:#1a4d2a;font-weight:950;margin-top:7px;">Supervisor Session Ended</div><div style="font-size:10px;color:#718176;line-height:1.5;margin-top:5px;">This is a prototype logout screen.</div><div style="margin-top:12px;">${button('Login Again',"state.loggedIn=true;state.view='dashboard';render()")}</div></div></div>`}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});render();
+</script>
+</body>
+</html>
