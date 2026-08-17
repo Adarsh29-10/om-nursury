@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Head of Operations</title>
+</head>
+<body style="margin:0;background:#f4f7f5;color:#1f2f25;font-family:Arial,Helvetica,sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:calc(90px + env(safe-area-inset-bottom));box-sizing:border-box;">
+  <div id="app"></div>
+
+  <div id="modal" onclick="if(event.target===this)closeModal()" style="display:none;position:fixed;inset:0;background:rgba(8,27,16,.68);backdrop-filter:blur(7px);z-index:9000;align-items:flex-start;justify-content:center;padding:12px 12px calc(100px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div id="modalBox" style="width:min(820px,100%);background:#fff;border-radius:20px;box-shadow:0 28px 85px rgba(0,20,0,.3);overflow:hidden;margin:auto;"></div>
+  </div>
+
+  <div id="toast" style="position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));max-width:540px;margin:auto;background:#173f27;color:#fff;border-radius:12px;padding:11px 14px;font-size:10px;font-weight:900;box-shadow:0 14px 30px rgba(0,20,0,.24);z-index:10000;opacity:0;transform:translateY(70px);transition:.22s;pointer-events:none;"></div>
+
+<script>
+const hoop={
+  name:"Ankush Patil",
+  shortName:"Ankush",
+  employeeId:"EMP-HOOP-001",
+  role:"Head of Operations",
+  phone:"+91 98765 00001",
+  email:"ankush.patil@omnursery.in",
+  base:"Nigdi Central Operations",
+  status:"Active"
+};
+
+const navItems=[
+  {id:"home",icon:"⌂",label:"Overview"},
+  {id:"company",icon:"🏢",label:"Company & Branch"},
+  {id:"production",icon:"🌱",label:"Production Work"},
+  {id:"material",icon:"📦",label:"Material Allocation"},
+  {id:"b2c",icon:"🛒",label:"B2C Operations"},
+  {id:"b2b",icon:"🤝",label:"B2B Operations"},
+  {id:"reviews",icon:"⭐",label:"Customer Reviews"},
+  {id:"rfid",icon:"📡",label:"RFID Identification"},
+  {id:"inventory",icon:"🪴",label:"Plant Inventory"},
+  {id:"vendorquotes",icon:"📨",label:"Vendor Quotations"},
+  {id:"vendors",icon:"🏷",label:"Vendor Management"},
+  {id:"variance",icon:"📊",label:"Variance Report"}
+];
+
+const state={
+  view:"home",
+  mobile:window.innerWidth<900,
+  drawer:false,
+  loggedIn:true,
+  modal:null,
+  productionTab:"work",
+  materialTab:"status",
+  b2cTab:"review",
+  b2bTab:"inquiries",
+  vendorTab:"register",
+  rfidMode:"individual",
+  rfidCode:"",
+  groupCode:"",
+  inventoryFilters:{farm:"All",plant:"All",stage:"All",bag:"All",block:"All"},
+  reviewSearch:"",
+  b2cSearch:"",
+  b2bSearch:"",
+  vendorSearch:"",
+  quotationSearch:""
+};
+
+const companies=[
+  {name:"OM Farm",type:"Nursery & Farm",status:"Active",branches:[
+    {name:"Kamshet",code:"BR-KAM",city:"Kamshet",manager:"Ramesh",status:"Active"},
+    {name:"Karla",code:"BR-KAR",city:"Karla",manager:"Suresh",status:"Active"},
+    {name:"Talegaon",code:"BR-TAL",city:"Talegaon",manager:"Dharmesh",status:"Active"}
+  ]},
+  {name:"OM Agro",type:"Agriculture",status:"Active",branches:[
+    {name:"Vadgaon",code:"BR-VAD",city:"Vadgaon",manager:"Mahesh",status:"Active"},
+    {name:"Ratnagiri",code:"BR-RAT",city:"Ratnagiri",manager:"Prakash",status:"Active"}
+  ]},
+  {name:"Sadiksha",type:"Trading",status:"Active",branches:[
+    {name:"Lanjha",code:"BR-LAN",city:"Lanjha",manager:"Sunil",status:"Active"}
+  ]}
+];
+
+const supervisors=["Ramesh","Suresh","Dharmesh","Mahesh","Prakash"];
+const drivers=["Nilesh Patil","Akash","Prakash","Ekansh","Sameer","Mahesh"];
+
+const workOrders=[
+  {id:"WO-2026-001",assigned:"05 Aug 2026, 09:20 AM",farm:"Kamshet",block:"Block A",plants:"Tulsi",stage:"Sapling",qty:32,supervisor:"Ramesh",action:"Growth + Maintenance",start:"05 Aug",end:"06 Aug",status:"Completed",eff:96,material:"Allocated"},
+  {id:"WO-2026-002",assigned:"05 Aug 2026, 11:00 AM",farm:"Karla",block:"Block B",plants:"Rose, Curry Leaf",stage:"Child / Adult",qty:46,supervisor:"Dharmesh",action:"Maintenance",start:"06 Aug",end:"08 Aug",status:"In Progress",eff:82,material:"Partial"},
+  {id:"WO-2026-003",assigned:"05 Aug 2026, 01:45 PM",farm:"Vadegaon",block:"Block A",plants:"Aloe Vera",stage:"Sapling / Child",qty:40,supervisor:"Dharmesh",action:"Growth",start:"07 Aug",end:"09 Aug",status:"Halted",eff:48,material:"Pending"},
+  {id:"WO-2026-004",assigned:"06 Aug 2026, 10:25 AM",farm:"Ratnagiri",block:"Block B",plants:"Guava, Lemon",stage:"Adult",qty:28,supervisor:"Mahesh",action:"Mortality + Maintenance",start:"07 Aug",end:"10 Aug",status:"Attention",eff:67,material:"Pending"},
+  {id:"WO-2026-005",assigned:"06 Aug 2026, 01:20 PM",farm:"Kamshet",block:"Block C",plants:"Marigold, Areca Palm",stage:"Sapling",qty:38,supervisor:"Ramesh",action:"Growth",start:"08 Aug",end:"08 Aug",status:"Not Started",eff:0,material:"Not Started"},
+  {id:"WO-2026-006",assigned:"06 Aug 2026, 02:05 PM",farm:"Karla",block:"Block C",plants:"Money Plant, Peace Lily",stage:"Sapling / Child",qty:46,supervisor:"Suresh",action:"Maintenance",start:"07 Aug",end:"08 Aug",status:"Pending",eff:0,material:"Pending"}
+];
+
+const productionDeliveries=[
+  {id:"DEL-PROD-001",wo:"WO-2026-002",type:"Plant Location Transfer",from:"Kamshet · Block A",to:"Karla · Block B",load:"12 RFID plants",driver:"Nilesh Patil",status:"Assigned",time:"09:30 AM → 11:30 AM"},
+  {id:"DEL-PROD-002",wo:"WO-2026-004",type:"Plant Location Transfer",from:"Ratnagiri · Block B",to:"Kamshet · Block C",load:"8 plants",driver:"Akash",status:"In Transit",time:"10:15 AM → 03:30 PM"}
+];
+
+const rawMaterials=[
+  {id:"RM-001",name:"Cocopeat Blocks",unit:"Blocks"},
+  {id:"RM-002",name:"Grow Bags 3x4",unit:"Bags"},
+  {id:"RM-003",name:"Grow Bags 4x4",unit:"Bags"},
+  {id:"RM-004",name:"Grow Bags 5x6",unit:"Bags"},
+  {id:"RM-005",name:"Cutting Equipment",unit:"Sets"},
+  {id:"RM-006",name:"Rooting Hormone",unit:"Bottles"},
+  {id:"RM-007",name:"Organic Fertilizer",unit:"Kg"},
+  {id:"RM-008",name:"Labels & Plant Tags",unit:"Pcs"}
+];
+
+const stock={
+  Kamshet:{"RM-001":18,"RM-002":90,"RM-003":60,"RM-004":38,"RM-005":4,"RM-006":16,"RM-007":42,"RM-008":230},
+  Karla:{"RM-001":12,"RM-002":50,"RM-003":70,"RM-004":55,"RM-005":5,"RM-006":12,"RM-007":65,"RM-008":180},
+  Vadegaon:{"RM-001":25,"RM-002":45,"RM-003":30,"RM-004":22,"RM-005":6,"RM-006":20,"RM-007":78,"RM-008":300},
+  Ratnagiri:{"RM-001":8,"RM-002":30,"RM-003":20,"RM-004":18,"RM-005":3,"RM-006":8,"RM-007":35,"RM-008":140}
+};
+
+const allocations=[
+  {id:"MA-2026-001",wo:"WO-2026-001",farm:"Kamshet",status:"Allocated",requirements:[["RM-001",3],["RM-007",12],["RM-008",32]]},
+  {id:"MA-2026-002",wo:"WO-2026-002",farm:"Karla",status:"Partial",requirements:[["RM-001",5],["RM-007",18],["RM-008",46]]},
+  {id:"MA-2026-003",wo:"WO-2026-003",farm:"Vadegaon",status:"Pending",requirements:[["RM-002",24],["RM-006",3],["RM-008",40]]}
+];
+
+const transferVouchers=[
+  {id:"TV-2026-004",wo:"WO-2026-002",from:"Vadegaon",to:"Karla",items:"Organic Fertilizer 18 Kg · Tags 46 Pcs · Cocopeat 5 Blocks",driver:"Nilesh Patil",status:"Driver Assigned"},
+  {id:"TV-2026-008",wo:"WO-2026-004",from:"Kamshet",to:"Ratnagiri",items:"Grow Bags 20 · Fertilizer 10 Kg",driver:"Akash",status:"In Transit"}
+];
+
+const procurements=[
+  {id:"PROC-2026-011",wo:"WO-2026-003",rfq:"RFQ-2026-0812-011",material:"Grow Bags 3x4",qty:120,unit:"Bags",status:"RFQ Sent",required:"25 Aug 2026"},
+  {id:"PROC-2026-014",wo:"WO-2026-004",rfq:"RFQ-2026-0812-014",material:"Tulsi + Areca Palm",qty:720,unit:"Plants",status:"Quotations Received",required:"18 Aug 2026"},
+  {id:"PROC-2026-015",wo:"WO-2026-005",rfq:"RFQ-2026-0813-015",material:"Organic Fertilizer",qty:80,unit:"Kg",status:"Draft",required:"22 Aug 2026"}
+];
+
+const quotations=[
+  {id:"QT-014-A",rfq:"RFQ-2026-0812-014",vendor:"GreenRoot Agro Pvt. Ltd.",capacity:"720 plants",price:128500,delivery:"17 Aug 2026",status:"Received"},
+  {id:"QT-014-B",rfq:"RFQ-2026-0812-014",vendor:"Shree Sai Horticulture",capacity:"700 plants",price:121000,delivery:"19 Aug 2026",status:"Received"},
+  {id:"QT-014-C",rfq:"RFQ-2026-0812-014",vendor:"Prakruti Nursery",capacity:"720 plants",price:132400,delivery:"16 Aug 2026",status:"Received"},
+  {id:"QT-011-A",rfq:"RFQ-2026-0812-011",vendor:"NaturePot Industries",capacity:"120 bags",price:27800,delivery:"22 Aug 2026",status:"Received"}
+];
+
+const purchaseOrders=[
+  {id:"PO-701",rfq:"RFQ-2026-0812-014",vendor:"GreenRoot Agro Pvt. Ltd.",farm:"Kamshet",amount:128500,status:"Partially Received",date:"02 Jul 2026"},
+  {id:"PO-702",rfq:"RFQ-2026-0812-011",vendor:"NaturePot Industries",farm:"Karla",amount:94200,status:"Pending Slip",date:"04 Jul 2026"},
+  {id:"PO-703",rfq:"RFQ-2026-0809-004",vendor:"Konkan Plant Supply Co.",farm:"Ratnagiri",amount:176800,status:"Received",date:"01 Jul 2026"}
+];
+
+const b2cOrders=[
+  {id:"B2C-2026-234",bill:"BILL-234",customer:"Aakash Patil",phone:"9876543210",city:"Pune",items:"Rose ×1 · Tulsi ×2 · Mango ×1",subtotal:1496,gst:74.8,total:1570.8,billStatus:"Generated",payment:"Pending Counter",supervisor:"Rajesh",driver:"Nilesh Patil",delivery:"Assigned",order:"In Progress",review:{product:5,display:4,supervisor:5}},
+  {id:"B2C-2026-235",bill:"BILL-235",customer:"Sneha Kulkarni",phone:"9822012145",city:"Pune",items:"Areca Palm ×2 · Aloe Vera ×1",subtotal:1447,gst:72.35,total:1519.35,billStatus:"Generated",payment:"Paid",supervisor:"Ramesh",driver:"Akash",delivery:"Delivered",order:"Completed",review:{product:4,display:5,supervisor:4}},
+  {id:"B2C-2026-236",bill:"Draft",customer:"Rahul Shah",phone:"9765511200",city:"Mumbai",items:"Mango Tree ×3",subtotal:1497,gst:74.85,total:1571.85,billStatus:"Draft",payment:"Not Started",supervisor:"Suresh",driver:"",delivery:"Pending Assignment",order:"Confirmed",review:null}
+];
+
+const b2bInquiries=[
+  {id:"INQ-2026-001",customer:"GreenScape Landscaping Pvt. Ltd.",contact:"Priya Deshmukh",mobile:"9876543210",farm:"Kamshet",requirement:"Tulsi 50 · Tomato Tree 70 · Rose 25",status:"Quotation Finalized",created:"04 Aug 2026"},
+  {id:"INQ-2026-004",customer:"UrbanLeaf Developers",contact:"Amit Shah",mobile:"9822011122",farm:"Kamshet",requirement:"Areca Palm 40 · Money Plant 80",status:"Quotation Sent",created:"07 Aug 2026"},
+  {id:"INQ-2026-005",customer:"Konkan Resort Project",contact:"Megha Kulkarni",mobile:"9765512033",farm:"Karla",requirement:"Mango Tree 30",status:"Order Created",created:"09 Aug 2026"}
+];
+
+const b2bQuotationVersions=[
+  {id:"QTN-2026-001-V1",inquiry:"INQ-2026-001",version:1,amount:146500,created:"05 Aug 2026",status:"Finalized"},
+  {id:"QTN-2026-004-V1",inquiry:"INQ-2026-004",version:1,amount:118000,created:"08 Aug 2026",status:"Superseded"},
+  {id:"QTN-2026-004-V2",inquiry:"INQ-2026-004",version:2,amount:112500,created:"09 Aug 2026",status:"Sent"},
+  {id:"QTN-2026-005-V1",inquiry:"INQ-2026-005",version:1,amount:89700,created:"10 Aug 2026",status:"Finalized"}
+];
+
+const b2bOrders=[
+  {id:"ORD-2026-001",inquiry:"INQ-2026-001",quotation:"QTN-2026-001-V1",customer:"GreenScape Landscaping Pvt. Ltd.",farm:"Kamshet",payment:"50% Advance",supervisor:"Ramesh",driver:"Nilesh Patil",orderStatus:"In Progress",deliveryStatus:"Driver Assigned",required:"18 Aug 2026"},
+  {id:"ORD-2026-002",inquiry:"INQ-2026-004",quotation:"QTN-2026-004-V2",customer:"UrbanLeaf Developers",farm:"Kamshet",payment:"Advance Pending",supervisor:"Ramesh",driver:"",orderStatus:"In Progress",deliveryStatus:"Pending Assignment",required:"20 Aug 2026"},
+  {id:"ORD-2026-003",inquiry:"INQ-2026-005",quotation:"QTN-2026-005-V1",customer:"Konkan Resort Project",farm:"Karla",payment:"Paid",supervisor:"Suresh",driver:"Akash",orderStatus:"Completed",deliveryStatus:"Delivered",required:"12 Aug 2026"}
+];
+
+const customerReviews=[
+  {bill:"BILL-221",customer:"Aarav Patil",product:5,display:4,supervisor:5,supervisorName:"Ramesh",date:"10 Aug 2026",comment:"Plants were healthy and staff guided well."},
+  {bill:"BILL-223",customer:"Neha Shah",product:4,display:4,supervisor:5,supervisorName:"Suresh",date:"10 Aug 2026",comment:"Good experience and clear display."},
+  {bill:"BILL-224",customer:"Rohit More",product:5,display:5,supervisor:4,supervisorName:"Dharmesh",date:"11 Aug 2026",comment:"Quick service and healthy plants."},
+  {bill:"BILL-227",customer:"Kavya Jain",product:3,display:4,supervisor:4,supervisorName:"Ramesh",date:"12 Aug 2026",comment:"Some products needed better labels."},
+  {bill:"BILL-231",customer:"Vikas Pawar",product:5,display:4,supervisor:5,supervisorName:"Suresh",date:"13 Aug 2026",comment:"Very satisfied with product quality."},
+  {bill:"BILL-234",customer:"Aakash Patil",product:5,display:4,supervisor:5,supervisorName:"Rajesh",date:"14 Aug 2026",comment:"Smooth counter and delivery process."},
+  {bill:"BILL-235",customer:"Sneha Kulkarni",product:4,display:5,supervisor:4,supervisorName:"Ramesh",date:"14 Aug 2026",comment:"Good nursery display."}
+];
+
+const individualPlants={
+  "OM-KAMSHET-0234":{rfid:"OM-KAMSHET-0234",plantId:"PL-KAM-MAN-0234",name:"Mango Plant",botanical:"Mangifera indica",farm:"Kamshet",block:"Block A",batch:"Batch 2",row:"Bed A-07 · Row 04",stage:"Adult",height:"168 cm",width:"92 cm canopy",age:"26 months",container:"24-inch grow bag",propagation:"Grafted",grade:"Grade A",sellable:"Ready for sale",health:"Healthy",score:94,moisture:"68% · Optimal",fertilisation:"28 Jul 2026",pest:"Clear",next:"Canopy shaping · 18 Aug"},
+  "OM-KAMSHET-0188":{rfid:"OM-KAMSHET-0188",plantId:"PL-KAM-ARE-0188",name:"Areca Palm",botanical:"Dypsis lutescens",farm:"Kamshet",block:"Block C",batch:"Batch 5",row:"Shade C-04 · Row 02",stage:"Sapling",height:"74 cm",width:"42 cm",age:"10 months",container:"12-inch grow bag",propagation:"Seed",grade:"Grade A",sellable:"Under growth",health:"Healthy",score:91,moisture:"71% · Optimal",fertilisation:"02 Aug 2026",pest:"Clear",next:"Growth check · 19 Aug"},
+  "OM-KARLA-0112":{rfid:"OM-KARLA-0112",plantId:"PL-KAR-ROS-0112",name:"Rose Plant",botanical:"Rosa",farm:"Karla",block:"Block B",batch:"Batch 3",row:"Bed B-03",stage:"Adult",height:"82 cm",width:"58 cm",age:"15 months",container:"18-inch grow bag",propagation:"Cutting",grade:"Grade A",sellable:"Ready for sale",health:"Healthy",score:89,moisture:"64% · Normal",fertilisation:"30 Jul 2026",pest:"Clear",next:"Flowering review"}
+};
+
+const groupPlants={
+  "GRP-KAMSHET-1001":{rfid:"GRP-KAMSHET-1001",mapping:"GRP-MAP-2026-1001",plant:"Mango Hapoos",stage:"Sapling",farm:"Kamshet",block:"Block A",batch:"Batch 4",bag:"12x12",qty:120,available:104,reserved:10,care:6,mapped:"02 Aug 2026",health:"Good",score:92},
+  "GRP-KAMSHET-1005":{rfid:"GRP-KAMSHET-1005",mapping:"GRP-MAP-2026-1005",plant:"Mango Pairi",stage:"Adult",farm:"Kamshet",block:"Block B",batch:"Batch 7",bag:"24x24",qty:95,available:80,reserved:8,care:7,mapped:"04 Aug 2026",health:"Good",score:90},
+  "GRP-KARLA-1002":{rfid:"GRP-KARLA-1002",mapping:"GRP-MAP-2026-1002",plant:"Rose Red",stage:"Adult",farm:"Karla",block:"Block B",batch:"Batch 3",bag:"18x18",qty:75,available:61,reserved:9,care:5,mapped:"03 Aug 2026",health:"Healthy",score:94}
+};
+
+const inventoryRows=[];
+["Kamshet","Vadegaon","Karla","Talegaon"].forEach((farm,fi)=>{
+  ["Mango Hapoos","Rose Red","Tulsi","Areca Palm","Aloe Vera","Guava","Lemon","Money Plant"].forEach((plant,pi)=>{
+    ["Sapling","Child","Adult"].forEach((stage,si)=>{
+      inventoryRows.push({
+        id:"INV-"+String(fi+1)+String(pi+1)+String(si+1),
+        farm,
+        plant,
+        stage,
+        bag:["10x10","12x12","18x18","24x24"][(pi+si)%4],
+        block:["Block A","Block B","Block C"][(fi+pi+si)%3],
+        available:20+((fi+1)*(pi+3)*(si+2))%95,
+        reserved:((pi+si)*3)%12,
+        care:(fi+pi+si)%8
+      });
+    });
+  });
+});
+
+const vendorQuotesSent=[
+  {rfq:"RFQ-2026-0812-014",vendor:"GreenRoot Agro Pvt. Ltd.",location:"Pune",items:"Tulsi 500 · Areca Palm 220",sent:"12 Aug 2026",required:"18 Aug 2026",status:"Accepted"},
+  {rfq:"RFQ-2026-0812-014",vendor:"Prakruti Nursery",location:"Satara",items:"Tulsi 500 · Areca Palm 220",sent:"12 Aug 2026",required:"18 Aug 2026",status:"Accepted"},
+  {rfq:"RFQ-2026-0812-011",vendor:"Shree Sai Horticulture",location:"Nashik",items:"Mango Hapoos 350",sent:"12 Aug 2026",required:"25 Aug 2026",status:"Accepted"},
+  {rfq:"RFQ-2026-0813-015",vendor:"EcoGrow Inputs",location:"Pune",items:"Organic Fertilizer 80 Kg",sent:"13 Aug 2026",required:"22 Aug 2026",status:"Pending"}
+];
+
+const vendors=[
+  {id:"VEN-001",name:"GreenRoot Agro Pvt. Ltd.",trade:"GreenRoot Nursery",location:"Pune, Maharashtra",category:"Plant Grower / Wholesale Nursery",phone:"9876511001",email:"sales@greenroot.in",rating:4.7,access:true,last:"12 Aug 2026"},
+  {id:"VEN-002",name:"Shree Sai Horticulture",trade:"Sai Plants",location:"Nashik, Maharashtra",category:"Plant Grower",phone:"9876511002",email:"sales@saiplants.in",rating:4.4,access:true,last:"12 Aug 2026"},
+  {id:"VEN-003",name:"NaturePot Industries",trade:"NaturePot",location:"Pune, Maharashtra",category:"Grow Bags & Pots",phone:"9876511003",email:"orders@naturepot.in",rating:4.2,access:true,last:"10 Aug 2026"},
+  {id:"VEN-004",name:"Prakruti Nursery",trade:"Prakruti",location:"Satara, Maharashtra",category:"Wholesale Nursery",phone:"9876511004",email:"hello@prakruti.in",rating:4.5,access:false,last:"08 Aug 2026"},
+  {id:"VEN-005",name:"EcoGrow Inputs",trade:"EcoGrow",location:"Pune, Maharashtra",category:"Fertilizer & Inputs",phone:"9876511005",email:"sales@ecogrow.in",rating:4.1,access:true,last:"13 Aug 2026"}
+];
+
+const vendorPurchases=[
+  {po:"PO-701",vendor:"GreenRoot Agro Pvt. Ltd.",plant:"Tulsi",qty:500,cost:75000,delivery:"11 Aug 2026",status:"Received"},
+  {po:"PO-701",vendor:"GreenRoot Agro Pvt. Ltd.",plant:"Areca Palm",qty:220,cost:53500,delivery:"11 Aug 2026",status:"Received"},
+  {po:"PO-702",vendor:"NaturePot Industries",plant:"Grow Bags 12 inch",qty:500,cost:94200,delivery:"Pending",status:"Partially Received"},
+  {po:"PO-703",vendor:"Konkan Plant Supply Co.",plant:"Mango Sapling",qty:350,cost:176800,delivery:"05 Jul 2026",status:"Received"}
+];
+
+const varianceReports=[
+  {po:"PO-701",vendor:"GreenRoot Agro Pvt. Ltd.",requested:1020,received:920,damaged:41,short:100,fulfilment:90.2,status:"Variance Found",comment:"Minor damage in rose/plant trays."},
+  {po:"PO-702",vendor:"NaturePot Industries",requested:660,received:0,damaged:0,short:660,fulfilment:0,status:"Pending Slip",comment:"Packing slip not submitted."},
+  {po:"PO-703",vendor:"Konkan Plant Supply Co.",requested:490,received:490,damaged:10,short:0,fulfilment:100,status:"Received with Damage",comment:"Two fertilizer bags torn during unloading."}
+];
+
+function esc(v){
+  return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function money(v){return "₹"+Number(v||0).toLocaleString("en-IN");}
+function showToast(msg,error=false){
+  const t=document.getElementById("toast");
+  t.textContent=(error?"⚠ ":"✓ ")+msg;
+  t.style.background=error?"#b42331":"#173f27";
+  t.style.opacity="1";t.style.transform="translateY(0)";
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.style.opacity="0";t.style.transform="translateY(70px)"},2300);
+}
+function openModal(content,width="820px"){
+  const m=document.getElementById("modal"),b=document.getElementById("modalBox");
+  b.style.width=`min(${width},100%)`;
+  b.innerHTML=content;m.style.display="flex";
+}
+function closeModal(){document.getElementById("modal").style.display="none";document.getElementById("modalBox").innerHTML="";}
+function btn(label,onclick,tone="green",extra=""){
+  const bg=tone==="gold"?"#d9a928":tone==="light"?"#fff":tone==="red"?"#fff0ef":"#173f27";
+  const color=tone==="gold"?"#273121":tone==="light"?"#173f27":tone==="red"?"#b42331":"#fff";
+  const border=tone==="light"?"1px solid #d8e4da":tone==="red"?"1px solid #f2d1cf":"none";
+  return `<button onclick="${onclick}" style="border:${border};background:${bg};color:${color};border-radius:10px;padding:9px 11px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;${extra}">${label}</button>`;
+}
+function pill(text,tone="green"){
+  const map={
+    green:["#e8f6ec","#17643a"],gold:["#fff5d9","#846300"],red:["#ffe9e8","#b42331"],
+    blue:["#eaf4ff","#1363a5"],gray:["#f0f3f0","#5f7064"],purple:["#f0e8ff","#6a3da5"]
+  };
+  const c=map[tone]||map.green;
+  return `<span style="display:inline-flex;align-items:center;padding:5px 7px;border-radius:999px;background:${c[0]};color:${c[1]};font-size:8px;font-weight:900;white-space:nowrap;">${esc(text)}</span>`;
+}
+function statusPill(s){
+  const x=String(s);
+  if(/halt|fail|variance|attention|damage/i.test(x))return pill(x,"red");
+  if(/pending|draft|partial|not started/i.test(x))return pill(x,"gold");
+  if(/assigned|transit|sent|received/i.test(x))return pill(x,"blue");
+  if(/final|complete|active|allocated|paid|accepted|delivered/i.test(x))return pill(x,"green");
+  return pill(x,"gray");
+}
+function sectionHeader(title,sub=""){
+  return `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;"><div><div style="font-size:17px;color:#173f27;font-weight:950;letter-spacing:-.02em;">${title}</div>${sub?`<div style="font-size:9px;color:#718176;line-height:1.5;margin-top:3px;">${sub}</div>`:""}</div></div>`;
+}
+function card(content,extra=""){
+  return `<section style="background:#fff;border:1px solid #e1e9e2;border-radius:15px;padding:12px;box-shadow:0 6px 18px rgba(20,60,32,.035);margin-bottom:10px;${extra}">${content}</section>`;
+}
+function metric(icon,label,value,note=""){
+  return `<div style="background:#fff;border:1px solid #e2eae3;border-radius:12px;padding:10px;min-height:61px;"><div style="font-size:8px;color:#75857a;font-weight:850;">${icon} ${label}</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:7px;">${value}</div>${note?`<div style="font-size:7px;color:#8d998f;margin-top:2px;">${note}</div>`:""}</div>`;
+}
+function detail(label,value){
+  return `<div style="background:#f8faf8;border:1px solid #e5ebe6;border-radius:10px;padding:9px;"><div style="font-size:7px;color:#89958c;font-weight:900;text-transform:uppercase;">${label}</div><div style="font-size:9px;color:#173f27;font-weight:900;margin-top:4px;line-height:1.45;word-break:break-word;">${esc(value)}</div></div>`;
+}
+function tableWrap(headers,rows,min="900px"){
+  return `<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #e1e9e2;border-radius:12px;"><table style="width:100%;min-width:${min};border-collapse:collapse;font-size:9px;"><thead><tr style="background:#edf5ef;color:#173f27;text-align:left;">${headers.map(h=>`<th style="padding:9px;border-bottom:1px solid #d9e5db;white-space:nowrap;">${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function td(v,strong=false){return `<td style="padding:9px;border-bottom:1px solid #edf1ed;vertical-align:top;${strong?"font-weight:900;color:#173f27;":""}">${v}</td>`;}
+function tabs(items,active,setter){
+  return `<div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:10px;padding-bottom:1px;">${items.map(x=>btn(x[1],`${setter}('${x[0]}')`,active===x[0]?"green":"light")).join("")}</div>`;
+}
+function setView(id){state.view=id;state.drawer=false;render();window.scrollTo({top:0,behavior:"smooth"});}
+function setProductionTab(x){state.productionTab=x;render();}
+function setMaterialTab(x){state.materialTab=x;render();}
+function setB2CTab(x){state.b2cTab=x;render();}
+function setB2BTab(x){state.b2bTab=x;render();}
+function setVendorTab(x){state.vendorTab=x;render();}
+
+function sidebar(drawer=false){
+  return `<aside style="height:${drawer?"100%":"calc(100vh - 16px)"};position:${drawer?"relative":"sticky"};top:${drawer?"0":"8px"};background:#fff;border:1px solid #dfe8e0;border-left:${drawer?"1px solid #dfe8e0":"none"};border-radius:${drawer?"0":"0 16px 16px 0"};padding:11px;box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:${drawer?"none":"0 8px 24px rgba(20,60,32,.05)"};">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+        <div style="width:35px;height:35px;min-width:35px;border-radius:10px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;">🌿</div>
+        <div style="min-width:0;"><div style="font-size:10px;color:#173f27;font-weight:950;">OM Nursery</div><div style="font-size:8px;color:#819087;margin-top:2px;">Head of Operations</div></div>
+      </div>
+      ${drawer?`<button onclick="state.drawer=false;render()" style="border:none;background:#f2f5f2;color:#173f27;width:30px;height:30px;border-radius:9px;font-size:17px;cursor:pointer;">×</button>`:""}
+    </div>
+    <div style="padding:9px;border:1px solid #e4ebe5;border-radius:11px;background:#fbfdfb;margin-bottom:11px;">
+      <div style="font-size:9px;color:#173f27;font-weight:950;">${esc(hoop.name)}</div>
+      <div style="font-size:7px;color:#829087;margin-top:3px;">${esc(hoop.base)}</div>
+    </div>
+    ${navItems.map(n=>{
+      const active=state.view===n.id;
+      return `<button onclick="setView('${n.id}')" style="width:100%;border:1px solid ${active?"#cfe0d2":"transparent"};background:${active?"#edf5ef":"transparent"};color:${active?"#173f27":"#607166"};border-radius:10px;padding:8px 9px;display:flex;align-items:center;gap:8px;text-align:left;cursor:pointer;margin-bottom:3px;font-size:9px;font-weight:900;"><span style="width:24px;height:24px;border-radius:7px;background:${active?"#173f27":"#f2f5f2"};color:${active?"#fff":"#5d7063"};display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 24px;">${n.icon}</span><span style="flex:1;">${n.label}</span></button>`;
+    }).join("")}
+    <div style="border-top:1px solid #edf1ed;margin-top:9px;padding-top:9px;">
+      ${btn("👤 Profile","openProfile()","light","width:100%;text-align:left;margin-bottom:5px;")}
+      ${btn("↪ Logout","logout()","red","width:100%;text-align:left;")}
+    </div>
+  </aside>`;
+}
+function mobileTop(){
+  const n=navItems.find(x=>x.id===state.view)||navItems[0];
+  return `<div style="position:sticky;top:0;z-index:400;background:rgba(244,247,245,.96);backdrop-filter:blur(12px);padding:7px 0;">
+    <div style="background:#fff;border:1px solid #e0e8e1;border-radius:13px;padding:7px 8px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(20,60,32,.045);">
+      <button onclick="state.drawer=true;render()" style="border:none;background:#edf5ef;color:#173f27;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;">☰</button>
+      <div style="min-width:0;flex:1;"><div style="font-size:7px;color:#89958c;font-weight:900;">HEAD OF OPERATIONS</div><div style="font-size:12px;color:#173f27;font-weight:950;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${n.icon} ${n.label}</div></div>
+      <button onclick="openProfile()" style="border:1px solid #dce6dd;background:#fff;width:34px;height:34px;border-radius:10px;cursor:pointer;">👤</button>
+    </div>
+  </div>`;
+}
+function drawer(){
+  if(!state.drawer)return "";
+  return `<div onclick="if(event.target===this){state.drawer=false;render()}" style="position:fixed;inset:0;z-index:5000;background:rgba(6,24,13,.52);backdrop-filter:blur(4px);display:flex;align-items:stretch;"><div style="width:min(84vw,310px);height:100%;background:#fff;">${sidebar(true)}</div></div>`;
+}
+function render(){
+  if(!state.loggedIn){renderLoggedOut();return;}
+  let content=homeView();
+  if(state.view==="company")content=companyView();
+  if(state.view==="production")content=productionView();
+  if(state.view==="material")content=materialView();
+  if(state.view==="b2c")content=b2cView();
+  if(state.view==="b2b")content=b2bView();
+  if(state.view==="reviews")content=reviewsView();
+  if(state.view==="rfid")content=rfidView();
+  if(state.view==="inventory")content=inventoryView();
+  if(state.view==="vendorquotes")content=vendorQuotesView();
+  if(state.view==="vendors")content=vendorsView();
+  if(state.view==="variance")content=varianceView();
+
+  if(state.mobile){
+    document.getElementById("app").innerHTML=`<div style="width:min(100% - 14px,980px);margin:0 auto;padding:0 0 calc(110px + env(safe-area-inset-bottom));box-sizing:border-box;">${mobileTop()}<main>${content}</main>${drawer()}</div>`;
+  }else{
+    document.getElementById("app").innerHTML=`<div style="width:100%;display:grid;grid-template-columns:290px minmax(0,1fr);gap:13px;align-items:start;padding:8px 14px calc(90px + env(safe-area-inset-bottom)) 0;box-sizing:border-box;">${sidebar(false)}<main style="min-width:0;">${content}</main></div>`;
+  }
+}
+function homeView(){
+  const openWO=workOrders.filter(x=>x.status!=="Completed").length;
+  const pendingProc=procurements.filter(x=>x.status!=="PO Finalized").length;
+  const openB2C=b2cOrders.filter(x=>x.order!=="Completed").length;
+  const openB2B=b2bOrders.filter(x=>x.orderStatus!=="Completed").length;
+  return `<div style="padding:4px 0;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:3px 1px 9px;"><div><div style="font-size:18px;color:#173f27;font-weight:950;">Operations Overview</div><div style="font-size:8px;color:#87958a;margin-top:2px;">Cross-module control desk for HOOP.</div></div>${pill("Central Operations","green")}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:6px;margin-bottom:9px;">
+      ${metric("🌱","Open Work Orders",openWO)}
+      ${metric("📦","Procurements",pendingProc)}
+      ${metric("🛒","B2C Open",openB2C)}
+      ${metric("🤝","B2B Open",openB2B)}
+      ${metric("🏷","Vendors",vendors.length)}
+      ${metric("⚠","Variances",varianceReports.filter(v=>v.status!=="Received").length)}
+    </div>
+    ${card(`${sectionHeader("Priority Actions")}
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:7px;">
+        ${quick("📦","Material & Procurement","Internal transfers, RFQs, quotations and POs","material",procurements.filter(x=>x.status!=="PO Finalized").length+" active")}
+        ${quick("🤝","B2B Orders","Inquiry, order and delivery assignment","b2b",b2bOrders.filter(x=>x.deliveryStatus!=="Delivered").length+" deliveries")}
+        ${quick("🚚","B2C Operations","Bills, delivery assignment and order status","b2c",b2cOrders.filter(x=>x.delivery!=="Delivered").length+" deliveries")}
+        ${quick("📊","Variance Reports","Review received vs short vs damaged","variance",varianceReports.filter(x=>x.status!=="Received").length+" need review")}
+      </div>`)}
+    ${card(`${sectionHeader("Latest Work Orders")}
+      <div style="display:grid;gap:6px;">${workOrders.slice(0,4).map(w=>`<button onclick="openWorkOrder('${w.id}')" style="width:100%;border:1px solid #e6ece6;background:#fbfdfb;border-radius:10px;padding:9px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;"><span style="min-width:0;"><strong style="font-size:9px;color:#173f27;">${w.id} · ${w.plants}</strong><span style="display:block;font-size:7px;color:#839087;margin-top:2px;">${w.farm} · ${w.block} · ${w.supervisor}</span></span>${statusPill(w.status)}</button>`).join("")}</div>`)}
+  </div>`;
+}
+function quick(icon,title,sub,view,badge){
+  return `<button onclick="setView('${view}')" style="border:1px solid #e2eae3;background:#fff;border-radius:12px;padding:11px;text-align:left;cursor:pointer;"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:18px;">${icon}</span>${pill(badge,"gold")}</div><div style="font-size:10px;color:#173f27;font-weight:950;margin-top:8px;">${title}</div><div style="font-size:7px;color:#859188;line-height:1.4;margin-top:3px;">${sub}</div></button>`;
+}
+
+function companyView(){
+  return card(`${sectionHeader("Company & Branch","HOOP access is view-only here.")}
+    <div style="display:grid;gap:8px;">
+      ${companies.map(c=>`<div style="border:1px solid #e2eae3;border-radius:13px;padding:11px;background:#fbfdfb;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:12px;color:#173f27;font-weight:950;">${c.name}</div><div style="font-size:8px;color:#839087;margin-top:3px;">${c.type} · ${c.branches.length} branches</div></div>${statusPill(c.status)}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin-top:9px;">${c.branches.map(b=>`<button onclick="openBranch('${c.name}','${b.code}')" style="border:1px solid #e4ebe5;background:#fff;border-radius:10px;padding:9px;text-align:left;cursor:pointer;"><strong style="font-size:9px;color:#173f27;">${b.name}</strong><span style="display:block;font-size:7px;color:#839087;margin-top:3px;">${b.code} · Manager ${b.manager}</span></button>`).join("")}</div>
+      </div>`).join("")}
+    </div>`);
+}
+function openBranch(company,code){
+  const c=companies.find(x=>x.name===company),b=c?.branches.find(x=>x.code===code);if(!b)return;
+  openModal(modalHead("Branch Details",company+" · "+b.name)+`<div style="padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px;">${detail("Company",c.name)}${detail("Branch",b.name)}${detail("Code",b.code)}${detail("City",b.city)}${detail("Manager",b.manager)}${detail("Status",b.status)}</div>`);
+}
+
+function productionView(){
+  return `${tabs([["work","Work Orders"],["deliveries","Deliveries Assigned"]],state.productionTab,"setProductionTab")}
+    ${state.productionTab==="work"?productionWorkTab():productionDeliveryTab()}`;
+}
+function productionWorkTab(){
+  const rows=workOrders.map(w=>`<tr>${td(w.id,true)}${td(w.assigned)}${td(`<strong>${w.farm}</strong><br>${w.block}`)}${td(`<strong>${w.plants}</strong><br>${w.stage} · ${w.qty} plants`)}${td(w.supervisor)}${td(w.action)}${td(`${w.start} → ${w.end}`)}${td(statusPill(w.status))}${td(`<strong>${w.eff}%</strong>`)}${td(statusPill(w.material))}${td(`${btn("View",`openWorkOrder('${w.id}')`,"light")} ${btn("Assign",`openWOAssign('${w.id}')`)}`)}</tr>`).join("");
+  return card(`${sectionHeader("Production Work","Entire operational work-order view with assignment and status visibility.")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("🧾","Total WO",workOrders.length)}${metric("▶","In Progress",workOrders.filter(x=>x.status==="In Progress").length)}${metric("⚠","Attention",workOrders.filter(x=>["Attention","Halted"].includes(x.status)).length)}${metric("✓","Completed",workOrders.filter(x=>x.status==="Completed").length)}</div>
+    ${tableWrap(["Work Order","Assigned On","Farm / Block","Plants","Supervisor","Action","Schedule","Status","Efficiency","Material","Action"],rows,"1160px")}`);
+}
+function productionDeliveryTab(){
+  return card(`${sectionHeader("Deliveries Assigned","Production location-transfer deliveries linked to work orders.")}
+    <div style="display:grid;gap:7px;">${productionDeliveries.map(d=>`<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:11px;color:#173f27;font-weight:950;">${d.id} · ${d.wo}</div><div style="font-size:8px;color:#839087;margin-top:3px;">${d.type}</div></div>${statusPill(d.status)}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-top:8px;">${detail("From",d.from)}${detail("To",d.to)}${detail("Load",d.load)}${detail("Driver",d.driver)}${detail("Time",d.time)}</div><div style="margin-top:8px;">${btn("Change Driver",`openProdDeliveryAssign('${d.id}')`)}</div></div>`).join("")}</div>`);
+}
+function openWorkOrder(id){
+  const w=workOrders.find(x=>x.id===id);if(!w)return;
+  openModal(modalHead("Work Order",id)+`<div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;">${detail("Farm / Block",w.farm+" · "+w.block)}${detail("Plants",w.plants)}${detail("Stage / Qty",w.stage+" · "+w.qty)}${detail("Supervisor",w.supervisor)}${detail("Action",w.action)}${detail("Schedule",w.start+" → "+w.end)}${detail("Status",w.status)}${detail("Efficiency",w.eff+"%")}${detail("Material",w.material)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;">${btn("Assign / Change Supervisor",`closeModal();openWOAssign('${id}')`)}${btn("Update Status",`closeModal();openWOStatus('${id}')`,"gold")}</div></div>`);
+}
+function openWOAssign(id){
+  const w=workOrders.find(x=>x.id===id);
+  openModal(modalHead("Assign Work Order",id)+`<div style="padding:14px;"><label style="font-size:9px;color:#173f27;font-weight:900;">Supervisor</label><select id="woSupervisor" style="${inputStyle()}">${supervisors.map(s=>`<option ${s===w.supervisor?"selected":""}>${s}</option>`).join("")}</select><label style="display:block;font-size:9px;color:#173f27;font-weight:900;margin-top:9px;">Production Action</label><select id="woAction" style="${inputStyle()}">${["Growth","Maintenance","Update Location","Mortality","Growth + Maintenance"].map(s=>`<option ${s===w.action?"selected":""}>${s}</option>`).join("")}</select><div style="margin-top:11px;">${btn("Save Assignment",`saveWOAssign('${id}')`)}</div></div>`);
+}
+function saveWOAssign(id){const w=workOrders.find(x=>x.id===id);w.supervisor=document.getElementById("woSupervisor").value;w.action=document.getElementById("woAction").value;closeModal();render();showToast(id+" assignment updated.");}
+function openWOStatus(id){
+  const w=workOrders.find(x=>x.id===id);
+  openModal(modalHead("Update Work Status",id)+`<div style="padding:14px;"><select id="woStat" style="${inputStyle()}">${["Not Started","Pending","In Progress","Completed","Halted","Attention"].map(s=>`<option ${s===w.status?"selected":""}>${s}</option>`).join("")}</select><input id="woEff" type="number" min="0" max="100" value="${w.eff}" style="${inputStyle()}margin-top:8px;" placeholder="Efficiency %"><div style="margin-top:10px;">${btn("Save",`saveWOStatus('${id}')`)}</div></div>`);
+}
+function saveWOStatus(id){const w=workOrders.find(x=>x.id===id);w.status=document.getElementById("woStat").value;w.eff=Math.max(0,Math.min(100,Number(document.getElementById("woEff").value||0)));closeModal();render();showToast(id+" status updated.");}
+function openProdDeliveryAssign(id){
+  const d=productionDeliveries.find(x=>x.id===id);
+  openModal(modalHead("Assign Delivery Driver",id)+`<div style="padding:14px;"><select id="prodDriver" style="${inputStyle()}">${drivers.map(x=>`<option ${x===d.driver?"selected":""}>${x}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Save Driver",`saveProdDriver('${id}')`)}</div></div>`);
+}
+function saveProdDriver(id){const d=productionDeliveries.find(x=>x.id===id);d.driver=document.getElementById("prodDriver").value;d.status="Assigned";closeModal();render();showToast("Driver assigned.");}
+
+function materialView(){
+  const items=[["status","Work Order Status"],["stock","Stock & Transfer"],["proc","Procurement / RFQ"],["compare","Quotation Comparison"],["po","Finalized POs"]];
+  return `${tabs(items,state.materialTab,"setMaterialTab")}${materialTabContent()}`;
+}
+function materialTabContent(){
+  if(state.materialTab==="stock")return materialStockTab();
+  if(state.materialTab==="proc")return procurementTab();
+  if(state.materialTab==="compare")return quotationCompareTab();
+  if(state.materialTab==="po")return poTab();
+  return materialStatusTab();
+}
+function materialStatusTab(){
+  const rows=workOrders.map(w=>`<tr>${td(w.id,true)}${td(w.farm+" · "+w.block)}${td(w.plants)}${td(w.supervisor)}${td(statusPill(w.status))}${td(statusPill(w.material))}${td(btn("Review Material",`openAllocationDecision('${w.id}')`))}</tr>`).join("");
+  return card(`${sectionHeader("Material Allocation Metrics & Work Order Status")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("🧾","Work Orders",workOrders.length)}${metric("📦","Allocations",allocations.length)}${metric("🚚","Transfers",transferVouchers.length)}${metric("📨","Open RFQs",procurements.length)}${metric("📄","POs",purchaseOrders.length)}</div>
+    ${tableWrap(["WO","Farm / Block","Plants","Supervisor","WO Status","Material Status","Action"],rows,"850px")}`);
+}
+function materialStockTab(){
+  const farms=Object.keys(stock);
+  return card(`${sectionHeader("Internal Transfer + Procurement + Stock Availability","HOOP can see stock and decide internal transfer versus procurement.")}
+    <div style="display:grid;gap:8px;">${farms.map(f=>`<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="font-size:11px;color:#173f27;font-weight:950;margin-bottom:7px;">${f} Farm Stock</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px;">${rawMaterials.map(m=>`<div style="background:#fff;border:1px solid #e7ede7;border-radius:9px;padding:8px;"><div style="font-size:7px;color:#869389;">${m.name}</div><div style="font-size:12px;color:#173f27;font-weight:950;margin-top:4px;">${stock[f][m.id]} ${m.unit}</div></div>`).join("")}</div></div>`).join("")}</div>
+    <div style="margin-top:10px;font-size:11px;color:#173f27;font-weight:950;">Internal Transfer Vouchers</div>
+    <div style="display:grid;gap:6px;margin-top:7px;">${transferVouchers.map(v=>`<div style="border:1px solid #e2eae3;border-radius:10px;padding:9px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><strong style="font-size:9px;color:#173f27;">${v.id} · ${v.wo}</strong>${statusPill(v.status)}</div><div style="font-size:8px;color:#748377;margin-top:4px;">${v.from} → ${v.to} · Driver ${v.driver}</div><div style="font-size:8px;color:#748377;margin-top:3px;">${v.items}</div></div>`).join("")}</div>`);
+}
+function openAllocationDecision(woId){
+  const w=workOrders.find(x=>x.id===woId),a=allocations.find(x=>x.wo===woId);
+  openModal(modalHead("Material Decision",woId)+`<div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;">${detail("Work Order",woId)}${detail("Farm",w.farm)}${detail("Material Status",w.material)}${detail("Allocation",a?a.id:"Not created")}</div><div style="padding:10px;background:#fff7dc;border:1px solid #f1df9d;border-radius:10px;font-size:8px;color:#735b14;line-height:1.5;margin-top:10px;">HOOP can evaluate stock availability and create either an internal-transfer instruction or procurement.</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">${btn("Create Transfer",`closeModal();openNewTransfer('${woId}')`)}${btn("Register Procurement",`closeModal();openProcurementForm('${woId}')`,"gold")}</div></div>`);
+}
+function openNewTransfer(woId){
+  const w=workOrders.find(x=>x.id===woId);
+  openModal(modalHead("Create Internal Transfer",woId)+`<div style="padding:14px;"><label style="${labelStyle()}">From Farm</label><select id="trFrom" style="${inputStyle()}">${Object.keys(stock).filter(f=>f!==w.farm).map(f=>`<option>${f}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Material</label><select id="trMat" style="${inputStyle()}">${rawMaterials.map(m=>`<option value="${m.id}">${m.name}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Quantity</label><input id="trQty" type="number" min="1" value="10" style="${inputStyle()}"><label style="${labelStyle()}margin-top:8px;">Driver</label><select id="trDriver" style="${inputStyle()}">${drivers.map(d=>`<option>${d}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Create Voucher",`saveTransfer('${woId}')`)}</div></div>`);
+}
+function saveTransfer(woId){
+  const mat=rawMaterials.find(m=>m.id===document.getElementById("trMat").value),w=workOrders.find(x=>x.id===woId);
+  transferVouchers.unshift({id:"TV-2026-"+String(transferVouchers.length+9).padStart(3,"0"),wo:woId,from:document.getElementById("trFrom").value,to:w.farm,items:mat.name+" "+document.getElementById("trQty").value+" "+mat.unit,driver:document.getElementById("trDriver").value,status:"Driver Assigned"});
+  w.material="Partial";closeModal();render();showToast("Internal transfer voucher created.");
+}
+function procurementTab(){
+  const rows=procurements.map(p=>`<tr>${td(p.id,true)}${td(p.wo)}${td(p.rfq)}${td(p.material)}${td(p.qty+" "+p.unit)}${td(p.required)}${td(statusPill(p.status))}${td(`${btn("Send RFQ",`markRFQSent('${p.id}')`,"light")} ${btn("Register Quotation",`openQuotationForm('${p.rfq}')`)}`)}</tr>`).join("");
+  return card(`${sectionHeader("Procurement Registration + RFQ + Quotation Registration")}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;">${btn("＋ Register Procurement","openProcurementForm('')")}${btn("＋ Register Quotation","openQuotationForm('')","gold")}</div>
+    ${tableWrap(["Procurement","WO","RFQ","Material","Qty","Required By","Status","Action"],rows,"970px")}`);
+}
+function openProcurementForm(woId){
+  openModal(modalHead("Register Procurement",woId||"New Procurement")+`<div style="padding:14px;"><label style="${labelStyle()}">Work Order</label><select id="prWO" style="${inputStyle()}">${workOrders.map(w=>`<option ${w.id===woId?"selected":""}>${w.id}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Material / Product</label><input id="prMat" value="Organic Fertilizer" style="${inputStyle()}"><label style="${labelStyle()}margin-top:8px;">Quantity</label><input id="prQty" type="number" value="50" style="${inputStyle()}"><label style="${labelStyle()}margin-top:8px;">Required By</label><input id="prDate" type="date" value="2026-08-25" style="${inputStyle()}"><div style="margin-top:10px;">${btn("Register & Create RFQ","saveProcurement()")}</div></div>`);
+}
+function saveProcurement(){
+  const n=procurements.length+16,wo=document.getElementById("prWO").value;
+  procurements.unshift({id:"PROC-2026-"+n,wo,rfq:"RFQ-2026-08"+String(n).padStart(2,"0"),material:document.getElementById("prMat").value,qty:Number(document.getElementById("prQty").value||0),unit:"Units",status:"Draft",required:document.getElementById("prDate").value});
+  closeModal();render();showToast("Procurement and RFQ registered.");
+}
+function markRFQSent(id){const p=procurements.find(x=>x.id===id);p.status="RFQ Sent";render();showToast(p.rfq+" sent to vendors.");}
+function openQuotationForm(rfq){
+  openModal(modalHead("Register Quotation",rfq||"Select RFQ")+`<div style="padding:14px;"><label style="${labelStyle()}">RFQ</label><select id="qtRFQ" style="${inputStyle()}">${procurements.map(p=>`<option ${p.rfq===rfq?"selected":""}>${p.rfq}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Vendor</label><select id="qtVendor" style="${inputStyle()}">${vendors.map(v=>`<option>${v.name}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Capacity</label><input id="qtCapacity" value="500 units" style="${inputStyle()}"><label style="${labelStyle()}margin-top:8px;">Quoted Price</label><input id="qtPrice" type="number" value="90000" style="${inputStyle()}"><label style="${labelStyle()}margin-top:8px;">Delivery Date</label><input id="qtDate" type="date" value="2026-08-22" style="${inputStyle()}"><div style="margin-top:10px;">${btn("Register Quotation","saveQuotation()")}</div></div>`);
+}
+function saveQuotation(){
+  const rfq=document.getElementById("qtRFQ").value;
+  quotations.push({id:"QT-"+rfq.slice(-3)+"-"+String.fromCharCode(65+quotations.filter(x=>x.rfq===rfq).length),rfq,vendor:document.getElementById("qtVendor").value,capacity:document.getElementById("qtCapacity").value,price:Number(document.getElementById("qtPrice").value||0),delivery:document.getElementById("qtDate").value,status:"Received"});
+  const p=procurements.find(x=>x.rfq===rfq);if(p)p.status="Quotations Received";
+  closeModal();render();showToast("Quotation registered.");
+}
+function quotationCompareTab(){
+  const rfqs=[...new Set(quotations.map(x=>x.rfq))];
+  return card(`${sectionHeader("Quotation Comparison & Finalization")}
+    <div style="display:grid;gap:9px;">${rfqs.map(rfq=>{
+      const q=quotations.filter(x=>x.rfq===rfq),min=Math.min(...q.map(x=>x.price));
+      return `<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="font-size:11px;color:#173f27;font-weight:950;margin-bottom:7px;">${rfq}</div><div style="display:grid;gap:6px;">${q.map(x=>`<div style="background:#fff;border:${x.price===min?"1px solid #bcd8c1":"1px solid #e6ece6"};border-radius:10px;padding:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><strong style="font-size:9px;color:#173f27;">${x.vendor}</strong><div style="font-size:7px;color:#829087;margin-top:3px;">Capacity ${x.capacity} · Delivery ${x.delivery}</div></div><div style="display:flex;align-items:center;gap:6px;"><strong style="font-size:11px;color:#173f27;">${money(x.price)}</strong>${x.price===min?pill("Lowest","green"):""}${btn(x.status==="Finalized"?"Finalized":"Finalize",`finalizeQuotation('${x.id}')`,x.status==="Finalized"?"light":"gold")}</div></div>`).join("")}</div></div>`;
+    }).join("")}</div>`);
+}
+function finalizeQuotation(id){
+  const q=quotations.find(x=>x.id===id);quotations.filter(x=>x.rfq===q.rfq).forEach(x=>x.status=x.id===id?"Finalized":"Not Selected");
+  const p=procurements.find(x=>x.rfq===q.rfq);if(p)p.status="PO Finalized";
+  if(!purchaseOrders.some(x=>x.rfq===q.rfq))purchaseOrders.unshift({id:"PO-"+(704+purchaseOrders.length),rfq:q.rfq,vendor:q.vendor,farm:"Kamshet",amount:q.price,status:"Finalized",date:new Date().toLocaleDateString("en-GB")});
+  render();showToast("Quotation finalized and PO created.");
+}
+function poTab(){
+  const rows=purchaseOrders.map(p=>`<tr>${td(p.id,true)}${td(p.rfq)}${td(p.vendor)}${td(p.farm)}${td(money(p.amount))}${td(p.date)}${td(statusPill(p.status))}${td(btn("View",`openPO('${p.id}')`,"light"))}</tr>`).join("");
+  return card(`${sectionHeader("Finalized Purchase Orders")}${tableWrap(["PO","RFQ","Vendor","Farm","Amount","Date","Status","Action"],rows,"850px")}`);
+}
+function openPO(id){const p=purchaseOrders.find(x=>x.id===id);openModal(modalHead("Purchase Order",id)+`<div style="padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px;">${detail("RFQ",p.rfq)}${detail("Vendor",p.vendor)}${detail("Farm",p.farm)}${detail("Amount",money(p.amount))}${detail("Date",p.date)}${detail("Status",p.status)}</div>`);}
+
+function b2cView(){
+  const items=[["review","Review Dashboard"],["bills","Bill System"],["delivery","Delivery Assignment"],["status","Order Status"]];
+  return `${tabs(items,state.b2cTab,"setB2CTab")}${b2cTabContent()}`;
+}
+function b2cTabContent(){
+  if(state.b2cTab==="bills")return b2cBills();
+  if(state.b2cTab==="delivery")return b2cDelivery();
+  if(state.b2cTab==="status")return b2cStatus();
+  return b2cReview();
+}
+function b2cReview(){
+  const rated=b2cOrders.filter(x=>x.review);
+  const avg=rated.length?(rated.reduce((s,x)=>s+(x.review.product+x.review.display+x.review.supervisor)/3,0)/rated.length).toFixed(1):"—";
+  return card(`${sectionHeader("B2C Review Dashboard")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("⭐","Reviewed Orders",rated.length)}${metric("★","Average Rating",avg)}${metric("🧾","Bills",b2cOrders.filter(x=>x.bill!=="Draft").length)}${metric("🚚","Pending Delivery",b2cOrders.filter(x=>x.delivery!=="Delivered").length)}</div>
+    <div style="display:grid;gap:6px;">${rated.map(o=>`<div style="border:1px solid #e2eae3;border-radius:10px;padding:9px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><strong style="font-size:9px;color:#173f27;">${o.bill} · ${o.customer}</strong>${pill("★ "+((o.review.product+o.review.display+o.review.supervisor)/3).toFixed(1),"gold")}</div><div style="font-size:8px;color:#829087;margin-top:4px;">Product ${o.review.product}/5 · Display ${o.review.display}/5 · Supervisor ${o.review.supervisor}/5</div></div>`).join("")}</div>`);
+}
+function b2cBills(){
+  const rows=b2cOrders.map(o=>`<tr>${td(o.id,true)}${td(o.customer)}${td(o.items)}${td(o.bill)}${td(money(o.total))}${td(statusPill(o.billStatus))}${td(statusPill(o.payment))}${td(`${o.bill==="Draft"?btn("Generate Bill",`generateBill('${o.id}')`,"gold"):""} ${btn("View",`openB2COrder('${o.id}')`,"light")}`)}</tr>`).join("");
+  return card(`${sectionHeader("Bill Generation & Bill Management")}${tableWrap(["Order","Customer","Items","Bill","Total","Bill Status","Payment","Action"],rows,"1020px")}`);
+}
+function generateBill(id){const o=b2cOrders.find(x=>x.id===id);o.bill="BILL-"+String(236+b2cOrders.indexOf(o));o.billStatus="Generated";o.payment="Pending Counter";render();showToast(o.bill+" generated.");}
+function b2cDelivery(){
+  return card(`${sectionHeader("B2C Delivery Assignment")}
+    <div style="display:grid;gap:7px;">${b2cOrders.map(o=>`<div style="border:1px solid #e2eae3;border-radius:11px;padding:10px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><strong style="font-size:9px;color:#173f27;">${o.id} · ${o.customer}</strong><div style="font-size:7px;color:#829087;margin-top:3px;">${o.city} · ${o.items}</div></div>${statusPill(o.delivery)}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:7px;">${detail("Supervisor",o.supervisor)}${detail("Driver",o.driver||"Not Assigned")}${detail("Order",o.order)}</div><div style="margin-top:8px;">${btn(o.driver?"Change Driver":"Assign Driver",`openB2CDriver('${o.id}')`)}</div></div>`).join("")}</div>`);
+}
+function openB2CDriver(id){const o=b2cOrders.find(x=>x.id===id);openModal(modalHead("Assign B2C Delivery",id)+`<div style="padding:14px;"><label style="${labelStyle()}">Supervisor</label><select id="b2cSup" style="${inputStyle()}">${supervisors.map(s=>`<option ${s===o.supervisor?"selected":""}>${s}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Driver</label><select id="b2cDriver" style="${inputStyle()}"><option value="">Select Driver</option>${drivers.map(d=>`<option ${d===o.driver?"selected":""}>${d}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Save Assignment",`saveB2CDriver('${id}')`)}</div></div>`);}
+function saveB2CDriver(id){const o=b2cOrders.find(x=>x.id===id);o.supervisor=document.getElementById("b2cSup").value;o.driver=document.getElementById("b2cDriver").value;o.delivery=o.driver?"Assigned":"Pending Assignment";closeModal();render();showToast("B2C delivery assignment updated.");}
+function b2cStatus(){
+  const rows=b2cOrders.map(o=>`<tr>${td(o.id,true)}${td(o.bill)}${td(o.customer)}${td(statusPill(o.payment))}${td(statusPill(o.delivery))}${td(statusPill(o.order))}${td(btn("Update",`openB2CStatus('${o.id}')`))}</tr>`).join("");
+  return card(`${sectionHeader("B2C Order Status")}${tableWrap(["Order","Bill","Customer","Payment","Delivery","Order Status","Action"],rows,"780px")}`);
+}
+function openB2CStatus(id){const o=b2cOrders.find(x=>x.id===id);openModal(modalHead("Update B2C Order",id)+`<div style="padding:14px;"><label style="${labelStyle()}">Order Status</label><select id="b2cOrderStatus" style="${inputStyle()}">${["Confirmed","In Progress","Completed","Failed","Variance"].map(s=>`<option ${s===o.order?"selected":""}>${s}</option>`).join("")}</select><label style="${labelStyle()}margin-top:8px;">Delivery Status</label><select id="b2cDeliveryStatus" style="${inputStyle()}">${["Pending Assignment","Assigned","In Transit","Delivered","Failed"].map(s=>`<option ${s===o.delivery?"selected":""}>${s}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Save Status",`saveB2CStatus('${id}')`)}</div></div>`);}
+function saveB2CStatus(id){const o=b2cOrders.find(x=>x.id===id);o.order=document.getElementById("b2cOrderStatus").value;o.delivery=document.getElementById("b2cDeliveryStatus").value;closeModal();render();showToast("B2C order updated.");}
+function openB2COrder(id){const o=b2cOrders.find(x=>x.id===id);openModal(modalHead("B2C Bill / Order",id)+`<div style="padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;">${detail("Customer",o.customer)}${detail("Phone",o.phone)}${detail("City",o.city)}${detail("Items",o.items)}${detail("Bill",o.bill)}${detail("Subtotal",money(o.subtotal))}${detail("GST",money(o.gst))}${detail("Total",money(o.total))}${detail("Payment",o.payment)}${detail("Delivery",o.delivery)}</div>`);}
+
+function b2bView(){
+  const items=[["inquiries","Inquiries"],["quotes","Quotation Versions"],["orders","Orders & Assignment"],["delivery","Delivery Assigned"]];
+  return `${tabs(items,state.b2bTab,"setB2BTab")}${b2bTabContent()}`;
+}
+function b2bTabContent(){
+  if(state.b2bTab==="quotes")return b2bQuotes();
+  if(state.b2bTab==="orders")return b2bOrdersTab();
+  if(state.b2bTab==="delivery")return b2bDeliveries();
+  return b2bInquiriesTab();
+}
+function b2bInquiriesTab(){
+  const rows=b2bInquiries.map(i=>`<tr>${td(i.id,true)}${td(i.customer)}${td(i.contact+"<br>"+i.mobile)}${td(i.farm)}${td(i.requirement)}${td(i.created)}${td(statusPill(i.status))}${td(btn("View",`openInquiry('${i.id}')`,"light"))}</tr>`).join("");
+  return card(`${sectionHeader("Register Inquiry + Metrics")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("📥","Inquiries",b2bInquiries.length)}${metric("📄","Quotation Versions",b2bQuotationVersions.length)}${metric("🧾","Orders",b2bOrders.length)}${metric("🚚","Pending Delivery",b2bOrders.filter(x=>x.deliveryStatus!=="Delivered").length)}</div>
+    <div style="margin-bottom:8px;">${btn("＋ Register Inquiry","openInquiryForm()")}</div>
+    ${tableWrap(["Inquiry","Customer","Contact","Farm","Requirement","Created","Status","Action"],rows,"970px")}`);
+}
+function openInquiryForm(){openModal(modalHead("Register B2B Inquiry","New Inquiry")+`<div style="padding:14px;"><input id="inqCustomer" placeholder="Company / Customer" style="${inputStyle()}"><input id="inqContact" placeholder="Contact Person" style="${inputStyle()}margin-top:7px;"><input id="inqMobile" placeholder="Mobile" style="${inputStyle()}margin-top:7px;"><select id="inqFarm" style="${inputStyle()}margin-top:7px;">${["Kamshet","Vadegaon","Karla","Ratnagiri","Talegaon","Lonavala"].map(x=>`<option>${x}</option>`).join("")}</select><textarea id="inqReq" placeholder="Plant requirement" style="${inputStyle()}min-height:70px;margin-top:7px;"></textarea><div style="margin-top:9px;">${btn("Register Inquiry","saveInquiry()")}</div></div>`);}
+function saveInquiry(){const n=b2bInquiries.length+6;b2bInquiries.unshift({id:"INQ-2026-00"+n,customer:document.getElementById("inqCustomer").value||"New Customer",contact:document.getElementById("inqContact").value||"Contact",mobile:document.getElementById("inqMobile").value||"—",farm:document.getElementById("inqFarm").value,requirement:document.getElementById("inqReq").value||"Plant requirement",status:"Registered",created:new Date().toLocaleDateString("en-GB")});closeModal();render();showToast("B2B inquiry registered.");}
+function openInquiry(id){const i=b2bInquiries.find(x=>x.id===id);openModal(modalHead("B2B Inquiry",id)+`<div style="padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px;">${detail("Customer",i.customer)}${detail("Contact",i.contact)}${detail("Mobile",i.mobile)}${detail("Farm",i.farm)}${detail("Requirement",i.requirement)}${detail("Status",i.status)}</div>`);}
+function b2bQuotes(){
+  const rows=b2bQuotationVersions.map(q=>`<tr>${td(q.id,true)}${td(q.inquiry)}${td("Version "+q.version)}${td(money(q.amount))}${td(q.created)}${td(statusPill(q.status))}${td(q.status==="Sent"?btn("Finalize",`finalizeB2BQuote('${q.id}')`,"gold"):"")}</tr>`).join("");
+  return card(`${sectionHeader("List of Quotation Versions")}${tableWrap(["Quotation","Inquiry","Version","Amount","Created","Status","Action"],rows,"760px")}`);
+}
+function finalizeB2BQuote(id){const q=b2bQuotationVersions.find(x=>x.id===id);q.status="Finalized";b2bQuotationVersions.filter(x=>x.inquiry===q.inquiry&&x.id!==q.id).forEach(x=>x.status="Superseded");render();showToast(id+" finalized.");}
+function b2bOrdersTab(){
+  return card(`${sectionHeader("Orders + Orders Assigned")}
+    <div style="display:grid;gap:7px;">${b2bOrders.map(o=>`<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><strong style="font-size:10px;color:#173f27;">${o.id} · ${o.customer}</strong><div style="font-size:7px;color:#829087;margin-top:3px;">${o.inquiry} · ${o.quotation} · ${o.farm}</div></div>${statusPill(o.orderStatus)}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:7px;">${detail("Payment",o.payment)}${detail("Supervisor",o.supervisor)}${detail("Driver",o.driver||"Not Assigned")}${detail("Required By",o.required)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">${btn("Assign Supervisor",`openB2BAssign('${o.id}','supervisor')`)}${btn("Assign Driver",`openB2BAssign('${o.id}','driver')`,"gold")}${btn("Update Status",`openB2BStatus('${o.id}')`,"light")}</div></div>`).join("")}</div>`);
+}
+function b2bDeliveries(){
+  return card(`${sectionHeader("Delivery Assigned")}
+    <div style="display:grid;gap:7px;">${b2bOrders.map(o=>`<div style="border:1px solid #e2eae3;border-radius:11px;padding:10px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><strong style="font-size:9px;color:#173f27;">${o.id} · ${o.customer}</strong>${statusPill(o.deliveryStatus)}</div><div style="font-size:8px;color:#829087;margin-top:4px;">Driver: ${o.driver||"Not Assigned"} · Required ${o.required}</div><div style="margin-top:7px;">${btn(o.driver?"Change Driver":"Assign Driver",`openB2BAssign('${o.id}','driver')`)}</div></div>`).join("")}</div>`);
+}
+function openB2BAssign(id,type){
+  const o=b2bOrders.find(x=>x.id===id),list=type==="driver"?drivers:supervisors,val=type==="driver"?o.driver:o.supervisor;
+  openModal(modalHead(type==="driver"?"Assign Delivery Driver":"Assign Supervisor",id)+`<div style="padding:14px;"><select id="assignValue" style="${inputStyle()}">${list.map(x=>`<option ${x===val?"selected":""}>${x}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Save Assignment",`saveB2BAssign('${id}','${type}')`)}</div></div>`);
+}
+function saveB2BAssign(id,type){const o=b2bOrders.find(x=>x.id===id),v=document.getElementById("assignValue").value;if(type==="driver"){o.driver=v;o.deliveryStatus="Driver Assigned";}else{o.supervisor=v;}closeModal();render();showToast("B2B assignment updated.");}
+function openB2BStatus(id){const o=b2bOrders.find(x=>x.id===id);openModal(modalHead("Update B2B Status",id)+`<div style="padding:14px;"><select id="b2bOrdSt" style="${inputStyle()}">${["In Progress","Completed","Failed","Variance"].map(s=>`<option ${s===o.orderStatus?"selected":""}>${s}</option>`).join("")}</select><select id="b2bDelSt" style="${inputStyle()}margin-top:7px;">${["Pending Assignment","Driver Assigned","In Transit","Delivered","Failed","Variance"].map(s=>`<option ${s===o.deliveryStatus?"selected":""}>${s}</option>`).join("")}</select><div style="margin-top:10px;">${btn("Save Status",`saveB2BStatus('${id}')`)}</div></div>`);}
+function saveB2BStatus(id){const o=b2bOrders.find(x=>x.id===id);o.orderStatus=document.getElementById("b2bOrdSt").value;o.deliveryStatus=document.getElementById("b2bDelSt").value;closeModal();render();showToast("B2B status updated.");}
+
+function reviewsView(){
+  const q=state.reviewSearch.toLowerCase();
+  const rows=customerReviews.filter(r=>!q||[r.bill,r.customer,r.supervisorName,r.comment].join(" ").toLowerCase().includes(q));
+  const avg=k=>(customerReviews.reduce((s,r)=>s+r[k],0)/customerReviews.length).toFixed(1);
+  return card(`${sectionHeader("Customer Review Dashboard","Full review view for product, display and supervisor feedback.")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("⭐","Total Reviews",customerReviews.length)}${metric("🌿","Product Avg",avg("product"))}${metric("🏪","Display Avg",avg("display"))}${metric("👤","Supervisor Avg",avg("supervisor"))}</div>
+    <input value="${esc(state.reviewSearch)}" oninput="state.reviewSearch=this.value;render()" placeholder="Search bill, customer, supervisor..." style="${inputStyle()}margin-bottom:8px;">
+    <div style="display:grid;gap:7px;">${rows.map(r=>`<div style="border:1px solid #e2eae3;border-radius:11px;padding:10px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><strong style="font-size:9px;color:#173f27;">${r.bill} · ${r.customer}</strong><span style="font-size:8px;color:#839087;">${r.date}</span></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;">${pill("Product ★"+r.product,"gold")}${pill("Display ★"+r.display,"gold")}${pill(r.supervisorName+" ★"+r.supervisor,"green")}</div><div style="font-size:8px;color:#718176;line-height:1.5;margin-top:6px;">“${esc(r.comment)}”</div></div>`).join("")}</div>`);
+}
+
+function rfidView(){
+  return card(`${sectionHeader("RFID Plant Identification","Individual and group RFID identification.")}
+    ${tabs([["individual","Individual RFID"],["group","Group RFID"]],state.rfidMode,"setRFIDMode")}
+    ${state.rfidMode==="individual"?individualRFID():groupRFID()}`);
+}
+function setRFIDMode(x){state.rfidMode=x;render();}
+function individualRFID(){
+  const d=individualPlants[state.rfidCode];
+  return `<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="display:flex;gap:6px;flex-wrap:wrap;"><input id="rfidInput" value="${esc(state.rfidCode)}" placeholder="OM-KAMSHET-0234" style="${inputStyle()}flex:1;min-width:170px;">${btn("Simulate Scan","simulateRFID()","gold")}${btn("Search","searchRFID()")}</div>${d?`<div style="margin-top:9px;background:#fff;border:1px solid #e2eae3;border-radius:11px;padding:10px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:14px;color:#173f27;font-weight:950;">${d.name}</div><div style="font-size:8px;color:#829087;margin-top:3px;">${d.botanical} · ${d.rfid}</div></div>${pill("Health "+d.score+"%","green")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:6px;margin-top:8px;">${detail("Plant ID",d.plantId)}${detail("Location",d.farm+" · "+d.block)}${detail("Batch / Row",d.batch+" · "+d.row)}${detail("Stage",d.stage)}${detail("Height",d.height)}${detail("Width",d.width)}${detail("Age",d.age)}${detail("Container",d.container)}${detail("Propagation",d.propagation)}${detail("Grade",d.grade)}${detail("Sellable",d.sellable)}${detail("Moisture",d.moisture)}${detail("Fertilisation",d.fertilisation)}${detail("Pest",d.pest)}${detail("Next Action",d.next)}</div></div>`:""}</div>`;
+}
+function simulateRFID(){state.rfidCode=Object.keys(individualPlants)[Math.floor(Math.random()*Object.keys(individualPlants).length)];render();showToast(state.rfidCode+" detected.");}
+function searchRFID(){const v=document.getElementById("rfidInput").value.trim().toUpperCase();if(!individualPlants[v]){showToast("Individual RFID not found.",true);return;}state.rfidCode=v;render();}
+function groupRFID(){
+  const d=groupPlants[state.groupCode];
+  return `<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="display:flex;gap:6px;flex-wrap:wrap;"><input id="groupInput" value="${esc(state.groupCode)}" placeholder="GRP-KAMSHET-1001" style="${inputStyle()}flex:1;min-width:170px;">${btn("Simulate Scan","simulateGroup()","gold")}${btn("Search","searchGroup()")}</div>${d?`<div style="margin-top:9px;background:#fff;border:1px solid #e2eae3;border-radius:11px;padding:10px;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:14px;color:#173f27;font-weight:950;">${d.plant} · ${d.qty} Plants</div><div style="font-size:8px;color:#829087;margin-top:3px;">${d.rfid} · ${d.mapping}</div></div>${pill(d.health+" "+d.score+"%","green")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:8px;">${detail("Farm / Block",d.farm+" · "+d.block)}${detail("Stage",d.stage)}${detail("Batch",d.batch)}${detail("Grow Bag",d.bag)}${detail("Total",d.qty)}${detail("Available",d.available)}${detail("Reserved",d.reserved)}${detail("Under Care",d.care)}${detail("Mapped On",d.mapped)}</div></div>`:""}</div>`;
+}
+function simulateGroup(){state.groupCode=Object.keys(groupPlants)[Math.floor(Math.random()*Object.keys(groupPlants).length)];render();showToast(state.groupCode+" detected.");}
+function searchGroup(){const v=document.getElementById("groupInput").value.trim().toUpperCase();if(!groupPlants[v]){showToast("Group RFID not found.",true);return;}state.groupCode=v;render();}
+
+function inventoryView(){
+  const f=state.inventoryFilters;
+  const filtered=inventoryRows.filter(r=>(f.farm==="All"||r.farm===f.farm)&&(f.plant==="All"||r.plant===f.plant)&&(f.stage==="All"||r.stage===f.stage)&&(f.bag==="All"||r.bag===f.bag)&&(f.block==="All"||r.block===f.block));
+  const total=filtered.reduce((s,r)=>s+r.available,0);
+  return card(`${sectionHeader("Plant Inventory Check","Filter by farm, plant, stage, grow bag and block.")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-bottom:8px;">
+      ${filterSelect("farm",["All",...new Set(inventoryRows.map(x=>x.farm))])}
+      ${filterSelect("plant",["All",...new Set(inventoryRows.map(x=>x.plant))])}
+      ${filterSelect("stage",["All","Sapling","Child","Adult"])}
+      ${filterSelect("bag",["All",...new Set(inventoryRows.map(x=>x.bag))])}
+      ${filterSelect("block",["All","Block A","Block B","Block C"])}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:8px;">${metric("🔎","Matches",filtered.length)}${metric("🌿","Available",total)}${metric("🏡","Farms",new Set(filtered.map(x=>x.farm)).size)}${metric("🪴","Plants",new Set(filtered.map(x=>x.plant)).size)}</div>
+    ${tableWrap(["Farm","Plant","Stage","Grow Bag","Block","Available","Reserved","Under Care"],filtered.slice(0,120).map(r=>`<tr>${td(r.farm,true)}${td(r.plant)}${td(r.stage)}${td(r.bag)}${td(r.block)}${td("<strong>"+r.available+"</strong>")}${td(r.reserved)}${td(r.care)}</tr>`).join(""),"760px")}`);
+}
+function filterSelect(key,options){
+  return `<select onchange="state.inventoryFilters.${key}=this.value;render()" style="${inputStyle()}">${options.map(x=>`<option ${state.inventoryFilters[key]===x?"selected":""}>${x}</option>`).join("")}</select>`;
+}
+
+function vendorQuotesView(){
+  const q=state.quotationSearch.toLowerCase();
+  const rows=vendorQuotesSent.filter(x=>!q||[x.rfq,x.vendor,x.location,x.items,x.status].join(" ").toLowerCase().includes(q));
+  return card(`${sectionHeader("Vendor Portal · Quotations Sent","HOOP sees RFQs/quotation opportunities sent to vendors.")}
+    <input value="${esc(state.quotationSearch)}" oninput="state.quotationSearch=this.value;render()" placeholder="Search RFQ or vendor..." style="${inputStyle()}margin-bottom:8px;">
+    ${tableWrap(["RFQ","Vendor","Location","Requested Items","Sent On","Required By","Status"],rows.map(x=>`<tr>${td(x.rfq,true)}${td(x.vendor)}${td(x.location)}${td(x.items)}${td(x.sent)}${td(x.required)}${td(statusPill(x.status))}</tr>`).join(""),"900px")}`);
+}
+
+function vendorsView(){
+  const items=[["register","Register Vendor"],["analytics","Analytics"],["history","PO History"],["listing","Vendor Listing"],["access","Vendor Access"]];
+  return `${tabs(items,state.vendorTab,"setVendorTab")}${vendorTabContent()}`;
+}
+function vendorTabContent(){
+  if(state.vendorTab==="analytics")return vendorAnalytics();
+  if(state.vendorTab==="history")return vendorHistory();
+  if(state.vendorTab==="listing")return vendorListing();
+  if(state.vendorTab==="access")return vendorAccess();
+  return vendorRegister();
+}
+function vendorRegister(){
+  return card(`${sectionHeader("Register Vendor")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:7px;">
+      <input id="vName" placeholder="Vendor legal name" style="${inputStyle()}">
+      <input id="vTrade" placeholder="Trade name" style="${inputStyle()}">
+      <input id="vLocation" placeholder="City, State" style="${inputStyle()}">
+      <input id="vCategory" placeholder="Category" style="${inputStyle()}">
+      <input id="vPhone" placeholder="Phone" style="${inputStyle()}">
+      <input id="vEmail" placeholder="Email" style="${inputStyle()}">
+    </div><div style="margin-top:9px;">${btn("Register Vendor","saveVendor()")}</div>`);
+}
+function saveVendor(){
+  const name=document.getElementById("vName").value.trim();if(!name){showToast("Enter vendor name.",true);return;}
+  vendors.push({id:"VEN-"+String(vendors.length+1).padStart(3,"0"),name,trade:document.getElementById("vTrade").value||name,location:document.getElementById("vLocation").value||"—",category:document.getElementById("vCategory").value||"General",phone:document.getElementById("vPhone").value||"—",email:document.getElementById("vEmail").value||"—",rating:0,access:false,last:"No transaction"});
+  render();showToast("Vendor registered.");
+}
+function vendorAnalytics(){
+  const totals={};vendorPurchases.forEach(p=>{totals[p.vendor]=(totals[p.vendor]||0)+p.cost});
+  return card(`${sectionHeader("Vendor Analytics")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:9px;">${metric("🏷","Vendors",vendors.length)}${metric("🧾","Purchase Records",vendorPurchases.length)}${metric("💰","Purchase Value",money(vendorPurchases.reduce((s,p)=>s+p.cost,0)))}${metric("★","Avg Rating",(vendors.reduce((s,v)=>s+v.rating,0)/vendors.length).toFixed(1))}</div>
+    <div style="display:grid;gap:7px;">${vendors.map(v=>{const val=totals[v.name]||0,max=Math.max(...Object.values(totals),1),pct=Math.round(val/max*100);return `<div style="border:1px solid #e2eae3;border-radius:10px;padding:9px;"><div style="display:flex;justify-content:space-between;gap:8px;"><strong style="font-size:9px;color:#173f27;">${v.name}</strong><span style="font-size:8px;color:#718176;">★ ${v.rating} · ${money(val)}</span></div><div style="height:7px;background:#edf1ed;border-radius:999px;overflow:hidden;margin-top:7px;"><div style="height:100%;width:${pct}%;background:#173f27;border-radius:999px;"></div></div></div>`}).join("")}</div>`);
+}
+function vendorHistory(){
+  const rows=vendorPurchases.map(p=>`<tr>${td(p.po,true)}${td(p.vendor)}${td(p.plant)}${td(p.qty)}${td(money(p.cost))}${td(p.delivery)}${td(statusPill(p.status))}</tr>`).join("");
+  return card(`${sectionHeader("Purchase Order History")}${tableWrap(["PO","Vendor","Product","Qty","Cost","Delivery","Status"],rows,"760px")}`);
+}
+function vendorListing(){
+  const q=state.vendorSearch.toLowerCase(),list=vendors.filter(v=>!q||[v.name,v.trade,v.location,v.category].join(" ").toLowerCase().includes(q));
+  return card(`${sectionHeader("Vendor Listing")}
+    <input value="${esc(state.vendorSearch)}" oninput="state.vendorSearch=this.value;render()" placeholder="Search vendor..." style="${inputStyle()}margin-bottom:8px;">
+    <div style="display:grid;gap:7px;">${list.map(v=>`<div style="border:1px solid #e2eae3;border-radius:11px;padding:10px;background:#fbfdfb;"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><strong style="font-size:10px;color:#173f27;">${v.name}</strong><div style="font-size:7px;color:#829087;margin-top:3px;">${v.trade} · ${v.location}</div></div>${pill("★ "+v.rating,"gold")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px;margin-top:7px;">${detail("Category",v.category)}${detail("Phone",v.phone)}${detail("Email",v.email)}${detail("Last Transaction",v.last)}</div></div>`).join("")}</div>`);
+}
+function vendorAccess(){
+  return card(`${sectionHeader("Vendor Access","Add/delete access option from the vendor master.")}
+    <div style="display:grid;gap:7px;">${vendors.map(v=>`<div style="border:1px solid #e2eae3;border-radius:11px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><strong style="font-size:9px;color:#173f27;">${v.name}</strong><div style="font-size:7px;color:#829087;margin-top:3px;">${v.id} · ${v.email}</div></div><div style="display:flex;align-items:center;gap:6px;">${v.access?pill("Access Granted","green"):pill("Access Disabled","red")}${btn(v.access?"Remove Access":"Grant Access",`toggleVendorAccess('${v.id}')`,v.access?"red":"green")}${btn("Delete",`deleteVendor('${v.id}')`,"light")}</div></div>`).join("")}</div>`);
+}
+function toggleVendorAccess(id){const v=vendors.find(x=>x.id===id);v.access=!v.access;render();showToast(v.name+" access "+(v.access?"granted.":"removed."));}
+function deleteVendor(id){const i=vendors.findIndex(x=>x.id===id);if(i>=0){const n=vendors[i].name;vendors.splice(i,1);render();showToast(n+" removed from vendor list.");}}
+
+function varianceView(){
+  return card(`${sectionHeader("Propagation & Acquisition · Variance Report","Purchase-order variance after packing-slip receipt.")}
+    <div style="display:grid;gap:9px;">${varianceReports.map(v=>`<div style="border:1px solid #e2eae3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:11px;color:#173f27;font-weight:950;">${v.po} · ${v.vendor}</div><div style="font-size:8px;color:#829087;margin-top:3px;">${v.comment}</div></div>${statusPill(v.status)}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin-top:8px;">${detail("Requested",v.requested)}${detail("Received",v.received)}${detail("Short",v.short)}${detail("Damaged",v.damaged)}${detail("Fulfilment",v.fulfilment+"%")}</div><div style="height:8px;background:#edf1ed;border-radius:999px;overflow:hidden;margin-top:8px;"><div style="height:100%;width:${Math.max(0,Math.min(100,v.fulfilment))}%;background:${v.fulfilment<90?"#b42331":"#173f27"};border-radius:999px;"></div></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">${btn("View Details",`openVariance('${v.po}')`,"light")}${btn("Notify Head / Record Action",`showToast('Variance action recorded for ${v.po}.')`,"gold")}</div></div>`).join("")}</div>`);
+}
+function openVariance(po){const v=varianceReports.find(x=>x.po===po);openModal(modalHead("Variance Report",po)+`<div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:7px;">${detail("Vendor",v.vendor)}${detail("Requested",v.requested)}${detail("Received",v.received)}${detail("Short",v.short)}${detail("Damaged",v.damaged)}${detail("Fulfilment",v.fulfilment+"%")}${detail("Status",v.status)}${detail("Comment",v.comment)}</div></div>`);}
+
+function modalHead(title,sub){
+  return `<div style="background:linear-gradient(145deg,#173f27,#245b38);color:#fff;padding:14px 15px;display:flex;align-items:flex-start;justify-content:space-between;gap:9px;"><div><div style="font-size:16px;font-weight:950;">${esc(title)}</div><div style="font-size:8px;color:rgba(255,255,255,.75);margin-top:3px;">${esc(sub||"")}</div></div><button onclick="closeModal()" style="border:none;background:rgba(255,255,255,.12);color:#fff;width:31px;height:31px;border-radius:9px;font-size:17px;cursor:pointer;">×</button></div>`;
+}
+function inputStyle(){return "width:100%;box-sizing:border-box;border:1px solid #dbe6dc;border-radius:10px;padding:9px 10px;background:#fff;color:#1f2f25;font:inherit;font-size:9px;outline:none;";}
+function labelStyle(){return "display:block;font-size:8px;color:#173f27;font-weight:900;";}
+function openProfile(){
+  openModal(modalHead("Head of Operations Profile",hoop.name)+`<div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;">${detail("Employee ID",hoop.employeeId)}${detail("Role",hoop.role)}${detail("Phone",hoop.phone)}${detail("Email",hoop.email)}${detail("Base",hoop.base)}${detail("Status",hoop.status)}</div><div style="margin-top:11px;">${btn("Logout","logout()","red")}</div></div>`);
+}
+function logout(){closeModal();state.loggedIn=false;render();}
+function renderLoggedOut(){
+  document.getElementById("app").innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;"><div style="width:min(420px,100%);background:#fff;border:1px solid #e2eae3;border-radius:18px;padding:22px;text-align:center;"><div style="font-size:38px;">🌿</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:7px;">Operations Session Ended</div><div style="font-size:9px;color:#718176;margin-top:5px;">Prototype logout screen.</div><div style="margin-top:12px;">${btn("Login Again","state.loggedIn=true;state.view='home';render()")}</div></div></div>`;
+}
+
+window.addEventListener("resize",()=>{
+  const m=window.innerWidth<900;
+  if(m!==state.mobile){state.mobile=m;state.drawer=false;render();}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(state.drawer){state.drawer=false;render();}else closeModal();}});
+render();
+</script>
+</body>
+</html>
