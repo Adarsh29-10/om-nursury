@@ -387,11 +387,26 @@
       border-color: #cfe0d1;
     }
 
+    .role-group {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+
+    .role-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+    }
+
     .role-card-left {
       display: flex;
       align-items: center;
       gap: 14px;
       min-width: 0;
+      flex: 1;
     }
 
     .role-icon {
@@ -451,6 +466,36 @@
 
     .role-btn:hover {
       background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .role-version-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      width: 100%;
+    }
+
+    .role-version-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 86px;
+      background: linear-gradient(135deg, #eef6ef 0%, #f7faf7 100%);
+      color: var(--green);
+      border: 1px solid #d7e7d9;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .role-version-btn:hover {
+      background: #ebf4eb;
       transform: translateY(-1px);
     }
 
@@ -533,6 +578,42 @@
         text-align: center;
       }
     }
+  
+    /* ===== Grouped Role Card Enhancements ===== */
+    .role-group {
+      min-height: 220px;
+    }
+
+    .role-version-list {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid #edf2ed;
+    }
+
+    .role-version-btn {
+      flex: 1 1 110px;
+      min-width: 105px;
+    }
+
+    @media (max-width: 560px) {
+      .role-group {
+        min-height: auto;
+      }
+
+      .role-card-top {
+        align-items: flex-start;
+      }
+
+      .role-version-list {
+        width: 100%;
+      }
+
+      .role-version-btn {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -687,8 +768,7 @@
           <div class="role-kicker">🧪 Trial UI</div>
           <h2 class="role-title">Role Dashboard UI</h2>
           <p class="role-subtext">
-            Separate role-specific interfaces are kept here so they do not mix with the main MIMO module pages.
-            Use this section for Driver, Supervisor, Store, Management and other role dashboards as they are finalized.
+            Choose a role first, then open the required UI version from inside that role card.
           </p>
         </div>
 
@@ -697,116 +777,77 @@
 
       <div class="role-grid">
 
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">🚚</div>
-            <div>
-              <div class="role-name">Driver UI · Version 01</div>
-              <div class="role-desc">
-                First driver dashboard trial for assigned deliveries, routes and delivery status updates.
+        <!-- DRIVER -->
+        <div class="role-card role-group">
+          <div class="role-card-top">
+            <div class="role-card-left">
+              <div class="role-icon">🚚</div>
+              <div>
+                <div class="role-name">Driver Dashboard</div>
+                <div class="role-desc">
+                  Delivery assignment, trip execution, vehicle entry and delivery status workflow.
+                </div>
+                <span class="role-status">3 UI Versions</span>
               </div>
-              <span class="role-status">Driver Role</span>
             </div>
           </div>
 
-          <a class="role-btn" href="driver01.html">Open UI</a>
+          <div class="role-version-list">
+            <a class="role-version-btn" href="driver01.html">Version 01</a>
+            <a class="role-version-btn" href="driver02.html">Version 02</a>
+            <a class="role-version-btn" href="driver03.html">Version 03</a>
+          </div>
         </div>
 
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">🚚</div>
-            <div>
-              <div class="role-name">Driver UI · Version 02</div>
-              <div class="role-desc">
-                Updated compact driver dashboard with modern navigation, profile page and delivery detail modal.
+        <!-- SUPERVISOR -->
+        <div class="role-card role-group">
+          <div class="role-card-top">
+            <div class="role-card-left">
+              <div class="role-icon">👨‍🌾</div>
+              <div>
+                <div class="role-name">Supervisor Dashboard</div>
+                <div class="role-desc">
+                  Work orders, material allocation, RFID operations and nursery supervision workflow.
+                </div>
+                <span class="role-status">3 UI Versions</span>
               </div>
-              <span class="role-status">Driver Role</span>
             </div>
           </div>
 
-          <a class="role-btn" href="driver02.html">Open UI</a>
+          <div class="role-version-list">
+            <a class="role-version-btn" href="supervisor01.html">Version 01</a>
+            <a class="role-version-btn" href="supervisor02.html">Version 02</a>
+            <a class="role-version-btn" href="supervisor03.html">Version 03</a>
+          </div>
         </div>
 
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">�</div>
-            <div>
-              <div class="role-name">Driver UI · Version 03</div>
-              <div class="role-desc">
-                Latest driver dashboard with refined layout, trip insights and faster dispatch workflow.
+        <!-- CUSTOMER -->
+        <div class="role-card role-group">
+          <div class="role-card-top">
+            <div class="role-card-left">
+              <div class="role-icon">🛍️</div>
+              <div>
+                <div class="role-name">Customer Dashboard</div>
+                <div class="role-desc">
+                  Customer registration, store selection, cart, checkout and profile workflow.
+                </div>
+                <span class="role-status">2 UI Versions</span>
               </div>
-              <span class="role-status">Driver Role</span>
             </div>
           </div>
 
-          <a class="role-btn" href="driver03.html">Open UI</a>
-        </div>
-
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">�👤</div>
-            <div>
-              <div class="role-name">Supervisor UI · Version 01</div>
-              <div class="role-desc">
-                First supervisor dashboard trial for team management, performance tracking and operational oversight.
-              </div>
-              <span class="role-status">Supervisor Role</span>
-            </div>
+          <div class="role-version-list">
+            <a class="role-version-btn" href="customer01.html">Version 01</a>
+            <a class="role-version-btn" href="customer02.html">Version 02</a>
           </div>
-
-          <a class="role-btn" href="supervisor01.html">Open UI</a>
         </div>
 
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">👤</div>
-            <div>
-              <div class="role-name">Supervisor UI · Version 02</div>
-              <div class="role-desc">
-                Updated supervisor dashboard with enhanced reporting, team analytics and advanced monitoring tools.
-              </div>
-              <span class="role-status">Supervisor Role</span>
-            </div>
-          </div>
-
-          <a class="role-btn" href="supervisor02.html">Open UI</a>
-        </div>
-
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">🛍️</div>
-            <div>
-              <div class="role-name">Customer UI · Version 01</div>
-              <div class="role-desc">
-                First customer portal trial for browsing products, placing orders and tracking purchase history.
-              </div>
-              <span class="role-status">Customer Role</span>
-            </div>
-          </div>
-
-          <a class="role-btn" href="customer01.html">Open UI</a>
-        </div>
-
-        <div class="role-card">
-          <div class="role-card-left">
-            <div class="role-icon">🛍️</div>
-            <div>
-              <div class="role-name">Customer UI · Version 02</div>
-              <div class="role-desc">
-                Enhanced customer portal with improved checkout flow, wishlist management and personalized recommendations.
-              </div>
-              <span class="role-status">Customer Role</span>
-            </div>
-          </div>
-
-          <a class="role-btn" href="customer02.html">Open UI</a>
-        </div>
-
+        <!-- FUTURE ROLES -->
         <div class="future-role-card">
           <div>
             <strong>＋ More Role Dashboards</strong>
             <div style="margin-top:4px;">
-              <span>Add new role UI links here as Supervisor, Store, Management and other role pages are created.</span>
+              <span>Store, Management and other role dashboards can be added here as separate cards.</span>
             </div>
           </div>
 
@@ -815,6 +856,7 @@
 
       </div>
     </section>
+
 
 </body>
 </html>
