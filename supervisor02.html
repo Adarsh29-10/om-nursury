@@ -8,13 +8,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body style="margin:0;background:#f4f7f5;color:#1e2e24;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(100px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
+<body style="margin:0;background:#f4f7f5;color:#1e2e24;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
 <div id="modal" onclick="if(event.target===this)closeModal()" style="display:none;position:fixed;inset:0;background:rgba(8,28,17,.66);backdrop-filter:blur(7px);z-index:9999;align-items:flex-start;justify-content:center;padding:12px 12px calc(110px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;"><div id="modalBox" style="width:min(820px,100%);max-height:none;overflow:visible;background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(0,20,0,.34);margin:0 auto 24px;"></div></div>
 <div id="toast" style="position:fixed;left:14px;right:14px;bottom:14px;max-width:560px;margin:auto;background:#1a4d2a;color:#fff;border-radius:15px;padding:13px 16px;font-size:12px;font-weight:800;box-shadow:0 14px 35px rgba(0,20,0,.25);z-index:10000;opacity:0;transform:translateY(70px);transition:.25s;pointer-events:none;"></div>
 <script>
 const supervisor={id:'SUP-001',employeeId:'EMP-SUP-001',name:'Ramesh Jadhav',shortName:'Ramesh',phone:'+91 98765 10001',email:'ramesh.jadhav@omnursery.in',role:'Farm Supervisor',farm:'Kamshet',joined:'04 Mar 2024',status:'Active'};
 const state={view:'dashboard',loggedIn:true,woStatusFilter:'All',allocationDraft:{},rfidMode:'individual',selectedRfids:new Set(),individualLogs:[],groupLogs:[],inventory:{},identifyMode:'individual',currentIndividualCode:'',currentGroupCode:'',individualScans:[],groupScans:[],selectedPO:'PO-701',amountsUnlocked:false,varianceChart:null,qualityChart:null};
+let supervisorMobile = window.innerWidth < 900;
+let supervisorDrawerOpen = false;
+
+const supervisorNavItems = [
+  {id:'dashboard', icon:'⌂', label:'Home'},
+  {id:'workorders', icon:'🧾', label:'Work Orders'},
+  {id:'material', icon:'📦', label:'Materials'},
+  {id:'rfidadd', icon:'🏷', label:'RFID Add'},
+  {id:'b2b', icon:'🤝', label:'B2B Orders'},
+  {id:'identify', icon:'📡', label:'RFID Identify'},
+  {id:'po', icon:'🚚', label:'PO Receiving'}
+];
+
+function supervisorViewLabel(){
+  const item=supervisorNavItems.find(x=>x.id===state.view);
+  return item ? item.label : 'Supervisor';
+}
+
+function selectSupervisorView(id){
+  state.view=id;
+  supervisorDrawerOpen=false;
+  render();
+}
+
+function toggleSupervisorDrawer(){
+  supervisorDrawerOpen=!supervisorDrawerOpen;
+  render();
+}
+
+function closeSupervisorDrawer(){
+  supervisorDrawerOpen=false;
+  render();
+}
+
 const drivers=['Nilesh Patil','Akash','Prakash','Ekansh'];
 const workOrders=[
 {id:'WO-2026-1001',assignedOn:'05 Aug 2026, 09:20 AM',farm:'Kamshet',block:'Block A',plants:['Tulsi'],stages:['Sapling'],quantity:12,supervisors:['Ramesh'],actions:['Growth','Maintenance'],startDate:'2026-08-05',endDate:'2026-08-06',estimatedTime:'14 Hours',status:'Completed',message:'Scheduled maintenance and growth activity completed.',efficiency:96,allocationStatus:'Requirement Submitted',flagged:false,transfer:'—'},
@@ -45,15 +79,384 @@ function esc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}function nowText(){return new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}function myWO(){return workOrders.filter(w=>w.supervisors.includes(supervisor.shortName))}function myB2B(){return b2bOrders.filter(o=>o.supervisor===supervisor.shortName)}
 function showToast(msg,error=false){const t=document.getElementById('toast');t.textContent=(error?'⚠ ':'✓ ')+msg;t.style.background=error?'#b42331':'#1a4d2a';t.style.opacity='1';t.style.transform='translateY(0)';clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(70px)'},2500)}
 function openModal(html,width='820px'){const m=document.getElementById('modal'),b=document.getElementById('modalBox');b.style.width=`min(${width},100%)`;b.innerHTML=html;m.style.display='flex'}function closeModal(){document.getElementById('modal').style.display='none';document.getElementById('modalBox').innerHTML=''}
-function headerBlock(title,sub,icon){return `<div style="margin-bottom:16px;"><div style="font-size:10px;color:#9a7512;font-weight:900;text-transform:uppercase;letter-spacing:.08em;">${icon} SUPERVISOR WORKSPACE</div><div style="font-size:22px;color:#1a4d2a;font-weight:950;margin-top:5px;">${title}</div><div style="font-size:11px;color:#6c7e71;line-height:1.55;margin-top:5px;">${sub}</div></div>`}function sectionCard(c){return `<section style="background:#fff;border:1px solid #e2ece3;border-radius:22px;padding:15px;box-shadow:0 8px 24px rgba(0,20,0,.05);margin-bottom:14px;">${c}</section>`}
+function headerBlock(title,sub,icon){
+  return `
+    <div style="display:flex;align-items:flex-start;gap:9px;margin-bottom:10px;">
+      <div style="width:31px;height:31px;min-width:31px;border-radius:9px;background:#eef6ef;color:#1a4d2a;display:flex;align-items:center;justify-content:center;font-size:15px;">
+        ${icon}
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:16px;color:#1a4d2a;font-weight:950;line-height:1.2;">${title}</div>
+        ${sub ? `<div style="font-size:9px;color:#718176;line-height:1.45;margin-top:3px;font-weight:650;">${sub}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function sectionCard(c){
+  return `<section style="background:#fff;border:1px solid #e2ebe3;border-radius:15px;padding:12px;box-shadow:0 5px 16px rgba(0,20,0,.035);margin-bottom:10px;">${c}</section>`;
+}
+
 function pill(text,tone='green'){const c=tone==='red'?['#ffe3e6','#b42331']:tone==='gold'?['#fff4d8','#7a5c00']:tone==='blue'?['#e6f3ff','#1363a5']:['#e8f5ea','#17643a'];return `<span style="display:inline-flex;padding:5px 8px;border-radius:999px;background:${c[0]};color:${c[1]};font-size:9px;font-weight:900;white-space:nowrap;">${esc(text)}</span>`}function statusPill(s){const red=['Halted','Attention','Failed','Variance'].some(x=>String(s).includes(x)),blue=['In-Progress','In Transit','Driver Assigned'].some(x=>String(s).includes(x)),gold=['Pending','Partially','Assigned'].some(x=>String(s).includes(x));return pill(s,red?'red':blue?'blue':gold?'gold':'green')}
-function button(label,onclick,tone='green',extra=''){const bg=tone==='red'?'#b42331':tone==='gold'?'#f5c542':tone==='light'?'#fff':'#1a4d2a',color=tone==='gold'?'#1e2e24':tone==='light'?'#1a4d2a':'#fff',border=tone==='light'?'1px solid #d8e5d9':'none';return `<button onclick="${onclick}" style="border:${border};background:${bg};color:${color};border-radius:999px;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;${extra}">${label}</button>`}
-function navBtn(id,icon,label){const active=state.view===id;return `<button onclick="state.view='${id}';render()" style="border:${active?'1px solid #1a4d2a':'1px solid transparent'};background:${active?'#1a4d2a':'#f4f7f5'};color:${active?'#fff':'#47604e'};border-radius:13px;padding:10px 12px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;flex:0 0 auto;">${icon} ${label}</button>`}
-function metric(icon,label,value,note){return `<div style="background:#fff;border:1px solid #e2ece3;border-radius:17px;padding:13px;min-height:80px;box-shadow:0 7px 18px rgba(0,20,0,.04);"><div style="font-size:10px;color:#718176;font-weight:800;">${icon} ${label}</div><div style="font-size:22px;color:#1a4d2a;font-weight:950;margin-top:11px;">${value}</div><div style="font-size:8px;color:#8a978d;margin-top:3px;">${note}</div></div>`}
+function button(label,onclick,tone='green',extra=''){
+  const bg=tone==='red'?'#b42331':tone==='gold'?'#f5c542':tone==='light'?'#fff':'#1a4d2a';
+  const color=tone==='gold'?'#1e2e24':tone==='light'?'#1a4d2a':'#fff';
+  const border=tone==='light'?'1px solid #d8e5d9':'none';
+
+  return `<button onclick="${onclick}" style="border:${border};background:${bg};color:${color};border-radius:10px;padding:8px 10px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;${extra}">${label}</button>`;
+}
+
+function navBtn(id,icon,label){
+  const active=state.view===id;
+
+  return `
+    <button
+      onclick="selectSupervisorView('${id}')"
+      style="
+        width:100%;
+        border:1px solid ${active?'#d4e5d6':'transparent'};
+        background:${active?'#edf6ee':'transparent'};
+        color:${active?'#1a4d2a':'#5f7165'};
+        border-radius:10px;
+        padding:9px 10px;
+        font-size:10px;
+        font-weight:900;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        gap:9px;
+        text-align:left;
+        margin-bottom:4px;
+      "
+    >
+      <span style="
+        width:25px;
+        height:25px;
+        min-width:25px;
+        border-radius:8px;
+        background:${active?'#1a4d2a':'#f3f6f4'};
+        color:${active?'#fff':'#52665a'};
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:12px;
+      ">${icon}</span>
+
+      <span style="flex:1;">${label}</span>
+
+      ${active?'<span style="width:6px;height:6px;border-radius:999px;background:#f5c542;"></span>':''}
+    </button>
+  `;
+}
+
+function metric(icon,label,value,note){
+  return `
+    <div style="
+      background:#fff;
+      border:1px solid #e2ece3;
+      border-radius:12px;
+      padding:10px;
+      min-height:60px;
+    ">
+      <div style="font-size:9px;color:#718176;font-weight:800;">${icon} ${label}</div>
+      <div style="font-size:18px;color:#1a4d2a;font-weight:950;margin-top:7px;">${value}</div>
+      ${note?`<div style="font-size:7px;color:#8a978d;margin-top:2px;">${note}</div>`:''}
+    </div>
+  `;
+}
+
+function renderSupervisorSidebar(drawer=false){
+  const activeWO=myWO().filter(w=>w.status!=='Completed').length;
+
+  return `
+    <aside style="
+      background:#fff;
+      border:1px solid #e1ebe2;
+      border-radius:${drawer?'0':'0 16px 16px 0'};
+      box-shadow:${drawer?'none':'0 7px 22px rgba(0,20,0,.05)'};
+      padding:12px;
+      box-sizing:border-box;
+      border-left:${drawer?'1px solid #e1ebe2':'none'};
+      ${drawer
+        ? 'height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(90px + env(safe-area-inset-bottom));'
+        : 'position:sticky;top:10px;height:calc(100vh - 20px);overflow-y:auto;'}
+    ">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px;">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+          <div style="width:34px;height:34px;min-width:34px;border-radius:10px;background:#1a4d2a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;">🌿</div>
+          <div style="min-width:0;">
+            <div style="font-size:9px;color:#1a4d2a;font-weight:950;">OM Nursery</div>
+            <div style="font-size:8px;color:#849188;font-weight:750;margin-top:2px;">Supervisor</div>
+          </div>
+        </div>
+
+        ${drawer?`
+          <button onclick="closeSupervisorDrawer()" style="border:none;background:#f4f7f5;color:#1a4d2a;width:30px;height:30px;border-radius:9px;font-size:18px;cursor:pointer;">×</button>
+        `:''}
+      </div>
+
+      <div style="padding:9px;border:1px solid #e5ede6;border-radius:11px;background:#fbfdfb;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:31px;height:31px;border-radius:999px;background:#e7f2e9;color:#1a4d2a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:950;">
+            ${esc(supervisor.shortName.charAt(0))}
+          </div>
+
+          <div style="min-width:0;flex:1;">
+            <div style="font-size:10px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(supervisor.name)}</div>
+            <div style="font-size:8px;color:#7b897f;margin-top:2px;">${esc(supervisor.farm)} · ${activeWO} active WO</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:7px;color:#94a098;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin:0 7px 6px;">Navigation</div>
+
+      ${supervisorNavItems.map(item=>navBtn(item.id,item.icon,item.label)).join('')}
+
+      <div style="border-top:1px solid #edf1ed;margin-top:10px;padding-top:10px;">
+        <button onclick="openProfile()" style="width:100%;border:1px solid #dce8dd;background:#fff;color:#1a4d2a;border-radius:10px;padding:9px 10px;font-size:9px;font-weight:900;cursor:pointer;text-align:left;margin-bottom:5px;">👤 &nbsp; Profile</button>
+        <button onclick="logout()" style="width:100%;border:none;background:#fff0ef;color:#b42331;border-radius:10px;padding:9px 10px;font-size:9px;font-weight:900;cursor:pointer;text-align:left;">↪ &nbsp; Logout</button>
+      </div>
+    </aside>
+  `;
+}
+
+function renderMobileTopbar(){
+  return `
+    <div style="
+      position:sticky;
+      top:0;
+      z-index:400;
+      background:rgba(244,247,245,.96);
+      backdrop-filter:blur(10px);
+      padding:8px 0 7px;
+    ">
+      <div style="
+        background:#fff;
+        border:1px solid #e1ebe2;
+        border-radius:13px;
+        padding:8px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        box-shadow:0 6px 18px rgba(0,20,0,.05);
+      ">
+        <button onclick="toggleSupervisorDrawer()" style="border:none;background:#eef6ef;color:#1a4d2a;width:34px;height:34px;border-radius:10px;font-size:17px;font-weight:900;cursor:pointer;">☰</button>
+
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:8px;color:#849188;font-weight:800;">OM NURSERY · ${esc(supervisor.shortName)}</div>
+          <div style="font-size:13px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">${supervisorViewLabel()}</div>
+        </div>
+
+        <button onclick="openProfile()" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;width:34px;height:34px;border-radius:10px;font-size:14px;cursor:pointer;">👤</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderMobileDrawer(){
+  if(!supervisorDrawerOpen)return '';
+
+  return `
+    <div
+      onclick="if(event.target===this)closeSupervisorDrawer()"
+      style="
+        position:fixed;
+        inset:0;
+        z-index:5000;
+        background:rgba(8,28,17,.52);
+        backdrop-filter:blur(4px);
+        display:flex;
+        align-items:stretch;
+        justify-content:flex-start;
+      "
+    >
+      <div style="width:min(82vw,290px);height:100%;background:#fff;box-shadow:18px 0 45px rgba(0,20,0,.22);">
+        ${renderSupervisorSidebar(true)}
+      </div>
+    </div>
+  `;
+}
+
 function detail(label,value){return `<div style="border:1px solid #e2ebe3;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="font-size:8px;color:#829085;font-weight:900;text-transform:uppercase;">${label}</div><div style="font-size:11px;color:#294631;font-weight:900;margin-top:4px;word-break:break-word;">${esc(value)}</div></div>`}
-function renderTop(){const activeWO=myWO().filter(w=>w.status!=='Completed').length;return `<div style="position:sticky;top:0;z-index:200;background:rgba(244,247,245,.96);backdrop-filter:blur(10px);padding:9px 0 7px;"><div style="background:#fff;border:1px solid #e1ebe2;border-radius:17px;padding:9px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 8px 24px rgba(0,20,0,.06);"><div style="display:flex;align-items:center;gap:9px;min-width:0;"><div style="width:36px;height:36px;min-width:36px;border-radius:11px;background:#1a4d2a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;">🌿</div><div style="min-width:0;"><div style="font-size:8px;color:#728176;font-weight:800;">OM NURSERY · SUPERVISOR</div><div style="font-size:14px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hello, ${esc(supervisor.shortName)} 👋</div></div></div><div style="display:flex;gap:6px;align-items:center;"><span style="background:#eef6ef;color:#1a4d2a;border-radius:999px;padding:6px 8px;font-size:8px;font-weight:900;">${activeWO} Active WO</span>${button('👤 Profile','openProfile()','light')}</div></div><div style="display:flex;gap:5px;overflow-x:auto;padding:7px 1px 1px;scrollbar-width:none;">${navBtn('dashboard','⌂','Home')}${navBtn('workorders','🧾','Work Orders')}${navBtn('material','📦','Material')}${navBtn('rfidadd','🏷','RFID Add')}${navBtn('b2b','🤝','B2B Orders')}${navBtn('identify','📡','RFID Identify')}${navBtn('po','🚚','PO Receiving')}</div></div>`}
-function render(){if(!state.loggedIn){renderLoggedOut();return}let c=dashboardView();if(state.view==='workorders')c=workOrdersView();if(state.view==='material')c=materialView();if(state.view==='rfidadd')c=rfidAdditionView();if(state.view==='b2b')c=b2bView();if(state.view==='identify')c=identifyView();if(state.view==='po')c=poView();document.getElementById('app').innerHTML=`<div style="width:min(1200px,calc(100% - 16px));margin:0 auto;padding:0 0 30px;box-sizing:border-box;">${renderTop()}${c}</div>`;if(state.view==='po')setTimeout(drawVarianceCharts,80)}
-function dashboardView(){const mine=myWO(),b2b=myB2B();return `<div style="background:linear-gradient(145deg,#1a4d2a,#2d6e3e);border-radius:21px;padding:18px;margin:7px 0 14px;color:#fff;position:relative;overflow:hidden;box-shadow:0 16px 34px rgba(0,20,0,.14);"><div style="position:absolute;right:-10px;bottom:-35px;font-size:110px;opacity:.08;">🌿</div><div style="position:relative;z-index:2;"><div style="font-size:9px;color:#f5c542;font-weight:900;">TODAY'S SUPERVISOR WORK</div><div style="font-size:24px;font-weight:950;margin-top:4px;">Your assigned work in one place</div><div style="font-size:11px;line-height:1.55;color:rgba(255,255,255,.82);margin-top:6px;max-width:760px;">Work orders, materials, RFID operations, B2B deliveries and purchase receiving are grouped here according to the supervisor role.</div></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-bottom:14px;">${metric('🧾','My Work Orders',mine.length,'Assigned to Ramesh')}${metric('⚠','Needs Attention',mine.filter(w=>['Halted','Attention'].includes(w.status)).length,'Work exceptions')}${metric('🏷','RFID Mapped',state.individualLogs.length+state.groupLogs.length,'This session')}${metric('🤝','B2B Orders',b2b.length,'Assigned orders')}${metric('🚚','Open PO',purchaseOrders.filter(p=>p.status!=='Received').length,'Receiving pending')}</div>${sectionCard(`${headerBlock('Assigned Work Orders','Only work orders assigned to you are surfaced here.','🧾')}<div style="display:grid;gap:8px;">${mine.map(w=>`<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;"><div><div style="font-size:12px;font-weight:950;color:#1a4d2a;">${w.id} · ${w.plants.join(', ')}</div><div style="font-size:9px;color:#758379;margin-top:3px;">${w.farm} · ${w.block} · ${w.quantity} plants · ${w.startDate} → ${w.endDate}</div></div>${statusPill(w.status)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;">${button('View Work Order',`openWorkOrder('${w.id}')`,'light')}${w.status!=='Completed'?button('Update Status',`openWOStatus('${w.id}')`):''}</div></div>`).join('')}</div>`)}${sectionCard(`${headerBlock('Quick Actions','Jump directly to your operational actions.','⚡')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:7px;">${button('📦 Material Allocation',"state.view='material';render()",'green','width:100%;')}${button('🏷 RFID Inventory Add',"state.view='rfidadd';render()",'green','width:100%;')}${button('📡 Identify Plant',"state.view='identify';render()",'green','width:100%;')}${button('🚚 Receive Purchase',"state.view='po';render()",'green','width:100%;')}</div>`)}`}
+function renderTop(){
+  return supervisorMobile ? renderMobileTopbar() : '';
+}
+
+function render(){
+  if(!state.loggedIn){
+    renderLoggedOut();
+    return;
+  }
+
+  let c=dashboardView();
+
+  if(state.view==='workorders')c=workOrdersView();
+  if(state.view==='material')c=materialView();
+  if(state.view==='rfidadd')c=rfidAdditionView();
+  if(state.view==='b2b')c=b2bView();
+  if(state.view==='identify')c=identifyView();
+  if(state.view==='po')c=poView();
+
+  if(supervisorMobile){
+    document.getElementById('app').innerHTML=`
+      <div style="
+        width:min(100% - 14px,900px);
+        margin:0 auto;
+        padding:0 0 calc(120px + env(safe-area-inset-bottom));
+        box-sizing:border-box;
+      ">
+        ${renderMobileTopbar()}
+        <main style="min-width:0;">${c}</main>
+        ${renderMobileDrawer()}
+      </div>
+    `;
+  }else{
+    document.getElementById('app').innerHTML=`
+      <div style="
+        width:100%;
+        margin:0;
+        display:grid;
+        grid-template-columns:285px minmax(0,1fr);
+        gap:14px;
+        align-items:start;
+        padding:10px 14px calc(90px + env(safe-area-inset-bottom)) 0;
+        box-sizing:border-box;
+      ">
+        ${renderSupervisorSidebar(false)}
+        <main style="min-width:0;padding-top:1px;">${c}</main>
+      </div>
+    `;
+  }
+
+  if(state.view==='po')setTimeout(drawVarianceCharts,80);
+}
+
+function dashboardView(){
+  const mine=myWO();
+  const active=mine.filter(w=>w.status!=='Completed');
+  const needsAttention=mine.filter(w=>['Halted','Attention'].includes(w.status));
+  const pendingMaterial=mine.filter(w=>w.allocationStatus==='Pending');
+  const assignedB2B=myB2B();
+  const deliveryPending=assignedB2B.filter(o=>o.deliveryStatus!=='Delivered');
+  const openPO=purchaseOrders.filter(p=>p.status!=='Received');
+
+  return `
+    <div style="padding:3px 0 2px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:4px 1px 9px;">
+        <div>
+          <div style="font-size:17px;color:#1a4d2a;font-weight:950;">Today</div>
+          <div style="font-size:8px;color:#849188;font-weight:700;margin-top:2px;">Only items that need supervisor action.</div>
+        </div>
+        <span style="font-size:8px;color:#718176;background:#fff;border:1px solid #e2ebe3;border-radius:999px;padding:6px 8px;font-weight:800;">
+          ${esc(supervisor.farm)}
+        </span>
+      </div>
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
+        margin-bottom:9px;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+      ">
+        ${metric('🧾','Active WO',active.length,'')}
+        ${metric('📦','Material',pendingMaterial.length,'Pending')}
+        ${metric('🤝','Delivery',deliveryPending.length,'Open')}
+        ${metric('🚚','PO',openPO.length,'Receiving')}
+      </div>
+
+      ${needsAttention.length ? `
+        <div style="background:#fff4f2;border:1px solid #f3d0cd;border-radius:13px;padding:10px;margin-bottom:9px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;">
+            <div style="font-size:10px;color:#a5251b;font-weight:950;">⚠ Needs attention</div>
+            <span style="font-size:8px;color:#a5251b;font-weight:900;">${needsAttention.length}</span>
+          </div>
+
+          <div style="display:grid;gap:5px;">
+            ${needsAttention.slice(0,3).map(w=>`
+              <button onclick="openWorkOrder('${w.id}')" style="
+                width:100%;
+                border:none;
+                background:#fff;
+                border-radius:10px;
+                padding:8px 9px;
+                text-align:left;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                gap:8px;
+              ">
+                <span style="min-width:0;">
+                  <strong style="display:block;font-size:9px;color:#1a4d2a;">${w.id} · ${w.plants.join(', ')}</strong>
+                  <span style="display:block;font-size:7px;color:#7f8d82;margin-top:2px;">${w.farm} · ${w.block}</span>
+                </span>
+                ${statusPill(w.status)}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:9px;">
+        <button onclick="selectSupervisorView('workorders')" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;border-radius:12px;padding:10px;text-align:left;cursor:pointer;">
+          <div style="font-size:9px;font-weight:950;">🧾 Work Orders</div>
+          <div style="font-size:7px;color:#829085;margin-top:3px;">${active.length} active assigned</div>
+        </button>
+
+        <button onclick="selectSupervisorView('material')" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;border-radius:12px;padding:10px;text-align:left;cursor:pointer;">
+          <div style="font-size:9px;font-weight:950;">📦 Material</div>
+          <div style="font-size:7px;color:#829085;margin-top:3px;">${pendingMaterial.length} requirement pending</div>
+        </button>
+
+        <button onclick="selectSupervisorView('rfidadd')" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;border-radius:12px;padding:10px;text-align:left;cursor:pointer;">
+          <div style="font-size:9px;font-weight:950;">🏷 RFID Inventory</div>
+          <div style="font-size:7px;color:#829085;margin-top:3px;">${state.individualLogs.length+state.groupLogs.length} updates this session</div>
+        </button>
+
+        <button onclick="selectSupervisorView('po')" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;border-radius:12px;padding:10px;text-align:left;cursor:pointer;">
+          <div style="font-size:9px;font-weight:950;">🚚 PO Receiving</div>
+          <div style="font-size:7px;color:#829085;margin-top:3px;">${openPO.length} open PO</div>
+        </button>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e2ebe3;border-radius:13px;padding:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;">
+          <div style="font-size:10px;color:#1a4d2a;font-weight:950;">Assigned work</div>
+          <button onclick="selectSupervisorView('workorders')" style="border:none;background:transparent;color:#1a4d2a;font-size:8px;font-weight:900;cursor:pointer;">View all →</button>
+        </div>
+
+        <div style="display:grid;gap:5px;">
+          ${active.slice(0,3).map(w=>`
+            <button onclick="openWorkOrder('${w.id}')" style="
+              width:100%;
+              border:1px solid #edf1ed;
+              background:#fbfdfb;
+              border-radius:9px;
+              padding:8px;
+              display:flex;
+              align-items:center;
+              justify-content:space-between;
+              gap:8px;
+              cursor:pointer;
+              text-align:left;
+            ">
+              <span style="min-width:0;">
+                <strong style="display:block;font-size:9px;color:#1a4d2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${w.id} · ${w.plants.join(', ')}</strong>
+                <span style="display:block;font-size:7px;color:#829085;margin-top:2px;">${w.farm} · ${w.block} · ${w.quantity} plants</span>
+              </span>
+              ${statusPill(w.status)}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function workOrdersView(){
   const rows=myWO().filter(w=>state.woStatusFilter==='All'||w.status===state.woStatusFilter);
 
@@ -497,7 +900,28 @@ function renderVariance(p){const req=totalRequested(p),rec=totalReceived(p),dam=
 function drawVarianceCharts(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);if(!p||typeof Chart==='undefined')return;if(state.varianceChart)state.varianceChart.destroy();if(state.qualityChart)state.qualityChart.destroy();const a=document.getElementById('varianceChart'),b=document.getElementById('qualityChart');if(!a||!b)return;state.varianceChart=new Chart(a,{type:'bar',data:{labels:p.items.map(i=>i.name),datasets:[{label:'Received',data:p.items.map(i=>i.received)},{label:'Short',data:p.items.map(i=>Math.max(0,i.requested-i.received))},{label:'Damaged',data:p.items.map(i=>i.damaged)}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});state.qualityChart=new Chart(b,{type:'doughnut',data:{labels:['Healthy Received','Damaged','Short'],datasets:[{data:[Math.max(0,totalReceived(p)-totalDamaged(p)),totalDamaged(p),totalShort(p)]}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}})}
 async function downloadVariancePDF(){if(typeof html2canvas==='undefined'||!window.jspdf){showToast('PDF libraries not loaded.',true);return}const t=document.getElementById('varianceReport');showToast('Preparing PDF...');const c=await html2canvas(t,{scale:1.5,useCORS:true}),img=c.toDataURL('image/png'),{jsPDF}=window.jspdf,pdf=new jsPDF('p','mm','a4'),pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight(),iw=pw-14,ih=c.height*iw/c.width;let left=ih,pos=7;pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph;while(left>0){pos=left-ih+7;pdf.addPage();pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph}pdf.save(state.selectedPO+'_variance_report.pdf');showToast('Variance PDF downloaded.')}
 function openProfile(){openModal(`<div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;"><div><div style="font-size:9px;color:#f5c542;font-weight:900;">SUPERVISOR PROFILE</div><div style="font-size:19px;font-weight:950;margin-top:3px;">${supervisor.name}</div><div style="font-size:9px;color:rgba(255,255,255,.78);margin-top:3px;">${supervisor.role}</div></div>${button('×','closeModal()','light')}</div><div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:6px;">${detail('Employee ID',supervisor.employeeId)}${detail('Phone',supervisor.phone)}${detail('Email',supervisor.email)}${detail('Base Farm',supervisor.farm)}${detail('Joining Date',supervisor.joined)}${detail('Status',supervisor.status)}</div><div style="margin-top:12px;">${button('Logout','logout()','red')}</div></div>`)}function logout(){closeModal();state.loggedIn=false;render()}function renderLoggedOut(){document.getElementById('app').innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;"><div style="width:min(390px,100%);background:#fff;border:1px solid #e2ebe3;border-radius:20px;padding:22px;text-align:center;box-shadow:0 16px 38px rgba(0,20,0,.08);"><div style="font-size:38px;">🌿</div><div style="font-size:20px;color:#1a4d2a;font-weight:950;margin-top:7px;">Supervisor Session Ended</div><div style="font-size:10px;color:#718176;line-height:1.5;margin-top:5px;">This is a prototype logout screen.</div><div style="margin-top:12px;">${button('Login Again',"state.loggedIn=true;state.view='dashboard';render()")}</div></div></div>`}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});render();
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(supervisorDrawerOpen){
+      supervisorDrawerOpen=false;
+      render();
+    }else{
+      closeModal();
+    }
+  }
+});
+
+window.addEventListener('resize',()=>{
+  const nextMobile=window.innerWidth<900;
+
+  if(nextMobile!==supervisorMobile){
+    supervisorMobile=nextMobile;
+    supervisorDrawerOpen=false;
+    render();
+  }
+});
+
+render();
 </script>
 </body>
 </html>
