@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Vendor Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#1a4d2a;--green2:#2d6e3e;--greenDark:#0f3a1e;--gold:#f5c542;
+      --bg:#f4f7f5;--soft:#f8fbf8;--softGreen:#eef6ef;--border:#e1eee1;
+      --text:#1e2e24;--muted:#66776a;--danger:#b42331;--blue:#1363a5;
+      --shadow:0 12px 30px rgba(0,20,0,.06);--radius:24px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+
+    /* AUTH */
+    .auth-page{min-height:100vh;padding:28px 18px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 90% 0%,rgba(245,197,66,.15),transparent 28%),linear-gradient(180deg,#f7faf7,#eef5ef)}
+    .auth-shell{width:min(1050px,100%);display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);background:#fff;border:1px solid #e4ece4;border-radius:30px;overflow:hidden;box-shadow:0 28px 80px rgba(17,55,29,.12)}
+    .auth-brand{background:linear-gradient(145deg,var(--green),var(--green2));padding:42px 38px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:690px}
+    .auth-brand:after{content:'🌿';position:absolute;right:-24px;bottom:-28px;font-size:170px;opacity:.08;transform:rotate(10deg)}
+    .brand-mark{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.03em}
+    .brand-logo{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:20px;border:1px solid rgba(255,255,255,.18)}
+    .auth-brand h1{font-size:36px;line-height:1.1;letter-spacing:-.035em;margin:36px 0 14px;font-weight:900;max-width:420px}
+    .auth-brand p{font-size:14px;line-height:1.65;color:rgba(255,255,255,.82);max-width:420px}
+    .auth-points{display:grid;gap:12px;position:relative;z-index:2}
+    .auth-point{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:13px}
+    .auth-point i{width:30px;height:30px;border-radius:10px;background:rgba(245,197,66,.16);display:flex;align-items:center;justify-content:center;color:var(--gold);flex:0 0 auto}
+    .auth-point strong{display:block;font-size:12px;margin-bottom:3px}.auth-point span{font-size:11px;color:rgba(255,255,255,.72);line-height:1.4}
+    .auth-panel{padding:36px 40px;overflow:auto;max-height:94vh}
+    .auth-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px}
+    .auth-kicker{font-size:11px;color:#a07013;text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin-bottom:6px}
+    .auth-header h2{font-size:29px;line-height:1.15;color:var(--green);font-weight:900;letter-spacing:-.025em}
+    .auth-header p{font-size:12px;color:var(--muted);line-height:1.55;margin-top:7px}
+    .demo-link{border:none;background:transparent;color:#8a6810;font-size:11px;font-weight:800;padding:6px 0;white-space:nowrap}
+    .form-section{padding:19px 0;border-top:1px solid #edf2ed}.form-section:first-of-type{border-top:none;padding-top:0}
+    .form-section-title{display:flex;gap:10px;align-items:center;margin-bottom:15px}
+    .step-circle{width:31px;height:31px;border-radius:10px;background:var(--softGreen);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+    .form-section-title strong{font-size:15px;color:var(--green)}.form-section-title span{display:block;font-size:11px;color:#819085;margin-top:2px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .full{grid-column:1/-1}
+    label.field{display:grid;gap:7px;font-size:12px;font-weight:800;color:#36503d}
+    .req{color:#b45309}
+    .control{width:100%;border:1px solid #dbe7db;background:#fff;border-radius:14px;padding:12px 13px;min-height:45px;color:var(--text);outline:none;transition:.18s}
+    textarea.control{min-height:92px;resize:vertical;line-height:1.5}
+    .control:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(26,77,42,.08)}
+    .field-note{font-size:10px;color:#8a978d;line-height:1.4;font-weight:600}
+    .checkbox-line{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:#66756a;line-height:1.5}.checkbox-line input{margin-top:3px;accent-color:var(--green)}
+    .auth-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap;margin-top:22px}
+    .btn{border:none;border-radius:999px;padding:11px 17px;font-weight:800;font-size:12px;display:inline-flex;gap:7px;align-items:center;justify-content:center;transition:.18s;white-space:nowrap}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--green);color:#fff;box-shadow:0 8px 18px rgba(26,77,42,.18)}.btn-primary:hover{background:var(--greenDark)}
+    .btn-secondary{background:var(--softGreen);color:var(--green);border:1px solid #dce9dc}.btn-white{background:#fff;color:#3d5543;border:1px solid #dce6dc}
+    .btn-gold{background:var(--gold);color:#283323}.btn-danger{background:#ffe6e8;color:var(--danger)}
+    .auth-switch{text-align:center;margin-top:22px;padding-top:18px;border-top:1px solid #edf2ed;font-size:12px;color:#6f7c72}.auth-switch button{border:none;background:transparent;color:var(--green);font-weight:900;margin-left:4px}
+    .login-card{max-width:500px;margin:42px auto 12px}.login-brand-mobile{display:none;text-align:center;margin-bottom:26px}.login-brand-mobile .brand-logo{margin:0 auto 10px;background:var(--green);color:var(--gold)}
+    .password-wrap{position:relative}.password-wrap .control{padding-right:45px}.eye-btn{position:absolute;right:9px;top:35px;width:32px;height:32px;border:none;background:transparent;color:#718078;border-radius:9px}
+    .login-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.text-btn{border:none;background:transparent;color:var(--green);font-size:11px;font-weight:800}
+
+    /* DASHBOARD */
+    .portal{min-height:100vh;background:var(--bg)}
+    .topbar-wrap{position:sticky;top:0;z-index:100;padding:14px 18px 0;background:linear-gradient(180deg,rgba(244,247,245,.98),rgba(244,247,245,.92),transparent)}
+    .topbar{max-width:1450px;margin:0 auto;background:#fff;border:1px solid #e1eae1;border-radius:22px;padding:10px 12px 10px 14px;box-shadow:0 10px 30px rgba(0,20,0,.07);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px}
+    .topbrand{display:flex;align-items:center;gap:11px;min-width:0}.topbrand .brand-logo{background:linear-gradient(145deg,var(--green),var(--green2));color:var(--gold);width:40px;height:40px;border-radius:13px;flex:0 0 auto}.topbrand strong{font-size:14px;color:var(--green);display:block}.topbrand span{font-size:10px;color:#839086;display:block;margin-top:2px}
+    .top-tabs{display:flex;background:#f2f6f2;border:1px solid #e5ece5;border-radius:15px;padding:4px;gap:4px}
+    .top-tab{border:none;background:transparent;color:#607065;border-radius:11px;padding:10px 14px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:7px}.top-tab.active{background:var(--green);color:#fff;box-shadow:0 5px 12px rgba(26,77,42,.16)}
+    .tab-count{min-width:20px;height:20px;border-radius:999px;background:rgba(255,255,255,.16);display:inline-flex;align-items:center;justify-content:center;font-size:9px;padding:0 5px}.top-tab:not(.active) .tab-count{background:#fff;color:var(--green)}
+    .profile-slot{display:flex;justify-content:flex-end}.profile-btn{width:42px;height:42px;border-radius:50%;border:2px solid #e4ece4;background:linear-gradient(145deg,#f7dc6f,var(--gold));color:#4d3d00;font-weight:900;font-size:12px;box-shadow:0 4px 12px rgba(0,20,0,.07);position:relative}.profile-btn:after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:#18a05e;border:2px solid #fff;right:-1px;bottom:1px}
+    .main{max-width:1450px;margin:0 auto;padding:26px 18px 50px}
+    .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+    .page-kicker{font-size:10px;color:#a07419;text-transform:uppercase;letter-spacing:.13em;font-weight:900;margin-bottom:6px}.page-head h1{font-size:30px;line-height:1.1;color:var(--green);letter-spacing:-.03em;font-weight:900}.page-head p{font-size:12px;color:var(--muted);line-height:1.6;margin-top:7px;max-width:760px}
+    .summary-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}.summary-card{background:#fff;border:1px solid #e4ece4;border-radius:20px;padding:17px;box-shadow:var(--shadow);display:flex;align-items:center;gap:13px}.summary-icon{width:44px;height:44px;border-radius:14px;background:var(--softGreen);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:17px}.summary-card span{font-size:10px;color:#7b887e;font-weight:700}.summary-card strong{display:block;font-size:22px;color:#18281e;margin-top:2px}.summary-card small{font-size:9px;color:#93a096}
+    .toolbar{background:#fff;border:1px solid #e2ebe2;border-radius:20px;padding:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;box-shadow:0 8px 22px rgba(0,20,0,.04)}
+    .search-wrap{position:relative;flex:1;min-width:240px}.search-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#8c998f;font-size:12px}.search{width:100%;padding:10px 12px 10px 34px;border:1px solid #dce6dc;border-radius:12px;outline:none;font-size:11px;background:#fbfdfb}.search:focus{border-color:var(--green)}
+    .filter-select{border:1px solid #dce6dc;border-radius:12px;padding:10px 12px;background:#fff;color:#536157;font-size:11px;font-weight:700;outline:none}
+    .rfq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .rfq-card{background:#fff;border:1px solid #e3ebe3;border-radius:22px;padding:19px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:.2s}.rfq-card:hover{transform:translateY(-2px);box-shadow:0 18px 34px rgba(0,20,0,.09)}
+    .rfq-card:before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green)}.rfq-card.accepted:before{background:#d6a514}
+    .rfq-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.rfq-token{font-size:10px;font-weight:900;color:var(--green);background:var(--softGreen);border-radius:999px;padding:6px 9px;display:inline-flex;gap:5px;align-items:center}.status-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;white-space:nowrap}.status-new{background:#eaf3ff;color:#17629a}.status-open{background:#fff4d7;color:#8b6400}.status-submitted{background:#dcf7ea;color:#0f7a45}.status-review{background:#f0e8ff;color:#6538a0}.status-awarded{background:#dff6e8;color:#126c40}
+    .rfq-card h3{font-size:17px;color:#1b3122;margin:12px 0 5px;font-weight:900}.rfq-meta{font-size:10px;color:#7c897f;line-height:1.5}.rfq-data{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:15px 0}.data-box{background:#f8fbf8;border:1px solid #e8eee8;border-radius:13px;padding:10px}.data-box span{display:block;font-size:9px;color:#859188;font-weight:700;margin-bottom:4px}.data-box strong{font-size:11px;color:#324738;line-height:1.35}.rfq-notice{background:#fffaf0;border:1px solid #f0e2b5;border-radius:13px;padding:10px;font-size:10px;color:#745d19;line-height:1.45;margin-bottom:14px}.rfq-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.rfq-bottom small{font-size:9px;color:#8a968e}
+    .empty{background:#fff;border:1px dashed #cfdccf;border-radius:22px;padding:55px 20px;text-align:center;color:#728077;grid-column:1/-1}.empty i{font-size:30px;color:#9caf9d;margin-bottom:10px}.empty strong{display:block;color:var(--green);font-size:15px;margin-bottom:5px}.empty span{font-size:11px}
+
+    /* TABLE-FIRST RFQ LISTS */
+    .data-table-card{background:#fff;border:1px solid #e2ebe2;border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+    .data-table-head{padding:14px 16px;border-bottom:1px solid #e7eee7;background:linear-gradient(180deg,#fbfdfb,#f7faf7);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .data-table-head strong{font-size:13px;color:var(--green);font-weight:900}.data-table-head span{font-size:10px;color:#819087;font-weight:700}
+    .record-count{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:var(--softGreen);color:var(--green)!important;font-size:9px!important;font-weight:900!important}
+    .portal-table-scroll{overflow:auto;max-width:100%;scrollbar-width:thin;scrollbar-color:#c8d8c9 transparent}
+    .portal-table{width:100%;border-collapse:separate;border-spacing:0;min-width:1420px;background:#fff}
+    .portal-table.accepted-table{min-width:1540px}
+    .portal-table th{position:sticky;top:0;z-index:3;background:#eaf3ec;color:var(--green);padding:12px 13px;border-bottom:1px solid #d7e5d9;font-size:9px;text-transform:uppercase;letter-spacing:.045em;text-align:left;white-space:nowrap;font-weight:900}
+    .portal-table td{padding:13px;border-bottom:1px solid #edf2ed;font-size:10px;color:#34483a;vertical-align:middle;line-height:1.45;background:#fff}
+    .portal-table tbody tr:last-child td{border-bottom:none}.portal-table tbody tr:hover td{background:#fbfdfb}
+    .portal-table th:first-child,.portal-table td:first-child{position:sticky;left:0;z-index:4;min-width:54px;text-align:center;background:#fff}
+    .portal-table th:nth-child(2),.portal-table td:nth-child(2){position:sticky;left:54px;z-index:4;min-width:145px;background:#fff;box-shadow:8px 0 14px rgba(0,20,0,.035)}
+    .portal-table thead th:first-child,.portal-table thead th:nth-child(2){background:#eaf3ec;z-index:6}
+    .portal-table th:last-child,.portal-table td:last-child{position:sticky;right:0;z-index:4;background:#fff;box-shadow:-8px 0 14px rgba(0,20,0,.045);min-width:112px}
+    .portal-table thead th:last-child{background:#eaf3ec;z-index:6}
+    .portal-table tbody tr:hover td:first-child,.portal-table tbody tr:hover td:nth-child(2),.portal-table tbody tr:hover td:last-child{background:#fbfdfb}
+    .serial-cell{font-weight:900;color:#7f8d83}.table-rfq{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:10px;background:var(--softGreen);color:var(--green);font-weight:900;white-space:nowrap}.table-title{font-weight:900;color:#203526;font-size:10.5px;min-width:180px}.table-sub{display:block;color:#839087;font-size:9px;margin-top:3px;line-height:1.35}.table-qty{font-weight:900;color:#2b4432;white-space:nowrap}.table-date{white-space:nowrap;font-weight:750}.table-action .btn{padding:8px 11px;font-size:10px}.partial-yes{background:#fff5d8;color:#8a6200}.partial-no{background:#f1f5f1;color:#607064}
+    .deadline-soon{color:#9c5700;font-weight:900}.quote-value{font-weight:900;color:var(--green);white-space:nowrap}
+    .table-empty{padding:48px 20px!important;text-align:center!important;color:#77857b!important;background:#fff!important}.table-empty i{display:block;font-size:27px;color:#9caf9d;margin-bottom:8px}.table-empty strong{display:block;color:var(--green);font-size:13px;margin-bottom:4px}.table-empty span{font-size:10px;color:#87948a}
+    .mobile-table-hint{display:none;font-size:9px;color:#829087;align-items:center;gap:6px;margin-left:auto}
+
+    /* MODAL */
+    .overlay{position:fixed;inset:0;background:rgba(8,28,17,.62);backdrop-filter:blur(7px);z-index:5000;padding:22px;display:flex;align-items:center;justify-content:center}
+    .modal{width:min(1060px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;border:1px solid #dfe9df;box-shadow:0 30px 90px rgba(0,20,0,.3)}
+    .modal-head{background:linear-gradient(145deg,var(--green),var(--green2));color:#fff;padding:22px 24px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;position:sticky;top:0;z-index:5}.modal-head .eyebrow{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#d5e7d8;font-weight:900}.modal-head h2{font-size:22px;margin:5px 0 4px;line-height:1.15}.modal-head p{font-size:10px;color:#d7e8da}.close-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;font-size:18px;flex:0 0 auto}
+    .modal-body{padding:22px;display:grid;gap:18px}.quote-status-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.section-box{border:1px solid #e3ece3;border-radius:18px;background:#fff;overflow:hidden}.section-box-head{padding:13px 15px;background:#f7faf7;border-bottom:1px solid #e7eee7;display:flex;justify-content:space-between;gap:10px;align-items:center}.section-box-head strong{font-size:12px;color:var(--green)}.section-box-head span{font-size:9px;color:#849188}.section-box-body{padding:15px}.detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.detail{border:1px solid #e8eee8;background:#fff;border-radius:12px;padding:10px;min-width:0}.detail span{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:#88948b;font-weight:800;margin-bottom:4px}.detail strong{font-size:10.5px;color:#2c4232;line-height:1.45;word-break:break-word}
+    .table-scroll{overflow-x:auto}.quote-table{width:100%;border-collapse:collapse;min-width:900px}.quote-table th{background:#edf5ef;color:var(--green);font-size:9px;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:10px;border-bottom:1px solid #dce8dd}.quote-table td{padding:11px 10px;border-bottom:1px solid #edf2ed;font-size:10px;color:#34483a;vertical-align:top;line-height:1.45}.quote-table tr:last-child td{border-bottom:none}.quote-table input,.quote-table select{min-width:100px;border:1px solid #dce6dc;border-radius:10px;padding:8px;font-size:10px;outline:none}.quote-table input:focus,.quote-table select:focus{border-color:var(--green)}
+    .note-box{background:#f8fbf8;border:1px dashed #c8d9c8;border-radius:14px;padding:13px;font-size:10px;line-height:1.6;color:#536256}.note-box strong{color:var(--green)}
+    .response-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.response-grid .field{font-size:10px}.response-grid .control{font-size:10px;padding:10px 11px;min-height:41px;border-radius:11px}.response-grid textarea.control{min-height:80px}.span-2{grid-column:span 2}.span-3{grid-column:1/-1}
+    .constraint-box{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:flex-start;background:#fffaf0;border:1px solid #eedfb3;border-radius:14px;padding:12px}.constraint-box input{margin-top:2px;accent-color:var(--green)}.constraint-box strong{font-size:10px;color:#6f5615}.constraint-box p{font-size:9px;color:#856d2e;line-height:1.45;margin-top:3px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;padding-top:3px}.total-box{background:linear-gradient(145deg,#f6faf7,#fff);border:1px solid #dce9dd;border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:16px;align-items:center}.total-box span{font-size:10px;color:#6f7d72}.total-box strong{font-size:20px;color:var(--green)}
+    .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.time-step{border:1px solid #e5ece5;border-radius:13px;padding:10px;background:#fbfdfb}.time-step.done{background:#edf8f0;border-color:#d8eadc}.time-step.current{background:#fff8df;border-color:#edd98d}.time-step i{font-size:12px;color:var(--green);margin-bottom:5px}.time-step strong{display:block;font-size:9px;color:#314638}.time-step span{font-size:8px;color:#819084;display:block;margin-top:3px;line-height:1.35}
+
+    /* PROFILE */
+    .profile-page{max-width:980px;margin:0 auto}.profile-hero{background:linear-gradient(145deg,var(--green),var(--green2));border-radius:25px;color:#fff;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 18px 36px rgba(0,20,0,.13);margin-bottom:18px}.profile-id{display:flex;align-items:center;gap:14px}.profile-avatar{width:58px;height:58px;border-radius:18px;background:var(--gold);color:#4f4108;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px}.profile-id h2{font-size:20px}.profile-id p{font-size:10px;color:#d3e5d6;margin-top:4px}.profile-status{font-size:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:7px 10px;border-radius:999px;font-weight:800}.profile-card{background:#fff;border:1px solid #e2ebe2;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}.profile-card h3{padding:15px 17px;border-bottom:1px solid #edf2ed;color:var(--green);font-size:13px}.profile-grid{padding:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.profile-actions{display:flex;justify-content:flex-end;padding:16px;border-top:1px solid #edf2ed;background:#fbfdfb}
+
+    /* TOAST */
+    .toast{position:fixed;right:22px;bottom:22px;z-index:9999;background:var(--green);color:#fff;border-radius:15px;padding:12px 16px;font-size:11px;font-weight:800;box-shadow:0 14px 34px rgba(0,20,0,.2);opacity:0;transform:translateY(12px);transition:.25s;max-width:360px}.toast.show{opacity:1;transform:translateY(0)}.toast.error{background:#7f1d1d}.toast.warning{background:#8a5d00}
+
+    @media(max-width:980px){
+      .auth-shell{grid-template-columns:1fr;max-width:760px}.auth-brand{min-height:auto;padding:26px 28px}.auth-brand h1{font-size:28px;margin:24px 0 10px}.auth-points{grid-template-columns:repeat(3,1fr);margin-top:26px}.auth-point{display:block}.auth-point i{margin-bottom:8px}.auth-panel{max-height:none}
+      .rfq-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.response-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span-3{grid-column:1/-1}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      .auth-page{padding:0;background:#fff;align-items:flex-start}.auth-shell{border:none;border-radius:0;box-shadow:none;min-height:100vh}.auth-brand{display:none}.auth-panel{padding:24px 16px}.login-brand-mobile{display:block}.auth-header h2{font-size:25px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.auth-actions{flex-direction:column-reverse;align-items:stretch}.auth-actions .btn{width:100%}.auth-switch{margin-bottom:16px}
+      .topbar-wrap{padding:8px 8px 0}.topbar{grid-template-columns:1fr auto;padding:9px;border-radius:18px}.topbrand span{display:none}.top-tabs{grid-column:1/-1;grid-row:2;order:3;width:100%}.top-tab{flex:1;justify-content:center;padding:9px 8px}.main{padding:20px 10px 40px}.page-head h1{font-size:25px}.page-head .btn{width:100%}.summary-row{grid-template-columns:1fr}.toolbar{align-items:stretch}.search-wrap{min-width:100%}.filter-select{flex:1}.rfq-card{padding:16px}.rfq-data{grid-template-columns:1fr 1fr}.rfq-data .data-box:last-child{grid-column:1/-1}.overlay{padding:0;align-items:flex-end}.modal{max-height:96vh;border-radius:24px 24px 0 0;width:100%}.modal-head{padding:18px}.modal-body{padding:14px}.detail-grid{grid-template-columns:1fr 1fr}.response-grid{grid-template-columns:1fr}.span-2,.span-3{grid-column:auto}.modal-actions{flex-direction:column-reverse}.modal-actions .btn{width:100%}.timeline{grid-template-columns:1fr 1fr}.profile-grid{grid-template-columns:1fr}.profile-hero{border-radius:20px}.profile-actions .btn{width:100%}.toast{left:12px;right:12px;bottom:12px;max-width:none}
+    }
+    @media(max-width:760px){
+      .data-table-card{border-radius:18px}.data-table-head{padding:12px}.mobile-table-hint{display:inline-flex}.portal-table{min-width:1310px}.portal-table.accepted-table{min-width:1450px}
+      .portal-table th,.portal-table td{padding:11px 10px}.portal-table th:first-child,.portal-table td:first-child{min-width:46px}.portal-table th:nth-child(2),.portal-table td:nth-child(2){left:46px;min-width:136px}
+      .toolbar .filter-select{min-width:0}.table-action .btn{min-width:82px}
+    }
+    @media(max-width:440px){.detail-grid{grid-template-columns:1fr}.rfq-data{grid-template-columns:1fr}.rfq-data .data-box:last-child{grid-column:auto}.topbrand strong{font-size:12px}.top-tab{font-size:10px}.timeline{grid-template-columns:1fr}.auth-header{display:block}.demo-link{margin-top:8px}.data-table-head>div:first-child span{display:block;margin-top:3px}}
+
+
+    /* ===== SIMPLE AUTH + MINIMAL LIST OVERRIDES ===== */
+    .auth-page{padding:18px;background:#f4f7f5;align-items:center}
+    .auth-shell{width:min(560px,100%);display:block;border-radius:24px;box-shadow:0 18px 55px rgba(17,55,29,.10);overflow:visible}
+    .auth-brand{display:none!important}
+    .auth-panel{padding:28px;max-height:none;overflow:visible}
+    .login-brand-mobile{display:flex!important;align-items:center;justify-content:center;gap:10px;margin:0 0 22px!important}
+    .login-brand-mobile .brand-logo{margin:0!important;width:42px;height:42px;border-radius:13px}
+    .auth-header{display:block;margin-bottom:20px;text-align:center}
+    .auth-kicker{display:none}
+    .auth-header h2{font-size:25px}
+    .auth-header p{font-size:11px;max-width:420px;margin:7px auto 0}
+    .demo-link{margin-top:12px;border:none;background:#fff8d8;color:#6b5600;border-radius:999px;padding:8px 11px;font-size:10px;font-weight:800}
+    .form-section{padding:0;border:none;background:transparent;margin:0 0 16px}
+    .form-section+.form-section{margin-top:0}
+    .form-section-title{display:none}
+    .form-grid{grid-template-columns:1fr;gap:12px}
+    .auth-actions{margin-top:16px;display:grid;grid-template-columns:1fr;gap:9px}
+    .auth-actions .btn{width:100%;min-height:45px}
+    .auth-switch{margin-top:17px;padding-top:15px}
+    .login-card{max-width:none;margin:0}
+    .login-tools{font-size:10px}
+
+    .summary-row{display:none!important}
+    .page-head{margin-bottom:14px}
+    .page-head h1{font-size:27px}
+    .page-head p{max-width:620px;font-size:11px}
+    .toolbar{margin-bottom:12px;padding:9px;border-radius:16px}
+    .data-table-card{border-radius:18px}
+    .data-table-head{padding:11px 13px}
+    .data-table-head>div:first-child span{display:none}
+    .portal-table{min-width:900px}
+    .portal-table.accepted-table{min-width:940px}
+    .portal-table th{padding:11px 12px;font-size:9px}
+    .portal-table td{padding:12px;font-size:10px}
+    .table-action .btn{min-width:105px;padding:9px 12px}
+
+    @media(max-width:720px){
+      .auth-page{padding:0;background:#fff;align-items:flex-start}
+      .auth-shell{width:100%;min-height:100vh;border:none;border-radius:0;box-shadow:none}
+      .auth-panel{padding:24px 16px 28px}
+      .login-brand-mobile{margin-top:8px!important;margin-bottom:20px!important}
+      .auth-header h2{font-size:23px}
+      .demo-link{width:auto}
+      .field{font-size:11px!important}
+      .control{min-height:44px;border-radius:12px;padding:11px 12px}
+      .topbar-wrap{padding:7px 7px 0}
+      .topbar{border-radius:16px}
+      .topbrand{display:none}
+      .topbar{grid-template-columns:1fr auto;gap:8px}
+      .top-tabs{grid-column:1;grid-row:1;width:auto}
+      .profile-slot{grid-column:2;grid-row:1}
+      .top-tab{padding:9px 8px;font-size:10px}
+      .top-tab i{display:none}
+      .main{padding:16px 8px 34px}
+      .page-head{display:block;margin-bottom:12px}
+      .page-head h1{font-size:22px}
+      .page-head p{font-size:10px;line-height:1.45}
+      .page-head .btn{margin-top:10px;width:100%}
+      .toolbar{gap:7px;padding:8px}
+      .search-wrap{min-width:100%}
+      .search{padding-top:10px;padding-bottom:10px}
+      .filter-select{width:100%}
+      .data-table-head{padding:10px 11px}
+      .record-count{font-size:8px!important}
+      .portal-table{min-width:820px}
+      .portal-table.accepted-table{min-width:860px}
+      .portal-table th,.portal-table td{padding:10px 9px}
+
+      /* Mobile tables: everything scrolls together — no frozen/sticky columns */
+      .portal-table-scroll{
+        width:100%;
+        max-width:100%;
+        overflow-x:auto!important;
+        overflow-y:visible;
+        -webkit-overflow-scrolling:touch;
+        touch-action:pan-x pan-y;
+      }
+      .portal-table th,
+      .portal-table td,
+      .portal-table th:first-child,
+      .portal-table td:first-child,
+      .portal-table th:nth-child(2),
+      .portal-table td:nth-child(2),
+      .portal-table th:last-child,
+      .portal-table td:last-child{
+        position:static!important;
+        left:auto!important;
+        right:auto!important;
+        top:auto!important;
+        z-index:auto!important;
+        box-shadow:none!important;
+      }
+      .portal-table th:first-child,.portal-table td:first-child{min-width:52px!important}
+      .portal-table th:nth-child(2),.portal-table td:nth-child(2){min-width:150px!important}
+      .portal-table th:nth-child(3),.portal-table td:nth-child(3){min-width:210px!important}
+      .portal-table th:nth-child(4),.portal-table td:nth-child(4){min-width:125px!important}
+      .portal-table th:nth-child(5),.portal-table td:nth-child(5){min-width:135px!important}
+      .portal-table th:last-child,.portal-table td:last-child{min-width:125px!important}
+      .portal-table tbody tr:hover td:first-child,
+      .portal-table tbody tr:hover td:nth-child(2),
+      .portal-table tbody tr:hover td:last-child{background:#fbfdfb}
+      .mobile-table-hint{display:inline-flex!important}
+
+      .overlay{padding:0;align-items:flex-end}
+      .modal{border-radius:22px 22px 0 0;max-height:96vh}
+      .modal-head{padding:16px}
+      .modal-head h2{font-size:18px}
+      .modal-body{padding:12px}
+      .section-box{border-radius:15px}
+      .section-box-head{padding:11px 12px}
+      .section-box-body{padding:11px 12px}
+      .quote-table{min-width:760px}
+    }
+
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast"></div>
+<script>
+  const state={
+    registeredVendor:null,
+    loggedIn:false,
+    authView:'register',
+    tab:'requests',
+    search:'',
+    category:'All',
+    requestSort:'Newest',
+    acceptedSearch:'',
+    acceptedStatus:'All',
+    requests:[
+      {
+        id:'RFQ-2026-0812-014',title:'Organic Fertilizer Supply',category:'Chemicals & Fertilizers',buyer:'OM Nursery Procurement',site:'Kamshet Farm',
+        issuedOn:'12 Aug 2026',respondBy:'16 Aug 2026',requiredBy:'18 Aug 2026',currency:'INR',paymentTerms:'30 days from GRN',deliveryTerms:'Delivered at site',
+        deliveryAddress:'OM Nursery, Kamshet Farm, Maval, Pune, Maharashtra',contact:'Priya Kulkarni',contactEmail:'procurement@omnursery.in',
+        notes:'Neem cake and organic growth mix. Partial quantity may be offered with a clear stock and replenishment note.',allowPartial:true,status:'Open',
+        attachments:['Product Specification.pdf','Quality Requirement.pdf'],
+        items:[
+          {line:1,code:'FERT-ORG-NEEM',name:'Neem Cake Fertilizer',spec:'Fine grade, moisture ≤ 12%, 50 kg bags',qty:750,uom:'kg'},
+          {line:2,code:'FERT-ORG-MIX',name:'Organic Growth Mix',spec:'Nursery-grade organic NPK growth mix, 25 kg bags',qty:500,uom:'kg'}
+        ]
+      },
+      {
+        id:'RFQ-2026-0812-011',title:'10 × 12 UV Stabilized Grow Bags',category:'Packaging & Pots',buyer:'OM Nursery Procurement',site:'Talegaon Farm',
+        issuedOn:'11 Aug 2026',respondBy:'17 Aug 2026',requiredBy:'20 Aug 2026',currency:'INR',paymentTerms:'45 days from GRN',deliveryTerms:'Delivered at site',
+        deliveryAddress:'OM Nursery, Talegaon Farm, Pune, Maharashtra',contact:'Rohan Deshmukh',contactEmail:'purchase@omnursery.in',
+        notes:'Black UV-stabilized grow bags. Sample approval required before bulk dispatch.',allowPartial:true,status:'Open',
+        attachments:['Grow Bag Technical Spec.pdf'],
+        items:[{line:1,code:'PKG-GB-1012',name:'Grow Bag 10 × 12',spec:'Black, UV stabilized, 250 micron minimum',qty:5000,uom:'pcs'}]
+      },
+      {
+        id:'RFQ-2026-0810-008',title:'Mango Hapoos Grafted Saplings',category:'Plant Grower / Wholesale Nursery',buyer:'OM Nursery Procurement',site:'Karla Farm',
+        issuedOn:'10 Aug 2026',respondBy:'19 Aug 2026',requiredBy:'25 Aug 2026',currency:'INR',paymentTerms:'50% against inspection, balance after GRN',deliveryTerms:'Vendor delivered',
+        deliveryAddress:'OM Nursery, Karla Farm, Lonavala, Pune, Maharashtra',contact:'Madhura Jagtap',contactEmail:'plantsourcing@omnursery.in',
+        notes:'Healthy grafted Hapoos saplings, target height 2.5–3 ft. Batch traceability and phytosanitary declaration preferred.',allowPartial:false,status:'Open',
+        attachments:['Plant Quality Checklist.pdf'],
+        items:[{line:1,code:'PLT-MAN-HAP',name:'Mango Hapoos Sapling',spec:'Grafted, 2.5–3 ft, healthy root ball, traceable batch',qty:350,uom:'plants'}]
+      }
+    ],
+    accepted:[
+      {
+        id:'RFQ-2026-0806-003',title:'Cocopeat Blocks',category:'Growing Media',buyer:'OM Nursery Procurement',site:'Vadegaon Farm',issuedOn:'06 Aug 2026',respondBy:'08 Aug 2026',requiredBy:'14 Aug 2026',currency:'INR',paymentTerms:'30 days from GRN',deliveryTerms:'Delivered at site',deliveryAddress:'OM Nursery, Vadegaon Farm, Pune, Maharashtra',contact:'Rohan Deshmukh',contactEmail:'purchase@omnursery.in',notes:'Low EC washed cocopeat blocks.',allowPartial:true,attachments:['Cocopeat Specification.pdf'],
+        items:[{line:1,code:'MEDIA-COCO-5KG',name:'Cocopeat Block 5 kg',spec:'Washed, low EC, expansion 70–75 L',qty:600,uom:'blocks'}],
+        response:{submittedOn:'08 Aug 2026, 04:20 PM',quoteRef:'GR-QT-0808-31',validTill:'31 Aug 2026',freight:4500,taxRate:5,leadTime:'4 Days',dispatchDate:'10 Aug 2026',paymentTerms:'30 days from GRN',deliveryTerms:'Delivered at site',remarks:'600 blocks available from current stock. Batch COA will be shared before dispatch.',constraint:false,constraintNote:'',lines:[{availableStock:720,commitQty:600,unitPrice:410}]},
+        vendorStatus:'Response Submitted',buyerStatus:'Under Buyer Review',awardStatus:'Awaiting Award / PO'
+      }
+    ]
+  };
+
+  const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+  const fmt=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+  function toast(msg,tone='success'){const el=document.getElementById('toast');el.textContent=msg;el.className='toast '+tone+' show';clearTimeout(el._t);el._t=setTimeout(()=>el.className='toast '+tone,2600)}
+  function vendor(){return state.registeredVendor||{legalName:'GreenRoot Agro Solutions Pvt. Ltd.',tradeName:'GreenRoot Nursery Supplies',vendorType:'Plant Grower / Wholesale Nursery',gstin:'27AABCG4821Q1Z7',pan:'AABCG4821Q',contactName:'Arjun Mehta',jobTitle:'Sales Manager',email:'vendor@greenroot.in',phone:'+91 98765 43120',officeAddress:'Plot 18, Talegaon MIDC Road, Maval, Pune, Maharashtra 410507',password:'Vendor@123'};}
+  function initials(){const v=vendor();return (v.contactName||'Vendor').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}
+
+  function render(){state.loggedIn?renderPortal():renderAuth()}
+
+  function renderAuth(){
+    const reg=state.authView==='register';
+    document.getElementById('app').innerHTML=`
+      <div class="auth-page"><div class="auth-shell">
+        <main class="auth-panel">
+          <div class="login-brand-mobile"><div class="brand-logo"><i class="fa fa-leaf"></i></div><strong style="color:var(--green)">OM Nursery Vendor Portal</strong></div>
+          <div class="auth-header">
+            <h2>${reg?'Create Vendor Account':'Vendor Login'}</h2>
+            <p>${reg?'Enter only the essential details required to create vendor access.':'Sign in to view RFQs and submitted quotations.'}</p>
+            <button class="demo-link" onclick="${reg?'fillRegistrationDemo()':'fillLoginDemo()'}"><i class="fa fa-bolt"></i> Demo autofill</button>
+          </div>
+          ${reg?registrationForm():loginForm()}
+          <div class="auth-switch">${reg?'Already registered?':'New vendor?'}<button onclick="switchAuth('${reg?'login':'register'}')">${reg?'Login':'Create account'}</button></div>
+        </main>
+      </div></div>`;
+  }
+
+  function registrationForm(){return `
+    <form onsubmit="registerVendor(event)">
+      <section class="form-section">
+        <div class="form-grid">
+          ${field('legalName','Business Name','GreenRoot Agro Solutions Pvt. Ltd.','text',true)}
+          ${select('vendorType','Vendor Category',['Plant Grower / Wholesale Nursery','Seeds & Plugs','Chemicals & Fertilizers','Packaging & Pots','Growing Media','Logistics & Freight','Maintenance / Equipment'],true)}
+          ${field('contactName','Contact Person','Arjun Mehta','text',true)}
+          ${field('email','Business Email','vendor@greenroot.in','email',true)}
+          ${field('phone','Mobile Number','+91 98765 43120','tel',true)}
+          ${field('regPassword','Create Password','Minimum 8 characters','password',true)}
+        </div>
+      </section>
+      <div class="auth-actions"><button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Register & Continue</button></div>
+    </form>`}
+
+  function loginForm(){return `<div class="login-card"><form onsubmit="loginVendor(event)" style="display:grid;gap:13px">
+      ${field('loginEmail','Business Email','vendor@greenroot.in','email',true)}
+      <div class="password-wrap">${field('loginPassword','Password','Enter password','password',true)}<button type="button" class="eye-btn" onclick="togglePassword()"><i class="fa fa-eye" id="eyeIcon"></i></button></div>
+      <div class="login-tools"><label class="checkbox-line"><input type="checkbox" checked><span>Keep me signed in</span></label><button type="button" class="text-btn" onclick="toast('Password reset flow is not connected in this prototype.','warning')">Forgot password?</button></div>
+      <button class="btn btn-primary" style="width:100%;padding:13px 18px;margin-top:2px"><i class="fa fa-sign-in"></i> Login</button>
+    </form></div>`}
+
+  function field(id,label,placeholder,type='text',required=false){return `<label class="field">${label}${required?' <span class="req">*</span>':''}<input class="control" id="${id}" type="${type}" ${required?'required':''} placeholder="${esc(placeholder)}"></label>`}
+  function select(id,label,options,required=false){return `<label class="field">${label}${required?' <span class="req">*</span>':''}<select class="control" id="${id}" ${required?'required':''}><option value="">Select</option>${options.map(o=>`<option>${esc(o)}</option>`).join('')}</select></label>`}
+  function switchAuth(v){state.authView=v;renderAuth()}
+  function fillRegistrationDemo(){const d={legalName:'GreenRoot Agro Solutions Pvt. Ltd.',vendorType:'Plant Grower / Wholesale Nursery',contactName:'Arjun Mehta',email:'vendor@greenroot.in',phone:'+91 98765 43120',regPassword:'Vendor@123'};Object.entries(d).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v});toast('Demo registration details filled.')}
+  function fillLoginDemo(){document.getElementById('loginEmail').value=vendor().email;document.getElementById('loginPassword').value=vendor().password;toast('Demo login credentials filled.')}
+  function togglePassword(){const e=document.getElementById('loginPassword');e.type=e.type==='password'?'text':'password';document.getElementById('eyeIcon').className='fa '+(e.type==='password'?'fa-eye':'fa-eye-slash')}
+  function registerVendor(e){e.preventDefault();const pass=document.getElementById('regPassword').value;if(pass.length<8){toast('Password must be at least 8 characters.','error');return}state.registeredVendor={legalName:val('legalName'),tradeName:val('legalName'),vendorType:val('vendorType'),gstin:'To be updated',pan:'To be updated',website:'',contactName:val('contactName'),jobTitle:'Vendor Account User',email:val('email'),phone:val('phone'),officeAddress:'To be updated from Vendor Profile',password:pass};state.authView='login';renderAuth();setTimeout(fillLoginDemo,50);toast('Registration completed. Please login.')}
+  function loginVendor(e){e.preventDefault();const email=val('loginEmail').toLowerCase(),pass=val('loginPassword'),v=vendor();if(email!==v.email.toLowerCase()||pass!==v.password){toast('Invalid email or password. Use Demo autofill for the prototype.','error');return}if(!state.registeredVendor)state.registeredVendor=v;state.loggedIn=true;state.tab='requests';renderPortal();toast('Login successful.')}
+  function val(id){return (document.getElementById(id)?.value||'').trim()}
+  function logout(){state.loggedIn=false;state.authView='login';renderAuth();toast('Logged out successfully.')}
+
+  function renderPortal(){
+    const tab=state.tab;
+    document.getElementById('app').innerHTML=`<div class="portal">
+      <div class="topbar-wrap"><header class="topbar">
+        <div class="topbrand"><div class="brand-logo"><i class="fa fa-leaf"></i></div><div><strong>OM Nursery Vendor Portal</strong><span>Supplier quotation workspace</span></div></div>
+        <nav class="top-tabs">
+          <button class="top-tab ${tab==='requests'?'active':''}" onclick="switchTab('requests')"><i class="fa fa-file-text-o"></i> Quotation Requests <span class="tab-count">${state.requests.length}</span></button>
+          <button class="top-tab ${tab==='accepted'?'active':''}" onclick="switchTab('accepted')"><i class="fa fa-check-circle-o"></i> Accepted Quotations <span class="tab-count">${state.accepted.length}</span></button>
+        </nav>
+        <div class="profile-slot"><button class="profile-btn" title="Vendor Profile" onclick="switchTab('profile')">${esc(initials())}</button></div>
+      </header></div>
+      <main class="main">${tab==='requests'?requestsView():tab==='accepted'?acceptedView():profileView()}</main>
+    </div>`;
+  }
+  function switchTab(t){state.tab=t;renderPortal()}
+
+  function requestsView(){const list=filteredRequests();return `
+    ${pageHead('Procurement Inbox','Quotation Requests','Keep the list simple. Open an RFQ only when you need complete requirement, delivery, commercial and response details.',`<button class="btn btn-secondary" onclick="toast('RFQ list refreshed.')"><i class="fa fa-refresh"></i> Refresh</button>`)}
+    <div class="toolbar"><div class="search-wrap"><i class="fa fa-search"></i><input class="search" value="${esc(state.search)}" oninput="state.search=this.value;renderPortal()" placeholder="Search RFQ number or requirement"></div>
+      <select class="filter-select" onchange="state.category=this.value;renderPortal()"><option ${state.category==='All'?'selected':''}>All</option>${categories().map(c=>`<option ${state.category===c?'selected':''}>${esc(c)}</option>`).join('')}</select>
+    </div>
+    <section class="data-table-card">
+      <div class="data-table-head"><div><strong>Quotation Requests</strong></div><div style="display:flex;align-items:center;gap:10px"><span class="mobile-table-hint"><i class="fa fa-arrows-h"></i> Swipe table</span><span class="record-count"><i class="fa fa-list"></i> ${list.length} RFQ${list.length===1?'':'s'}</span></div></div>
+      <div class="portal-table-scroll"><table class="portal-table"><thead><tr><th>Sr.</th><th>RFQ Number</th><th>Requirement</th><th>Respond By</th><th>Status</th><th>Action</th></tr></thead><tbody>
+        ${list.length?list.map((q,index)=>requestTableRow(q,index)).join(''):`<tr><td colspan="6" class="table-empty"><i class="fa fa-inbox"></i><strong>No RFQs match your filters</strong><span>New requests will appear here when procurement sends them to your vendor account.</span></td></tr>`}
+      </tbody></table></div>
+    </section>`}
+
+  function acceptedView(){const list=filteredAccepted();return `
+    ${pageHead('Submitted Responses','Accepted Quotations','Only the current quotation state is shown here. Open View Quotation for prices, committed quantities, buyer evaluation, delivery terms and complete history.')} 
+    <div class="toolbar"><div class="search-wrap"><i class="fa fa-search"></i><input class="search" value="${esc(state.acceptedSearch)}" oninput="state.acceptedSearch=this.value;renderPortal()" placeholder="Search RFQ, quote reference or requirement"></div>
+      <select class="filter-select" onchange="state.acceptedStatus=this.value;renderPortal()"><option ${state.acceptedStatus==='All'?'selected':''}>All</option><option ${state.acceptedStatus==='Under Buyer Review'?'selected':''}>Under Buyer Review</option><option ${state.acceptedStatus==='Award / PO Pending'?'selected':''}>Award / PO Pending</option><option ${state.acceptedStatus==='PO Issued'?'selected':''}>PO Issued</option></select>
+    </div>
+    <section class="data-table-card">
+      <div class="data-table-head"><div><strong>Accepted Quotations</strong></div><div style="display:flex;align-items:center;gap:10px"><span class="mobile-table-hint"><i class="fa fa-arrows-h"></i> Swipe table</span><span class="record-count"><i class="fa fa-check-circle-o"></i> ${list.length} quotation${list.length===1?'':'s'}</span></div></div>
+      <div class="portal-table-scroll"><table class="portal-table accepted-table"><thead><tr><th>Sr.</th><th>RFQ Number</th><th>Requirement</th><th>Quote Ref.</th><th>Status</th><th>Action</th></tr></thead><tbody>
+        ${list.length?list.map((q,index)=>acceptedTableRow(q,index)).join(''):`<tr><td colspan="6" class="table-empty"><i class="fa fa-check-circle-o"></i><strong>No accepted quotations match your filters</strong><span>Submitted RFQ responses will appear here.</span></td></tr>`}
+      </tbody></table></div>
+    </section>`}
+
+  function profileView(){const v=vendor();return `<div class="profile-page">
+    ${pageHead('Vendor Account','Vendor Profile','Registration and account information for this vendor portal. Logout is intentionally kept only inside this profile section.',`<button class="btn btn-white" onclick="switchTab('requests')"><i class="fa fa-arrow-left"></i> Back to RFQs</button>`)}
+    <div class="profile-hero"><div class="profile-id"><div class="profile-avatar">${esc(initials())}</div><div><h2>${esc(v.tradeName||v.legalName)}</h2><p>${esc(v.vendorType)} · ${esc(v.contactName)} · ${esc(v.jobTitle)}</p></div></div><span class="profile-status"><i class="fa fa-check-circle"></i> Active Vendor Account</span></div>
+    <section class="profile-card"><h3><i class="fa fa-building-o"></i> Business & Contact Details</h3><div class="profile-grid">
+      ${detail('Legal Business Name',v.legalName)}${detail('Trade Name',v.tradeName||'—')}${detail('Vendor Category',v.vendorType)}${detail('GSTIN',v.gstin)}${detail('PAN / Tax ID',v.pan)}${detail('Website',v.website||'—')}${detail('Primary Contact',v.contactName)}${detail('Designation',v.jobTitle)}${detail('Email',v.email)}${detail('Phone',v.phone)}${detail('Office Address',v.officeAddress)}
+    </div><div class="profile-actions"><button class="btn btn-danger" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button></div></section>
+  </div>`}
+
+  function pageHead(k,t,s,a=''){return `<div class="page-head"><div><div class="page-kicker">${k}</div><h1>${t}</h1><p>${s}</p></div>${a}</div>`}
+  function summary(icon,label,value,sub){return `<div class="summary-card"><div class="summary-icon"><i class="fa ${icon}"></i></div><div><span>${label}</span><strong>${value}</strong><small>${sub}</small></div></div>`}
+  function categories(){return [...new Set(state.requests.map(x=>x.category))]}
+  function nearestDeadline(){return state.requests[0]?.respondBy||'—'}
+  function filteredRequests(){let x=[...state.requests];if(state.search.trim()){const s=state.search.toLowerCase();x=x.filter(q=>[q.id,q.title,q.category,q.site,...q.items.map(i=>i.name)].join(' ').toLowerCase().includes(s))}if(state.category!=='All')x=x.filter(q=>q.category===state.category);if(state.requestSort==='Deadline')x.sort((a,b)=>a.respondBy.localeCompare(b.respondBy));return x}
+  function filteredAccepted(){let x=[...state.accepted];if(state.acceptedSearch.trim()){const s=state.acceptedSearch.toLowerCase();x=x.filter(q=>[q.id,q.title,q.category,q.site,q.vendorStatus,q.buyerStatus,q.awardStatus,q.response?.quoteRef||'',...q.items.map(i=>i.name)].join(' ').toLowerCase().includes(s))}if(state.acceptedStatus==='Under Buyer Review')x=x.filter(q=>q.buyerStatus==='Under Buyer Review');if(state.acceptedStatus==='Award / PO Pending')x=x.filter(q=>q.awardStatus!=='PO Issued');if(state.acceptedStatus==='PO Issued')x=x.filter(q=>q.awardStatus==='PO Issued');return x}
+  function totalRequested(q){return q.items.map(i=>`${i.qty.toLocaleString('en-IN')} ${i.uom}`).join(' + ')}
+  function lineItemSummary(q){return q.items.map(i=>i.name).join(', ')}
+  function requestedQtySummary(q){return q.items.map(i=>`${i.qty.toLocaleString('en-IN')} ${i.uom}`).join(' / ')}
+  function requestTableRow(q,index){return `<tr>
+    <td class="serial-cell">${index+1}</td>
+    <td><span class="table-rfq"><i class="fa fa-file-text-o"></i>${esc(q.id)}</span></td>
+    <td><div class="table-title">${esc(q.title)}</div></td>
+    <td class="table-date deadline-soon">${esc(q.respondBy)}</td>
+    <td><span class="status-pill status-open"><i class="fa fa-circle"></i>${esc(q.status)}</span></td>
+    <td class="table-action"><button class="btn btn-primary" onclick="openRequest('${q.id}')"><i class="fa fa-eye"></i> View RFQ</button></td>
+  </tr>`}
+  function committedQtySummary(q){const r=q.response;return q.items.map((i,idx)=>`${Number(r.lines[idx]?.commitQty||0).toLocaleString('en-IN')} ${i.uom}`).join(' / ')}
+  function acceptedTableRow(q,index){const r=q.response;const current=q.awardStatus==='PO Issued'?'PO Issued':(q.buyerStatus||q.vendorStatus);return `<tr>
+    <td class="serial-cell">${index+1}</td>
+    <td><span class="table-rfq"><i class="fa fa-check-circle-o"></i>${esc(q.id)}</span></td>
+    <td><div class="table-title">${esc(q.title)}</div></td>
+    <td><strong>${esc(r.quoteRef)}</strong></td>
+    <td><span class="status-pill ${q.awardStatus==='PO Issued'?'status-awarded':'status-review'}">${esc(current)}</span></td>
+    <td class="table-action"><button class="btn btn-secondary" onclick="openAccepted('${q.id}')"><i class="fa fa-eye"></i> View Quotation</button></td>
+  </tr>`}
+
+  function openRequest(id){const q=state.requests.find(x=>x.id===id);if(!q)return;document.body.insertAdjacentHTML('beforeend',requestModal(q))}
+  function requestModal(q){return `<div class="overlay" id="requestModal" onclick="if(event.target===this)this.remove()"><div class="modal">
+    <div class="modal-head"><div><div class="eyebrow">Request for Quotation</div><h2>${esc(q.title)}</h2><p>${esc(q.id)} · ${esc(q.buyer)} · ${esc(q.site)}</p></div><button class="close-btn" onclick="document.getElementById('requestModal').remove()">×</button></div>
+    <div class="modal-body">
+      <div class="quote-status-row"><span class="status-pill status-open"><i class="fa fa-clock-o"></i> Open for Response</span>${q.allowPartial?'<span class="status-pill status-submitted"><i class="fa fa-exchange"></i> Partial Supply Allowed</span>':''}<span class="status-pill status-new"><i class="fa fa-calendar"></i> Respond by ${esc(q.respondBy)}</span></div>
+      ${box('RFQ Header & Commercial Terms',`<div class="detail-grid">${detail('RFQ Number',q.id)}${detail('Buyer / Purchasing Organization',q.buyer)}${detail('Issue Date',q.issuedOn)}${detail('Response Deadline',q.respondBy)}${detail('Required Delivery Date',q.requiredBy)}${detail('Delivery Site',q.site)}${detail('Currency',q.currency)}${detail('Payment Terms',q.paymentTerms)}${detail('Delivery Terms',q.deliveryTerms)}${detail('Ship-To Address',q.deliveryAddress)}${detail('Buyer Contact',q.contact)}${detail('Buyer Email',q.contactEmail)}</div>`)}
+      ${box('Requested Items',`<div class="table-scroll"><table class="quote-table"><thead><tr><th>Line</th><th>Item / Code</th><th>Specification</th><th>Requested Qty</th><th>UOM</th><th>Required By</th></tr></thead><tbody>${q.items.map(i=>`<tr><td>${i.line}</td><td><strong>${esc(i.name)}</strong><br><span style="color:#87938a">${esc(i.code)}</span></td><td>${esc(i.spec)}</td><td><strong>${i.qty.toLocaleString('en-IN')}</strong></td><td>${esc(i.uom)}</td><td>${esc(q.requiredBy)}</td></tr>`).join('')}</tbody></table></div>`)}
+      ${box('Requirement Notes & Attachments',`<div class="note-box"><strong>Buyer Notes</strong><br>${esc(q.notes)}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${q.attachments.map(a=>`<span class="status-pill status-new"><i class="fa fa-paperclip"></i>${esc(a)}</span>`).join('')}</div>`)}
+      ${box('Your Vendor Response',vendorResponseForm(q),'Enter actual stock and commercial details. Your committed quantity can be lower than requested when partial supply is permitted.')}
+      <div class="modal-actions"><button class="btn btn-white" onclick="document.getElementById('requestModal').remove()">Close</button><button class="btn btn-secondary" onclick="saveDraft('${q.id}')"><i class="fa fa-save"></i> Save Draft</button><button class="btn btn-primary" onclick="submitResponse('${q.id}')"><i class="fa fa-paper-plane"></i> Accept RFQ & Submit Response</button></div>
+    </div></div></div>`}
+
+  function vendorResponseForm(q){return `<div class="table-scroll"><table class="quote-table"><thead><tr><th>Item</th><th>Requested</th><th>Available Stock Now</th><th>Qty You Can Commit</th><th>Unit Price (${q.currency})</th><th>Line Lead Time</th></tr></thead><tbody>${q.items.map((i,idx)=>`<tr><td><strong>${esc(i.name)}</strong><br><span style="color:#87938a">${esc(i.code)}</span></td><td>${i.qty.toLocaleString('en-IN')} ${esc(i.uom)}</td><td><input id="stock_${idx}" type="number" min="0" placeholder="e.g. ${Math.max(1,i.qty-100)}"></td><td><input id="commit_${idx}" type="number" min="0" max="${q.allowPartial?'999999':i.qty}" placeholder="Max ${i.qty}"></td><td><input id="price_${idx}" type="number" min="0" step="0.01" placeholder="Unit rate"></td><td><input id="lineLead_${idx}" placeholder="e.g. 3 Days"></td></tr>`).join('')}</tbody></table></div>
+    <div class="response-grid" style="margin-top:13px">
+      <label class="field">Vendor Quote Reference<input class="control" id="quoteRef" placeholder="e.g. GR-QT-0812-44"></label>
+      <label class="field">Quotation Valid Until<input class="control" id="validTill" type="date"></label>
+      <label class="field">Proposed Dispatch Date<input class="control" id="dispatchDate" type="date"></label>
+      <label class="field">GST / Tax %<input class="control" id="taxRate" type="number" min="0" value="5"></label>
+      <label class="field">Freight / Delivery Charge<input class="control" id="freight" type="number" min="0" value="0"></label>
+      <label class="field">Overall Lead Time<input class="control" id="leadTime" placeholder="e.g. 4 Days"></label>
+      <label class="field span-2">Vendor Remarks<textarea class="control" id="vendorRemarks" placeholder="Quality notes, packaging, batch availability, inspection requirement, etc."></textarea></label>
+      <label class="field">Payment Terms Offered<select class="control" id="responsePayment"><option>${esc(q.paymentTerms)}</option><option>Advance payment</option><option>15 days from GRN</option><option>30 days from GRN</option><option>45 days from GRN</option></select></label>
+      <div class="constraint-box span-3"><input id="constraintCheck" type="checkbox" onchange="document.getElementById('constraintNoteWrap').classList.toggle('hidden',!this.checked)"><div><strong>I cannot supply the full requested quantity / I need a buyer-side quantity update.</strong><p>Use this when, for example, the RFQ asks for 500 pieces but only 400 are currently available. Procurement will see the committed quantity and your explanation.</p></div></div>
+      <label class="field span-3 hidden" id="constraintNoteWrap">Stock / Quantity Revision Comment<textarea class="control" id="constraintNote" placeholder="Example: Requested 500 pcs. Current ready stock is 400 pcs; balance 100 pcs can be supplied after 7 days. Please confirm whether partial dispatch is acceptable."></textarea></label>
+    </div>`}
+
+  function saveDraft(id){toast(`${id} response saved as draft in this prototype.`);}
+  function submitResponse(id){const q=state.requests.find(x=>x.id===id);if(!q)return;const lines=[];for(let idx=0;idx<q.items.length;idx++){const stock=Number(val(`stock_${idx}`)),commit=Number(val(`commit_${idx}`)),price=Number(val(`price_${idx}`));if(!stock&&stock!==0||!commit||!price){toast('Enter available stock, committed quantity and unit price for every line item.','error');return}if(!q.allowPartial&&commit<q.items[idx].qty){toast('This RFQ requires the full requested quantity. Add a revision comment or contact procurement.','error');return}if(commit>stock){toast('Committed quantity cannot exceed available stock now.','error');return}lines.push({availableStock:stock,commitQty:commit,unitPrice:price,lineLeadTime:val(`lineLead_${idx}`)||val('leadTime')})}
+    const ref=val('quoteRef')||`VQ-${id.replace('RFQ-','')}`;const constraint=document.getElementById('constraintCheck').checked;const response={submittedOn:new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),quoteRef:ref,validTill:val('validTill')||'30 days from submission',freight:Number(val('freight')||0),taxRate:Number(val('taxRate')||0),leadTime:val('leadTime')||'As per line item',dispatchDate:val('dispatchDate')||'To be confirmed',paymentTerms:val('responsePayment')||q.paymentTerms,deliveryTerms:q.deliveryTerms,remarks:val('vendorRemarks')||'Commercial response submitted by vendor.',constraint,constraintNote:constraint?val('constraintNote'):'',lines};
+    const accepted={...q,response,vendorStatus:'Response Submitted',buyerStatus:'Under Buyer Review',awardStatus:'Awaiting Award / PO'};state.requests=state.requests.filter(x=>x.id!==id);state.accepted.unshift(accepted);document.getElementById('requestModal').remove();state.tab='accepted';renderPortal();toast(`${id} accepted and quotation response submitted.`)}
+
+  function openAccepted(id){const q=state.accepted.find(x=>x.id===id);if(!q)return;document.body.insertAdjacentHTML('beforeend',acceptedModal(q))}
+  function acceptedModal(q){const r=q.response;return `<div class="overlay" id="acceptedModal" onclick="if(event.target===this)this.remove()"><div class="modal">
+    <div class="modal-head"><div><div class="eyebrow">Submitted Vendor Quotation</div><h2>${esc(q.title)}</h2><p>${esc(q.id)} · Quote Ref ${esc(r.quoteRef)}</p></div><button class="close-btn" onclick="document.getElementById('acceptedModal').remove()">×</button></div>
+    <div class="modal-body">
+      <div class="quote-status-row"><span class="status-pill status-submitted"><i class="fa fa-check-circle"></i>${esc(q.vendorStatus)}</span><span class="status-pill status-review"><i class="fa fa-search"></i>${esc(q.buyerStatus)}</span><span class="status-pill status-open"><i class="fa fa-shopping-cart"></i>${esc(q.awardStatus)}</span></div>
+      <div class="timeline"><div class="time-step done"><i class="fa fa-envelope-o"></i><strong>RFQ Received</strong><span>${esc(q.issuedOn)}</span></div><div class="time-step done"><i class="fa fa-paper-plane"></i><strong>Vendor Response Submitted</strong><span>${esc(r.submittedOn)}</span></div><div class="time-step current"><i class="fa fa-search"></i><strong>Buyer Evaluation</strong><span>${esc(q.buyerStatus)}</span></div><div class="time-step"><i class="fa fa-file-text-o"></i><strong>Award / Purchase Order</strong><span>${esc(q.awardStatus)}</span></div></div>
+      ${box('RFQ & Delivery Summary',`<div class="detail-grid">${detail('RFQ Number',q.id)}${detail('Buyer',q.buyer)}${detail('Delivery Site',q.site)}${detail('Required By',q.requiredBy)}${detail('Payment Terms',r.paymentTerms)}${detail('Delivery Terms',r.deliveryTerms)}${detail('Ship-To Address',q.deliveryAddress)}${detail('Buyer Contact',q.contact+' · '+q.contactEmail)}</div>`)}
+      ${box('Submitted Commercial Response',`<div class="table-scroll"><table class="quote-table"><thead><tr><th>Item</th><th>Requested</th><th>Stock Declared</th><th>Committed</th><th>Unit Price</th><th>Line Value</th><th>Lead Time</th></tr></thead><tbody>${q.items.map((i,idx)=>{const l=r.lines[idx]||{};return `<tr><td><strong>${esc(i.name)}</strong><br><span style="color:#87938a">${esc(i.code)}</span></td><td>${i.qty.toLocaleString('en-IN')} ${esc(i.uom)}</td><td>${Number(l.availableStock||0).toLocaleString('en-IN')} ${esc(i.uom)}</td><td><strong>${Number(l.commitQty||0).toLocaleString('en-IN')} ${esc(i.uom)}</strong></td><td>${fmt(l.unitPrice)}</td><td>${fmt(Number(l.commitQty||0)*Number(l.unitPrice||0))}</td><td>${esc(l.lineLeadTime||r.leadTime)}</td></tr>`}).join('')}</tbody></table></div><div class="response-grid" style="margin-top:13px">${detail('Quote Reference',r.quoteRef)}${detail('Submitted On',r.submittedOn)}${detail('Valid Until',r.validTill)}${detail('Proposed Dispatch',r.dispatchDate)}${detail('GST / Tax',r.taxRate+'%')}${detail('Freight',fmt(r.freight))}</div>`)}
+      <div class="total-box"><div><span>Total Quotation Value (including tax & freight)</span><br><small style="font-size:9px;color:#859188">Calculated from committed quantity and submitted unit rates.</small></div><strong>${fmt(quoteTotal(q))}</strong></div>
+      ${box('Vendor Remarks & Supply Constraint',`<div class="note-box"><strong>Remarks</strong><br>${esc(r.remarks||'—')}</div>${r.constraint?`<div class="note-box" style="margin-top:9px;background:#fffaf0;border-color:#eadba9"><strong>Quantity / Stock Revision Requested</strong><br>${esc(r.constraintNote||'Vendor has requested buyer confirmation for a quantity adjustment.')}</div>`:''}`)}
+      <div class="modal-actions"><button class="btn btn-white" onclick="document.getElementById('acceptedModal').remove()">Close</button><button class="btn btn-secondary" onclick="toast('Quotation PDF export can be connected to the backend later.')"><i class="fa fa-file-pdf-o"></i> Download Quote</button></div>
+    </div></div></div>`}
+
+  function quoteTotal(q){const r=q.response||{lines:[],taxRate:0,freight:0};const subtotal=r.lines.reduce((s,l)=>s+Number(l.commitQty||0)*Number(l.unitPrice||0),0);return subtotal+(subtotal*Number(r.taxRate||0)/100)+Number(r.freight||0)}
+  function box(title,body,sub=''){return `<section class="section-box"><div class="section-box-head"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}</div><div class="section-box-body">${body}</div></section>`}
+  function detail(label,value){return `<div class="detail"><span>${esc(label)}</span><strong>${esc(value??'—')}</strong></div>`}
+
+  render();
+</script>
+</body>
+</html>

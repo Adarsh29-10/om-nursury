@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM Nursery · Customer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body style="margin:0;background:#f4f7f5;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:calc(90px + env(safe-area-inset-bottom));box-sizing:border-box;">
+
+  <div id="app"></div>
+
+  <!-- CAMERA / RFID SCAN MODAL -->
+  <div id="scanModal"
+       onclick="if(event.target===this) closeScanner()"
+       style="display:none;position:fixed;inset:0;background:rgba(6,24,13,.72);backdrop-filter:blur(7px);z-index:9999;align-items:flex-start;justify-content:center;padding:12px 12px calc(90px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div style="width:min(540px,100%);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.35);margin:auto;">
+      <div style="background:linear-gradient(145deg,#173f27,#245b38);color:#fff;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <div>
+          <div style="font-size:17px;font-weight:950;"><i class="fa-solid fa-qrcode" style="margin-right:7px;"></i>Scan RFID / QR Label</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.78);margin-top:4px;line-height:1.45;">Camera reads a QR/barcode containing the RFID code.</div>
+        </div>
+        <button onclick="closeScanner()" style="border:none;background:rgba(255,255,255,.13);color:#fff;width:34px;height:34px;border-radius:10px;font-size:20px;cursor:pointer;">×</button>
+      </div>
+
+      <div style="padding:14px;">
+        <div style="background:#0d1710;border-radius:16px;overflow:hidden;position:relative;min-height:260px;display:flex;align-items:center;justify-content:center;">
+          <video id="cameraVideo" autoplay playsinline muted style="width:100%;max-height:360px;object-fit:cover;display:block;"></video>
+
+          <div style="position:absolute;inset:15%;border:2px solid #d9a928;border-radius:17px;box-shadow:0 0 0 999px rgba(0,0,0,.20);pointer-events:none;"></div>
+
+          <div id="cameraPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#dbe8dd;padding:28px;font-size:12px;line-height:1.55;font-weight:700;">
+            Camera preview will appear here.
+          </div>
+        </div>
+
+        <div id="scanStatus" style="margin-top:10px;padding:10px 11px;background:#edf5ef;border:1px solid #dce9de;border-radius:11px;color:#173f27;font-size:10px;line-height:1.5;font-weight:750;">
+          Point the camera at a QR/barcode carrying an RFID code.
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;">
+          <button onclick="simulateRFIDScan()" style="border:none;background:#d9a928;color:#1e2e24;border-radius:12px;padding:11px;font-size:11px;font-weight:900;cursor:pointer;">
+            <i class="fa-solid fa-bolt" style="margin-right:6px;"></i>Simulate RFID Scan
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin:13px 0 9px;">
+          <div style="height:1px;background:#e6eee6;flex:1;"></div>
+          <span style="font-size:9px;color:#879489;font-weight:800;">OR ENTER CODE</span>
+          <div style="height:1px;background:#e6eee6;flex:1;"></div>
+        </div>
+
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <input id="manualRFID" placeholder="e.g. RFID-OM-1001" style="flex:1;min-width:180px;border:1px solid #dbe8db;border-radius:12px;padding:11px 12px;font:inherit;font-size:12px;outline:none;box-sizing:border-box;">
+          <button onclick="manualRFIDAdd()" style="border:none;background:#173f27;color:#fff;border-radius:12px;padding:10px 15px;font-size:10px;font-weight:900;cursor:pointer;">Add Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAILS -->
+  <div id="productModal"
+       onclick="if(event.target===this) closeProductModal()"
+       style="display:none;position:fixed;inset:0;background:rgba(6,24,13,.67);backdrop-filter:blur(6px);z-index:9998;align-items:flex-start;justify-content:center;padding:12px 12px calc(90px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div id="productModalContent" style="width:min(620px,100%);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.32);margin:auto;"></div>
+  </div>
+
+  <div id="toast"
+       style="position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));max-width:520px;margin:auto;background:#173f27;color:#fff;padding:12px 15px;border-radius:13px;box-shadow:0 13px 30px rgba(0,20,0,.22);font-size:11px;font-weight:850;z-index:10000;opacity:0;transform:translateY(70px);transition:.25s;pointer-events:none;"></div>
+
+<script>
+  const PRODUCTS = [
+    {
+      id:"P001", name:"Rose Plant", category:"Flowering", price:299, stage:"Adult",
+      image:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80",
+      description:"Healthy flowering rose plant suitable for home gardens and landscape beds."
+    },
+    {
+      id:"P002", name:"Tulsi Plant", category:"Medicinal", price:199, stage:"Child",
+      image:"https://images.unsplash.com/photo-1618375569909-3c8616cf7733?auto=format&fit=crop&w=800&q=80",
+      description:"Aromatic Tulsi plant for home, balcony and medicinal garden use."
+    },
+    {
+      id:"P003", name:"Mango Tree", category:"Fruit", price:499, stage:"Sapling",
+      image:"https://images.unsplash.com/photo-1591073113125-e46713c829ed?auto=format&fit=crop&w=800&q=80",
+      description:"Young mango sapling prepared for transplanting and long-term growth."
+    },
+    {
+      id:"P004", name:"Aloe Vera", category:"Medicinal", price:249, stage:"Adult",
+      image:"https://images.unsplash.com/photo-1509423350716-97f2360af8e4?auto=format&fit=crop&w=800&q=80",
+      description:"Low-maintenance Aloe Vera plant suitable for indoor and outdoor placement."
+    },
+    {
+      id:"P005", name:"Money Plant", category:"Indoor", price:179, stage:"Child",
+      image:"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=80",
+      description:"Popular indoor foliage plant with easy-care growth."
+    },
+    {
+      id:"P006", name:"Jasmine Plant", category:"Flowering", price:349, stage:"Adult",
+      image:"https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=800&q=80",
+      description:"Fragrant flowering Jasmine plant for pots and outdoor garden areas."
+    },
+    {
+      id:"P007", name:"Guava Plant", category:"Fruit", price:399, stage:"Sapling",
+      image:"https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
+      description:"Healthy guava sapling suitable for home orchards and landscape planting."
+    },
+    {
+      id:"P008", name:"Areca Palm", category:"Indoor", price:599, stage:"Adult",
+      image:"https://images.unsplash.com/photo-1598880940080-ff9a29891b85?auto=format&fit=crop&w=800&q=80",
+      description:"Decorative Areca Palm suitable for indoor and shaded environments."
+    },
+    {
+      id:"P009", name:"Garden Trowel", category:"Tools", price:149, stage:"Tool",
+      image:"https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
+      description:"Compact hand trowel for planting, potting and daily garden work."
+    },
+    {
+      id:"P010", name:"Organic Compost", category:"Garden Care", price:220, stage:"Care",
+      image:"https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80",
+      description:"Organic compost mix for improving soil nutrition and plant growth."
+    }
+  ];
+
+  const RFID_PRODUCTS = {
+    "RFID-OM-1001":"P001",
+    "RFID-OM-1002":"P002",
+    "RFID-OM-1003":"P003",
+    "RFID-OM-1004":"P004",
+    "RFID-OM-1005":"P005",
+    "RFID-OM-1006":"P006",
+    "RFID-OM-1007":"P007",
+    "RFID-OM-1008":"P008"
+  };
+
+  const state = {
+    authView:"login",
+    screen:"home",
+    loggedIn:false,
+    customer:null,
+    storeSearch:"",
+    category:"All",
+    cart:[],
+    checkoutComplete:false,
+    order:null,
+    purchaseHistory:[],
+    reviews:{
+      product:{rating:0,comment:""},
+      display:{rating:0,comment:""},
+      supervisor:{rating:0,comment:""}
+    },
+    reviewSubmitted:false,
+    cameraStream:null,
+    scanLoop:null
+  };
+
+  function esc(v){
+    return String(v??"")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
+
+  function money(v){
+    return "₹"+Number(v||0).toLocaleString("en-IN");
+  }
+
+  function showToast(message,error=false){
+    const t=document.getElementById("toast");
+    t.textContent=(error?"Error: ":"")+message;
+    t.style.background=error?"#b42331":"#173f27";
+    t.style.opacity="1";
+    t.style.transform="translateY(0)";
+    clearTimeout(t._timer);
+    t._timer=setTimeout(()=>{
+      t.style.opacity="0";
+      t.style.transform="translateY(70px)";
+    },2400);
+  }
+
+  function customerStorage(){
+    try{
+      return JSON.parse(localStorage.getItem("omNurseryCustomer")||"null");
+    }catch(e){
+      return null;
+    }
+  }
+
+  function saveCustomerStorage(data){
+    localStorage.setItem("omNurseryCustomer",JSON.stringify(data));
+  }
+
+  function purchaseHistoryKey(){
+    const identity=(state.customer?.email || state.customer?.phone || "guest").toLowerCase();
+    return "omNurseryPurchaseHistory:"+identity;
+  }
+
+  function loadPurchaseHistory(){
+    try{
+      const data=JSON.parse(localStorage.getItem(purchaseHistoryKey())||"[]");
+      return Array.isArray(data) ? data : [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  function savePurchaseHistory(){
+    localStorage.setItem(purchaseHistoryKey(),JSON.stringify(state.purchaseHistory));
+  }
+
+  function resetReviewState(){
+    state.reviews={
+      product:{rating:0,comment:""},
+      display:{rating:0,comment:""},
+      supervisor:{rating:0,comment:""}
+    };
+    state.reviewSubmitted=false;
+  }
+
+  function prepareNewOrder(){
+    if(!state.checkoutComplete)return;
+    state.checkoutComplete=false;
+    state.order=null;
+    resetReviewState();
+  }
+
+  function field(label,id,type="text",placeholder="",value=""){
+    return `
+      <label style="display:block;color:#173f27;font-size:11px;font-weight:800;">
+        <span style="display:block;margin-bottom:6px;">${label}</span>
+        <input
+          id="${id}"
+          type="${type}"
+          placeholder="${placeholder}"
+          value="${esc(value)}"
+          style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;background:#fff;color:#1e2e24;border-radius:14px;padding:13px 14px;font:inherit;font-size:13px;font-weight:600;outline:none;box-shadow:0 1px 0 rgba(23,63,39,.02);"
+        >
+      </label>
+    `;
+  }
+
+  function greenButton(label,onclick,extra=""){
+    return `<button onclick="${onclick}" style="border:none;background:#173f27;color:#fff;border-radius:14px;padding:12px 15px;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 7px 18px rgba(23,63,39,.16);${extra}">${label}</button>`;
+  }
+
+  function lightButton(label,onclick,extra=""){
+    return `<button onclick="${onclick}" style="border:1px solid #d9e5db;background:#fff;color:#173f27;border-radius:14px;padding:11px 14px;font-size:10px;font-weight:900;cursor:pointer;${extra}">${label}</button>`;
+  }
+
+  function authLayout(){
+    const isLogin=state.authView==="login";
+
+    return `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px 14px;box-sizing:border-box;background:#f4f7f5;">
+        <div style="width:min(430px,100%);">
+          <div style="text-align:center;margin-bottom:18px;">
+            <div style="width:58px;height:58px;border-radius:19px;background:linear-gradient(145deg,#173f27,#245b38);color:#fff;display:flex;align-items:center;justify-content:center;font-size:27px;margin:0 auto;box-shadow:0 12px 28px rgba(23,63,39,.18);"><i class="fa-solid fa-seedling"></i></div>
+            <div style="font-size:25px;color:#173f27;font-weight:950;letter-spacing:-.04em;margin-top:11px;">OM Nursery</div>
+            <div style="font-size:11px;color:#75847a;line-height:1.5;margin-top:4px;">Shop plants in-store with the same ease as your favourite shopping app.</div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e1e9e2;border-radius:24px;padding:18px;box-shadow:0 18px 45px rgba(23,63,39,.08);">
+            <div style="display:flex;gap:5px;background:#f3f6f3;border-radius:14px;padding:4px;margin-bottom:18px;">
+              <button onclick="state.authView='login';render()" style="flex:1;border:none;background:${isLogin?"#173f27":"transparent"};color:${isLogin?"#fff":"#718077"};border-radius:11px;padding:10px;font-size:10px;font-weight:900;cursor:pointer;">Login</button>
+              <button onclick="state.authView='register';render()" style="flex:1;border:none;background:${!isLogin?"#173f27":"transparent"};color:${!isLogin?"#fff":"#718077"};border-radius:11px;padding:10px;font-size:10px;font-weight:900;cursor:pointer;">Create account</button>
+            </div>
+            ${isLogin ? loginForm() : registrationForm()}
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:13px;color:#839087;font-size:8px;font-weight:750;">
+            <span><i class="fa-solid fa-lock" style="margin-right:5px;"></i>Secure customer access</span><span>·</span><span>Fast in-store checkout</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function registrationForm(){
+    return `
+      <div style="font-size:20px;color:#173f27;font-weight:950;letter-spacing:-.03em;">Create your account</div>
+      <div style="font-size:10px;color:#78867c;line-height:1.5;margin-top:4px;margin-bottom:15px;">Enter only the details needed to shop and identify your order at the counter.</div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:11px;">
+        ${field("Full name","regName","text","Your name")}
+        ${field("Mobile number","regPhone","tel","10-digit mobile")}
+        ${field("Email","regEmail","email","name@example.com")}
+        ${field("City","regCity","text","Pune")}
+        ${field("Create password","regPassword","password","Minimum 6 characters")}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:15px;">
+        ${greenButton("Create Account","registerCustomer()","width:100%;padding:13px;")}
+        ${lightButton("<i class=\"fa-solid fa-flask\" style=\"margin-right:6px;\"></i>Fill Demo Customer","fillDemoRegistration()","width:100%;")}
+      </div>
+    `;
+  }
+
+  function loginForm(){
+    return `
+      <div style="font-size:20px;color:#173f27;font-weight:950;letter-spacing:-.03em;">Welcome back</div>
+      <div style="font-size:10px;color:#78867c;line-height:1.5;margin-top:4px;margin-bottom:15px;">Login with the mobile number or email used during registration.</div>
+
+      <div style="display:grid;gap:11px;">
+        ${field("Email / Mobile","loginUser","text","Email or mobile number")}
+        ${field("Password","loginPassword","password","Enter password")}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:15px;">
+        ${greenButton("Login & Start Shopping","loginCustomer()","width:100%;padding:13px;")}
+        ${lightButton("<i class=\"fa-solid fa-flask\" style=\"margin-right:6px;\"></i>Use Demo Login","fillDemoLogin()","width:100%;")}
+      </div>
+
+      <div style="margin-top:12px;padding:10px 11px;background:#fff8df;border:1px solid #f0dfa4;border-radius:12px;color:#6f5b1f;font-size:9px;line-height:1.5;font-weight:700;">
+        Demo: <strong>aakash@example.com</strong> · <strong>123456</strong>
+      </div>
+    `;
+  }
+
+  function fillDemoRegistration(){
+    document.getElementById("regName").value="Aakash Patil";
+    document.getElementById("regEmail").value="aakash@example.com";
+    document.getElementById("regPhone").value="9876543210";
+    document.getElementById("regCity").value="Pune";
+    document.getElementById("regPassword").value="123456";
+  }
+
+  function fillDemoLogin(){
+    const demo={
+      name:"Aakash Patil",
+      email:"aakash@example.com",
+      phone:"9876543210",
+      city:"Pune",
+      password:"123456"
+    };
+    saveCustomerStorage(demo);
+    document.getElementById("loginUser").value=demo.email;
+    document.getElementById("loginPassword").value=demo.password;
+  }
+
+  function registerCustomer(){
+    const name=document.getElementById("regName").value.trim();
+    const email=document.getElementById("regEmail").value.trim();
+    const phone=document.getElementById("regPhone").value.trim();
+    const city=document.getElementById("regCity").value.trim();
+    const password=document.getElementById("regPassword").value;
+
+    if(!name||!email||!phone||!city||!password){
+      showToast("Complete all registration fields.",true);
+      return;
+    }
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      showToast("Enter a valid email address.",true);
+      return;
+    }
+
+    if(!/^\d{10}$/.test(phone.replace(/\D/g,""))){
+      showToast("Enter a valid 10-digit mobile number.",true);
+      return;
+    }
+
+    if(password.length<6){
+      showToast("Password must be at least 6 characters.",true);
+      return;
+    }
+
+    saveCustomerStorage({name,email,phone:phone.replace(/\D/g,""),city,password});
+    state.authView="login";
+    render();
+    showToast("Registration complete. Please login.");
+  }
+
+  function loginCustomer(){
+    const user=document.getElementById("loginUser").value.trim().toLowerCase();
+    const password=document.getElementById("loginPassword").value;
+    const saved=customerStorage();
+
+    if(!saved){
+      showToast("No customer account found. Register first.",true);
+      return;
+    }
+
+    const matched=(saved.email.toLowerCase()===user || saved.phone===user.replace(/\D/g,""));
+
+    if(!matched || saved.password!==password){
+      showToast("Incorrect login details.",true);
+      return;
+    }
+
+    state.customer=saved;
+    state.purchaseHistory=loadPurchaseHistory();
+    state.loggedIn=true;
+    state.screen="home";
+    render();
+    showToast("Welcome, "+saved.name.split(" ")[0]+"!");
+  }
+
+  function logout(){
+    closeScanner();
+    state.loggedIn=false;
+    state.customer=null;
+    state.screen="home";
+    state.cart=[];
+    state.checkoutComplete=false;
+    state.order=null;
+    state.purchaseHistory=[];
+    state.reviewSubmitted=false;
+    state.authView="login";
+    render();
+  }
+
+  function customerScreenTitle(){
+    const titles={
+      home:"Home",
+      store:"Shop",
+      cart:"My Cart",
+      checkout:"Checkout",
+      review:"Reviews",
+      profile:"Account",
+      orders:"Previously Bought"
+    };
+    return titles[state.screen] || "OM Nursery";
+  }
+
+  function isMobileView(){
+    return window.innerWidth<760;
+  }
+
+  function openCategory(category){
+    state.category=category;
+    state.storeSearch="";
+    state.screen="store";
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function startHomeSearch(){
+    const input=document.getElementById("homeSearchInput");
+    state.storeSearch=input ? input.value.trim() : "";
+    state.category="All";
+    state.screen="store";
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function startHeaderSearch(){
+    const input=document.getElementById("desktopHeaderSearchInput");
+    state.storeSearch=input ? input.value.trim() : "";
+    state.category="All";
+    state.screen="store";
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function customerNavButton(screen,icon,label,badge=""){
+    const active=state.screen===screen || (screen==="cart" && state.screen==="checkout") || (screen==="profile" && state.screen==="orders");
+    return `
+      <button onclick="goScreen('${screen}')" title="${label}" style="position:relative;border:none;background:transparent;color:${active?"#173f27":"#7a887f"};min-width:58px;height:54px;padding:5px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;">
+        <span style="font-size:17px;line-height:1;"><i class="${icon}"></i></span>
+        <span style="font-size:8px;font-weight:${active?"950":"800"};white-space:nowrap;">${label}</span>
+        ${active?`<span style="position:absolute;bottom:1px;width:18px;height:3px;border-radius:999px;background:#d9a928;"></span>`:""}
+        ${badge?`<span style="position:absolute;right:8px;top:3px;background:#d9a928;color:#173f27;min-width:17px;height:17px;padding:0 4px;border:2px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:950;box-sizing:border-box;">${badge}</span>`:""}
+      </button>
+    `;
+  }
+
+  function renderHeader(){
+    const cartQty=state.cart.reduce((s,i)=>s+i.qty,0);
+    const firstName=state.customer?.name?.split(" ")[0] || "Customer";
+
+    return `
+      <div data-desktop-header="true" style="display:${isMobileView()?"none":"block"};position:sticky;top:0;z-index:300;background:rgba(244,247,245,.96);backdrop-filter:blur(16px);padding:10px 0;">
+        <div style="background:#fff;border:1px solid #dde7df;border-radius:18px;padding:9px 11px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 24px rgba(23,63,39,.055);">
+          <button onclick="goScreen('home')" style="border:none;background:transparent;display:flex;align-items:center;gap:9px;cursor:pointer;padding:0;">
+            <span style="width:40px;height:40px;border-radius:13px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;"><i class="fa-solid fa-seedling"></i></span>
+            <span style="text-align:left;"><strong style="display:block;color:#173f27;font-size:13px;">OM Nursery</strong><span style="display:block;color:#8a978e;font-size:8px;margin-top:2px;">Hi, ${esc(firstName)}</span></span>
+          </button>
+
+          <div style="flex:1;position:relative;min-width:220px;">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#738279;font-size:12px;pointer-events:none;"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input id="desktopHeaderSearchInput" value="${esc(state.screen==='store'?state.storeSearch:'')}" onkeydown="if(event.key==='Enter')startHeaderSearch()" placeholder="Search plants, tools or garden care..." style="width:100%;box-sizing:border-box;border:1px solid #dbe6dd;background:#f7faf7;color:#1e2e24;border-radius:13px;padding:11px 43px 11px 36px;font:inherit;font-size:10px;outline:none;">
+            <button onclick="startHeaderSearch()" aria-label="Search" title="Search" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);border:none;background:#173f27;color:#fff;width:31px;height:31px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;"><i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:4px;">
+            <button onclick="openScanner()" style="border:1px solid #d9e5db;background:#edf5ef;color:#173f27;border-radius:12px;padding:10px 12px;font-size:9px;font-weight:900;cursor:pointer;"><i class="fa-solid fa-qrcode" style="margin-right:6px;"></i>Scan</button>
+            <button onclick="goScreen('cart')" style="position:relative;border:1px solid #d9e5db;background:#fff;color:#173f27;border-radius:12px;padding:10px 12px;font-size:9px;font-weight:900;cursor:pointer;"><i class="fa-solid fa-cart-shopping" style="margin-right:6px;"></i>Cart${cartQty?` · ${cartQty}`:""}</button>
+            <button onclick="goScreen('profile')" style="border:1px solid #d9e5db;background:#fff;color:#173f27;border-radius:12px;padding:10px 12px;font-size:9px;font-weight:900;cursor:pointer;"><i class="fa-solid fa-user" style="margin-right:6px;"></i>Account</button>
+          </div>
+        </div>
+      </div>
+
+      <div data-mobile-header="true" style="display:${isMobileView()?"block":"none"};position:sticky;top:0;z-index:300;background:rgba(244,247,245,.97);backdrop-filter:blur(14px);padding:8px 0 6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <button onclick="goScreen('home')" style="border:none;background:transparent;padding:0;display:flex;align-items:center;gap:9px;cursor:pointer;text-align:left;min-width:0;">
+            <span style="width:38px;height:38px;min-width:38px;border-radius:12px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 5px 13px rgba(23,63,39,.14);"><i class="fa-solid fa-seedling"></i></span>
+            <span style="min-width:0;"><span style="display:block;font-size:8px;color:#86948a;font-weight:800;">Hello, ${esc(firstName)}</span><strong style="display:block;color:#173f27;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">${customerScreenTitle()}</strong></span>
+          </button>
+          <div style="display:flex;gap:7px;">
+            <button onclick="openScanner()" aria-label="Scan" style="border:1px solid #d9e4db;background:#fff;color:#173f27;width:38px;height:38px;border-radius:12px;font-size:16px;cursor:pointer;"><i class="fa-solid fa-qrcode"></i></button>
+            <button onclick="goScreen('cart')" aria-label="Cart" style="position:relative;border:1px solid #d9e4db;background:#fff;color:#173f27;width:38px;height:38px;border-radius:12px;font-size:16px;cursor:pointer;"><i class="fa-solid fa-cart-shopping"></i>${cartQty?`<span style="position:absolute;right:-5px;top:-5px;background:#d9a928;color:#173f27;min-width:17px;height:17px;padding:0 4px;border:2px solid #f4f7f5;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:950;box-sizing:border-box;">${cartQty}</span>`:""}</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderBottomNav(){
+    const cartQty=state.cart.reduce((s,i)=>s+i.qty,0);
+    return `
+      <div data-mobile-bottom-nav="true" style="display:${isMobileView()?"block":"none"};position:fixed;left:0;right:0;bottom:0;z-index:500;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);border-top:1px solid #dde7df;padding:3px 8px calc(3px + env(safe-area-inset-bottom));box-shadow:0 -10px 28px rgba(23,63,39,.08);">
+        <div style="max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;">
+          ${customerNavButton("home","fa-solid fa-house","Home")}
+          ${customerNavButton("store","fa-solid fa-store","Shop")}
+          <button onclick="openScanner()" title="Scan" style="position:relative;border:none;background:transparent;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:#173f27;">
+            <span style="width:42px;height:42px;margin-top:-18px;border-radius:15px;background:#173f27;color:#fff;border:4px solid #fff;box-shadow:0 7px 18px rgba(23,63,39,.22);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class="fa-solid fa-qrcode"></i></span>
+            <span style="font-size:8px;font-weight:900;margin-top:-2px;">Scan</span>
+          </button>
+          ${customerNavButton("cart","fa-solid fa-cart-shopping","Cart",cartQty || "")}
+          ${customerNavButton("profile","fa-solid fa-user","Account")}
+        </div>
+      </div>
+    `;
+  }
+
+  function goScreen(screen){
+    if(screen==="review" && !state.checkoutComplete){
+      showToast("Complete checkout first.",true);
+      return;
+    }
+    state.screen=screen;
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function render(){
+    if(!state.loggedIn){
+      document.getElementById("app").innerHTML=authLayout();
+      return;
+    }
+
+    let content=homeScreen();
+    if(state.screen==="store")content=storeScreen();
+    if(state.screen==="cart")content=cartScreen();
+    if(state.screen==="checkout")content=checkoutScreen();
+    if(state.screen==="review")content=reviewScreen();
+    if(state.screen==="profile")content=profileScreen();
+    if(state.screen==="orders")content=ordersScreen();
+
+    document.getElementById("app").innerHTML=`
+      <div style="width:min(1180px,calc(100% - 20px));margin:0 auto;padding:0 0 calc(92px + env(safe-area-inset-bottom));box-sizing:border-box;">
+        ${renderHeader()}
+        ${content}
+      </div>
+      ${renderBottomNav()}
+    `;
+  }
+
+  function profileScreen(){
+    const cartQty=state.cart.reduce((sum,item)=>sum+item.qty,0);
+    const initials=state.customer.name.split(" ").filter(Boolean).slice(0,2).map(part=>part.charAt(0).toUpperCase()).join("");
+    const latestOrder=state.order || state.purchaseHistory[0] || null;
+    const pastOrderCount=state.purchaseHistory.length;
+    const purchasedQty=state.purchaseHistory.reduce((sum,order)=>sum+(order.items||[]).reduce((itemSum,item)=>itemSum+Number(item.qty||0),0),0);
+
+    return `
+      <div style="padding:6px 0 12px;">
+        <div style="background:linear-gradient(145deg,#173f27 0%,#245b38 100%);border-radius:20px;padding:18px;color:#fff;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(23,63,39,.15);">
+          <i class="fa-solid fa-leaf" style="position:absolute;right:-30px;bottom:-42px;font-size:140px;opacity:.06;"></i>
+          <div style="position:relative;display:flex;align-items:center;gap:13px;">
+            <div style="width:58px;height:58px;min-width:58px;border-radius:18px;background:#fff;color:#173f27;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:950;">${esc(initials || "C")}</div>
+            <div style="min-width:0;">
+              <div style="font-size:8px;color:#d9a928;font-weight:900;text-transform:uppercase;letter-spacing:.06em;">My account</div>
+              <div style="font-size:20px;font-weight:950;letter-spacing:-.03em;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(state.customer.name)}</div>
+              <div style="font-size:9px;color:rgba(255,255,255,.74);margin-top:3px;">Registered OM Nursery customer</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px;">
+          <div style="background:#fff;border:1px solid #e0e9e2;border-radius:17px;padding:14px;box-shadow:0 5px 16px rgba(23,63,39,.035);">
+            <div style="font-size:12px;color:#173f27;font-weight:950;margin-bottom:6px;">Personal details</div>
+            ${profileDetailRow("fa-solid fa-user","Full Name",state.customer.name)}
+            ${profileDetailRow("fa-solid fa-envelope","Email",state.customer.email)}
+            ${profileDetailRow("fa-solid fa-phone","Phone",state.customer.phone)}
+            ${profileDetailRow("fa-solid fa-location-dot","City",state.customer.city)}
+          </div>
+
+          <div style="background:#fff;border:1px solid #e0e9e2;border-radius:17px;padding:14px;box-shadow:0 5px 16px rgba(23,63,39,.035);">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <div style="font-size:12px;color:#173f27;font-weight:950;">Shopping activity</div>
+              <i class="fa-solid fa-bag-shopping" style="color:#d9a928;font-size:14px;"></i>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px;">
+              <div style="background:#f7faf7;border:1px solid #e5ece6;border-radius:12px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Cart</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:5px;">${cartQty}</div></div>
+              <div style="background:#f7faf7;border:1px solid #e5ece6;border-radius:12px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Orders</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:5px;">${pastOrderCount}</div></div>
+              <div style="background:#f7faf7;border:1px solid #e5ece6;border-radius:12px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Bought</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:5px;">${purchasedQty}</div></div>
+            </div>
+
+            ${latestOrder ? `<div style="margin-top:9px;background:#edf5ef;border:1px solid #d7e5d9;border-radius:12px;padding:11px;"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><div style="font-size:9px;color:#173f27;font-weight:950;">Latest order</div><span style="font-size:7px;font-weight:900;color:#0f7a45;background:#dcf7ea;border-radius:999px;padding:4px 7px;">Completed</span></div><div style="font-size:8px;color:#708176;line-height:1.55;margin-top:4px;">${esc(latestOrder.id)} · ${esc(latestOrder.counter)} · Token ${esc(latestOrder.token)}</div></div>` : `<div style="margin-top:9px;background:#f8fbf8;border:1px dashed #cddccf;border-radius:12px;padding:11px;color:#7b8a80;font-size:8px;line-height:1.5;">Your completed purchases will appear here.</div>`}
+
+            <button onclick="goScreen('orders')" style="width:100%;border:1px solid #d7e4d9;background:#fff;color:#173f27;border-radius:13px;padding:12px;margin-top:10px;font-size:10px;font-weight:950;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <span><i class="fa-solid fa-clock-rotate-left" style="margin-right:7px;color:#d9a928;"></i>Previously Bought</span>
+              <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+            </button>
+
+            <div style="display:grid;gap:8px;margin-top:9px;">
+              ${greenButton("Continue Shopping","goScreen('store')","width:100%;")}
+              <button onclick="logout()" style="width:100%;border:1px solid #f0d4d1;background:#fff4f3;color:#b42331;border-radius:13px;padding:11px;font-size:10px;font-weight:950;cursor:pointer;"><i class="fa-solid fa-arrow-right-from-bracket" style="margin-right:6px;"></i>Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function ordersScreen(){
+    const orders=state.purchaseHistory || [];
+    const totalSpent=orders.reduce((sum,order)=>sum+Number(order.totals?.total||0),0);
+    const totalItems=orders.reduce((sum,order)=>sum+(order.items||[]).reduce((itemSum,item)=>itemSum+Number(item.qty||0),0),0);
+
+    return `
+      <div style="padding:6px 0 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 1px 11px;">
+          <div>
+            <button onclick="goScreen('profile')" style="border:none;background:transparent;color:#708176;font-size:9px;font-weight:900;cursor:pointer;padding:0 0 5px;"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>Account</button>
+            <div style="font-size:20px;color:#173f27;font-weight:950;letter-spacing:-.03em;">Previously Bought</div>
+            <div style="font-size:9px;color:#7d8b81;margin-top:3px;">Completed nursery purchases and the products in each order.</div>
+          </div>
+          <span style="width:42px;height:42px;border-radius:14px;background:#edf5ef;color:#173f27;display:flex;align-items:center;justify-content:center;font-size:17px;"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px;">
+          <div style="background:#fff;border:1px solid #e1e9e2;border-radius:13px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Orders</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:5px;">${orders.length}</div></div>
+          <div style="background:#fff;border:1px solid #e1e9e2;border-radius:13px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Products</div><div style="font-size:18px;color:#173f27;font-weight:950;margin-top:5px;">${totalItems}</div></div>
+          <div style="background:#fff;border:1px solid #e1e9e2;border-radius:13px;padding:10px;"><div style="font-size:7px;color:#87948a;font-weight:900;text-transform:uppercase;">Purchased</div><div style="font-size:14px;color:#173f27;font-weight:950;margin-top:7px;">${money(totalSpent)}</div></div>
+        </div>
+
+        ${orders.length ? `<div style="display:grid;gap:10px;">${orders.map((order,index)=>orderHistoryCard(order,index)).join("")}</div>` : `
+          <div style="background:#fff;border:1px dashed #bfd5bf;border-radius:18px;padding:34px 18px;text-align:center;">
+            <div style="width:54px;height:54px;border-radius:18px;background:#edf5ef;color:#173f27;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto;"><i class="fa-solid fa-bag-shopping"></i></div>
+            <div style="font-size:15px;color:#173f27;font-weight:950;margin-top:10px;">No previous purchases yet</div>
+            <div style="font-size:9px;color:#718176;line-height:1.5;margin-top:4px;">After your first completed checkout, the order and products will appear here.</div>
+            <div style="margin-top:12px;">${greenButton("Start Shopping","goScreen('store')")}</div>
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  function orderHistoryCard(order,index){
+    const items=order.items || [];
+    const itemQty=items.reduce((sum,item)=>sum+Number(item.qty||0),0);
+    return `
+      <div style="background:#fff;border:1px solid #e0e9e2;border-radius:17px;overflow:hidden;box-shadow:0 6px 18px rgba(23,63,39,.04);">
+        <div style="padding:12px 13px;background:${index===0?'#f7faf7':'#fff'};display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid #e8eee8;">
+          <div style="min-width:0;">
+            <div style="font-size:10px;color:#173f27;font-weight:950;">${esc(order.id)}</div>
+            <div style="font-size:7px;color:#87948a;margin-top:3px;">${esc(order.createdAt || '')} · ${itemQty} item${itemQty===1?'':'s'}</div>
+          </div>
+          <div style="text-align:right;">
+            <span style="display:inline-flex;background:#dcf7ea;color:#0f7a45;border-radius:999px;padding:4px 7px;font-size:7px;font-weight:950;">Completed</span>
+            <div style="font-size:12px;color:#173f27;font-weight:950;margin-top:5px;">${money(order.totals?.total||0)}</div>
+          </div>
+        </div>
+
+        <div style="padding:5px 12px 9px;">
+          ${items.map(item=>{
+            const p=PRODUCTS.find(x=>x.id===item.productId);
+            if(!p)return '';
+            return `<div style="display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid #edf1ed;">
+              <img src="${p.image}" alt="${esc(p.name)}" style="width:54px;height:54px;border-radius:11px;object-fit:cover;background:#edf5ef;display:block;">
+              <div style="min-width:0;"><div style="font-size:10px;color:#173f27;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div><div style="font-size:7px;color:#839087;margin-top:3px;">${esc(p.category)} · Qty ${item.qty}${item.source?` · ${esc(item.source)}`:''}</div></div>
+              <strong style="font-size:9px;color:#173f27;white-space:nowrap;">${money(p.price*item.qty)}</strong>
+            </div>`;
+          }).join('')}
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:9px;font-size:8px;color:#718176;"><span>${esc(order.counter || '')} · Token ${esc(order.token || '')}</span><strong style="color:#173f27;">Paid/Billed at counter</strong></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function profileDetailRow(icon,label,value){
+    return `
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:9px;
+        padding:9px 0;
+        border-bottom:1px solid #edf1ed;
+      ">
+        <div style="
+          width:30px;
+          height:30px;
+          min-width:30px;
+          border-radius:9px;
+          background:#edf5ef;
+          color:#173f27;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-size:12px;
+        ">
+          <i class="${icon}"></i>
+        </div>
+
+        <div style="min-width:0;">
+          <div style="
+            color:#8a978d;
+            font-size:7px;
+            font-weight:900;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+          ">
+            ${label}
+          </div>
+
+          <div style="
+            color:#173f27;
+            font-size:10px;
+            font-weight:900;
+            margin-top:3px;
+            word-break:break-word;
+          ">
+            ${esc(value)}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function homeScreen(){
+    const itemCount=state.cart.reduce((s,i)=>s+i.qty,0);
+    const firstName=state.customer?.name?.split(" ")[0] || "there";
+    const featured=PRODUCTS.slice(0,6);
+    const cats=[
+      ["Flowering","fa-solid fa-seedling"],["Indoor","fa-solid fa-house"],["Medicinal","fa-solid fa-leaf"],["Fruit","fa-solid fa-apple-whole"],["Tools","fa-solid fa-screwdriver-wrench"],["Garden Care","fa-solid fa-box-open"]
+    ];
+
+    return `
+      <div style="padding:4px 0 12px;">
+        <div style="margin-top:3px;">
+          <div style="font-size:10px;color:#849188;font-weight:800;">GOOD TO SEE YOU, ${esc(firstName).toUpperCase()}</div>
+          <div style="font-size:22px;color:#173f27;font-weight:950;letter-spacing:-.04em;margin-top:2px;">What are you looking for today?</div>
+        </div>
+
+        <div data-mobile-page-search="true" style="display:${isMobileView()?"block":"none"};margin-top:11px;">
+          <div style="position:relative;">
+            <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;color:#617168;pointer-events:none;"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input id="homeSearchInput" onkeydown="if(event.key==='Enter')startHomeSearch()" placeholder="Search plants, tools, compost..." style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;background:#fff;color:#1e2e24;border-radius:14px;padding:13px 47px 13px 38px;font:inherit;font-size:11px;outline:none;box-shadow:0 6px 18px rgba(23,63,39,.04);">
+            <button onclick="startHomeSearch()" aria-label="Search" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);border:none;background:#173f27;color:#fff;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;"><i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <button onclick="openScanner()" style="width:100%;border:1px solid #dbc36c;background:#fff8df;color:#173f27;border-radius:15px;padding:12px 13px;margin-top:9px;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;box-shadow:0 6px 18px rgba(23,63,39,.045);">
+          <span style="width:42px;height:42px;min-width:42px;border-radius:13px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;"><i class="fa-solid fa-qrcode"></i></span>
+          <span style="min-width:0;flex:1;"><strong style="display:block;font-size:11px;font-weight:950;">Scan plant RFID / QR</strong><span style="display:block;font-size:8px;color:#6f755e;line-height:1.45;margin-top:3px;">Fastest way to identify the exact plant and add it directly to your cart.</span></span>
+          <span style="width:30px;height:30px;border-radius:10px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;"><i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+
+        <div style="margin-top:12px;background:linear-gradient(145deg,#173f27,#245b38);border-radius:22px;padding:18px;color:#fff;position:relative;overflow:hidden;box-shadow:0 15px 34px rgba(23,63,39,.16);">
+          <i class="fa-solid fa-seedling" style="position:absolute;right:-2px;bottom:-26px;font-size:118px;opacity:.10;"></i>
+          <div style="position:relative;z-index:2;max-width:67%;">
+            <span style="display:inline-flex;background:#d9a928;color:#173f27;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950;">OM NURSERY STORE</span>
+            <div style="font-size:24px;font-weight:950;letter-spacing:-.04em;line-height:1.08;margin-top:10px;">Fresh plants, simple shopping.</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.76);line-height:1.55;margin-top:6px;">Browse the catalogue, add items to cart and get your counter token in a few taps.</div>
+            <button onclick="goScreen('store')" style="border:none;background:#fff;color:#173f27;border-radius:12px;padding:10px 13px;margin-top:12px;font-size:9px;font-weight:950;cursor:pointer;">Shop now <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;">
+          <div style="font-size:14px;color:#173f27;font-weight:950;">Shop by category</div>
+          <button onclick="goScreen('store')" style="border:none;background:transparent;color:#6f8074;font-size:9px;font-weight:900;cursor:pointer;">View all</button>
+        </div>
+        <div style="display:flex;gap:9px;overflow-x:auto;padding:9px 1px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+          ${cats.map(([cat,icon])=>`<button onclick="openCategory('${cat}')" style="border:none;background:transparent;min-width:68px;padding:0;cursor:pointer;text-align:center;"><span style="width:58px;height:58px;border-radius:18px;background:#fff;border:1px solid #e1e9e2;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto;box-shadow:0 5px 15px rgba(23,63,39,.04);"><i class="${icon}"></i></span><span style="display:block;color:#52675a;font-size:8px;font-weight:850;margin-top:6px;white-space:nowrap;">${cat}</span></button>`).join("")}
+        </div>
+
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:17px;">
+          <div><div style="font-size:14px;color:#173f27;font-weight:950;">Popular picks</div><div style="font-size:8px;color:#89958c;margin-top:2px;">Tap any item for details</div></div>
+          ${itemCount?`<button onclick="goScreen('cart')" style="border:1px solid #d7e4d9;background:#fff;color:#173f27;border-radius:999px;padding:8px 10px;font-size:8px;font-weight:900;cursor:pointer;"><i class="fa-solid fa-cart-shopping" style="margin-right:5px;"></i>${itemCount} in cart</button>`:""}
+        </div>
+        <div style="margin-top:9px;">${storeProductsGrid(featured)}</div>
+      </div>
+    `;
+  }
+
+  function categoryButtons(){
+    const categories=["All",...new Set(PRODUCTS.map(p=>p.category))];
+    return `
+      <div style="display:flex;gap:7px;overflow-x:auto;padding:2px 1px 5px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+        ${categories.map(cat=>`
+          <button onclick="state.category='${cat}';render()" style="border:1px solid ${state.category===cat?"#173f27":"#dce8dd"};background:${state.category===cat?"#173f27":"#fff"};color:${state.category===cat?"#fff":"#173f27"};border-radius:999px;padding:8px 12px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:${state.category===cat?"0 5px 12px rgba(23,63,39,.12)":"none"};">${cat}</button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function filteredProducts(){
+    const q=state.storeSearch.trim().toLowerCase();
+
+    return PRODUCTS.filter(p=>{
+      const categoryOk=state.category==="All" || p.category===state.category;
+      const searchOk=!q || [p.name,p.category,p.stage,p.description].join(" ").toLowerCase().includes(q);
+      return categoryOk && searchOk;
+    });
+  }
+
+  function storeScreen(){
+    const products=filteredProducts();
+
+    return `
+      <div style="padding:4px 0 12px;">
+        <div style="background:#fff;border:1px solid #dfe8e0;border-radius:18px;padding:12px;margin-bottom:9px;box-shadow:0 7px 20px rgba(23,63,39,.04);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+            <div><div style="font-size:9px;color:#819087;font-weight:850;">OM NURSERY CATALOGUE</div><div style="font-size:18px;color:#173f27;font-weight:950;letter-spacing:-.03em;margin-top:2px;">Shop plants & garden essentials</div></div>
+            <button onclick="openScanner()" style="border:1px solid #d4e2d6;background:#edf5ef;color:#173f27;border-radius:12px;padding:9px 10px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;"><i class="fa-solid fa-qrcode" style="margin-right:6px;"></i>Scan</button>
+          </div>
+
+          <div data-mobile-page-search="true" style="display:${isMobileView()?"block":"none"};position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;color:#617168;"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input id="storeSearchInput" value="${esc(state.storeSearch)}" oninput="state.storeSearch=this.value;renderStoreResultsOnly()" placeholder="Search by product, category or stage" style="width:100%;box-sizing:border-box;border:1px solid #dbe6dc;background:#f8faf8;color:#1e2e24;border-radius:13px;padding:12px 12px 12px 36px;font:inherit;font-size:10px;outline:none;">
+          </div>
+        </div>
+
+        ${categoryButtons()}
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 1px 2px;">
+          <span style="font-size:10px;color:#173f27;font-weight:900;">${products.length} product${products.length===1?"":"s"}</span>
+          <span style="font-size:8px;color:#87948a;font-weight:800;">${state.category==="All"?"All categories":esc(state.category)}</span>
+        </div>
+
+        <div id="storeResults" style="margin-top:8px;">${storeProductsGrid(products)}</div>
+      </div>
+    `;
+  }
+
+  function renderStoreResultsOnly(){
+    const input=document.getElementById("storeSearchInput");
+    if(input)state.storeSearch=input.value;
+    const target=document.getElementById("storeResults");
+    if(target)target.innerHTML=storeProductsGrid(filteredProducts());
+  }
+
+  function storeProductsGrid(products){
+    if(!products.length){
+      return `<div style="background:#fff;border:1px dashed #bfd5bf;border-radius:16px;padding:28px 18px;text-align:center;color:#718176;font-size:10px;font-weight:750;"><div style="font-size:28px;margin-bottom:7px;"><i class="fa-solid fa-magnifying-glass"></i></div>No matching products found.<div><button onclick="state.storeSearch='';state.category='All';render()" style="border:none;background:#173f27;color:#fff;border-radius:11px;padding:9px 12px;margin-top:10px;font-size:9px;font-weight:900;cursor:pointer;">Clear filters</button></div></div>`;
+    }
+    return `<div data-product-grid="true" style="display:grid;grid-template-columns:${isMobileView()?"repeat(2,minmax(0,1fr))":"repeat(auto-fill,minmax(205px,1fr))"};gap:${isMobileView()?"8px":"12px"};">${products.map(productCard).join("")}</div>`;
+  }
+
+  function productCard(p){
+    const cartItem=state.cart.find(i=>i.productId===p.id && i.source==="Store");
+    const qty=cartItem?cartItem.qty:0;
+
+    return `
+      <div style="background:#fff;border:1px solid #e2ebe3;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,20,0,.04);position:relative;min-width:0;">
+        <div style="position:relative;background:#edf4ee;">
+          <img src="${p.image}" alt="${esc(p.name)}" onclick="openProduct('${p.id}')" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;cursor:pointer;">
+          <span style="position:absolute;left:7px;top:7px;background:rgba(255,255,255,.94);color:#173f27;border:1px solid #e0e9e1;border-radius:999px;padding:4px 6px;font-size:7px;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,.06);">${esc(p.stage)}</span>
+        </div>
+        <div style="padding:10px;">
+          <div onclick="openProduct('${p.id}')" style="font-size:${isMobileView()?"11px":"13px"};color:#173f27;font-weight:950;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>
+          <div style="font-size:7px;color:#87948a;font-weight:750;margin-top:3px;">${esc(p.category)}</div>
+          <div style="display:flex;align-items:end;justify-content:space-between;gap:6px;margin-top:7px;">
+            <div style="font-size:${isMobileView()?"14px":"16px"};color:#173f27;font-weight:950;">${money(p.price)}</div>
+            <button onclick="openProduct('${p.id}')" style="border:none;background:transparent;color:#7d8b80;font-size:7px;font-weight:900;cursor:pointer;padding:0;">Details</button>
+          </div>
+          ${qty===0 ? `
+            <button onclick="addStoreProduct('${p.id}')" style="width:100%;border:1px solid #173f27;background:#fff;color:#173f27;border-radius:10px;padding:9px;margin-top:8px;font-size:9px;font-weight:950;cursor:pointer;"><i class="fa-solid fa-plus" style="margin-right:5px;"></i>Add to cart</button>
+          ` : `
+            <div style="display:grid;grid-template-columns:31px 1fr 31px;align-items:center;gap:5px;background:#173f27;border-radius:10px;padding:4px;margin-top:8px;">
+              <button onclick="changeQty('${p.id}',-1)" style="border:none;background:#fff;color:#173f27;width:31px;height:29px;border-radius:8px;font-size:14px;font-weight:950;cursor:pointer;">−</button>
+              <div style="font-size:10px;color:#fff;font-weight:950;text-align:center;">${qty} added</div>
+              <button onclick="changeQty('${p.id}',1)" style="border:none;background:#d9a928;color:#173f27;width:31px;height:29px;border-radius:8px;font-size:14px;font-weight:950;cursor:pointer;">+</button>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }
+
+  function openProduct(id){
+    const p=PRODUCTS.find(x=>x.id===id);
+    if(!p)return;
+    const item=state.cart.find(i=>i.productId===id && i.source==="Store");
+    const qty=item?item.qty:0;
+
+    document.getElementById("productModalContent").innerHTML=`
+      <div style="position:relative;">
+        <img src="${p.image}" alt="${esc(p.name)}" style="width:100%;height:${isMobileView()?"270px":"340px"};object-fit:cover;background:#eaf3ea;display:block;">
+        <button onclick="closeProductModal()" style="position:absolute;right:12px;top:12px;border:none;background:rgba(255,255,255,.95);color:#173f27;width:36px;height:36px;border-radius:12px;font-size:20px;cursor:pointer;box-shadow:0 5px 14px rgba(0,0,0,.12);">×</button>
+      </div>
+      <div style="padding:16px 16px 18px;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="background:#edf5ef;color:#173f27;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:900;">${esc(p.category)}</span><span style="background:#fff8df;color:#6d5718;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:900;">${esc(p.stage)}</span></div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:10px;">
+          <div style="font-size:21px;color:#173f27;font-weight:950;letter-spacing:-.03em;">${esc(p.name)}</div>
+          <div style="font-size:21px;color:#173f27;font-weight:950;white-space:nowrap;">${money(p.price)}</div>
+        </div>
+        <div style="font-size:10px;color:#607468;line-height:1.65;margin-top:9px;">${esc(p.description)}</div>
+        <div style="margin-top:14px;padding:10px 11px;background:#f8fbf8;border:1px solid #e2ebe3;border-radius:12px;font-size:8px;color:#718176;line-height:1.5;"><strong style="color:#173f27;">In-store purchase:</strong> Add to cart now. Final billing/payment happens at the counter after checkout.</div>
+        <div style="margin-top:13px;">
+          ${qty===0
+            ? greenButton("<i class=\"fa-solid fa-cart-plus\" style=\"margin-right:6px;\"></i>Add to Cart",`addStoreProduct('${p.id}');closeProductModal()`, "width:100%;padding:13px;")
+            : `<div style="display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:8px;background:#f6f9f6;border:1px solid #e1e9e2;border-radius:13px;padding:6px;">${lightButton("−",`changeQty('${p.id}',-1);openProduct('${p.id}')`,"padding:10px;")}<strong style="color:#173f27;font-size:11px;text-align:center;">${qty} in cart</strong>${greenButton("+",`changeQty('${p.id}',1);openProduct('${p.id}')`,"padding:10px;")}</div>`
+          }
+        </div>
+      </div>
+    `;
+    document.getElementById("productModal").style.display="flex";
+  }
+
+  function closeProductModal(){
+    document.getElementById("productModal").style.display="none";
+  }
+
+  function addStoreProduct(id){
+    addProductToCart(id,"Store",null,1);
+    render();
+    showToast("Product added to cart.");
+  }
+
+  function addProductToCart(productId,source,rfid=null,qty=1){
+    prepareNewOrder();
+    const existing=state.cart.find(i=>i.productId===productId && i.source===source && (source!=="RFID" || i.rfid===rfid));
+
+    if(existing){
+      existing.qty+=qty;
+    }else{
+      state.cart.push({
+        key:"CART-"+Date.now()+"-"+Math.random().toString(36).slice(2,7),
+        productId,
+        qty,
+        source,
+        rfid
+      });
+    }
+  }
+
+  function combinedProductQty(productId){
+    return state.cart
+      .filter(i=>i.productId===productId)
+      .reduce((s,i)=>s+i.qty,0);
+  }
+
+  function changeQty(productId,delta){
+    const storeItem=state.cart.find(i=>i.productId===productId && i.source==="Store");
+
+    if(!storeItem && delta>0){
+      addProductToCart(productId,"Store",null,1);
+    }else if(storeItem){
+      storeItem.qty+=delta;
+      if(storeItem.qty<=0){
+        state.cart=state.cart.filter(i=>i.key!==storeItem.key);
+      }
+    }
+
+    render();
+  }
+
+  function cartTotals(){
+    const subtotal=state.cart.reduce((sum,item)=>{
+      const p=PRODUCTS.find(x=>x.id===item.productId);
+      return sum+(p?p.price*item.qty:0);
+    },0);
+
+    const gst=Math.round(subtotal*0.05*100)/100;
+
+    return {
+      subtotal,
+      gst,
+      total:subtotal+gst
+    };
+  }
+
+  function cartScreen(){
+    if(!state.cart.length){
+      return `
+        <div style="padding:20px 0;display:flex;justify-content:center;">
+          <div style="width:min(500px,100%);background:#fff;border:1px solid #e0e9e2;border-radius:20px;padding:30px 20px;text-align:center;box-shadow:0 8px 24px rgba(23,63,39,.04);">
+            <div style="width:68px;height:68px;border-radius:22px;background:#edf5ef;display:flex;align-items:center;justify-content:center;font-size:31px;margin:0 auto;"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div style="font-size:19px;color:#173f27;font-weight:950;margin-top:11px;">Your cart is empty</div>
+            <div style="font-size:9px;color:#718176;line-height:1.55;margin-top:5px;">Browse the store or scan a plant label to start adding products.</div>
+            <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px;">${greenButton("Start Shopping","goScreen('store')","width:100%;")}${lightButton("<i class=\"fa-solid fa-qrcode\" style=\"margin-right:6px;\"></i>Scan RFID / QR","openScanner()","width:100%;")}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    const totals=cartTotals();
+    const qty=state.cart.reduce((s,i)=>s+i.qty,0);
+
+    return `
+      <div style="padding:4px 0 92px;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:2px 1px 10px;">
+          <div><div style="font-size:19px;color:#173f27;font-weight:950;letter-spacing:-.03em;">My Cart</div><div style="font-size:8px;color:#819087;margin-top:3px;">${qty} item${qty===1?"":"s"} ready for checkout</div></div>
+          ${lightButton("<i class=\"fa-solid fa-plus\" style=\"margin-right:6px;\"></i>Add More","goScreen('store')")}
+        </div>
+
+        <div data-cart-layout="true" style="display:grid;grid-template-columns:${isMobileView()?"1fr":"minmax(0,1.55fr) minmax(275px,.7fr)"};gap:12px;align-items:start;">
+          <div style="display:grid;gap:9px;">${state.cart.map(cartItemCard).join("")}</div>
+
+          <div data-cart-summary="true" style="display:${isMobileView()?"none":"block"};background:#fff;border:1px solid #dfe8e0;border-radius:18px;padding:15px;position:sticky;top:72px;box-shadow:0 8px 24px rgba(23,63,39,.05);">
+            <div style="font-size:14px;color:#173f27;font-weight:950;">Price details</div>
+            <div style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #edf1ed;font-size:9px;color:#6e7e72;margin-top:3px;"><span>Subtotal</span><strong style="color:#173f27;">${money(totals.subtotal)}</strong></div>
+            <div style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #edf1ed;font-size:9px;color:#6e7e72;"><span>GST · 5%</span><strong style="color:#173f27;">${money(totals.gst)}</strong></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;"><strong style="font-size:11px;color:#173f27;">Total</strong><strong style="font-size:20px;color:#173f27;">${money(totals.total)}</strong></div>
+            <button onclick="goScreen('checkout')" style="width:100%;border:none;background:#173f27;color:#fff;border-radius:13px;padding:12px;margin-top:13px;font-size:10px;font-weight:950;cursor:pointer;">Continue to Checkout <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></button>
+            <div style="text-align:center;color:#8b978e;font-size:7px;margin-top:7px;">Payment will be completed at the assigned counter</div>
+          </div>
+        </div>
+
+        <div data-mobile-cart-bar="true" style="display:${isMobileView()?"flex":"none"};position:fixed;left:10px;right:10px;bottom:calc(65px + env(safe-area-inset-bottom));z-index:490;background:#fff;border:1px solid #dce7de;border-radius:16px;padding:8px;box-shadow:0 12px 35px rgba(23,63,39,.16);align-items:center;gap:9px;">
+          <div style="padding-left:5px;min-width:92px;"><div style="font-size:7px;color:#89958c;font-weight:850;">TOTAL</div><div style="font-size:16px;color:#173f27;font-weight:950;margin-top:2px;">${money(totals.total)}</div></div>
+          <button onclick="goScreen('checkout')" style="flex:1;border:none;background:#173f27;color:#fff;border-radius:12px;padding:12px 10px;font-size:10px;font-weight:950;cursor:pointer;">Checkout <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></button>
+        </div>
+      </div>
+    `;
+  }
+
+  function cartItemCard(item){
+    const p=PRODUCTS.find(x=>x.id===item.productId);
+    if(!p)return "";
+
+    return `
+      <div style="background:#fff;border:1px solid #e2ebe3;border-radius:16px;padding:10px;display:grid;grid-template-columns:82px minmax(0,1fr);gap:10px;box-shadow:0 5px 15px rgba(0,20,0,.03);">
+        <img src="${p.image}" alt="${esc(p.name)}" onclick="openProduct('${p.id}')" style="width:82px;height:92px;object-fit:cover;border-radius:12px;background:#eaf3ea;cursor:pointer;">
+        <div style="min-width:0;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:7px;">
+            <div style="min-width:0;"><div style="font-size:12px;color:#173f27;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div><div style="font-size:7px;color:#87948a;margin-top:3px;">${esc(p.category)} · ${esc(p.stage)}</div></div>
+            <button onclick="removeCartItem('${item.key}')" style="border:none;background:transparent;color:#a06a6f;font-size:9px;font-weight:900;cursor:pointer;padding:2px;">Remove</button>
+          </div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;"><span style="background:${item.source==="RFID"?"#edf6ff":"#edf5ef"};color:${item.source==="RFID"?"#134f7a":"#173f27"};border-radius:999px;padding:4px 7px;font-size:7px;font-weight:900;">${item.source==="RFID"?"<i class=\"fa-solid fa-qrcode\" style=\"margin-right:4px;\"></i>RFID scan":"<i class=\"fa-solid fa-store\" style=\"margin-right:4px;\"></i>Store"}</span>${item.rfid?`<span style="font-size:7px;color:#829085;font-weight:750;padding:4px 0;">${esc(item.rfid)}</span>`:""}</div>
+          <div style="display:flex;align-items:end;justify-content:space-between;gap:8px;margin-top:9px;">
+            <div><div style="font-size:14px;color:#173f27;font-weight:950;">${money(p.price*item.qty)}</div><div style="font-size:7px;color:#87948a;margin-top:2px;">${money(p.price)} each</div></div>
+            <div style="display:grid;grid-template-columns:28px 25px 28px;align-items:center;gap:3px;background:#f6f9f6;border:1px solid #e2ebe3;border-radius:10px;padding:3px;"><button onclick="changeCartItem('${item.key}',-1)" style="border:none;background:#fff;color:#173f27;width:28px;height:28px;border-radius:8px;font-size:14px;font-weight:950;cursor:pointer;">−</button><span style="text-align:center;font-size:10px;color:#173f27;font-weight:950;">${item.qty}</span><button onclick="changeCartItem('${item.key}',1)" style="border:none;background:#173f27;color:#fff;width:28px;height:28px;border-radius:8px;font-size:14px;font-weight:950;cursor:pointer;">+</button></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function changeCartItem(key,delta){
+    const item=state.cart.find(i=>i.key===key);
+    if(!item)return;
+
+    item.qty+=delta;
+
+    if(item.qty<=0){
+      state.cart=state.cart.filter(i=>i.key!==key);
+    }
+
+    render();
+  }
+
+  function removeCartItem(key){
+    state.cart=state.cart.filter(i=>i.key!==key);
+    render();
+    showToast("Product removed from cart.");
+  }
+
+  function checkoutScreen(){
+    if(state.checkoutComplete && state.order){
+      return checkoutCompleteView();
+    }
+    if(!state.cart.length){
+      state.screen="cart";
+      return cartScreen();
+    }
+
+    const totals=cartTotals();
+    const qty=state.cart.reduce((s,i)=>s+i.qty,0);
+
+    return `
+      <div style="padding:4px 0 16px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:3px 0 12px;">
+          ${[["1","Cart",true],["2","Confirm",true],["3","Counter",false]].map(([n,l,a])=>`<div style="background:${a?"#edf5ef":"#fff"};border:1px solid ${a?"#cfe0d2":"#e2e9e3"};border-radius:11px;padding:8px;text-align:center;"><div style="font-size:8px;color:${a?"#173f27":"#8c988f"};font-weight:950;">${n}. ${l}</div></div>`).join("")}
+        </div>
+
+        <div style="background:#fff;border:1px solid #e2ebe3;border-radius:19px;padding:15px;box-shadow:0 7px 20px rgba(0,20,0,.04);">
+          <div style="font-size:19px;color:#173f27;font-weight:950;letter-spacing:-.03em;">Confirm your order</div>
+          <div style="font-size:9px;color:#718176;line-height:1.5;margin-top:4px;">Review the items below. After confirmation, you’ll receive the counter and token for billing/payment.</div>
+
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px;">
+            ${checkoutInfo("Customer",state.customer.name)}
+            ${checkoutInfo("Mobile",state.customer.phone)}
+            ${checkoutInfo("City",state.customer.city)}
+            ${checkoutInfo("Items",qty+" items")}
+          </div>
+
+          <div style="margin-top:12px;border:1px solid #e2ebe3;border-radius:14px;overflow:hidden;">
+            <div style="padding:10px 11px;background:#edf5ef;color:#173f27;font-size:10px;font-weight:950;">Order summary</div>
+            ${state.cart.map(item=>{const p=PRODUCTS.find(x=>x.id===item.productId);return `<div style="display:flex;justify-content:space-between;gap:9px;padding:10px 11px;border-top:1px solid #e8eee8;font-size:9px;"><span><strong style="color:#173f27;">${esc(p.name)}</strong> × ${item.qty}<span style="display:block;color:#879489;font-size:7px;margin-top:2px;">${item.source}</span></span><strong style="color:#173f27;white-space:nowrap;">${money(p.price*item.qty)}</strong></div>`;}).join("")}
+            <div style="display:flex;justify-content:space-between;gap:9px;padding:9px 11px;border-top:1px solid #e8eee8;font-size:8px;color:#74847a;"><span>GST · 5%</span><strong style="color:#173f27;">${money(totals.gst)}</strong></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:9px;padding:11px;background:#fbfdfb;border-top:1px solid #e8eee8;"><strong style="font-size:10px;color:#173f27;">Total</strong><strong style="font-size:18px;color:#173f27;">${money(totals.total)}</strong></div>
+          </div>
+
+          <div style="margin-top:12px;padding:11px;background:#fff8df;border:1px solid #f0dfa4;border-radius:12px;color:#6d5718;font-size:9px;line-height:1.55;font-weight:750;"><strong>What happens next?</strong><br>Tap confirm → get your counter & token → show it to the counter staff → billing/payment is completed there.</div>
+
+          <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;">
+            ${greenButton("Confirm & Get Counter Token","completeCheckout()","width:100%;padding:13px;")}
+            ${lightButton("<i class=\"fa-solid fa-arrow-left\" style=\"margin-right:6px;\"></i>Edit Cart","goScreen('cart')","width:100%;")}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function checkoutInfo(label,value){
+    return `<div style="background:#f8fbf8;border:1px solid #e4ece4;border-radius:12px;padding:10px;"><div style="font-size:7px;color:#869389;font-weight:900;text-transform:uppercase;">${label}</div><div style="font-size:10px;color:#173f27;font-weight:900;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(value)}</div></div>`;
+  }
+
+  function completeCheckout(){
+    if(!state.cart.length){
+      showToast("Cart is empty.",true);
+      return;
+    }
+
+    const totals=cartTotals();
+    const counterNumber=((new Date().getMinutes()%3)+1);
+    const counter="Counter "+String(counterNumber).padStart(2,"0");
+
+    state.order={
+      id:"ORD-B2C-"+Date.now().toString().slice(-6),
+      token:"T"+String(Math.floor(100+Math.random()*900)),
+      counter,
+      items:JSON.parse(JSON.stringify(state.cart)),
+      totals,
+      createdAt:new Date().toLocaleString("en-IN"),
+      status:"Completed"
+    };
+
+    state.purchaseHistory=[JSON.parse(JSON.stringify(state.order)),...state.purchaseHistory.filter(order=>order.id!==state.order.id)];
+    savePurchaseHistory();
+
+    // Real commerce behaviour: the active cart is empty as soon as checkout is completed.
+    state.cart=[];
+    state.checkoutComplete=true;
+    render();
+    showToast("Order confirmed. Cart cleared. Proceed to "+counter+".");
+  }
+
+  function checkoutCompleteView(){
+    return `
+      <div style="padding:10px 0 18px;display:flex;justify-content:center;">
+        <div style="width:min(560px,100%);background:#fff;border:1px solid #dfeae0;border-radius:21px;padding:18px;text-align:center;box-shadow:0 12px 30px rgba(0,20,0,.06);">
+          <div style="width:64px;height:64px;border-radius:22px;background:#eaf8ef;color:#173f27;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto;"><i class="fa-solid fa-check"></i></div>
+          <div style="font-size:21px;color:#173f27;font-weight:950;margin-top:11px;">Order confirmed</div>
+          <div style="font-size:9px;color:#718176;line-height:1.55;margin-top:5px;">Your order is saved and your cart is now empty. Continue to the counter below for billing and payment.</div>
+
+          <div style="background:linear-gradient(145deg,#173f27,#245b38);border-radius:18px;padding:17px;color:#fff;margin-top:15px;position:relative;overflow:hidden;">
+            <i class="fa-solid fa-leaf" style="position:absolute;right:-3px;bottom:-18px;font-size:94px;opacity:.07;"></i>
+            <div style="position:relative;z-index:2;"><div style="font-size:8px;color:rgba(255,255,255,.72);font-weight:850;letter-spacing:.05em;">PLEASE PROCEED TO</div><div style="font-size:29px;color:#d9a928;font-weight:950;margin-top:4px;">${esc(state.order.counter)}</div><div style="font-size:9px;color:rgba(255,255,255,.80);margin-top:5px;">Your token</div><div style="display:inline-flex;background:#fff;color:#173f27;border-radius:12px;padding:8px 15px;font-size:17px;font-weight:950;margin-top:6px;">${esc(state.order.token)}</div></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px;">${checkoutInfo("Order ID",state.order.id)}${checkoutInfo("Token",state.order.token)}</div>
+          <div style="margin-top:10px;padding:10px;background:#f8fbf8;border:1px solid #e2ebe3;border-radius:12px;color:#718176;font-size:8px;line-height:1.5;">Show this token to the counter staff. They will continue billing/payment from there.</div>
+          <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;">${greenButton("<i class=\"fa-solid fa-star\" style=\"margin-right:6px;\"></i>Rate Your Experience","goScreen('review')","width:100%;padding:12px;")}${lightButton("Continue Shopping","goScreen('store')","width:100%;")}${lightButton("<i class=\"fa-solid fa-clock-rotate-left\" style=\"margin-right:6px;\"></i>View Previous Purchases","goScreen('orders')","width:100%;")}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function reviewScreen(){
+    if(!state.checkoutComplete){
+      return `<div></div>`;
+    }
+
+    if(state.reviewSubmitted){
+      return `
+        <div style="padding:18px 0;display:flex;justify-content:center;">
+          <div style="width:min(540px,100%);background:#fff;border:1px solid #dfeae0;border-radius:20px;padding:22px;text-align:center;">
+            <div style="font-size:34px;color:#173f27;"><i class="fa-solid fa-seedling"></i></div>
+            <div style="font-size:20px;color:#173f27;font-weight:950;margin-top:8px;">Thank you for your feedback!</div>
+            <div style="font-size:10px;color:#718176;line-height:1.55;margin-top:5px;">Your product, nursery display and supervisor reviews have been submitted.</div>
+            <div style="margin-top:13px;">${greenButton("Done","goScreen('home')")}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div style="padding:7px 0;">
+
+        <div style="margin-bottom:10px;">
+          <div style="font-size:19px;color:#173f27;font-weight:950;"><i class="fa-solid fa-star" style="color:#d9a928;margin-right:7px;"></i>Add Review</div>
+          <div style="font-size:9px;color:#718176;line-height:1.5;margin-top:3px;">Please complete all three review sections.</div>
+        </div>
+
+        <div style="display:grid;gap:9px;">
+          ${reviewCard("product","fa-solid fa-leaf","Product Review","How satisfied are you with the plants/products?")}
+          ${reviewCard("display","fa-solid fa-store","Nursery Display Review","How was the store/display and product arrangement?")}
+          ${reviewCard("supervisor","fa-solid fa-user","Supervisor Review","How was the support from the nursery supervisor/staff?")}
+        </div>
+
+        <button onclick="submitReviews()" style="width:100%;border:none;background:#173f27;color:#fff;border-radius:12px;padding:12px;margin-top:11px;font-size:11px;font-weight:950;cursor:pointer;">Submit All Reviews</button>
+
+      </div>
+    `;
+  }
+
+  function reviewCard(type,icon,title,sub){
+    const data=state.reviews[type];
+
+    return `
+      <div style="background:#fff;border:1px solid #e2ebe3;border-radius:16px;padding:13px;box-shadow:0 5px 16px rgba(0,20,0,.035);">
+        <div style="display:flex;align-items:flex-start;gap:9px;">
+          <div style="width:35px;height:35px;min-width:35px;border-radius:10px;background:#edf5ef;display:flex;align-items:center;justify-content:center;font-size:16px;color:#173f27;"><i class="${icon}"></i></div>
+          <div>
+            <div style="font-size:13px;color:#173f27;font-weight:950;">${title}</div>
+            <div style="font-size:8px;color:#829085;line-height:1.4;margin-top:3px;">${sub}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:11px;">
+          ${[1,2,3,4,5].map(n=>`
+            <button onclick="setReviewRating('${type}',${n})" style="border:1px solid ${data.rating>=n?"#d9a928":"#dce8dd"};background:${data.rating>=n?"#fff8df":"#fff"};color:${data.rating>=n?"#d9a928":"#b7c4b9"};border-radius:10px;height:39px;font-size:20px;cursor:pointer;"><i class="fa-solid fa-star"></i></button>
+          `).join("")}
+        </div>
+
+        <textarea
+          oninput="state.reviews['${type}'].comment=this.value"
+          placeholder="Write your comment..."
+          style="width:100%;min-height:70px;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:9px;font:inherit;font-size:10px;line-height:1.45;resize:vertical;outline:none;"
+        >${esc(data.comment)}</textarea>
+      </div>
+    `;
+  }
+
+  function setReviewRating(type,rating){
+    state.reviews[type].rating=rating;
+    render();
+  }
+
+  function submitReviews(){
+    const all=Object.values(state.reviews);
+
+    if(all.some(r=>!r.rating)){
+      showToast("Give a star rating in all three reviews.",true);
+      return;
+    }
+
+    if(all.some(r=>!r.comment.trim())){
+      showToast("Add a comment in all three reviews.",true);
+      return;
+    }
+
+    state.reviewSubmitted=true;
+    render();
+    showToast("Thank you! Reviews submitted.");
+  }
+
+  async function openScanner(){
+    document.getElementById("scanModal").style.display="flex";
+    document.getElementById("scanStatus").textContent="Starting camera...";
+    document.getElementById("cameraPlaceholder").style.display="flex";
+
+    try{
+      if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        throw new Error("Camera API is not supported in this browser.");
+      }
+
+      const stream=await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:{ideal:"environment"},
+          width:{ideal:1280},
+          height:{ideal:720}
+        },
+        audio:false
+      });
+
+      state.cameraStream=stream;
+
+      const video=document.getElementById("cameraVideo");
+      video.srcObject=stream;
+
+      await video.play();
+
+      document.getElementById("cameraPlaceholder").style.display="none";
+      document.getElementById("scanStatus").textContent="Camera ready. Scan a QR/barcode containing the RFID code.";
+
+      startBarcodeDetection();
+
+    }catch(err){
+      document.getElementById("scanStatus").innerHTML=
+        "Camera unavailable. You can still use <strong>Simulate RFID Scan</strong> or enter the RFID code manually.";
+      document.getElementById("cameraPlaceholder").style.display="flex";
+      document.getElementById("cameraPlaceholder").textContent="Camera permission unavailable";
+    }
+  }
+
+  function startBarcodeDetection(){
+    stopBarcodeLoopOnly();
+
+    if(!("BarcodeDetector" in window)){
+      document.getElementById("scanStatus").innerHTML=
+        "Camera is open. Automatic QR/barcode detection is not supported in this browser. Use the demo scan or manual code below.";
+      return;
+    }
+
+    let detector;
+
+    try{
+      detector=new BarcodeDetector({
+        formats:["qr_code","code_128","code_39","ean_13","ean_8","data_matrix"]
+      });
+    }catch(e){
+      try{
+        detector=new BarcodeDetector();
+      }catch(err){
+        return;
+      }
+    }
+
+    const scan=async()=>{
+      if(!state.cameraStream)return;
+
+      const video=document.getElementById("cameraVideo");
+
+      if(video && video.readyState>=2){
+        try{
+          const codes=await detector.detect(video);
+
+          if(codes.length){
+            const value=String(codes[0].rawValue||"").trim().toUpperCase();
+
+            if(value){
+              handleRFIDCode(value);
+              return;
+            }
+          }
+        }catch(e){}
+      }
+
+      state.scanLoop=requestAnimationFrame(scan);
+    };
+
+    state.scanLoop=requestAnimationFrame(scan);
+  }
+
+  function stopBarcodeLoopOnly(){
+    if(state.scanLoop){
+      cancelAnimationFrame(state.scanLoop);
+      state.scanLoop=null;
+    }
+  }
+
+  function closeScanner(){
+    stopBarcodeLoopOnly();
+
+    if(state.cameraStream){
+      state.cameraStream.getTracks().forEach(track=>track.stop());
+      state.cameraStream=null;
+    }
+
+    const video=document.getElementById("cameraVideo");
+    if(video)video.srcObject=null;
+
+    document.getElementById("scanModal").style.display="none";
+  }
+
+  function simulateRFIDScan(){
+    const codes=Object.keys(RFID_PRODUCTS);
+    const already=state.cart.filter(i=>i.source==="RFID").map(i=>i.rfid);
+    const available=codes.find(c=>!already.includes(c)) || codes[Math.floor(Math.random()*codes.length)];
+
+    handleRFIDCode(available);
+  }
+
+  function manualRFIDAdd(){
+    const code=document.getElementById("manualRFID").value.trim().toUpperCase();
+
+    if(!code){
+      showToast("Enter an RFID code.",true);
+      return;
+    }
+
+    handleRFIDCode(code);
+  }
+
+  function handleRFIDCode(code){
+    const productId=RFID_PRODUCTS[code];
+
+    if(!productId){
+      const status=document.getElementById("scanStatus");
+      if(status)status.innerHTML=`RFID <strong>${esc(code)}</strong> was not found in the demo product registry.`;
+      showToast("RFID product not found.",true);
+      return;
+    }
+
+    const duplicate=state.cart.some(i=>i.source==="RFID" && i.rfid===code);
+
+    if(duplicate){
+      showToast("This RFID product is already in your cart.",true);
+      return;
+    }
+
+    addProductToCart(productId,"RFID",code,1);
+
+    const p=PRODUCTS.find(x=>x.id===productId);
+
+    closeScanner();
+    state.screen="cart";
+    render();
+    showToast(p.name+" scanned and added to cart.");
+  }
+
+  window.addEventListener("beforeunload",closeScanner);
+
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      closeScanner();
+      closeProductModal();
+    }
+  });
+
+  render();
+</script>
+
+<script>
+  function applyCustomerResponsiveLayout(){
+    const mobile=window.innerWidth<760;
+
+    document.querySelectorAll('[data-desktop-header="true"]').forEach(el=>el.style.display=mobile?"none":"block");
+    document.querySelectorAll('[data-mobile-header="true"],[data-mobile-bottom-nav="true"]').forEach(el=>el.style.display=mobile?"block":"none");
+    document.querySelectorAll('[data-mobile-page-search="true"]').forEach(el=>el.style.display=mobile?"block":"none");
+
+    document.querySelectorAll('[data-product-grid="true"]').forEach(el=>{
+      el.style.gridTemplateColumns=mobile?"repeat(2,minmax(0,1fr))":"repeat(auto-fill,minmax(205px,1fr))";
+      el.style.gap=mobile?"8px":"12px";
+    });
+
+    document.querySelectorAll('[data-cart-layout="true"]').forEach(el=>{
+      el.style.gridTemplateColumns=mobile?"1fr":"minmax(0,1.55fr) minmax(275px,.7fr)";
+    });
+    document.querySelectorAll('[data-cart-summary="true"]').forEach(el=>el.style.display=mobile?"none":"block");
+    document.querySelectorAll('[data-mobile-cart-bar="true"]').forEach(el=>el.style.display=mobile?"flex":"none");
+  }
+
+  window.addEventListener("resize",applyCustomerResponsiveLayout);
+
+  const originalRender=render;
+  render=function(){
+    originalRender();
+    requestAnimationFrame(applyCustomerResponsiveLayout);
+  };
+
+  render();
+</script>
+
+</body>
+</html>
