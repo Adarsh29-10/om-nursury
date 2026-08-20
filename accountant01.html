@@ -88,6 +88,63 @@ tbody tr:hover{background:#fafcfa}
   .main{padding:16px}.mobile-menu{display:inline-flex}.hero{padding:22px}.hero h1{font-size:25px}.metric-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:560px){.metric-grid{grid-template-columns:1fr}.detail-grid,.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.search{min-width:100%;width:100%}.topbar{align-items:flex-start}.account-chip{padding:7px 9px}.hero h1{font-size:22px}.stepper{padding:10px}.bar-row{grid-template-columns:105px 1fr 55px}}
+
+@media(max-width:760px){
+  .main{padding:12px}
+  .hero{border-radius:20px;padding:20px 18px}
+  .panel{border-radius:18px}
+  .panel-head{padding:15px}
+  .toolbar{width:100%}
+  .toolbar .input,.toolbar .select,.toolbar .btn{width:100%}
+  .table-wrap{overflow:visible;padding:10px}
+  .table-wrap table,.table-wrap thead,.table-wrap tbody,.table-wrap th,.table-wrap td,.table-wrap tr{display:block}
+  .table-wrap table{min-width:0!important;width:100%}
+  .table-wrap thead{display:none}
+  .table-wrap tbody{display:grid;gap:12px}
+  .table-wrap tr{border:1px solid var(--border);border-radius:16px;background:#fff;padding:10px;box-shadow:0 5px 14px rgba(0,20,0,.035)}
+  .table-wrap td{display:grid;grid-template-columns:minmax(105px,38%) 1fr;gap:8px;padding:8px 6px;border-bottom:1px dashed #e6ece6;align-items:start;word-break:break-word}
+  .table-wrap td:last-child{border-bottom:none}
+  #b2cTable td:nth-child(1)::before,#b2bTable td:nth-child(1)::before,#vendorQuoteTable td:nth-child(1)::before,#vendorMasterTable td:nth-child(1)::before,#poTable td:nth-child(1)::before{content:"Sr. No.";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(2)::before{content:"Bill No.";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(3)::before{content:"Date";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(4)::before{content:"Customer";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(5)::before{content:"City";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(6)::before{content:"Supervisor";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(7)::before{content:"Total Qty";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(8)::before{content:"Products";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(9)::before{content:"Subtotal";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(10)::before{content:"GST";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(11)::before{content:"Total";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(12)::before{content:"Payment";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(13)::before{content:"Bill Status";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(14)::before{content:"Info";font-weight:900;color:var(--green)}
+  #b2cTable td:nth-child(15)::before{content:"Action";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(2)::before{content:"Order No.";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(3)::before{content:"Quotation";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(4)::before{content:"Inquiry";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(5)::before{content:"Customer";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(6)::before{content:"Total Qty";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(7)::before{content:"Products";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(8)::before{content:"Order Value";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(9)::before{content:"Received";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(10)::before{content:"Pending";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(11)::before{content:"Payment Terms";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(12)::before{content:"Supervisor";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(13)::before{content:"Driver";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(14)::before{content:"Order Status";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(15)::before{content:"Payment Status";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(16)::before{content:"Info";font-weight:900;color:var(--green)}
+  #b2bTable td:nth-child(17)::before{content:"Action";font-weight:900;color:var(--green)}
+  .modal{padding:8px;align-items:flex-start}
+  .modal-box{margin-top:8px;border-radius:18px;max-height:calc(100vh - 16px)}
+  .modal-head{padding:14px 15px}
+  .modal-body{padding:14px}
+  .modal-body .table-wrap{padding:0}
+  .modal-body .table-wrap td{grid-template-columns:minmax(90px,36%) 1fr}
+  .modal-body > div[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}
+  .btn{white-space:normal;text-align:center;justify-content:center}
+}
+
 </style>
 </head>
 <body>
@@ -123,15 +180,40 @@ tbody tr:hover{background:#fafcfa}
 const state={
  current:'master',
  b2cBills:[
-  {bill:'B2C-0234',date:'19 Aug 2026',customer:'Aakash Patil',city:'Pune',supervisor:'Ramesh',items:4,subtotal:1196,gst:60,total:1256,payment:'Pending',mode:'Counter',status:'Pending'},
-  {bill:'B2C-0233',date:'19 Aug 2026',customer:'Neha Joshi',city:'Pune',supervisor:'Suresh',items:3,subtotal:1680,gst:84,total:1764,payment:'Paid',mode:'UPI',status:'Completed'},
-  {bill:'B2C-0232',date:'18 Aug 2026',customer:'Vikram Shah',city:'Mumbai',supervisor:'Dharmesh',items:6,subtotal:2870,gst:144,total:3014,payment:'Paid',mode:'Card',status:'Completed'},
-  {bill:'B2C-0231',date:'18 Aug 2026',customer:'Kiran More',city:'Pune',supervisor:'Ramesh',items:2,subtotal:910,gst:46,total:956,payment:'Cancelled',mode:'Counter',status:'Cancelled'}
+  {bill:'B2C-0234',date:'19 Aug 2026',customer:'Aakash Patil',email:'aakash.patil@example.com',phone:'9876543210',city:'Pune',supervisor:'Ramesh',subtotal:1196,gst:60,total:1256,payment:'Pending',mode:'Pay at Counter',status:'Pending',products:[
+    {product:'Rose Plant',rfid:'RFID-OM-1001',stage:'Adult',qty:1,price:299,total:299},
+    {product:'Tulsi Plant',rfid:'RFID-OM-1002',stage:'Child',qty:2,price:199,total:398},
+    {product:'Mango Tree',rfid:'RFID-OM-1003',stage:'Sapling',qty:1,price:499,total:499}
+  ]},
+  {bill:'B2C-0233',date:'19 Aug 2026',customer:'Neha Joshi',email:'neha.joshi@example.com',phone:'9823011122',city:'Pune',supervisor:'Suresh',subtotal:1680,gst:84,total:1764,payment:'Paid',mode:'UPI',status:'Completed',products:[
+    {product:'Areca Palm',rfid:'RFID-OM-1008',stage:'Adult',qty:2,price:599,total:1198},
+    {product:'Aloe Vera',rfid:'RFID-OM-1004',stage:'Adult',qty:1,price:249,total:249},
+    {product:'Money Plant',rfid:'RFID-OM-1005',stage:'Child',qty:1,price:179,total:179}
+  ]},
+  {bill:'B2C-0232',date:'18 Aug 2026',customer:'Vikram Shah',email:'vikram.shah@example.com',phone:'9892012345',city:'Mumbai',supervisor:'Dharmesh',subtotal:2870,gst:144,total:3014,payment:'Paid',mode:'Card',status:'Completed',products:[
+    {product:'Mango Tree',rfid:'RFID-OM-1003',stage:'Sapling',qty:3,price:499,total:1497},
+    {product:'Jasmine Plant',rfid:'RFID-OM-1006',stage:'Adult',qty:2,price:349,total:698},
+    {product:'Organic Compost',rfid:'SUP-OM-2002',stage:'Supply',qty:3,price:220,total:660}
+  ]},
+  {bill:'B2C-0231',date:'18 Aug 2026',customer:'Kiran More',email:'kiran.more@example.com',phone:'9766123456',city:'Pune',supervisor:'Ramesh',subtotal:910,gst:46,total:956,payment:'Cancelled',mode:'Pay at Counter',status:'Cancelled',products:[
+    {product:'Guava Plant',rfid:'RFID-OM-1007',stage:'Sapling',qty:1,price:399,total:399},
+    {product:'Rose Plant',rfid:'RFID-OM-1001',stage:'Adult',qty:1,price:299,total:299},
+    {product:'Garden Trowel',rfid:'TOOL-OM-2001',stage:'Tool',qty:1,price:149,total:149}
+  ]}
  ],
  b2b:[
-  {order:'ORD-2026-001',quotation:'QTN-2026-001-V2',inquiry:'INQ-2026-001',customer:'GreenScape Landscaping Pvt Ltd',value:146500,received:75000,terms:'50% advance / balance before dispatch',supervisor:'Ramesh',driver:'Akash',status:'In Progress',payment:'Partially Paid'},
-  {order:'ORD-2026-002',quotation:'QTN-2026-002-V1',inquiry:'INQ-2026-002',customer:'UrbanLeaf Developers',value:98000,received:98000,terms:'100% before delivery',supervisor:'Suresh',driver:'Prakash',status:'Completed',payment:'Fully Paid'},
-  {order:'ORD-2026-003',quotation:'QTN-2026-003-V3',inquiry:'INQ-2026-003',customer:'EverGreen Resorts',value:212000,received:60000,terms:'30% advance / 70% on dispatch',supervisor:'Dharmesh',driver:'Ekansh',status:'Variance',payment:'Partially Paid'}
+  {order:'ORD-2026-001',quotation:'QTN-2026-001-V2',inquiry:'INQ-2026-001',customer:'GreenScape Landscaping Pvt Ltd',value:146500,received:75000,terms:'50% advance / balance before dispatch',supervisor:'Ramesh',driver:'Akash',status:'In Progress',payment:'Partially Paid',products:[
+    {plant:'Tulsi',stage:'Child',units:500,pricePerUnit:110,total:55000},
+    {plant:'Areca Palm',stage:'Adult',units:150,pricePerUnit:610,total:91500}
+  ]},
+  {order:'ORD-2026-002',quotation:'QTN-2026-002-V1',inquiry:'INQ-2026-002',customer:'UrbanLeaf Developers',value:98000,received:98000,terms:'100% before delivery',supervisor:'Suresh',driver:'Prakash',status:'Completed',payment:'Fully Paid',products:[
+    {plant:'Mango Tree',stage:'Sapling',units:100,pricePerUnit:560,total:56000},
+    {plant:'Rose Plant',stage:'Adult',units:120,pricePerUnit:350,total:42000}
+  ]},
+  {order:'ORD-2026-003',quotation:'QTN-2026-003-V3',inquiry:'INQ-2026-003',customer:'EverGreen Resorts',value:212000,received:60000,terms:'30% advance / 70% on dispatch',supervisor:'Dharmesh',driver:'Ekansh',status:'Variance',payment:'Partially Paid',products:[
+    {plant:'Areca Palm',stage:'Adult',units:200,pricePerUnit:620,total:124000},
+    {plant:'Guava Plant',stage:'Sapling',units:160,pricePerUnit:550,total:88000}
+  ]}
  ],
  vendorQuotes:[
   {rfq:'RFQ-2026-0812-014',wo:'WO-260812-018',vendor:'GreenRoot Agro Pvt. Ltd.',requirement:'Organic Fertilizer Supply',category:'Chemicals & Fertilizers',farm:'Kamshet Farm',qty:'1,250 kg',required:'18 Aug 2026',accepted:'12 Aug 2026',status:'Quote Pending'},
@@ -149,6 +231,10 @@ const state={
   {po:'PO-2026-0621-026',date:'21 Jun 2026',vendor:'Shree Sai Horticulture',product:'Tulsi',qty:900,rate:31,total:27900,farm:'Talegaon Farm',status:'Received',payment:'Paid'},
   {po:'PO-2026-0802-046',date:'02 Aug 2026',vendor:'GreenRoot Agro Pvt. Ltd.',product:'Areca Palm',qty:220,rate:145,total:31900,farm:'Kamshet Farm',status:'Received',payment:'Due'},
   {po:'PO-2026-0722-038',date:'22 Jul 2026',vendor:'Shree Sai Horticulture',product:'Areca Palm',qty:300,rate:138,total:41400,farm:'Vadegaon Farm',status:'Received',payment:'Partial'}
+ ],
+ manualTodos:[
+   {id:'MT-001',title:'Reconcile August counter cash',note:'Verify counter cash against B2C bills before day-end.',module:'master',priority:'High',done:false},
+   {id:'MT-002',title:'Collect GreenScape payment reference',note:'Add UTR / receipt reference for the latest B2B receipt.',module:'b2b',priority:'Medium',done:false}
  ]
 };
 
@@ -163,6 +249,61 @@ const badge=(text)=> {
  if(t.includes('variance')) c='purple';
  return `<span class="badge ${c}">${text}</span>`;
 };
+const b2cQty=x=>(x.products||[]).reduce((s,p)=>s+Number(p.qty||0),0);
+const b2bQty=x=>(x.products||[]).reduce((s,p)=>s+Number(p.units||0),0);
+
+function viewB2CProducts(billNo){
+ const x=state.b2cBills.find(b=>b.bill===billNo); if(!x)return;
+ openModal('Products Bought · '+billNo,`
+   <div class="detail-grid" style="margin-bottom:14px">
+     <div class="detail"><label>Customer Name</label><strong>${x.customer}</strong></div>
+     <div class="detail"><label>Email</label><strong>${x.email}</strong></div>
+     <div class="detail"><label>Phone Number</label><strong>${x.phone}</strong></div>
+     <div class="detail"><label>City</label><strong>${x.city}</strong></div>
+     <div class="detail"><label>Supervisor</label><strong>${x.supervisor}</strong></div>
+     <div class="detail"><label>Checkout Mode</label><strong>${x.mode}</strong></div>
+     <div class="detail"><label>Total Quantity Bought</label><strong>${b2cQty(x)} units</strong></div>
+     <div class="detail"><label>Bill Total</label><strong>${money(x.total)}</strong></div>
+   </div>
+   <div class="table-wrap">
+    <table style="min-width:720px">
+      <thead><tr><th>Sr.</th><th>Product</th><th>RFID</th><th>Stage</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+      <tbody>${(x.products||[]).map((p,i)=>`<tr><td>${i+1}</td><td><strong>${p.product}</strong></td><td>${p.rfid}</td><td>${p.stage}</td><td>${p.qty}</td><td>${money(p.price)}</td><td><strong>${money(p.total)}</strong></td></tr>`).join('')}</tbody>
+    </table>
+   </div>
+   <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px">
+     <div class="detail"><label>Subtotal</label><strong>${money(x.subtotal)}</strong></div>
+     <div class="detail"><label>GST Demo</label><strong>${money(x.gst)}</strong></div>
+     <div class="detail"><label>Grand Total</label><strong>${money(x.total)}</strong></div>
+   </div>
+ `)
+}
+
+function viewB2BProducts(orderNo){
+ const x=state.b2b.find(o=>o.order===orderNo); if(!x)return;
+ openModal('Products Bought · '+orderNo,`
+   <div class="detail-grid" style="margin-bottom:14px">
+     <div class="detail"><label>Order Number</label><strong>${x.order}</strong></div>
+     <div class="detail"><label>Finalized Quotation</label><strong>${x.quotation}</strong></div>
+     <div class="detail"><label>Inquiry Number</label><strong>${x.inquiry}</strong></div>
+     <div class="detail"><label>Customer</label><strong>${x.customer}</strong></div>
+     <div class="detail"><label>Total Quantity Bought</label><strong>${b2bQty(x)} units</strong></div>
+     <div class="detail"><label>Order Value</label><strong>${money(x.value)}</strong></div>
+   </div>
+   <div class="table-wrap">
+    <table style="min-width:700px">
+      <thead><tr><th>Sr.</th><th>Plant</th><th>Stage</th><th>Units</th><th>Price Per Unit</th><th>Total</th></tr></thead>
+      <tbody>${(x.products||[]).map((p,i)=>`<tr><td>${i+1}</td><td><strong>${p.plant}</strong></td><td>${p.stage}</td><td>${p.units}</td><td>${money(p.pricePerUnit)}</td><td><strong>${money(p.total)}</strong></td></tr>`).join('')}</tbody>
+    </table>
+   </div>
+   <div class="detail-grid" style="margin-top:14px">
+     <div class="detail"><label>Payment Terms</label><strong>${x.terms}</strong></div>
+     <div class="detail"><label>Payment Received</label><strong>${money(x.received)}</strong></div>
+     <div class="detail"><label>Pending Balance</label><strong>${money(x.value-x.received)}</strong></div>
+     <div class="detail"><label>Payment Status</label><strong>${x.payment}</strong></div>
+   </div>
+ `)
+}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2400)}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
 function switchTab(tab,btn){
@@ -182,7 +323,83 @@ function metric(label,value,sub,icon){return `<div class="metric"><div class="mi
 function stepper(items,current){return `<div class="stepper">${items.map((x,i)=>`${i?'<div class="step-line"></div>':''}<div class="step ${i<current?'done':i===current?'current':''}"><span class="step-num">${i<current?'✓':i+1}</span>${x}</div>`).join('')}</div>`}
 function panel(title,sub,toolbar,body){return `<section class="panel"><div class="panel-head"><div><h3>${title}</h3><p>${sub}</p></div><div class="toolbar">${toolbar||''}</div></div>${body}</section>`}
 function chart(rows){const max=Math.max(...rows.map(x=>x[1]),1);return `<div class="chart-card"><h3>Financial Snapshot</h3>${rows.map(r=>`<div class="bar-row"><span>${r[0]}</span><div class="bar-bg"><div class="bar-fill" style="width:${(r[1]/max)*100}%"></div></div><strong>${typeof r[1]==='number'?money(r[1]):r[1]}</strong></div>`).join('')}</div>`}
-function activities(items){return `<div class="activity-card"><h3>Accounts Activity / To-do</h3>${items.map(x=>`<div class="todo"><span class="todo-dot"></span><div><strong>${x[0]}</strong><p>${x[1]}</p></div></div>`).join('')}</div>`}
+function systemTodos(module){
+ const list=[];
+ if(module==='master'){
+   const pendingB2C=state.b2cBills.filter(x=>x.payment==='Pending');
+   const pendingB2B=state.b2b.filter(x=>x.received<x.value);
+   const vendorDue=state.purchases.filter(x=>x.payment!=='Paid');
+   if(pendingB2C.length) list.push({id:'SYS-B2C',title:`${pendingB2C.length} B2C payment(s) pending`,note:'Review pending counter bills and record collection once received.',priority:'High',source:'Automatic'});
+   if(pendingB2B.length) list.push({id:'SYS-B2B',title:`${pendingB2B.length} B2B order balance(s) open`,note:'Follow up outstanding customer receivables and payment references.',priority:'High',source:'Automatic'});
+   if(vendorDue.length) list.push({id:'SYS-VEN',title:`${vendorDue.length} vendor PO payment(s) open`,note:'Review due or partially paid purchase orders before settlement.',priority:'Medium',source:'Automatic'});
+ }
+ if(module==='b2b'){
+   state.b2b.filter(x=>x.received<x.value).forEach(x=>list.push({id:'SYS-'+x.order,title:`Follow up ${x.order}`,note:`${money(x.value-x.received)} remains outstanding from ${x.customer}.`,priority:'High',source:'Automatic'}));
+ }
+ if(module==='vendorPurchase'){
+   state.purchases.filter(x=>x.payment!=='Paid').forEach(x=>list.push({id:'SYS-'+x.po,title:`Process ${x.po}`,note:`${x.vendor} · ${x.payment} · ${money(x.total)} purchase value.`,priority:x.payment==='Due'?'High':'Medium',source:'Automatic'}));
+ }
+ return list;
+}
+function todoCard(module){
+ const manual=state.manualTodos.filter(x=>x.module===module||x.module==='all');
+ const automatic=systemTodos(module);
+ const rows=[
+   ...automatic.map(x=>({...x,done:false,manual:false})),
+   ...manual.map(x=>({...x,manual:true}))
+ ];
+ return `<div class="activity-card">
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+     <div><h3 style="margin-bottom:3px">Accounts Activity / To-do</h3><div style="font-size:10px;color:var(--muted)">Automatic tasks are generated from ERP status. Manual tasks can be fully managed by the accountant.</div></div>
+     <button class="btn btn-green" onclick="openTodoModal('${module}')">＋ Add Task</button>
+   </div>
+   ${rows.length?rows.map(x=>`<div class="todo" style="${x.done?'opacity:.55':''}">
+      <button onclick="${x.manual?`toggleTodo('${x.id}')`:`toast('Automatic task updates when the linked ERP transaction changes.')`}" style="width:21px;height:21px;border-radius:7px;border:1px solid ${x.done?'#b9d9c0':'#d6e1d7'};background:${x.done?'#dcf7ea':'#fff'};color:#0f7a45;font-weight:950;flex:0 0 auto">${x.done?'✓':''}</button>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <strong style="${x.done?'text-decoration:line-through':''}">${x.title}</strong>
+          <span class="badge ${x.manual?'blue':'gray'}">${x.manual?'Manual':'Automatic'}</span>
+          <span class="badge ${x.priority==='High'?'red':x.priority==='Medium'?'yellow':'green'}">${x.priority}</span>
+        </div>
+        <p>${x.note}</p>
+      </div>
+      ${x.manual?`<div style="display:flex;gap:5px"><button class="info-btn" onclick="editTodo('${x.id}')">✎</button><button class="info-btn" style="color:var(--red)" onclick="deleteTodo('${x.id}')">×</button></div>`:''}
+   </div>`).join(''):`<div class="empty">No pending account activities for this screen.</div>`}
+ </div>`;
+}
+function openTodoModal(module){
+ openModal('Add Manual To-do',`<div class="form-grid">
+   <label class="full">Task Title<input id="todoTitle" class="input" placeholder="e.g. Verify bank settlement"></label>
+   <label>Priority<select id="todoPriority" class="select"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+   <label>Show On<select id="todoModule" class="select"><option value="${module}">Current Screen</option><option value="master">Master Dashboard</option><option value="b2b">B2B</option><option value="vendorPurchase">Vendor Purchase Management</option><option value="all">All Relevant Screens</option></select></label>
+   <label class="full">Note<input id="todoNote" class="input" placeholder="Add short follow-up note"></label>
+ </div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn btn-light" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="saveTodo()">Add Task</button></div>`)
+}
+function saveTodo(){
+ const title=document.getElementById('todoTitle').value.trim();
+ if(!title){toast('Enter a task title');return}
+ state.manualTodos.push({id:'MT-'+Date.now(),title,note:document.getElementById('todoNote').value.trim()||'Manual account follow-up.',module:document.getElementById('todoModule').value,priority:document.getElementById('todoPriority').value,done:false});
+ closeModal();render();toast('Manual to-do added');
+}
+function toggleTodo(id){const t=state.manualTodos.find(x=>x.id===id);if(t){t.done=!t.done;render();toast(t.done?'Task completed':'Task reopened')}}
+function deleteTodo(id){state.manualTodos=state.manualTodos.filter(x=>x.id!==id);render();toast('Task deleted')}
+function editTodo(id){
+ const t=state.manualTodos.find(x=>x.id===id);if(!t)return;
+ openModal('Edit To-do',`<div class="form-grid">
+  <label class="full">Task Title<input id="editTodoTitle" class="input" value="${t.title.replace(/"/g,'&quot;')}"></label>
+  <label>Priority<select id="editTodoPriority" class="select"><option ${t.priority==='High'?'selected':''}>High</option><option ${t.priority==='Medium'?'selected':''}>Medium</option><option ${t.priority==='Low'?'selected':''}>Low</option></select></label>
+  <label>Screen<select id="editTodoModule" class="select"><option value="master" ${t.module==='master'?'selected':''}>Master Dashboard</option><option value="b2b" ${t.module==='b2b'?'selected':''}>B2B</option><option value="vendorPurchase" ${t.module==='vendorPurchase'?'selected':''}>Vendor Purchase Management</option><option value="all" ${t.module==='all'?'selected':''}>All Relevant Screens</option></select></label>
+  <label class="full">Note<input id="editTodoNote" class="input" value="${(t.note||'').replace(/"/g,'&quot;')}"></label>
+ </div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn btn-light" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="updateTodo('${id}')">Save Changes</button></div>`)
+}
+function updateTodo(id){
+ const t=state.manualTodos.find(x=>x.id===id);if(!t)return;
+ t.title=document.getElementById('editTodoTitle').value.trim()||t.title;
+ t.priority=document.getElementById('editTodoPriority').value;
+ t.module=document.getElementById('editTodoModule').value;
+ t.note=document.getElementById('editTodoNote').value.trim();
+ closeModal();render();toast('To-do updated');
+}
 
 function renderMaster(){
  const b2cTotal=state.b2cBills.reduce((s,x)=>s+x.total,0), b2cPaid=state.b2cBills.filter(x=>x.payment==='Paid').reduce((s,x)=>s+x.total,0);
@@ -201,46 +418,33 @@ function renderMaster(){
   ['Vendor Purchase','PO-2026-0802-046','GreenRoot Agro Pvt. Ltd.',31900,0,31900,'Due']
  ].map((r,i)=>`<tr><td>${i+1}</td><td>${r[0]}</td><td><strong>${r[1]}</strong></td><td>${r[2]}</td><td>${money(r[3])}</td><td>${money(r[4])}</td><td><strong>${money(r[5])}</strong></td><td>${badge(r[6])}</td><td>${infoButton('This row consolidates the financial status of the referenced transaction.')}</td><td><button class="btn btn-green" onclick="toast('Opening ${r[1]}')">Open</button></td></tr>`).join('')}
  </tbody></table></div>`)+
- `<div class="bottom-grid">${chart([['B2C Sales',b2cTotal],['B2B Orders',b2bValue],['Vendor Purchases',purchase],['Outstanding',due]])}${activities([
- ['Collect B2C-0234','Counter bill payment is still pending.'],
- ['Follow up ORD-2026-003','₹152,000 customer balance remains outstanding.'],
- ['Review vendor dues','Two purchase orders still require payment processing.'],
- ['Monthly reconciliation','Reconcile receipts, balances and purchase payments before closing.']
- ])}</div>`;
+ `<div class="bottom-grid">${chart([['B2C Sales',b2cTotal],['B2B Orders',b2bValue],['Vendor Purchases',purchase],['Outstanding',due]])}${todoCard('master')}</div>`;
 }
 
 function renderB2C(){
  const total=state.b2cBills.reduce((s,x)=>s+x.total,0),paid=state.b2cBills.filter(x=>x.payment==='Paid').reduce((s,x)=>s+x.total,0),pending=state.b2cBills.filter(x=>x.payment==='Pending').reduce((s,x)=>s+x.total,0),cancelled=state.b2cBills.filter(x=>x.status==='Cancelled').length;
  return hero('MIMO 4 · Accountant Counter','B2C Billing & Payment Management','Manage counter bills, customer payment status, billing totals and invoice lifecycle without exposing the full customer-store workflow.')+
- `<div class="metric-grid">${metric('Total Bills',state.b2cBills.length,'Counter bills created','🧾')}${metric('B2C Sales',money(total),'Gross billed value','₹')}${metric('Payment Pending',money(pending),'Open counter receivables','⏳')}${metric('Cancelled Bills',cancelled,'Bills requiring reason audit','×')}</div>`+
+ `<div class="metric-grid">${metric('Total Bills',state.b2cBills.length,'Counter bills created','🧾')}${metric('Total Quantity Bought',state.b2cBills.reduce((s,x)=>s+b2cQty(x),0),'Plant / product units purchased','🌿')}${metric('B2C Sales',money(total),'Gross billed value','₹')}${metric('Payment Pending',money(pending),'Open counter receivables','⏳')}</div>`+
  stepper(['Bill Created','Payment Recorded','Invoice Updated','Completed'],1)+
  panel('B2C Bill Management','Counter invoices from the B2C flow. Record payment directly from the table.',
  `<input id="b2cSearch" class="input search" placeholder="Search bill or customer..." oninput="filterRows('b2cTable',this.value)"><select class="select"><option>All Payment Status</option><option>Paid</option><option>Pending</option><option>Cancelled</option></select>`,
- `<div class="table-wrap"><table id="b2cTable"><thead><tr><th>Sr.</th><th>Bill No.</th><th>Date</th><th>Customer</th><th>City</th><th>Supervisor</th><th>Items</th><th>Subtotal</th><th>GST</th><th>Total</th><th>Payment</th><th>Bill Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
- ${state.b2cBills.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${x.bill}</strong></td><td>${x.date}</td><td>${x.customer}</td><td>${x.city}</td><td>${x.supervisor}</td><td>${x.items}</td><td>${money(x.subtotal)}</td><td>${money(x.gst)}</td><td><strong>${money(x.total)}</strong></td><td>${badge(x.payment)}</td><td>${badge(x.status)}</td><td>${infoButton('Payment status represents the accountant-side collection state of this counter bill.')}</td><td>${x.payment==='Pending'?`<button class="btn btn-gold" onclick="paymentModal('${x.bill}',${x.total},'B2C')">Record Payment</button>`:`<button class="btn btn-light" onclick="viewRecord('B2C','${x.bill}')">View Bill</button>`}</td></tr>`).join('')}
+ `<div class="table-wrap"><table id="b2cTable"><thead><tr><th>Sr.</th><th>Bill No.</th><th>Date</th><th>Customer</th><th>City</th><th>Supervisor</th><th>Total Qty Bought</th><th>Products Bought</th><th>Subtotal</th><th>GST</th><th>Total</th><th>Payment</th><th>Bill Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
+ ${state.b2cBills.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${x.bill}</strong></td><td>${x.date}</td><td>${x.customer}</td><td>${x.city}</td><td>${x.supervisor}</td><td><strong>${b2cQty(x)}</strong></td><td><button class="btn btn-blue" onclick="viewB2CProducts('${x.bill}')">View Products Bought</button></td><td>${money(x.subtotal)}</td><td>${money(x.gst)}</td><td><strong>${money(x.total)}</strong></td><td>${badge(x.payment)}</td><td>${badge(x.status)}</td><td>${infoButton('B2C product details follow the MIMO 4 bill fields: Product, RFID, Stage, Qty, Price and Total.')}</td><td style="display:flex;gap:6px;flex-wrap:wrap">${x.payment==='Pending'?`<button class="btn btn-gold" onclick="paymentModal('${x.bill}',${x.total},'B2C')">Record Payment</button>`:`<button class="btn btn-light" onclick="viewRecord('B2C','${x.bill}')">View Bill</button>`}</td></tr>`).join('')}
  </tbody></table></div>`)+
- `<div class="bottom-grid">${chart([['Paid',paid],['Pending',pending],['Total Billed',total]])}${activities([
- ['Verify pending counter bills','Check open bills against cash / UPI / card settlement.'],
- ['Review cancellations','Confirm cancellation reason and supervisor reference.'],
- ['Day-end B2C closure','Match counter total with payment settlement before daily close.']
- ])}</div>`;
+ `<div>${chart([['Paid',paid],['Pending',pending],['Total Billed',total]])}</div>`;
 }
 
 function renderB2B(){
  const total=state.b2b.reduce((s,x)=>s+x.value,0),received=state.b2b.reduce((s,x)=>s+x.received,0),pending=total-received,completed=state.b2b.filter(x=>x.status==='Completed').length;
  return hero('MIMO 5 · B2B Finance','B2B Orders & Receivables','Accountant-facing view of finalized quotations, order values, payment terms, receipts, pending balances and order-linked payment tracking.')+
- `<div class="metric-grid">${metric('Active Orders',state.b2b.length,'Finalized quotations converted to orders','🤝')}${metric('Order Value',money(total),'Total B2B value','₹')}${metric('Payment Received',money(received),'Recorded receipts','✓')}${metric('Pending Balance',money(pending),completed+' order(s) completed','⏳')}</div>`+
+ `<div class="metric-grid">${metric('Active Orders',state.b2b.length,'Finalized quotations converted to orders','🤝')}${metric('Total Quantity Bought',state.b2b.reduce((s,x)=>s+b2bQty(x),0),'Quoted plant units across orders','🌿')}${metric('Payment Received',money(received),'Recorded receipts','✓')}${metric('Pending Balance',money(pending),completed+' order(s) completed','⏳')}</div>`+
  stepper(['Inquiry','Quotation Finalized','Payment Recorded','Order Fulfilled'],2)+
  panel('B2B Orders & Payment Register','Main receivables table linked to inquiry and finalized quotation records.',
  `<input class="input search" placeholder="Search order / customer..." oninput="filterRows('b2bTable',this.value)"><select class="select"><option>All Payment Status</option><option>Fully Paid</option><option>Partially Paid</option></select>`,
- `<div class="table-wrap"><table id="b2bTable"><thead><tr><th>Sr.</th><th>Order No.</th><th>Quotation</th><th>Inquiry</th><th>Customer</th><th>Order Value</th><th>Received</th><th>Pending</th><th>Payment Terms</th><th>Supervisor</th><th>Driver</th><th>Order Status</th><th>Payment Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
- ${state.b2b.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${x.order}</strong></td><td>${x.quotation}</td><td>${x.inquiry}</td><td>${x.customer}</td><td><strong>${money(x.value)}</strong></td><td>${money(x.received)}</td><td><strong>${money(x.value-x.received)}</strong></td><td>${x.terms}</td><td>${x.supervisor}</td><td>${x.driver}</td><td>${badge(x.status)}</td><td>${badge(x.payment)}</td><td>${infoButton('The accountant records payments against this order. Operational assignment fields remain visible for reference.')}</td><td><button class="btn ${x.received<x.value?'btn-gold':'btn-light'}" onclick="${x.received<x.value?`paymentModal('${x.order}',${x.value-x.received},'B2B')`:`viewRecord('B2B','${x.order}')`}">${x.received<x.value?'Update Payment':'View'}</button></td></tr>`).join('')}
+ `<div class="table-wrap"><table id="b2bTable"><thead><tr><th>Sr.</th><th>Order No.</th><th>Quotation</th><th>Inquiry</th><th>Customer</th><th>Total Qty Bought</th><th>Products Bought</th><th>Order Value</th><th>Received</th><th>Pending</th><th>Payment Terms</th><th>Supervisor</th><th>Driver</th><th>Order Status</th><th>Payment Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
+ ${state.b2b.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${x.order}</strong></td><td>${x.quotation}</td><td>${x.inquiry}</td><td>${x.customer}</td><td><strong>${b2bQty(x)}</strong></td><td><button class="btn btn-blue" onclick="viewB2BProducts('${x.order}')">View Products Bought</button></td><td><strong>${money(x.value)}</strong></td><td>${money(x.received)}</td><td><strong>${money(x.value-x.received)}</strong></td><td>${x.terms}</td><td>${x.supervisor}</td><td>${x.driver}</td><td>${badge(x.status)}</td><td>${badge(x.payment)}</td><td>${infoButton('B2B product details follow the MIMO 5 finalized quotation fields: Plant, Stage, Units, Price Per Unit and Total.')}</td><td><button class="btn ${x.received<x.value?'btn-gold':'btn-light'}" onclick="${x.received<x.value?`paymentModal('${x.order}',${x.value-x.received},'B2B')`:`viewRecord('B2B','${x.order}')`}">${x.received<x.value?'Update Payment':'View'}</button></td></tr>`).join('')}
  </tbody></table></div>`)+
- `<div class="bottom-grid">${chart([['Order Value',total],['Received',received],['Pending',pending]])}${activities([
- ['Follow up GreenScape','₹71,500 remains against ORD-2026-001.'],
- ['Review variance order','Confirm payment impact for ORD-2026-003 before closure.'],
- ['Verify payment references','Ensure UTR / cheque / receipt numbers are recorded for every B2B receipt.']
- ])}</div>`;
+ `<div class="bottom-grid">${chart([['Order Value',total],['Received',received],['Pending',pending]])}${todoCard('b2b')}</div>`;
 }
 
 function renderVendorPortal(){
@@ -253,11 +457,7 @@ function renderVendorPortal(){
  `<div class="table-wrap"><table id="vendorQuoteTable"><thead><tr><th>Sr.</th><th>RFQ No.</th><th>Work Order</th><th>Vendor</th><th>Requirement</th><th>Category</th><th>Farm</th><th>Requested Qty</th><th>Required By</th><th>Accepted On</th><th>Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
  ${state.vendorQuotes.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${x.rfq}</strong></td><td>${x.wo}</td><td>${x.vendor}</td><td>${x.requirement}</td><td>${x.category}</td><td>${x.farm}</td><td>${x.qty}</td><td>${x.required}</td><td>${x.accepted}</td><td>${badge(x.status)}</td><td>${infoButton('RFQ and work-order references allow the accountant to trace procurement demand back to the operational requirement.')}</td><td><button class="btn btn-blue" onclick="viewVendorQuote('${x.rfq}')">View Details</button></td></tr>`).join('')}
  </tbody></table></div>`)+
- `<div class="bottom-grid">${chart([['Accepted RFQs',state.vendorQuotes.filter(x=>x.status==='Accepted').length],['Quote Pending',pending]])}${activities([
- ['Check quote pending RFQ','RFQ-2026-0812-014 is accepted but vendor quote is still pending.'],
- ['Trace PO conversion','Ensure accepted vendor quotations eventually map to purchase orders.'],
- ['Review required-by dates','Escalate vendor RFQs approaching requirement date without final quote.']
- ])}</div>`;
+ `<div>${chart([['Accepted RFQs',state.vendorQuotes.filter(x=>x.status==='Accepted').length],['Quote Pending',pending]])}</div>`;
 }
 
 function renderVendorPurchase(){
@@ -275,11 +475,7 @@ function renderVendorPurchase(){
  `<div class="table-wrap"><table id="poTable"><thead><tr><th>Sr.</th><th>PO No.</th><th>Date</th><th>Vendor</th><th>Product</th><th>Qty</th><th>Rate</th><th>Total</th><th>Farm</th><th>Receipt Status</th><th>Payment Status</th><th>Info</th><th>CTA</th></tr></thead><tbody>
  ${state.purchases.map((p,i)=>`<tr><td>${i+1}</td><td><strong>${p.po}</strong></td><td>${p.date}</td><td>${p.vendor}</td><td>${p.product}</td><td>${p.qty.toLocaleString('en-IN')}</td><td>${money(p.rate)}</td><td><strong>${money(p.total)}</strong></td><td>${p.farm}</td><td>${badge(p.status)}</td><td>${badge(p.payment)}</td><td>${infoButton('Receipt status confirms material receipt; payment status tracks the financial settlement of the PO.')}</td><td>${p.payment!=='Paid'?`<button class="btn btn-gold" onclick="paymentModal('${p.po}',${p.total},'Vendor Purchase')">Record Payment</button>`:`<button class="btn btn-light" onclick="viewRecord('Purchase','${p.po}')">View</button>`}</td></tr>`).join('')}
  </tbody></table></div>`)+
- `<div class="bottom-grid">${chart([['Purchase Value',total],['Due',due],['Partial',partial]])}${activities([
- ['Process GreenRoot dues','Two GreenRoot purchase orders are marked Due.'],
- ['Verify material receipt','Only received POs should progress to final vendor payment.'],
- ['Review payment terms','Use vendor master payment terms when prioritizing outgoing payments.']
- ])}</div>`;
+ `<div class="bottom-grid">${chart([['Purchase Value',total],['Due',due],['Partial',partial]])}${todoCard('vendorPurchase')}</div>`;
 }
 
 function render(){
