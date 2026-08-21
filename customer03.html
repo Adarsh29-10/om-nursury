@@ -495,15 +495,15 @@
       </div>
 
       <div data-mobile-header="true" style="display:${isMobileView()?"block":"none"};position:sticky;top:0;z-index:300;background:rgba(244,247,245,.97);backdrop-filter:blur(14px);padding:8px 0 6px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div style="background:#fff;border:1px solid #dde7df;border-radius:15px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(23,63,39,.045);">
           <button onclick="goScreen('home')" style="border:none;background:transparent;padding:0;display:flex;align-items:center;gap:9px;cursor:pointer;text-align:left;min-width:0;">
             <span style="width:38px;height:38px;min-width:38px;border-radius:12px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 5px 13px rgba(23,63,39,.14);"><i class="fa-solid fa-seedling"></i></span>
-            <span style="min-width:0;"><span style="display:block;font-size:8px;color:#86948a;font-weight:800;">Hello, ${esc(firstName)}</span><strong style="display:block;color:#173f27;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">${customerScreenTitle()}</strong></span>
+            <span style="min-width:0;">
+              <strong style="display:block;color:#173f27;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">OM Nursery</strong>
+              <span style="display:block;font-size:8px;color:#86948a;font-weight:800;margin-top:2px;">${customerScreenTitle()}</span>
+            </span>
           </button>
-          <div style="display:flex;gap:7px;">
-            <button onclick="openScanner()" aria-label="Scan" style="border:1px solid #d9e4db;background:#fff;color:#173f27;width:38px;height:38px;border-radius:12px;font-size:16px;cursor:pointer;"><i class="fa-solid fa-qrcode"></i></button>
-            <button onclick="goScreen('cart')" aria-label="Cart" style="position:relative;border:1px solid #d9e4db;background:#fff;color:#173f27;width:38px;height:38px;border-radius:12px;font-size:16px;cursor:pointer;"><i class="fa-solid fa-cart-shopping"></i>${cartQty?`<span style="position:absolute;right:-5px;top:-5px;background:#d9a928;color:#173f27;min-width:17px;height:17px;padding:0 4px;border:2px solid #f4f7f5;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:950;box-sizing:border-box;">${cartQty}</span>`:""}</button>
-          </div>
+          <span style="font-size:8px;color:#7f8d83;font-weight:800;white-space:nowrap;">Hi, ${esc(firstName)}</span>
         </div>
       </div>
     `;
@@ -734,58 +734,51 @@
   }
 
   function homeScreen(){
-    const itemCount=state.cart.reduce((s,i)=>s+i.qty,0);
     const firstName=state.customer?.name?.split(" ")[0] || "there";
-    const featured=PRODUCTS.slice(0,6);
     const cats=[
-      ["Flowering","fa-solid fa-seedling"],["Indoor","fa-solid fa-house"],["Medicinal","fa-solid fa-leaf"],["Fruit","fa-solid fa-apple-whole"],["Tools","fa-solid fa-screwdriver-wrench"],["Garden Care","fa-solid fa-box-open"]
+      ["Flowering","fa-solid fa-seedling"],
+      ["Indoor","fa-solid fa-house"],
+      ["Medicinal","fa-solid fa-leaf"],
+      ["Fruit","fa-solid fa-apple-whole"],
+      ["Tools","fa-solid fa-screwdriver-wrench"],
+      ["Garden Care","fa-solid fa-box-open"]
     ];
 
     return `
-      <div style="padding:4px 0 12px;">
-        <div style="margin-top:3px;">
-          <div style="font-size:10px;color:#849188;font-weight:800;">GOOD TO SEE YOU, ${esc(firstName).toUpperCase()}</div>
-          <div style="font-size:22px;color:#173f27;font-weight:950;letter-spacing:-.04em;margin-top:2px;">What are you looking for today?</div>
+      <div style="padding:6px 0 14px;">
+        <div style="margin:5px 2px 13px;">
+          <div style="font-size:9px;color:#849188;font-weight:850;text-transform:uppercase;letter-spacing:.035em;">Good to see you, ${esc(firstName)}</div>
+          <div style="font-size:22px;color:#173f27;font-weight:950;letter-spacing:-.04em;margin-top:3px;">How would you like to shop?</div>
+          <div style="font-size:9px;color:#77867c;line-height:1.5;margin-top:4px;">Scan a nursery label for the fastest checkout, or browse the full store.</div>
         </div>
 
-        <div data-mobile-page-search="true" style="display:${isMobileView()?"block":"none"};margin-top:11px;">
-          <div style="position:relative;">
-            <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;color:#617168;pointer-events:none;"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input id="homeSearchInput" onkeydown="if(event.key==='Enter')startHomeSearch()" placeholder="Search plants, tools, compost..." style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;background:#fff;color:#1e2e24;border-radius:14px;padding:13px 47px 13px 38px;font:inherit;font-size:11px;outline:none;box-shadow:0 6px 18px rgba(23,63,39,.04);">
-            <button onclick="startHomeSearch()" aria-label="Search" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);border:none;background:#173f27;color:#fff;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;"><i class="fa-solid fa-arrow-right"></i></button>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
+          <button onclick="openScanner()" style="border:1px solid #dbc36c;background:linear-gradient(145deg,#fff9e8,#fff4c9);color:#173f27;border-radius:20px;padding:16px 14px;text-align:left;cursor:pointer;box-shadow:0 9px 24px rgba(23,63,39,.055);min-height:165px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+            <span style="width:46px;height:46px;border-radius:15px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;"><i class="fa-solid fa-qrcode"></i></span>
+            <span style="display:block;font-size:16px;font-weight:950;letter-spacing:-.025em;margin-top:16px;">Scan plant</span>
+            <span style="display:block;font-size:8px;color:#6f755e;line-height:1.45;margin-top:4px;max-width:180px;">Scan RFID / QR and add the exact plant directly to your cart.</span>
+            <span style="margin-top:auto;padding-top:14px;font-size:9px;font-weight:950;display:flex;align-items:center;gap:6px;">Open scanner <i class="fa-solid fa-arrow-right"></i></span>
+          </button>
+
+          <button onclick="goScreen('store')" style="border:none;background:linear-gradient(145deg,#173f27,#245b38);color:#fff;border-radius:20px;padding:16px 14px;text-align:left;cursor:pointer;box-shadow:0 12px 28px rgba(23,63,39,.16);min-height:165px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+            <span style="width:46px;height:46px;border-radius:15px;background:#fff;color:#173f27;display:flex;align-items:center;justify-content:center;font-size:19px;"><i class="fa-solid fa-store"></i></span>
+            <span style="display:block;font-size:16px;font-weight:950;letter-spacing:-.025em;margin-top:16px;">Shop nursery</span>
+            <span style="display:block;font-size:8px;color:rgba(255,255,255,.76);line-height:1.45;margin-top:4px;max-width:180px;">Browse plants, tools and garden-care products from the catalogue.</span>
+            <span style="margin-top:auto;padding-top:14px;font-size:9px;font-weight:950;display:flex;align-items:center;gap:6px;">Open store <i class="fa-solid fa-arrow-right"></i></span>
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;">
+          <div>
+            <div style="font-size:14px;color:#173f27;font-weight:950;">Shop by category</div>
+            <div style="font-size:8px;color:#89958c;margin-top:2px;">Jump directly to what you need</div>
           </div>
+          <button onclick="goScreen('store')" style="border:none;background:transparent;color:#607568;font-size:9px;font-weight:900;cursor:pointer;">View all <i class="fa-solid fa-chevron-right" style="margin-left:3px;"></i></button>
         </div>
 
-        <button onclick="openScanner()" style="width:100%;border:1px solid #dbc36c;background:#fff8df;color:#173f27;border-radius:15px;padding:12px 13px;margin-top:9px;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;box-shadow:0 6px 18px rgba(23,63,39,.045);">
-          <span style="width:42px;height:42px;min-width:42px;border-radius:13px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;"><i class="fa-solid fa-qrcode"></i></span>
-          <span style="min-width:0;flex:1;"><strong style="display:block;font-size:11px;font-weight:950;">Scan plant RFID / QR</strong><span style="display:block;font-size:8px;color:#6f755e;line-height:1.45;margin-top:3px;">Fastest way to identify the exact plant and add it directly to your cart.</span></span>
-          <span style="width:30px;height:30px;border-radius:10px;background:#173f27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;"><i class="fa-solid fa-arrow-right"></i></span>
-        </button>
-
-        <div style="margin-top:12px;background:linear-gradient(145deg,#173f27,#245b38);border-radius:22px;padding:18px;color:#fff;position:relative;overflow:hidden;box-shadow:0 15px 34px rgba(23,63,39,.16);">
-          <i class="fa-solid fa-seedling" style="position:absolute;right:-2px;bottom:-26px;font-size:118px;opacity:.10;"></i>
-          <div style="position:relative;z-index:2;max-width:67%;">
-            <span style="display:inline-flex;background:#d9a928;color:#173f27;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950;">OM NURSERY STORE</span>
-            <div style="font-size:24px;font-weight:950;letter-spacing:-.04em;line-height:1.08;margin-top:10px;">Fresh plants, simple shopping.</div>
-            <div style="font-size:9px;color:rgba(255,255,255,.76);line-height:1.55;margin-top:6px;">Browse the catalogue, add items to cart and get your counter token in a few taps.</div>
-            <button onclick="goScreen('store')" style="border:none;background:#fff;color:#173f27;border-radius:12px;padding:10px 13px;margin-top:12px;font-size:9px;font-weight:950;cursor:pointer;">Shop now <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></button>
-          </div>
+        <div style="display:flex;gap:9px;overflow-x:auto;padding:10px 1px 5px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+          ${cats.map(([cat,icon])=>`<button onclick="openCategory('${cat}')" style="border:none;background:transparent;min-width:72px;padding:0;cursor:pointer;text-align:center;"><span style="width:60px;height:60px;border-radius:18px;background:#fff;border:1px solid #e1e9e2;display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto;box-shadow:0 5px 15px rgba(23,63,39,.04);color:#173f27;"><i class="${icon}"></i></span><span style="display:block;color:#52675a;font-size:8px;font-weight:850;margin-top:6px;white-space:nowrap;">${cat}</span></button>`).join("")}
         </div>
-
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;">
-          <div style="font-size:14px;color:#173f27;font-weight:950;">Shop by category</div>
-          <button onclick="goScreen('store')" style="border:none;background:transparent;color:#6f8074;font-size:9px;font-weight:900;cursor:pointer;">View all</button>
-        </div>
-        <div style="display:flex;gap:9px;overflow-x:auto;padding:9px 1px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
-          ${cats.map(([cat,icon])=>`<button onclick="openCategory('${cat}')" style="border:none;background:transparent;min-width:68px;padding:0;cursor:pointer;text-align:center;"><span style="width:58px;height:58px;border-radius:18px;background:#fff;border:1px solid #e1e9e2;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto;box-shadow:0 5px 15px rgba(23,63,39,.04);"><i class="${icon}"></i></span><span style="display:block;color:#52675a;font-size:8px;font-weight:850;margin-top:6px;white-space:nowrap;">${cat}</span></button>`).join("")}
-        </div>
-
-
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:17px;">
-          <div><div style="font-size:14px;color:#173f27;font-weight:950;">Popular picks</div><div style="font-size:8px;color:#89958c;margin-top:2px;">Tap any item for details</div></div>
-          ${itemCount?`<button onclick="goScreen('cart')" style="border:1px solid #d7e4d9;background:#fff;color:#173f27;border-radius:999px;padding:8px 10px;font-size:8px;font-weight:900;cursor:pointer;"><i class="fa-solid fa-cart-shopping" style="margin-right:5px;"></i>${itemCount} in cart</button>`:""}
-        </div>
-        <div style="margin-top:9px;">${storeProductsGrid(featured)}</div>
       </div>
     `;
   }
