@@ -35,21 +35,41 @@
   .erp-breadcrumb .current{color:#294631;font-weight:900}
   .erp-breadcrumb .sep{color:#a3ada5}
   .erp-po-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 12px}
-  @media(max-width:700px){
-    .erp-stepper{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .erp-mobile-filter-toggle{display:none;width:100%;border:0;background:transparent;color:#1a4d2a;padding:0;font-family:inherit;align-items:center;gap:7px;cursor:pointer;text-align:left}
+  .erp-mobile-filter-toggle strong{flex:1;font-size:11px;font-weight:900}
+  .erp-filter-chevron{font-size:14px;color:#718176}
+  @media(max-width:820px){
+    .erp-stepper{display:flex;grid-template-columns:none;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:1px 0 3px;scrollbar-width:none}
+    .erp-stepper::-webkit-scrollbar{display:none}
+    .erp-step{flex:0 0 auto;min-height:0!important;padding:7px 9px!important;border-radius:999px!important;display:flex;align-items:center;white-space:nowrap}
+    .erp-step strong{font-size:9px!important;margin:0!important;line-height:1.1}
+    .erp-step span{display:none!important}
+    .erp-mobile-filter-toggle{display:flex}
+    .erp-filter-panel{padding:9px!important;border-radius:13px!important;background:#fff!important}
+    .erp-filter-panel .erp-filter-body{display:none;padding-top:9px}
+    .erp-filter-panel.mobile-open .erp-filter-body{display:block}
+    .erp-filter-grid{grid-template-columns:1fr!important;gap:7px!important}
+    .erp-multi summary{padding:9px 10px!important;border-radius:10px!important}
+    .erp-page-heading{gap:8px!important;margin-bottom:9px!important}
+    .erp-page-heading-icon{width:32px!important;height:32px!important;min-width:32px!important;border-radius:10px!important;font-size:14px!important}
+    .erp-page-heading-title{font-size:16px!important}
+    .erp-page-heading-sub{display:none!important}
+    .erp-inline-help{display:none!important}
+    .erp-po-summary{grid-template-columns:1fr 1fr!important;gap:5px!important;margin:7px 0 9px!important}
+    section[style*="border-radius:22px"][style*="padding:16px"]{padding:11px!important;border-radius:16px!important;margin-bottom:9px!important}
+
     .erp-mobile-hint{display:block;font-size:9px;color:#718176;font-weight:800;margin:6px 0 8px}
     .erp-table th,.erp-table td{padding:10px;font-size:11px}
     .erp-table th{font-size:9px}
     .erp-inline-select{min-width:145px}
-    .erp-filter-grid{grid-template-columns:1fr 1fr}
     .erp-po-summary{grid-template-columns:1fr 1fr}
     .erp-breadcrumb{font-size:10px;gap:5px;margin-bottom:10px}
     .erp-breadcrumb button{font-size:10px}
   }
   @media(max-width:460px){
-    .erp-filter-grid{grid-template-columns:1fr}
-    .erp-stepper{grid-template-columns:1fr 1fr}
-    .erp-po-summary{grid-template-columns:1fr}
+    .erp-step{padding:7px 8px!important}
+    .erp-step strong{font-size:8.5px!important}
+    .erp-po-summary{grid-template-columns:1fr 1fr!important}
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -152,13 +172,13 @@ function showToast(msg,error=false){const t=document.getElementById('toast');t.t
 function openModal(html,width='820px'){const m=document.getElementById('modal'),b=document.getElementById('modalBox');b.style.width=`min(${width},100%)`;b.innerHTML=html;m.style.display='flex'}function closeModal(){document.getElementById('modal').style.display='none';document.getElementById('modalBox').innerHTML=''}
 function headerBlock(title,sub,icon){
   return `
-    <div style="display:flex;align-items:flex-start;gap:11px;margin-bottom:13px;">
-      <div style="width:38px;height:38px;min-width:38px;border-radius:12px;background:#eef6ef;color:#1a4d2a;display:flex;align-items:center;justify-content:center;font-size:17px;border:1px solid #dfeadf;">
+    <div class="erp-page-heading" style="display:flex;align-items:flex-start;gap:11px;margin-bottom:13px;">
+      <div class="erp-page-heading-icon" style="width:38px;height:38px;min-width:38px;border-radius:12px;background:#eef6ef;color:#1a4d2a;display:flex;align-items:center;justify-content:center;font-size:17px;border:1px solid #dfeadf;">
         ${icon}
       </div>
       <div style="min-width:0;">
-        <div style="font-size:19px;color:#1a4d2a;font-weight:900;line-height:1.2;letter-spacing:-.02em;">${title}</div>
-        ${sub ? `<div style="font-size:11px;color:#718176;line-height:1.5;margin-top:4px;font-weight:600;max-width:860px;">${sub}</div>` : ''}
+        <div class="erp-page-heading-title" style="font-size:19px;color:#1a4d2a;font-weight:900;line-height:1.2;letter-spacing:-.02em;">${title}</div>
+        ${sub ? `<div class="erp-page-heading-sub" style="font-size:11px;color:#718176;line-height:1.5;margin-top:4px;font-weight:600;max-width:860px;">${sub}</div>` : ''}
       </div>
     </div>
   `;
@@ -834,6 +854,14 @@ function clearWorkOrderFilters(){
   showToast('Work-order filters cleared.');
 }
 
+function toggleMobileFilters(buttonEl){
+  const panel=buttonEl.closest('.erp-filter-panel');
+  if(!panel)return;
+  panel.classList.toggle('mobile-open');
+  const chevron=buttonEl.querySelector('.erp-filter-chevron');
+  if(chevron)chevron.textContent=panel.classList.contains('mobile-open')?'⌃':'⌄';
+}
+
 function workOrdersView(){
   const rows=myWO();
   const farms=[...new Set(rows.map(w=>w.farm))].sort();
@@ -855,7 +883,9 @@ function workOrdersView(){
       <div class="erp-step"><strong>4 · Review Details</strong><span>Open only when more context is required.</span></div>
     </div>
 
-    <div style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
+    <div class="erp-filter-panel" style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
+      <button type="button" class="erp-mobile-filter-toggle" onclick="toggleMobileFilters(this)"><span>⌕</span><strong>Search & Filters</strong><span class="erp-filter-chevron">⌄</span></button>
+      <div class="erp-filter-body">
       <div class="erp-filter-grid">
         <div>
           <div style="font-size:9px;color:#758379;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px 2px;">Search</div>
@@ -876,6 +906,7 @@ function workOrdersView(){
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:9px;">
         <span id="woVisibleCount" style="font-size:10px;color:#1a4d2a;font-weight:900;">${rows.length} work orders</span>
         ${button('Clear Filters','clearWorkOrderFilters()','light','padding:8px 11px;font-size:10px;')}
+      </div>
       </div>
     </div>
 
@@ -1271,7 +1302,9 @@ function b2bView(){
       <div class="erp-step"><strong>4 · Deliver</strong><span>Update shipment until Delivered.</span></div>
     </div>
 
-    <div style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
+    <div class="erp-filter-panel" style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
+      <button type="button" class="erp-mobile-filter-toggle" onclick="toggleMobileFilters(this)"><span>⌕</span><strong>Search & Filters</strong><span class="erp-filter-chevron">⌄</span></button>
+      <div class="erp-filter-body">
       <div class="erp-filter-grid">
         <div>
           <div style="font-size:9px;color:#758379;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px 2px;">Search</div>
@@ -1290,9 +1323,10 @@ function b2bView(){
         <span id="b2bVisibleCount" style="font-size:10px;color:#1a4d2a;font-weight:900;">${orders.length} orders</span>
         ${button('Clear Filters','clearB2BFilters()','light','padding:8px 11px;font-size:10px;')}
       </div>
+      </div>
     </div>
 
-    <div style="padding:9px 10px;border-radius:12px;background:#eef6ef;border:1px solid #d7e5d9;color:#365640;font-size:10px;line-height:1.5;margin-bottom:9px;">
+    <div class="erp-inline-help" style="padding:9px 10px;border-radius:12px;background:#eef6ef;border:1px solid #d7e5d9;color:#365640;font-size:10px;line-height:1.5;margin-bottom:9px;">
       <strong>Order Fulfilment</strong> tells whether the nursery has prepared/completed the customer order. <strong>Delivery Status</strong> tracks the physical shipment after a driver is assigned.
     </div>
 
