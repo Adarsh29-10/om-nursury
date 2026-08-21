@@ -1764,7 +1764,6 @@ function workOrdersView(){
           <h1>Work Orders</h1>
           <span class="wo-mobile-count">${rows.length}</span>
         </div>
-        <button class="wo-mobile-new" onclick="showToast('New work orders are created from the planning workflow.')">${plusIcon}<span>New</span></button>
       </div>
 
       <div class="wo-search-row">
@@ -1780,11 +1779,6 @@ function workOrdersView(){
         ${compactMultiFilter('woFilters','allocation','Material','◇',allocations)}
         ${compactMultiFilter('woFilters','farm','Farm','⌾',farms)}
         ${compactMultiFilter('woFilters','plant','Plant','♧',plantsList)}
-      </div>
-
-      <div class="ref-result-bar">
-        <div id="woVisibleCount" class="ref-result-count">${rows.length} work orders</div>
-        <button class="ref-clear-btn" onclick="clearWorkOrderFilters()">↻ &nbsp;Clear all</button>
       </div>
 
       <!-- Laptop / desktop: table only -->
@@ -2399,10 +2393,7 @@ function b2bView(){
         ${compactMultiFilter('b2bFilters','farm','Farm','',farms)}
       </div>
 
-      <div class="ref-result-bar">
-        <div id="b2bVisibleCount" class="ref-result-count">${orders.length} orders</div>
-        <button class="ref-clear-btn" onclick="clearB2BFilters()">↻ &nbsp;Clear all</button>
-      </div>
+
 
       <!-- Laptop / desktop: original table remains unchanged -->
       <div class="b2b-desktop-table">
@@ -2913,11 +2904,6 @@ function poListScreen(){
         ${compactMultiFilter('poFilters','status','Status','☷',statuses)}
         ${compactMultiFilter('poFilters','farm','Farm','⌾',farms)}
         ${compactMultiFilter('poFilters','vendor','Vendor','♙',vendors)}
-      </div>
-
-      <div class="ref-result-bar">
-        <div id="poVisibleCount" class="ref-result-count">${purchaseOrders.length} purchase orders</div>
-        <button class="ref-clear-btn" onclick="clearPOFilters()">↻ &nbsp;Clear all</button>
       </div>
 
       <!-- Laptop / desktop: table only -->
