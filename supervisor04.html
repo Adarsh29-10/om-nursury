@@ -305,6 +305,54 @@
     }
   }
 </style>
+
+<style id="clear-all-toolbar-update">
+  .ref-search-row{
+    grid-template-columns:minmax(0,1fr) auto auto !important;
+  }
+  .ref-clear-top{
+    height:46px;
+    border:1px solid #dce3de;
+    border-radius:13px;
+    background:#fff;
+    color:#1a7a42;
+    padding:0 14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    font:inherit;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+    white-space:nowrap;
+    box-sizing:border-box;
+  }
+  .ref-clear-top:hover{
+    background:#f7fbf8;
+    border-color:#cddbd0;
+  }
+  @media(max-width:700px){
+    .ref-search-row{
+      grid-template-columns:minmax(0,1fr) auto auto !important;
+      gap:5px !important;
+    }
+    .ref-clear-top{
+      height:36px !important;
+      border-radius:9px !important;
+      padding:0 8px !important;
+      font-size:8.5px !important;
+    }
+  }
+  @media(max-width:420px){
+    .ref-clear-top{
+      height:34px !important;
+      padding:0 6px !important;
+      font-size:8px !important;
+    }
+  }
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
@@ -1138,6 +1186,7 @@ function workOrdersView(){
           <input value="${esc(state.woFilters.search)}" placeholder="Search WO, plant, block..." oninput="state.woFilters.search=this.value;applyWorkOrderFiltersDom()">
         </label>
         <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('wo-filter-strip')"><span>⚲</span> Filters</button>
+        <button class="ref-clear-top" onclick="clearWorkOrderFilters()">↻ Clear All</button>
       </div>
 
       <div id="wo-filter-strip" class="ref-filter-strip">
@@ -1147,15 +1196,10 @@ function workOrdersView(){
         ${compactMultiFilter('woFilters','plant','Plant','♧',plantsList)}
       </div>
 
-      <div class="ref-result-bar">
-        <span id="woVisibleCount" class="ref-result-count">${rows.length} work orders</span>
-        <button class="ref-clear-btn" onclick="clearWorkOrderFilters()">↻ &nbsp;Clear all</button>
-      </div>
-
       <div class="erp-mobile-hint">↔ Swipe sideways to see every table field.</div>
       <div class="erp-table-wrap">
-        <table class="erp-table" style="min-width:1080px;">
-          <thead><tr><th>Work Order</th><th>Plant / Stage</th><th>Qty</th><th>Work Status</th><th>Material Status</th><th>Farm / Block</th><th>Assigned</th><th>Supervisor</th><th>Action</th></tr></thead>
+        <table class="erp-table" style="min-width:960px;">
+          <thead><tr><th>Work Order</th><th>Plant / Stage</th><th>Qty</th><th>Work Status</th><th>Material Status</th><th>Farm / Block</th><th>Assigned</th><th>Action</th></tr></thead>
           <tbody>
             ${rows.map(w=>`
               <tr id="wo-row-${w.id}" class="wo-data-row" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${esc([w.id,w.farm,w.block,w.plants.join(' '),w.stages.join(' '),w.actions.join(' '),w.message].join(' ').toLowerCase())}">
@@ -1166,7 +1210,6 @@ function workOrdersView(){
                 <td style="min-width:190px;"><select class="erp-inline-select ref-status-select" onchange="updateWorkOrderInline('${w.id}','allocationStatus',this.value)">${allocations.map(x=>`<option ${x===w.allocationStatus?'selected':''}>${x}</option>`).join('')}</select></td>
                 <td style="min-width:130px;"><strong>${esc(w.farm)}</strong><div class="ref-sub">${esc(w.block)}</div></td>
                 <td style="min-width:155px;"><strong>${esc(w.assignedOn.split(',')[0])}</strong><div class="ref-sub">${esc(w.assignedOn.split(',').slice(1).join(',').trim())}</div></td>
-                <td style="min-width:135px;"><strong>${esc(w.supervisors.join(', '))}</strong></td>
                 <td style="min-width:110px;"><button class="ref-table-action" onclick="openWorkOrder('${w.id}')">View Details</button></td>
               </tr>`).join('')}
           </tbody>
@@ -1485,6 +1528,7 @@ function b2bView(){
       <div class="ref-search-row">
         <label class="ref-search-box"><span class="ref-search-icon">⌕</span><input value="${esc(state.b2bFilters.search)}" placeholder="Search order, customer, item..." oninput="state.b2bFilters.search=this.value;applyB2BFiltersDom()"></label>
         <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('b2b-filter-strip')"><span>⚲</span> Filters</button>
+        <button class="ref-clear-top" onclick="clearB2BFilters()">↻ Clear All</button>
       </div>
 
       <div id="b2b-filter-strip" class="ref-filter-strip">
@@ -1494,7 +1538,6 @@ function b2bView(){
         ${compactMultiFilter('b2bFilters','farm','Farm','⌾',farms)}
       </div>
 
-      <div class="ref-result-bar"><span id="b2bVisibleCount" class="ref-result-count">${orders.length} orders</span><button class="ref-clear-btn" onclick="clearB2BFilters()">↻ &nbsp;Clear all</button></div>
       <div class="erp-mobile-hint">↔ Swipe sideways to see every order field.</div>
 
       <div class="erp-table-wrap">
@@ -2068,6 +2111,7 @@ function poListScreen(){
       <div class="ref-search-row">
         <label class="ref-search-box"><span class="ref-search-icon">⌕</span><input value="${esc(state.poFilters.search)}" placeholder="Search PO, vendor, farm..." oninput="state.poFilters.search=this.value;applyPOFiltersDom()"></label>
         <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('po-filter-strip')"><span>⚲</span> Filters</button>
+        <button class="ref-clear-top" onclick="clearPOFilters()">↻ Clear All</button>
       </div>
 
       <div id="po-filter-strip" class="ref-filter-strip">
@@ -2076,7 +2120,6 @@ function poListScreen(){
         ${compactMultiFilter('poFilters','vendor','Vendor','♙',vendors)}
       </div>
 
-      <div class="ref-result-bar"><span id="poVisibleCount" class="ref-result-count">${purchaseOrders.length} purchase orders</span><button class="ref-clear-btn" onclick="clearPOFilters()">↻ &nbsp;Clear all</button></div>
       <div class="erp-mobile-hint">↔ Swipe sideways to see every purchase-order field.</div>
 
       <div class="erp-table-wrap">
