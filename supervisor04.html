@@ -71,6 +71,64 @@
     .erp-step strong{font-size:8.5px!important}
     .erp-po-summary{grid-template-columns:1fr 1fr!important}
   }
+
+  /* ===== Reference-style list/table UI ===== */
+  .ref-list-page{background:transparent;padding:7px 2px 10px}
+  .ref-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:5px 0 18px}
+  .ref-title-wrap{display:flex;align-items:center;gap:11px;min-width:0}
+  .ref-title{margin:0;color:#17212b;font-size:31px;line-height:1.1;font-weight:800;letter-spacing:-.035em}
+  .ref-count-badge{min-width:39px;height:39px;padding:0 10px;border-radius:12px;background:#eaf6ee;color:#1c7b42;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+  .ref-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+  .ref-search-box{height:46px;border:1px solid #dce3de;border-radius:13px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 13px;box-sizing:border-box}
+  .ref-search-icon{font-size:18px;color:#6b7470;line-height:1}
+  .ref-search-box input{width:100%;min-width:0;border:none;outline:none;background:transparent;color:#27322c;font:inherit;font-size:13px;font-weight:500}
+  .ref-filter-master{height:46px;border:1px solid #dce3de;border-radius:13px;background:#fff;color:#25332b;padding:0 16px;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
+  .ref-filter-strip{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .ref-filter-chip{flex:1 1 135px;min-width:125px;max-width:220px;position:relative}
+  .ref-filter-chip .erp-multi summary{height:42px;box-sizing:border-box;padding:0 11px;border-radius:12px;font-size:11px;font-weight:700;color:#2d3732}
+  .ref-filter-chip-icon{font-size:13px;color:#4f5d55;margin-right:4px}
+  .ref-result-bar{min-height:48px;border:1px solid #dce3de;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 13px;margin:8px 0 12px;box-sizing:border-box}
+  .ref-result-count{font-size:11px;color:#222d27;font-weight:750}
+  .ref-clear-btn{border:none;background:transparent;color:#1a7a42;font:inherit;font-size:11px;font-weight:750;cursor:pointer;padding:7px 2px}
+  .ref-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 1px 2px;color:#65716a;font-size:10px}
+  .ref-page-size{height:38px;border:1px solid #dce3de;border-radius:10px;background:#fff;color:#27322c;padding:0 10px;font:inherit;font-size:11px}
+  .ref-page-controls{display:flex;align-items:center;gap:7px}
+  .ref-page-btn{width:38px;height:38px;border:1px solid #dce3de;border-radius:10px;background:#fff;color:#68736d;font:inherit;font-size:14px;font-weight:800}
+  .ref-page-btn.active{background:#1c7b42;border-color:#1c7b42;color:#fff}
+  .ref-status-select{border-radius:10px!important;font-weight:750!important}
+  .ref-table-id{font-size:12px;color:#16723c;font-weight:850;white-space:nowrap}
+  .ref-sub{font-size:9px;color:#7d8982;margin-top:3px;line-height:1.35}
+  .ref-table-action{border:1px solid #d9e3db;background:#fff;color:#17643a;border-radius:9px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .ref-po-progress{display:flex;gap:6px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:8px 0 11px}
+  .ref-po-progress::-webkit-scrollbar{display:none}
+  .ref-po-progress span{flex:0 0 auto;border:1px solid #dfe8e0;background:#fff;color:#65736a;border-radius:999px;padding:7px 10px;font-size:9px;font-weight:800;white-space:nowrap}
+  .ref-po-progress span.active{background:#eaf6ee;border-color:#cee3d3;color:#17643a}
+
+  @media(max-width:820px){
+    .ref-list-page{padding:12px 4px 20px}
+    .ref-title-row{margin:4px 0 15px}
+    .ref-title{font-size:27px}
+    .ref-count-badge{min-width:36px;height:36px;border-radius:11px;font-size:13px}
+    .ref-search-row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+    .ref-search-box,.ref-filter-master{height:45px}
+    .ref-filter-master{padding:0 13px}
+    .ref-filter-strip{gap:7px;margin:9px 0}
+    .ref-filter-chip{flex:1 1 calc(25% - 7px);min-width:120px;max-width:none}
+    .ref-result-bar{min-height:45px;margin:7px 0 10px}
+    .erp-table-wrap{border-radius:13px}
+    .erp-table th{background:#f2f6f3;color:#526158;text-transform:none;letter-spacing:0;font-size:9px;font-weight:800}
+    .erp-table td{font-size:10px}
+    .ref-pagination{padding-top:12px}
+  }
+  @media(max-width:540px){
+    .ref-title{font-size:25px}
+    .ref-search-box input{font-size:12px}
+    .ref-filter-master{font-size:11px;padding:0 12px}
+    .ref-filter-chip{flex:1 1 calc(50% - 5px);min-width:0}
+    .ref-filter-chip .erp-multi summary{height:40px;font-size:10px;padding:0 9px}
+    .ref-result-bar{padding:0 11px}
+  }
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -87,7 +145,8 @@ const state={
   loggedIn:true,
   woStatusFilter:'All',
   woFilters:{status:[],allocation:[],farm:[],plant:[],search:''},
-  b2bFilters:{order:[],delivery:[],search:''},
+  b2bFilters:{order:[],delivery:[],driver:[],farm:[],search:''},
+  poFilters:{status:[],farm:[],vendor:[],search:''},
   allocationDraft:{},
   rfidMode:'individual',
   selectedRfids:new Set(),
@@ -314,36 +373,21 @@ function renderSupervisorSidebar(drawer=false){
 
 function renderMobileTopbar(){
   return `
-    <div style="
-      position:sticky;
-      top:0;
-      z-index:400;
-      background:rgba(244,247,245,.96);
-      backdrop-filter:blur(10px);
-      padding:8px 0 7px;
-    ">
-      <div style="
-        background:#fff;
-        border:1px solid #e1ebe2;
-        border-radius:13px;
-        padding:8px;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        box-shadow:0 6px 18px rgba(0,20,0,.05);
-      ">
-        <button onclick="toggleSupervisorDrawer()" style="border:none;background:#eef6ef;color:#1a4d2a;width:34px;height:34px;border-radius:10px;font-size:17px;font-weight:900;cursor:pointer;">☰</button>
-
-        <div style="min-width:0;flex:1;">
-          <div style="font-size:10px;color:#849188;font-weight:800;">OM NURSERY · ${esc(supervisor.shortName)}</div>
-          <div style="font-size:13px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">${supervisorViewLabel()}</div>
+    <div style="position:sticky;top:0;z-index:400;background:#fff;border-bottom:1px solid #e3e8e4;box-shadow:0 2px 8px rgba(0,20,0,.035);">
+      <div style="height:67px;display:grid;grid-template-columns:58px minmax(0,1fr) 58px;align-items:center;">
+        <button onclick="toggleSupervisorDrawer()" style="height:67px;border:none;border-right:1px solid #e6ebe7;background:#fff;color:#17643a;font-size:24px;font-weight:500;cursor:pointer;">☰</button>
+        <div style="display:flex;align-items:center;gap:9px;padding:0 14px;min-width:0;">
+          <div style="font-size:31px;line-height:1;color:#1c7b42;transform:rotate(-15deg);">❧</div>
+          <div style="min-width:0;">
+            <div style="font-size:14px;color:#17643a;font-weight:900;letter-spacing:.01em;white-space:nowrap;">OM NURSERY</div>
+            <div style="font-size:12px;color:#59635e;font-weight:650;margin-top:1px;">${esc(supervisor.shortName)}</div>
+          </div>
         </div>
-
-        <button onclick="openProfile()" style="border:1px solid #dce8dd;background:#fff;color:#1a4d2a;width:34px;height:34px;border-radius:10px;font-size:14px;cursor:pointer;">👤</button>
+        <div style="display:flex;align-items:center;justify-content:center;">
+          <button onclick="openProfile()" style="width:39px;height:39px;border:1px solid #dce6de;background:#f8fbf8;color:#17643a;border-radius:999px;font-size:16px;cursor:pointer;">👤</button>
+        </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function renderMobileDrawer(){
@@ -391,14 +435,9 @@ function render(){
 
   if(supervisorMobile){
     document.getElementById('app').innerHTML=`
-      <div style="
-        width:min(100% - 14px,900px);
-        margin:0 auto;
-        padding:0 0 calc(120px + env(safe-area-inset-bottom));
-        box-sizing:border-box;
-      ">
+      <div style="width:100%;margin:0;padding:0 0 calc(120px + env(safe-area-inset-bottom));box-sizing:border-box;">
         ${renderMobileTopbar()}
-        <main style="min-width:0;">${c}</main>
+        <main style="min-width:0;padding:14px 12px 0;box-sizing:border-box;">${c}</main>
         ${renderMobileDrawer()}
       </div>
     `;
@@ -797,6 +836,52 @@ function multiFilter(scope,key,label,options,emptyLabel){
   `;
 }
 
+function compactMultiFilter(scope,key,label,icon,options){
+  const selected=state[scope][key]||[];
+  const summaryText=!selected.length?label:(selected.length===1?selected[0]:selected.length+' selected');
+  return `
+    <div class="ref-filter-chip">
+      <details class="erp-multi">
+        <summary>
+          <span style="display:flex;align-items:center;gap:5px;min-width:0;"><span class="ref-filter-chip-icon">${icon}</span><span id="${scope}-${key}-summary" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(summaryText)}</span></span>
+          <span style="color:#647169;font-size:10px;">⌄</span>
+        </summary>
+        <div class="erp-multi-menu">
+          ${options.map(value=>`
+            <label class="erp-check">
+              <input type="checkbox" ${selected.includes(value)?'checked':''}
+                onchange="toggleCompactFilter('${scope}','${key}','${value}',this.checked,'${label}')">
+              <span>${esc(value)}</span>
+            </label>
+          `).join('')}
+        </div>
+      </details>
+    </div>`;
+}
+
+function toggleCompactFilter(scope,key,value,checked,label){
+  const list=state[scope][key]||[];
+  state[scope][key]=checked?[...new Set([...list,value])]:list.filter(x=>x!==value);
+  const summary=document.getElementById(scope+'-'+key+'-summary');
+  if(summary){
+    const selected=state[scope][key];
+    summary.textContent=!selected.length?label:(selected.length===1?selected[0]:selected.length+' selected');
+  }
+  if(scope==='woFilters')applyWorkOrderFiltersDom();
+  if(scope==='b2bFilters')applyB2BFiltersDom();
+  if(scope==='poFilters')applyPOFiltersDom();
+}
+
+function toggleReferenceFilterStrip(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.display=el.style.display==='none'?'flex':'none';
+}
+
+function referencePagination(count,label){
+  return `<div class="ref-pagination"><span>Showing ${count} of ${count} ${label}</span><div style="display:flex;align-items:center;gap:8px;"><select class="ref-page-size"><option>10 / page</option><option>25 / page</option><option>50 / page</option></select><div class="ref-page-controls"><button class="ref-page-btn" disabled>‹</button><button class="ref-page-btn active">1</button><button class="ref-page-btn" disabled>›</button></div></div></div>`;
+}
+
 function toggleListFilter(scope,key,value,checked,emptyLabel){
   const list=state[scope][key]||[];
   state[scope][key]=checked
@@ -808,12 +893,18 @@ function toggleListFilter(scope,key,value,checked,emptyLabel){
 
   if(scope==='woFilters')applyWorkOrderFiltersDom();
   if(scope==='b2bFilters')applyB2BFiltersDom();
+  if(scope==='poFilters')applyPOFiltersDom();
 }
 
 function updateWorkOrderInline(id,field,value){
   const w=workOrders.find(x=>x.id===id);
   if(!w)return;
   w[field]=value;
+  const row=document.getElementById('wo-row-'+id);
+  if(row){
+    if(field==='status')row.dataset.status=value;
+    if(field==='allocationStatus')row.dataset.allocation=value;
+  }
 
   if(field==='status' && value==='Completed'){
     w.efficiency=Math.max(Number(w.efficiency||0),90);
@@ -869,126 +960,55 @@ function workOrdersView(){
   const statuses=['Not Started','In-Progress','Completed','Halted','Attention'];
   const allocations=['Pending','Requirement Submitted','Partially Allocated','Allocated','Not Required'];
 
-  return sectionCard(`
-    ${headerBlock(
-      'Work Order Status',
-      'One table for daily execution. Filter multiple values, update work status and material allocation directly in the row, and open details only when needed.',
-      '🧾'
-    )}
-
-    <div class="erp-stepper" style="margin-bottom:12px;">
-      <div class="erp-step active"><strong>1 · Find Work</strong><span>Use search or multi-select filters.</span></div>
-      <div class="erp-step"><strong>2 · Update Work</strong><span>Change work status in the row.</span></div>
-      <div class="erp-step"><strong>3 · Update Material</strong><span>Change allocation status or set material quantity.</span></div>
-      <div class="erp-step"><strong>4 · Review Details</strong><span>Open only when more context is required.</span></div>
-    </div>
-
-    <div class="erp-filter-panel" style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
-      <button type="button" class="erp-mobile-filter-toggle" onclick="toggleMobileFilters(this)"><span>⌕</span><strong>Search & Filters</strong><span class="erp-filter-chevron">⌄</span></button>
-      <div class="erp-filter-body">
-      <div class="erp-filter-grid">
-        <div>
-          <div style="font-size:9px;color:#758379;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px 2px;">Search</div>
-          <input
-            value="${esc(state.woFilters.search)}"
-            placeholder="WO number, plant, block..."
-            oninput="state.woFilters.search=this.value;applyWorkOrderFiltersDom()"
-            style="width:100%;box-sizing:border-box;border:1px solid #dce7dc;background:#fff;border-radius:12px;padding:10px 11px;font-size:11px;color:#294631;outline:none;"
-          >
-        </div>
-
-        ${multiFilter('woFilters','status','Work Status',statuses,'All statuses')}
-        ${multiFilter('woFilters','allocation','Material Status',allocations,'All material')}
-        ${multiFilter('woFilters','farm','Farm',farms,'All farms')}
-        ${multiFilter('woFilters','plant','Plant',plantsList,'All plants')}
+  return `
+    <div class="ref-list-page">
+      <div class="ref-title-row">
+        <div class="ref-title-wrap"><h1 class="ref-title">Work Orders</h1><span class="ref-count-badge">${rows.length}</span></div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:9px;">
-        <span id="woVisibleCount" style="font-size:10px;color:#1a4d2a;font-weight:900;">${rows.length} work orders</span>
-        ${button('Clear Filters','clearWorkOrderFilters()','light','padding:8px 11px;font-size:10px;')}
+      <div class="ref-search-row">
+        <label class="ref-search-box">
+          <span class="ref-search-icon">⌕</span>
+          <input value="${esc(state.woFilters.search)}" placeholder="Search WO, plant, block..." oninput="state.woFilters.search=this.value;applyWorkOrderFiltersDom()">
+        </label>
+        <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('wo-filter-strip')"><span>⚲</span> Filters</button>
       </div>
+
+      <div id="wo-filter-strip" class="ref-filter-strip">
+        ${compactMultiFilter('woFilters','status','Status','☷',statuses)}
+        ${compactMultiFilter('woFilters','allocation','Material','◇',allocations)}
+        ${compactMultiFilter('woFilters','farm','Farm','⌾',farms)}
+        ${compactMultiFilter('woFilters','plant','Plant','♧',plantsList)}
       </div>
-    </div>
 
-    <div class="erp-mobile-hint">↔ Swipe the table sideways on mobile to see every field. No column is frozen.</div>
+      <div class="ref-result-bar">
+        <span id="woVisibleCount" class="ref-result-count">${rows.length} work orders</span>
+        <button class="ref-clear-btn" onclick="clearWorkOrderFilters()">↻ &nbsp;Clear all</button>
+      </div>
 
-    <div class="erp-table-wrap">
-      <table class="erp-table" style="min-width:1060px;">
-        <thead>
-          <tr>
-            <th>Work Order</th>
-            <th>Plant / Qty</th>
-            <th>Location</th>
-            <th>Schedule</th>
-            <th>Work Status</th>
-            <th>Material Allocation</th>
-            <th>Efficiency</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map(w=>`
-            <tr
-              class="wo-data-row"
-              data-status="${esc(w.status)}"
-              data-allocation="${esc(w.allocationStatus)}"
-              data-farm="${esc(w.farm)}"
-              data-plants="${esc(w.plants.join('|'))}"
-              data-search="${esc([w.id,w.farm,w.block,w.plants.join(' '),w.stages.join(' '),w.actions.join(' '),w.message].join(' ').toLowerCase())}"
-            >
-              <td style="min-width:145px;">
-                <div style="font-size:12px;color:#1a4d2a;font-weight:950;">${w.id}</div>
-                <div style="font-size:9px;color:#829085;margin-top:3px;">Assigned ${esc(w.assignedOn)}</div>
-              </td>
-
-              <td style="min-width:170px;">
-                <strong style="color:#294631;">${esc(w.plants.join(', '))}</strong>
-                <div style="font-size:10px;color:#718176;margin-top:3px;">${esc(w.stages.join(', '))} · ${w.quantity} plants</div>
-              </td>
-
-              <td style="min-width:125px;">
-                <strong>${esc(w.farm)}</strong>
-                <div style="font-size:10px;color:#718176;margin-top:3px;">${esc(w.block)}</div>
-              </td>
-
-              <td style="min-width:150px;">
-                <div style="font-size:10px;font-weight:800;">${esc(w.startDate)} → ${esc(w.endDate)}</div>
-                <div style="font-size:9px;color:#829085;margin-top:3px;">${esc(w.estimatedTime)}</div>
-              </td>
-
-              <td style="min-width:165px;">
-                <select class="erp-inline-select"
-                  onchange="updateWorkOrderInline('${w.id}','status',this.value)">
-                  ${statuses.map(s=>`<option ${s===w.status?'selected':''}>${s}</option>`).join('')}
-                </select>
-              </td>
-
-              <td style="min-width:205px;">
-                <select class="erp-inline-select"
-                  onchange="updateWorkOrderInline('${w.id}','allocationStatus',this.value)">
-                  ${allocations.map(s=>`<option ${s===w.allocationStatus?'selected':''}>${s}</option>`).join('')}
-                </select>
-                <button onclick="openAllocation('${w.id}')" style="margin-top:6px;border:none;background:transparent;color:#1a4d2a;font-size:9px;font-weight:900;cursor:pointer;padding:2px 0;">Set / edit material quantities →</button>
-              </td>
-
-              <td style="min-width:105px;">
-                <div style="font-size:15px;color:#1a4d2a;font-weight:950;">${w.efficiency}%</div>
-                <div style="height:6px;background:#e7eee7;border-radius:999px;margin-top:5px;overflow:hidden;">
-                  <div style="height:100%;width:${Math.max(0,Math.min(100,w.efficiency))}%;background:#1a4d2a;border-radius:999px;"></div>
-                </div>
-              </td>
-
-              <td style="min-width:115px;">
-                ${button('View Details',`openWorkOrder('${w.id}')`,'light','padding:8px 10px;font-size:10px;')}
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `);
+      <div class="erp-mobile-hint">↔ Swipe sideways to see every table field.</div>
+      <div class="erp-table-wrap">
+        <table class="erp-table" style="min-width:1080px;">
+          <thead><tr><th>Work Order</th><th>Plant / Stage</th><th>Qty</th><th>Work Status</th><th>Material Status</th><th>Farm / Block</th><th>Assigned</th><th>Supervisor</th><th>Action</th></tr></thead>
+          <tbody>
+            ${rows.map(w=>`
+              <tr id="wo-row-${w.id}" class="wo-data-row" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${esc([w.id,w.farm,w.block,w.plants.join(' '),w.stages.join(' '),w.actions.join(' '),w.message].join(' ').toLowerCase())}">
+                <td style="min-width:150px;"><div class="ref-table-id">${w.id}</div></td>
+                <td style="min-width:190px;"><strong style="color:#202c25;">${esc(w.plants.join(', '))}</strong><div class="ref-sub">${esc(w.stages.join(', '))}</div></td>
+                <td style="min-width:80px;"><strong>${w.quantity}</strong><div class="ref-sub">plants</div></td>
+                <td style="min-width:165px;"><select class="erp-inline-select ref-status-select" onchange="updateWorkOrderInline('${w.id}','status',this.value)">${statuses.map(x=>`<option ${x===w.status?'selected':''}>${x}</option>`).join('')}</select></td>
+                <td style="min-width:190px;"><select class="erp-inline-select ref-status-select" onchange="updateWorkOrderInline('${w.id}','allocationStatus',this.value)">${allocations.map(x=>`<option ${x===w.allocationStatus?'selected':''}>${x}</option>`).join('')}</select></td>
+                <td style="min-width:130px;"><strong>${esc(w.farm)}</strong><div class="ref-sub">${esc(w.block)}</div></td>
+                <td style="min-width:155px;"><strong>${esc(w.assignedOn.split(',')[0])}</strong><div class="ref-sub">${esc(w.assignedOn.split(',').slice(1).join(',').trim())}</div></td>
+                <td style="min-width:135px;"><strong>${esc(w.supervisors.join(', '))}</strong></td>
+                <td style="min-width:110px;"><button class="ref-table-action" onclick="openWorkOrder('${w.id}')">View Details</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${referencePagination(rows.length,'work orders')}
+    </div>`;
 }
-
 
 function openWorkOrder(id){
   const w=workOrders.find(x=>x.id===id);
@@ -1253,6 +1273,8 @@ function updateB2BInline(id,field,value){
   if(row){
     row.dataset.order=o.orderStatus;
     row.dataset.delivery=o.deliveryStatus;
+    row.dataset.driver=o.driver||'Not Assigned';
+    row.dataset.farm=o.farm;
   }
 
   applyB2BFiltersDom();
@@ -1262,23 +1284,23 @@ function updateB2BInline(id,field,value){
 function applyB2BFiltersDom(){
   const f=state.b2bFilters;
   let visible=0;
-
   document.querySelectorAll('.b2b-data-row').forEach(row=>{
     const matchOrder=!f.order.length || f.order.includes(row.dataset.order);
     const matchDelivery=!f.delivery.length || f.delivery.includes(row.dataset.delivery);
+    const matchDriver=!f.driver.length || f.driver.includes(row.dataset.driver);
+    const matchFarm=!f.farm.length || f.farm.includes(row.dataset.farm);
     const q=(f.search||'').trim().toLowerCase();
     const matchSearch=!q || (row.dataset.search||'').includes(q);
-    const show=matchOrder&&matchDelivery&&matchSearch;
+    const show=matchOrder&&matchDelivery&&matchDriver&&matchFarm&&matchSearch;
     row.style.display=show?'':'none';
     if(show)visible++;
   });
-
   const count=document.getElementById('b2bVisibleCount');
   if(count)count.textContent=visible+' order'+(visible===1?'':'s');
 }
 
 function clearB2BFilters(){
-  state.b2bFilters={order:[],delivery:[],search:''};
+  state.b2bFilters={order:[],delivery:[],driver:[],farm:[],search:''};
   render();
   showToast('B2B filters cleared.');
 }
@@ -1287,127 +1309,50 @@ function b2bView(){
   const orders=myB2B();
   const orderStatuses=['In Progress','Ready to Dispatch','Completed','On Hold','Failed'];
   const deliveryStatuses=['Pending Assignment','Driver Assigned','Ready for Pickup','In Transit','Delivered','Failed'];
+  const farms=[...new Set(orders.map(o=>o.farm))].sort();
+  const driverOptions=['Not Assigned',...drivers];
 
-  return sectionCard(`
-    ${headerBlock(
-      'B2B Orders & Delivery',
-      'Keep fulfilment and shipment tracking in one table. Driver and statuses can be changed directly without opening separate update popups.',
-      '🤝'
-    )}
+  return `
+    <div class="ref-list-page">
+      <div class="ref-title-row"><div class="ref-title-wrap"><h1 class="ref-title">B2B Orders & Delivery</h1><span class="ref-count-badge">${orders.length}</span></div></div>
 
-    <div class="erp-stepper" style="margin-bottom:12px;">
-      <div class="erp-step active"><strong>1 · Review Order</strong><span>Check customer, items and due date.</span></div>
-      <div class="erp-step"><strong>2 · Prepare Order</strong><span>Update order fulfilment status.</span></div>
-      <div class="erp-step"><strong>3 · Assign Driver</strong><span>Select driver directly in the row.</span></div>
-      <div class="erp-step"><strong>4 · Deliver</strong><span>Update shipment until Delivered.</span></div>
-    </div>
-
-    <div class="erp-filter-panel" style="border:1px solid #e1ebe2;border-radius:16px;background:#f8fbf8;padding:10px;margin-bottom:10px;">
-      <button type="button" class="erp-mobile-filter-toggle" onclick="toggleMobileFilters(this)"><span>⌕</span><strong>Search & Filters</strong><span class="erp-filter-chevron">⌄</span></button>
-      <div class="erp-filter-body">
-      <div class="erp-filter-grid">
-        <div>
-          <div style="font-size:9px;color:#758379;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px 2px;">Search</div>
-          <input
-            value="${esc(state.b2bFilters.search)}"
-            placeholder="Order, customer, item..."
-            oninput="state.b2bFilters.search=this.value;applyB2BFiltersDom()"
-            style="width:100%;box-sizing:border-box;border:1px solid #dce7dc;background:#fff;border-radius:12px;padding:10px 11px;font-size:11px;color:#294631;outline:none;"
-          >
-        </div>
-        ${multiFilter('b2bFilters','order','Order Fulfilment',orderStatuses,'All order status')}
-        ${multiFilter('b2bFilters','delivery','Delivery Status',deliveryStatuses,'All delivery status')}
+      <div class="ref-search-row">
+        <label class="ref-search-box"><span class="ref-search-icon">⌕</span><input value="${esc(state.b2bFilters.search)}" placeholder="Search order, customer, item..." oninput="state.b2bFilters.search=this.value;applyB2BFiltersDom()"></label>
+        <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('b2b-filter-strip')"><span>⚲</span> Filters</button>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:9px;">
-        <span id="b2bVisibleCount" style="font-size:10px;color:#1a4d2a;font-weight:900;">${orders.length} orders</span>
-        ${button('Clear Filters','clearB2BFilters()','light','padding:8px 11px;font-size:10px;')}
+      <div id="b2b-filter-strip" class="ref-filter-strip">
+        ${compactMultiFilter('b2bFilters','order','Order Status','☷',orderStatuses)}
+        ${compactMultiFilter('b2bFilters','delivery','Delivery','⌁',deliveryStatuses)}
+        ${compactMultiFilter('b2bFilters','driver','Driver','♙',driverOptions)}
+        ${compactMultiFilter('b2bFilters','farm','Farm','⌾',farms)}
       </div>
+
+      <div class="ref-result-bar"><span id="b2bVisibleCount" class="ref-result-count">${orders.length} orders</span><button class="ref-clear-btn" onclick="clearB2BFilters()">↻ &nbsp;Clear all</button></div>
+      <div class="erp-mobile-hint">↔ Swipe sideways to see every order field.</div>
+
+      <div class="erp-table-wrap">
+        <table class="erp-table" style="min-width:1160px;">
+          <thead><tr><th>Order</th><th>Customer</th><th>Items / Qty</th><th>Required By</th><th>Order Status</th><th>Driver</th><th>Delivery Status</th><th>Farm</th><th>Action</th></tr></thead>
+          <tbody>
+            ${orders.map(o=>{const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);return `
+              <tr id="b2b-row-${o.id}" class="b2b-data-row" data-order="${esc(o.orderStatus)}" data-delivery="${esc(o.deliveryStatus)}" data-driver="${esc(o.driver||'Not Assigned')}" data-farm="${esc(o.farm)}" data-search="${esc([o.id,o.company,o.contact,o.inquiry,o.quotation,o.address,o.items.map(i=>i[0]).join(' ')].join(' ').toLowerCase())}">
+                <td style="min-width:145px;"><div class="ref-table-id">${esc(o.id)}</div></td>
+                <td style="min-width:205px;"><strong>${esc(o.company)}</strong><div class="ref-sub">${esc(o.contact)}</div></td>
+                <td style="min-width:145px;"><strong>${o.items.length} items</strong><div class="ref-sub">${itemCount} plants</div></td>
+                <td style="min-width:115px;"><strong>${esc(o.requiredBy)}</strong></td>
+                <td style="min-width:170px;"><select id="b2b-order-${o.id}" class="erp-inline-select ref-status-select" onchange="updateB2BInline('${o.id}','orderStatus',this.value)">${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${x}</option>`).join('')}</select></td>
+                <td style="min-width:165px;"><select id="b2b-driver-${o.id}" class="erp-inline-select" onchange="updateB2BInline('${o.id}','driver',this.value)"><option value="">Not Assigned</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}</select></td>
+                <td style="min-width:175px;"><select id="b2b-delivery-${o.id}" class="erp-inline-select ref-status-select" onchange="updateB2BInline('${o.id}','deliveryStatus',this.value)">${deliveryStatuses.map(x=>`<option ${x===o.deliveryStatus?'selected':''}>${x}</option>`).join('')}</select></td>
+                <td style="min-width:110px;"><strong>${esc(o.farm)}</strong></td>
+                <td style="min-width:110px;"><button class="ref-table-action" onclick="openB2B('${o.id}')">View Details</button></td>
+              </tr>`;}).join('')}
+          </tbody>
+        </table>
       </div>
-    </div>
-
-    <div class="erp-inline-help" style="padding:9px 10px;border-radius:12px;background:#eef6ef;border:1px solid #d7e5d9;color:#365640;font-size:10px;line-height:1.5;margin-bottom:9px;">
-      <strong>Order Fulfilment</strong> tells whether the nursery has prepared/completed the customer order. <strong>Delivery Status</strong> tracks the physical shipment after a driver is assigned.
-    </div>
-
-    <div class="erp-mobile-hint">↔ Swipe sideways on mobile to see the complete order table. All columns move together.</div>
-
-    <div class="erp-table-wrap">
-      <table class="erp-table" style="min-width:1160px;">
-        <thead>
-          <tr>
-            <th>Order</th>
-            <th>Customer</th>
-            <th>Items</th>
-            <th>Required By</th>
-            <th>Order Fulfilment</th>
-            <th>Driver</th>
-            <th>Delivery Status</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${orders.map(o=>{
-            const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);
-            return `
-              <tr
-                id="b2b-row-${o.id}"
-                class="b2b-data-row"
-                data-order="${esc(o.orderStatus)}"
-                data-delivery="${esc(o.deliveryStatus)}"
-                data-search="${esc([o.id,o.company,o.contact,o.inquiry,o.quotation,o.address,o.items.map(i=>i[0]).join(' ')].join(' ').toLowerCase())}"
-              >
-                <td style="min-width:145px;">
-                  <div style="font-size:12px;color:#1a4d2a;font-weight:950;">${esc(o.id)}</div>
-                  <div style="font-size:9px;color:#829085;margin-top:3px;">${esc(o.farm)} Farm</div>
-                </td>
-
-                <td style="min-width:190px;">
-                  <strong>${esc(o.company)}</strong>
-                  <div style="font-size:10px;color:#718176;margin-top:3px;">${esc(o.contact)}</div>
-                </td>
-
-                <td style="min-width:155px;">
-                  <strong>${o.items.length} line items</strong>
-                  <div style="font-size:10px;color:#718176;margin-top:3px;">${itemCount} plants total</div>
-                </td>
-
-                <td style="min-width:115px;font-weight:800;">${esc(o.requiredBy)}</td>
-
-                <td style="min-width:170px;">
-                  <select id="b2b-order-${o.id}" class="erp-inline-select"
-                    onchange="updateB2BInline('${o.id}','orderStatus',this.value)">
-                    ${orderStatuses.map(s=>`<option ${s===o.orderStatus?'selected':''}>${s}</option>`).join('')}
-                  </select>
-                </td>
-
-                <td style="min-width:170px;">
-                  <select id="b2b-driver-${o.id}" class="erp-inline-select"
-                    onchange="updateB2BInline('${o.id}','driver',this.value)">
-                    <option value="">Not Assigned</option>
-                    ${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}
-                  </select>
-                </td>
-
-                <td style="min-width:175px;">
-                  <select id="b2b-delivery-${o.id}" class="erp-inline-select"
-                    onchange="updateB2BInline('${o.id}','deliveryStatus',this.value)">
-                    ${deliveryStatuses.map(s=>`<option ${s===o.deliveryStatus?'selected':''}>${s}</option>`).join('')}
-                  </select>
-                </td>
-
-                <td style="min-width:110px;">
-                  ${button('View Details',`openB2B('${o.id}')`,'light','padding:8px 10px;font-size:10px;')}
-                </td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-  `);
+      ${referencePagination(orders.length,'orders')}
+    </div>`;
 }
-
 
 function openB2B(id){
   const o=b2bOrders.find(x=>x.id===id);
@@ -1923,66 +1868,70 @@ function poView(){
   return poListScreen();
 }
 
+function applyPOFiltersDom(){
+  const f=state.poFilters;
+  let visible=0;
+  document.querySelectorAll('.po-data-row').forEach(row=>{
+    const matchStatus=!f.status.length || f.status.includes(row.dataset.status);
+    const matchFarm=!f.farm.length || f.farm.includes(row.dataset.farm);
+    const matchVendor=!f.vendor.length || f.vendor.includes(row.dataset.vendor);
+    const q=(f.search||'').trim().toLowerCase();
+    const matchSearch=!q || (row.dataset.search||'').includes(q);
+    const show=matchStatus&&matchFarm&&matchVendor&&matchSearch;
+    row.style.display=show?'':'none';
+    if(show)visible++;
+  });
+  const count=document.getElementById('poVisibleCount');
+  if(count)count.textContent=visible+' purchase order'+(visible===1?'':'s');
+}
+function clearPOFilters(){
+  state.poFilters={status:[],farm:[],vendor:[],search:''};
+  render();
+  showToast('PO filters cleared.');
+}
+
 function poListScreen(){
-  return sectionCard(`
-    ${poBreadcrumb()}
-    ${headerBlock(
-      'Purchase Order Receiving',
-      'Open a purchase order to receive material. Each PO opens as a separate working screen so the list stays clean.',
-      '🚚'
-    )}
+  const statuses=[...new Set(purchaseOrders.map(x=>x.status))];
+  const farms=[...new Set(purchaseOrders.map(x=>x.farm))];
+  const vendors=[...new Set(purchaseOrders.map(x=>x.vendor.name))];
+  return `
+    <div class="ref-list-page">
+      ${poBreadcrumb()}
+      <div class="ref-title-row"><div class="ref-title-wrap"><h1 class="ref-title">Purchase Order Receiving</h1><span class="ref-count-badge">${purchaseOrders.length}</span></div></div>
 
-    <div class="erp-stepper" style="margin-bottom:12px;">
-      <div class="erp-step active"><strong>1 · Select PO</strong><span>Choose the incoming purchase order.</span></div>
-      <div class="erp-step"><strong>2 · Receive</strong><span>Record received and damaged quantity.</span></div>
-      <div class="erp-step"><strong>3 · Review Variance</strong><span>Check shortage or damage.</span></div>
-      <div class="erp-step"><strong>4 · Complete</strong><span>Validate and close the receipt.</span></div>
-    </div>
+      <div class="ref-search-row">
+        <label class="ref-search-box"><span class="ref-search-icon">⌕</span><input value="${esc(state.poFilters.search)}" placeholder="Search PO, vendor, farm..." oninput="state.poFilters.search=this.value;applyPOFiltersDom()"></label>
+        <button class="ref-filter-master" onclick="toggleReferenceFilterStrip('po-filter-strip')"><span>⚲</span> Filters</button>
+      </div>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:9px;">
-      <div style="font-size:11px;color:#718176;font-weight:750;">${purchaseOrders.length} purchase orders · click <strong>Open PO</strong> to continue</div>
-      ${pill(purchaseOrders.filter(x=>x.status!=='Received').length+' Pending')}
-    </div>
+      <div id="po-filter-strip" class="ref-filter-strip">
+        ${compactMultiFilter('poFilters','status','Status','☷',statuses)}
+        ${compactMultiFilter('poFilters','farm','Farm','⌾',farms)}
+        ${compactMultiFilter('poFilters','vendor','Vendor','♙',vendors)}
+      </div>
 
-    <div class="erp-mobile-hint">↔ Swipe sideways on mobile. Every PO column moves together.</div>
+      <div class="ref-result-bar"><span id="poVisibleCount" class="ref-result-count">${purchaseOrders.length} purchase orders</span><button class="ref-clear-btn" onclick="clearPOFilters()">↻ &nbsp;Clear all</button></div>
+      <div class="erp-mobile-hint">↔ Swipe sideways to see every purchase-order field.</div>
 
-    <div class="erp-table-wrap">
-      <table class="erp-table" style="min-width:860px;">
-        <thead>
-          <tr>
-            <th>PO Number</th>
-            <th>Vendor</th>
-            <th>Farm</th>
-            <th>Expected</th>
-            <th>Items</th>
-            <th>Receipt Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${purchaseOrders.map(x=>`
-            <tr>
-              <td style="min-width:125px;">
-                <strong style="color:#1a4d2a;">${esc(x.id)}</strong>
-                <div style="font-size:9px;color:#829085;margin-top:3px;">${esc(x.requisitionNo)}</div>
-              </td>
-              <td style="min-width:205px;">
-                <strong>${esc(x.vendor.name)}</strong>
-                <div style="font-size:9px;color:#829085;margin-top:3px;">${esc(x.vendor.location)}</div>
-              </td>
-              <td style="min-width:100px;">${esc(x.farm)}</td>
-              <td style="min-width:115px;">${esc(x.expectedDelivery)}</td>
-              <td style="min-width:90px;">${x.items.length} lines</td>
-              <td style="min-width:145px;">${statusPill(x.status)}</td>
-              <td style="min-width:120px;">
-                ${button(x.status==='Received'?'View Receipt':'Open PO',`selectPOForReceiving('${x.id}')`,'green','padding:8px 11px;font-size:10px;')}
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `);
+      <div class="erp-table-wrap">
+        <table class="erp-table" style="min-width:900px;">
+          <thead><tr><th>PO Number</th><th>Vendor</th><th>Farm</th><th>Expected</th><th>Items</th><th>Receipt Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${purchaseOrders.map(x=>`
+              <tr class="po-data-row" data-status="${esc(x.status)}" data-farm="${esc(x.farm)}" data-vendor="${esc(x.vendor.name)}" data-search="${esc([x.id,x.requisitionNo,x.vendor.name,x.vendor.location,x.farm,x.status].join(' ').toLowerCase())}">
+                <td style="min-width:135px;"><div class="ref-table-id">${esc(x.id)}</div><div class="ref-sub">${esc(x.requisitionNo)}</div></td>
+                <td style="min-width:220px;"><strong>${esc(x.vendor.name)}</strong><div class="ref-sub">${esc(x.vendor.location)}</div></td>
+                <td style="min-width:105px;"><strong>${esc(x.farm)}</strong></td>
+                <td style="min-width:120px;"><strong>${esc(x.expectedDelivery)}</strong></td>
+                <td style="min-width:90px;"><strong>${x.items.length}</strong><div class="ref-sub">lines</div></td>
+                <td style="min-width:145px;">${statusPill(x.status)}</td>
+                <td style="min-width:120px;"><button class="ref-table-action" onclick="selectPOForReceiving('${x.id}')">${x.status==='Received'?'View Receipt':'Open PO'}</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${referencePagination(purchaseOrders.length,'purchase orders')}
+    </div>`;
 }
 
 function poReceivingDetailScreen(p){
@@ -2009,11 +1958,11 @@ function poReceivingDetailScreen(p){
         ${detail('PO Lines',p.items.length)}
       </div>
 
-      <div class="erp-stepper" style="margin-bottom:12px;">
-        <div class="erp-step ${poStageFor(p)>=1?'active':''}"><strong>1 · Select PO</strong><span>${esc(p.id)} selected.</span></div>
-        <div class="erp-step ${poStageFor(p)>=2?'active':''}"><strong>2 · Receive</strong><span>Enter received and damaged quantity.</span></div>
-        <div class="erp-step ${poStageFor(p)>=3?'active':''}"><strong>3 · Review Variance</strong><span>Check short or damaged stock.</span></div>
-        <div class="erp-step ${poStageFor(p)>=4?'active':''}"><strong>4 · Complete</strong><span>Validate the receipt.</span></div>
+      <div class="ref-po-progress">
+        <span class="${poStageFor(p)>=1?'active':''}">1 · PO Selected</span>
+        <span class="${poStageFor(p)>=2?'active':''}">2 · Receive</span>
+        <span class="${poStageFor(p)>=3?'active':''}">3 · Variance</span>
+        <span class="${poStageFor(p)>=4?'active':''}">4 · Complete</span>
       </div>
 
       <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px;">
