@@ -596,6 +596,142 @@
   }
 </style>
 
+
+<style id="rfid-v5-reference-update">
+  .rfid-v5-page{background:#fff;width:100%;box-sizing:border-box;padding:4px 2px 24px;}
+  .rfid-v5-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:7px 0 22px;}
+  .rfid-v5-title{margin:0;color:#141b17;font-size:29px;line-height:1.12;font-weight:850;letter-spacing:-.035em;}
+  .rfid-v5-subtitle{margin:8px 0 0;color:#737b76;font-size:13px;line-height:1.45;font-weight:500;}
+  .rfid-v5-history-btn{height:44px;border:1px solid #7cad8e;border-radius:10px;background:#fff;color:#166f3c;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;box-sizing:border-box;}
+  .rfid-v5-history-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;max-width:520px;}
+  .rfid-v5-tab{height:49px;border:1px solid #e1e5e2;border-radius:10px;background:#fff;color:#141a16;font:inherit;font-size:13px;font-weight:750;cursor:pointer;box-sizing:border-box;}
+  .rfid-v5-tab.active{background:#11733d;border-color:#11733d;color:#fff;box-shadow:0 2px 7px rgba(17,115,61,.16);}
+  .rfid-v5-card{border:1px solid #e2e7e3;border-radius:14px;background:#fff;padding:18px;box-sizing:border-box;margin-bottom:14px;box-shadow:0 1px 3px rgba(21,42,28,.02);}
+  .rfid-v5-step-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .rfid-v5-step-title{display:flex;align-items:center;gap:10px;min-width:0;color:#131a16;font-size:14px;font-weight:850;}
+  .rfid-v5-step-num{width:31px;height:31px;border-radius:50%;background:#11733d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex:0 0 auto;box-shadow:0 2px 6px rgba(17,115,61,.18);}
+  .rfid-v5-count-pill{background:#f5f8f6;border-radius:999px;padding:9px 13px;color:#707a73;font-size:11px;font-weight:650;white-space:nowrap;}
+  .rfid-v5-count-pill strong{color:#176e3f;font-weight:850;}
+  .rfid-v5-tag-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px;}
+  .rfid-v5-outline-btn{height:43px;border:1px solid #76a98a;border-radius:9px;background:#fff;color:#166f3c;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;box-sizing:border-box;}
+  .rfid-v5-outline-btn svg,.rfid-v5-clear-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-clear-btn{height:43px;border:1px solid #f0d1d4;border-radius:9px;background:#fff;color:#c74650;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:11px;font-weight:800;cursor:pointer;box-sizing:border-box;}
+  .rfid-v5-tags-scroll{max-height:306px;overflow-y:auto;padding-right:5px;scrollbar-width:thin;scrollbar-color:#b8bdb9 transparent;}
+  .rfid-v5-tags-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+  .rfid-v5-tag{min-height:52px;border:1px solid #e0e5e1;border-radius:10px;background:#fff;display:flex;align-items:center;gap:9px;padding:0 12px;box-sizing:border-box;cursor:pointer;color:#252c28;font-size:11px;font-weight:700;transition:.15s;min-width:0;}
+  .rfid-v5-tag:hover{border-color:#9cb9a6;background:#fbfdfb;}
+  .rfid-v5-tag.selected{border-color:#5c9a72;background:#eff8f1;color:#126d3b;}
+  .rfid-v5-checkbox{width:17px;height:17px;border:1.5px solid #a7afaa;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;box-sizing:border-box;}
+  .rfid-v5-tag.selected .rfid-v5-checkbox{background:#147a43;border-color:#147a43;color:#fff;}
+  .rfid-v5-checkbox svg{display:none;width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.6;}
+  .rfid-v5-tag.selected .rfid-v5-checkbox svg{display:block;}
+  .rfid-v5-tag-code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rfid-v5-show-more{width:100%;border:0;background:transparent;color:#176f3e;padding:14px 0 0;font:inherit;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .rfid-v5-show-more svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;transition:.2s;}
+  .rfid-v5-show-more.open svg{transform:rotate(180deg);}
+  .rfid-v5-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+  .rfid-v5-field{display:block;color:#181f1b;font-size:11px;font-weight:800;}
+  .rfid-v5-field.full{grid-column:1/-1;}
+  .rfid-v5-field select,.rfid-v5-field input{width:100%;height:48px;box-sizing:border-box;margin-top:7px;border:1px solid #dfe4e0;border-radius:9px;background:#fff;color:#1d241f;padding:0 13px;font:inherit;font-size:12px;font-weight:600;outline:none;}
+  .rfid-v5-field input{padding:0 13px;}
+  .rfid-v5-field select:focus,.rfid-v5-field input:focus{border-color:#5e9d74;box-shadow:0 0 0 3px rgba(17,115,61,.07);}
+  .rfid-v5-submit{width:100%;height:48px;border:0;border-radius:9px;background:#11733d;color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:16px;box-shadow:0 2px 7px rgba(17,115,61,.16);}
+  .rfid-v5-submit svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-updated{border:1px solid #dfece2;border-left:4px solid #16804a;border-radius:13px;background:linear-gradient(90deg,#f5fbf6,#fbfefb);padding:17px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0;box-sizing:border-box;}
+  .rfid-v5-updated-left{display:flex;align-items:center;gap:14px;min-width:0;}
+  .rfid-v5-updated-icon{width:48px;height:48px;border-radius:50%;background:#e0f4e5;color:#167943;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .rfid-v5-updated-icon svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.3;}
+  .rfid-v5-updated-title{color:#126c3a;font-size:12px;font-weight:850;}
+  .rfid-v5-updated-plant{color:#202823;font-size:12px;font-weight:800;margin-top:5px;}
+  .rfid-v5-updated-meta{color:#747d77;font-size:10.5px;font-weight:650;margin-top:5px;}
+  .rfid-v5-updated-qty{text-align:center;background:#eef8f0;border-radius:10px;min-width:93px;padding:10px 11px;box-sizing:border-box;flex:0 0 auto;}
+  .rfid-v5-updated-qty strong{display:block;color:#0f743c;font-size:24px;line-height:1;font-weight:900;}
+  .rfid-v5-updated-qty span{display:block;color:#4d805f;font-size:9.5px;font-weight:750;margin-top:5px;}
+  .rfid-v5-history-link{height:76px;border:1px solid #e1e6e2;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 18px;box-sizing:border-box;color:#18201b;font-size:12px;font-weight:800;cursor:pointer;width:100%;font-family:inherit;}
+  .rfid-v5-history-link-left{display:flex;align-items:center;gap:11px;}
+  .rfid-v5-history-link svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-breadcrumb{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:7px 0 15px;color:#7c867f;font-size:10.5px;font-weight:750;}
+  .rfid-v5-breadcrumb button{border:0;background:transparent;padding:0;color:#13743f;font:inherit;font-size:10.5px;font-weight:850;cursor:pointer;}
+  .rfid-v5-history-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 17px;}
+  .rfid-v5-history-head h1{margin:0;color:#141b17;font-size:27px;line-height:1.12;font-weight:850;letter-spacing:-.035em;}
+  .rfid-v5-history-head p{margin:7px 0 0;color:#737c76;font-size:11.5px;line-height:1.4;}
+  .rfid-v5-history-list{display:grid;gap:11px;}
+  .rfid-v5-history-card{border:1px solid #e2e7e3;border-radius:12px;background:#fff;padding:15px 16px;box-sizing:border-box;}
+  .rfid-v5-history-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .rfid-v5-history-id{color:#17211a;font-size:12px;font-weight:900;}
+  .rfid-v5-history-date{color:#6e7871;font-size:10px;font-weight:650;text-align:right;white-space:nowrap;}
+  .rfid-v5-history-type{display:flex;align-items:center;gap:9px;color:#737d76;font-size:10px;font-weight:650;margin-top:11px;flex-wrap:wrap;}
+  .rfid-v5-history-type span{display:inline-flex;align-items:center;gap:5px;}
+  .rfid-v5-history-type svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-history-details{color:#747d77;font-size:10.5px;font-weight:650;margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .rfid-v5-history-details strong{color:#28322c;font-weight:750;}
+  .rfid-v5-history-details svg{width:14px!important;height:14px!important;min-width:14px!important;max-width:14px!important;display:block;stroke:currentColor;fill:none;stroke-width:2;}
+  .rfid-v5-empty{border:1px solid #e2e7e3;border-radius:13px;background:#fff;padding:35px 18px;text-align:center;color:#7a847e;font-size:11px;font-weight:650;line-height:1.6;}
+  .rfid-v5-desktop-history-table{display:block;}
+  .rfid-v5-mobile-history-list{display:none;}
+
+  @media(max-width:899px){
+    .rfid-v5-page{padding:3px 3px 28px;}
+    .rfid-v5-title-row{margin:9px 0 18px;align-items:center;}
+    .rfid-v5-title{font-size:25px;}
+    .rfid-v5-subtitle{font-size:11.5px;margin-top:6px;}
+    .rfid-v5-history-btn{height:42px;padding:0 12px;font-size:10.5px;border-radius:9px;}
+    .rfid-v5-tabs{max-width:none;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+    .rfid-v5-tab{height:48px;font-size:12px;}
+    .rfid-v5-card{padding:16px 14px;border-radius:13px;margin-bottom:13px;}
+    .rfid-v5-step-head{margin-bottom:15px;}
+    .rfid-v5-step-title{font-size:13px;gap:9px;}
+    .rfid-v5-step-num{width:29px;height:29px;font-size:11px;}
+    .rfid-v5-count-pill{padding:8px 10px;font-size:10px;}
+    .rfid-v5-tag-actions{gap:10px;margin-bottom:14px;}
+    .rfid-v5-outline-btn,.rfid-v5-clear-btn{height:42px;font-size:10.5px;padding:0 13px;}
+    .rfid-v5-tags-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+    .rfid-v5-tag{min-height:50px;padding:0 10px;font-size:10.5px;border-radius:9px;gap:8px;}
+    .rfid-v5-tags-scroll{max-height:298px;}
+    .rfid-v5-form-grid{gap:13px 12px;}
+    .rfid-v5-field{font-size:10.5px;}
+    .rfid-v5-field select,.rfid-v5-field input{height:47px;margin-top:6px;font-size:11.5px;border-radius:9px;padding-left:11px;padding-right:11px;}
+    .rfid-v5-submit{height:48px;margin-top:15px;font-size:11.5px;}
+    .rfid-v5-updated{padding:15px 14px;margin:13px 0;}
+    .rfid-v5-updated-icon{width:45px;height:45px;}
+    .rfid-v5-updated-title,.rfid-v5-updated-plant{font-size:11.5px;}
+    .rfid-v5-updated-meta{font-size:10px;}
+    .rfid-v5-updated-qty{min-width:88px;padding:9px 10px;}
+    .rfid-v5-updated-qty strong{font-size:22px;}
+    .rfid-v5-history-link{height:70px;padding:0 15px;font-size:11.5px;}
+    .rfid-v5-breadcrumb{margin:6px 0 14px;}
+    .rfid-v5-history-head{margin-bottom:14px;}
+    .rfid-v5-history-head h1{font-size:24px;}
+    .rfid-v5-history-head p{font-size:10.5px;}
+    .rfid-v5-desktop-history-table{display:none!important;}
+    .rfid-v5-mobile-history-list{display:grid!important;gap:10px;}
+  }
+
+  @media(max-width:430px){
+    .rfid-v5-title-row{gap:10px;}
+    .rfid-v5-title{font-size:23px;}
+    .rfid-v5-history-btn{padding:0 10px;font-size:9.5px;gap:6px;}
+    .rfid-v5-history-btn svg{width:15px;height:15px;}
+    .rfid-v5-tabs{gap:6px;}
+    .rfid-v5-card{padding:14px 12px;}
+    .rfid-v5-count-pill{font-size:9px;padding:7px 8px;}
+    .rfid-v5-tags-grid{gap:7px;}
+    .rfid-v5-tag{min-height:47px;padding:0 8px;font-size:9.5px;gap:6px;}
+    .rfid-v5-checkbox{width:15px;height:15px;}
+    .rfid-v5-outline-btn,.rfid-v5-clear-btn{height:40px;padding:0 11px;font-size:9.8px;}
+    .rfid-v5-form-grid{gap:12px 10px;}
+    .rfid-v5-updated{gap:9px;padding:13px 11px;}
+    .rfid-v5-updated-left{gap:10px;}
+    .rfid-v5-updated-icon{width:40px;height:40px;}
+    .rfid-v5-updated-qty{min-width:76px;padding:8px;}
+    .rfid-v5-updated-qty strong{font-size:20px;}
+    .rfid-v5-history-card{padding:14px 13px;min-height:0!important;}
+    .rfid-v5-history-details{margin-top:10px!important;justify-content:flex-start!important;}
+    .rfid-v5-history-date{font-size:9px;}
+  }
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
@@ -612,6 +748,8 @@ const state={
   poFilters:{status:[],farm:[],vendor:[],search:''},
   allocationDraft:{},
   rfidMode:'individual',
+  rfidScreen:'main',
+  rfidShowAll:false,
   selectedRfids:new Set(),
   individualLogs:[],
   groupLogs:[],
@@ -1747,73 +1885,268 @@ function saveAllocation(id){
   );
 }
 
-function rfidAdditionView(){return sectionCard(`${headerBlock('RFID Inventory Addition','','🏷')}<div style="display:flex;gap:6px;margin-bottom:11px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;">${button('Individual RFID',"state.rfidMode='individual';render()",state.rfidMode==='individual'?'green':'light')}${button('Group RFID',"state.rfidMode='group';render()",state.rfidMode==='group'?'green':'light')}</div>${state.rfidMode==='individual'?individualRFIDView():groupRFIDView()}${renderUpdatedFarmInventory()}${renderRFIDLogs()}`)}
-function commonRFIDSelect(p){return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;"><label style="font-size:11px;color:#1a4d2a;font-weight:900;">Plant<select id="${p}Plant" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${plants.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:11px;color:#1a4d2a;font-weight:900;">Stage<select id="${p}Stage" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${stages.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:11px;color:#1a4d2a;font-weight:900;">Farm<select id="${p}Farm" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${farms.map(x=>`<option>${x}</option>`).join('')}</select></label><label style="font-size:11px;color:#1a4d2a;font-weight:900;">Block<select id="${p}Block" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${blocks.map(x=>`<option>${x}</option>`).join('')}</select></label></div>`}
-function individualRFIDView(){const usable=availableRfids.filter(x=>!mappedRfidRegistry.has(x));return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:13px;color:#1a4d2a;font-weight:950;">Individual RFID Map</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin:9px 0;">${button('Select First 5','selectFirstRFIDs()','light')}${button('Clear','state.selectedRfids.clear();render()','light')}<span style="font-size:11px;font-weight:900;color:#1a4d2a;padding:8px;">${state.selectedRfids.size} selected</span></div><div style="max-height:165px;overflow:auto;display:flex;gap:5px;flex-wrap:wrap;padding:7px;border:1px solid #e3ece5;border-radius:11px;background:#fff;">${usable.map(r=>`<button onclick="toggleRFID('${r}')" style="border:1px solid ${state.selectedRfids.has(r)?'#1a4d2a':'#dfe8df'};background:${state.selectedRfids.has(r)?'#e8f5ea':'#fff'};color:#1a4d2a;border-radius:8px;padding:6px 7px;font-size:10px;font-weight:850;cursor:pointer;">${r}</button>`).join('')}</div><div style="margin-top:10px;">${commonRFIDSelect('ind')}<label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:7px;">Batch<select id="indBatch" style="width:100%;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;background:#fff;">${Array.from({length:20},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label></div><div style="margin-top:10px;">${button('Submit Individual RFID Mapping','submitIndividualRFID()')}</div></div>`}
-function groupRFIDView(){return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:13px;color:#1a4d2a;font-weight:950;">Group RFID Map</div><label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:10px;">Group RFID Code<input id="grpCode" placeholder="RFID-GRP-OM-0001" style="width:100%;box-sizing:border-box;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;"></label><div style="margin-top:8px;">${commonRFIDSelect('grp')}</div><label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:7px;">Quantity<input id="grpQty" type="number" min="1" placeholder="e.g. 120" style="width:100%;box-sizing:border-box;margin-top:4px;border:1px solid #dbe8db;border-radius:9px;padding:9px;"></label><div style="margin-top:10px;">${button('Submit Group RFID Mapping','submitGroupRFID()')}</div></div>`}
-function toggleRFID(r){state.selectedRfids.has(r)?state.selectedRfids.delete(r):state.selectedRfids.add(r);render()}function selectFirstRFIDs(){state.selectedRfids=new Set(availableRfids.filter(x=>!mappedRfidRegistry.has(x)).slice(0,5));render()}function invKey(f,b,p,s){return [f,b,p,s].join('|')}function addInventory(f,b,p,s,q){const k=invKey(f,b,p,s);state.inventory[k]=(state.inventory[k]||0)+q}
-function submitIndividualRFID(){if(!state.selectedRfids.size){showToast('Select at least one RFID.',true);return}const p=document.getElementById('indPlant').value,s=document.getElementById('indStage').value,f=document.getElementById('indFarm').value,b=document.getElementById('indBlock').value,batch=document.getElementById('indBatch').value,rfids=[...state.selectedRfids];rfids.forEach(r=>mappedRfidRegistry.add(r));addInventory(f,b,p,s,rfids.length);const l={id:'INV-ADD-2026-'+String(state.individualLogs.length+1).padStart(3,'0'),rfids,plant:p,stage:s,farm:f,block:'Block '+b,batch,count:rfids.length,date:nowText()};state.individualLogs.unshift(l);state.selectedRfids.clear();render();showToast(l.id+' submitted. '+l.count+' plants added.')}
-function submitGroupRFID(){const r=document.getElementById('grpCode').value.trim().toUpperCase(),q=Number(document.getElementById('grpQty').value||0);if(!r){showToast('Enter Group RFID code.',true);return}if(mappedRfidRegistry.has(r)){showToast('RFID already mapped.',true);return}if(!Number.isInteger(q)||q<1){showToast('Enter valid group quantity.',true);return}const p=document.getElementById('grpPlant').value,s=document.getElementById('grpStage').value,f=document.getElementById('grpFarm').value,b=document.getElementById('grpBlock').value;mappedRfidRegistry.add(r);addInventory(f,b,p,s,q);const l={id:'GRP-RFID-2026-'+String(state.groupLogs.length+1).padStart(3,'0'),rfid:r,plant:p,stage:s,farm:f,block:'Block '+b,count:q,date:nowText()};state.groupLogs.unshift(l);render();showToast(l.id+' submitted. '+q+' plants added.')}
+function rfidIcon(name){
+  const icons={
+    history:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/><path d="M12 7v5l3 2"/></svg>`,
+    trash:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/><path d="M10 11v5M14 11v5"/></svg>`,
+    scan:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3M16 4h3a1 1 0 0 1 1 1v3M8 20H5a1 1 0 0 1-1-1v-3M16 20h3a1 1 0 0 0 1-1v-3"/><path d="M9 9h6v6H9z"/></svg>`,
+    cube:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>`,
+    check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>`,
+    user:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6 20c.8-4 3-6 6-6s5.2 2 6 6"/></svg>`,
+    tag:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13l-7 7-9-9V4h7l9 9z"/><circle cx="8.5" cy="8.5" r="1.3"/></svg>`,
+    chevron:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>`,
+    down:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`
+  };
+  return icons[name]||'';
+}
 
-function renderUpdatedFarmInventory(){
-  const rows=Object.entries(state.inventory).map(([key,qty])=>{
-    const parts=key.split('|');
-    return {
-      farm:parts[0]||'—',
-      block:parts[1]||'—',
-      plant:parts[2]||'—',
-      stage:parts[3]||'—',
-      updatedQty:Number(qty||0)
-    };
-  }).sort((a,b)=>a.farm.localeCompare(b.farm)||a.block.localeCompare(b.block)||a.plant.localeCompare(b.plant));
+function openRFIDHistory(){state.rfidScreen='history';render();window.scrollTo({top:0,behavior:'smooth'});}
+function backToRFIDAdd(){state.rfidScreen='main';render();window.scrollTo({top:0,behavior:'smooth'});}
+function toggleRFIDShowMore(){state.rfidShowAll=!state.rfidShowAll;render();}
 
+function rfidAdditionView(){
+  return state.rfidScreen==='history' ? rfidHistoryView() : rfidMainView();
+}
+
+function rfidMainView(){
   return `
-    <div style="margin-top:13px;border:1px solid #dfe9df;border-radius:14px;background:#fff;overflow:hidden;">
-      <div style="padding:11px 12px;background:linear-gradient(135deg,#eef6ef,#f8fbf8);border-bottom:1px solid #dfe9df;">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-          <div>
-            <div style="font-size:13px;color:#1a4d2a;font-weight:950;">🌿 Updated Farm Inventory View</div>          </div>
-
-          <span style="background:#fff8df;color:#7a5c00;border:1px solid #f0dfa4;border-radius:999px;padding:5px 7px;font-size:10px;font-weight:900;">
-            Updated Values Only
-          </span>
+    <div class="rfid-v5-page">
+      <div class="rfid-v5-title-row">
+        <div>
+          <h1 class="rfid-v5-title">Add RFID Inventory</h1>
+          <p class="rfid-v5-subtitle">Select RFID tags and assign them to inventory.</p>
         </div>
+        <button class="rfid-v5-history-btn" onclick="openRFIDHistory()">${rfidIcon('history')}<span>View History</span></button>
       </div>
 
-      ${rows.length ? `
-        <div style="display:grid;gap:7px;padding:10px;">
-          ${rows.map(r=>`
-            <div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px 10px;background:#fbfdfb;">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-                <div style="min-width:0;">
-                  <div style="font-size:12px;color:#1a4d2a;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                    ${esc(r.plant)}
-                  </div>
+      <div class="rfid-v5-tabs">
+        <button class="rfid-v5-tab ${state.rfidMode==='individual'?'active':''}" onclick="state.rfidMode='individual';state.rfidShowAll=false;render()">Individual RFID</button>
+        <button class="rfid-v5-tab ${state.rfidMode==='group'?'active':''}" onclick="state.rfidMode='group';state.rfidShowAll=false;render()">Group RFID</button>
+      </div>
 
-                  <div style="font-size:10px;color:#77867b;font-weight:700;margin-top:3px;">
-                    ${esc(r.farm)} · Block ${esc(r.block)} · ${esc(r.stage)}
-                  </div>
-                </div>
+      ${state.rfidMode==='individual'?individualRFIDView():groupRFIDView()}
+      ${renderUpdatedFarmInventory()}
 
-                <div style="text-align:right;flex:0 0 auto;">
-                  <div style="font-size:10px;color:#829085;font-weight:900;text-transform:uppercase;">Updated Qty</div>
-                  <div style="font-size:17px;color:#1a4d2a;font-weight:950;margin-top:2px;">+${r.updatedQty}</div>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      ` : `
-        <div style="padding:18px 12px;text-align:center;color:#7b897d;font-size:11px;font-weight:700;line-height:1.5;">
-          No farm inventory has been updated in this session yet.<br>
-          Submit an Individual or Group RFID mapping to see the updated values here.
-        </div>
-      `}
+      <button class="rfid-v5-history-link" onclick="openRFIDHistory()">
+        <span class="rfid-v5-history-link-left">${rfidIcon('history')}<span>View Inventory History</span></span>
+        ${rfidIcon('chevron')}
+      </button>
     </div>
   `;
 }
 
-function renderRFIDLogs(){const logs=[...state.individualLogs.map(x=>({...x,type:'Individual',code:x.rfids.join(', ')})),...state.groupLogs.map(x=>({...x,type:'Group',code:x.rfid}))];return `<div style="margin-top:13px;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;margin-bottom:6px;">Inventory Addition Log</div><div style="overflow-x:auto;border:1px solid #e2ebe3;border-radius:12px;-webkit-overflow-scrolling:touch;"><table style="width:100%;min-width:700px;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#edf5ef;color:#1a4d2a;text-align:left;">${['Addition','Type','Plant','Stage','Farm / Block','Qty','RFID','Date'].map(h=>`<th style="padding:8px;">${h}</th>`).join('')}</tr></thead><tbody>${logs.length?logs.map(l=>`<tr><td style="padding:8px;border-top:1px solid #e7eee7;font-weight:900;color:#1a4d2a;">${l.id}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.type}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.plant}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.stage}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.farm} · ${l.block}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.count}</td><td style="padding:8px;border-top:1px solid #e7eee7;max-width:220px;">${esc(l.code)}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${l.date}</td></tr>`).join(''):`<tr><td colspan="8" style="padding:18px;text-align:center;color:#7b897d;">No RFID inventory addition submitted yet.</td></tr>`}</tbody></table></div></div>`}
+function commonRFIDSelect(p){
+  return `
+    <div class="rfid-v5-form-grid">
+      <label class="rfid-v5-field">Plant
+        <select id="${p}Plant">${plants.map(x=>`<option>${x}</option>`).join('')}</select>
+      </label>
+      <label class="rfid-v5-field">Stage
+        <select id="${p}Stage">${stages.map(x=>`<option>${x}</option>`).join('')}</select>
+      </label>
+      <label class="rfid-v5-field">Farm
+        <select id="${p}Farm">${farms.map(x=>`<option>${x}</option>`).join('')}</select>
+      </label>
+      <label class="rfid-v5-field">Block
+        <select id="${p}Block">${blocks.map(x=>`<option>${x}</option>`).join('')}</select>
+      </label>
+    </div>
+  `;
+}
+
+function individualRFIDView(){
+  const usable=availableRfids.filter(x=>!mappedRfidRegistry.has(x));
+  // Keep the default selector compact on mobile: 3 rows × 3 tags.
+  // Users can expand the full list with Show more.
+  const initialVisibleCount=9;
+  const visible=state.rfidShowAll?usable:usable.slice(0,initialVisibleCount);
+
+  return `
+    <div class="rfid-v5-card">
+      <div class="rfid-v5-step-head">
+        <div class="rfid-v5-step-title"><span class="rfid-v5-step-num">1</span><span>Select RFID Tags</span></div>
+        <div class="rfid-v5-count-pill"><strong>${usable.length}</strong> available&nbsp; · &nbsp;<strong>${state.selectedRfids.size}</strong> selected</div>
+      </div>
+
+      <div class="rfid-v5-tag-actions">
+        <button class="rfid-v5-outline-btn" onclick="selectFirstRFIDs()">${rfidIcon('scan')}<span>Select first 5</span></button>
+        <button class="rfid-v5-clear-btn" onclick="state.selectedRfids.clear();render()">${rfidIcon('trash')}<span>Clear</span></button>
+      </div>
+
+      <div class="rfid-v5-tags-scroll">
+        <div class="rfid-v5-tags-grid">
+          ${visible.map(r=>`
+            <button class="rfid-v5-tag ${state.selectedRfids.has(r)?'selected':''}" onclick="toggleRFID('${r}')">
+              <span class="rfid-v5-checkbox">${rfidIcon('check')}</span>
+              <span class="rfid-v5-tag-code">${r}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      ${usable.length>initialVisibleCount?`<button class="rfid-v5-show-more ${state.rfidShowAll?'open':''}" onclick="toggleRFIDShowMore()">${rfidIcon('down')}<span>${state.rfidShowAll?'Show less':'Show more'}</span></button>`:''}
+    </div>
+
+    <div class="rfid-v5-card">
+      <div class="rfid-v5-step-head">
+        <div class="rfid-v5-step-title"><span class="rfid-v5-step-num">2</span><span>Inventory Details</span></div>
+      </div>
+
+      ${commonRFIDSelect('ind')}
+
+      <div class="rfid-v5-form-grid" style="margin-top:13px;">
+        <label class="rfid-v5-field full">Batch
+          <select id="indBatch">${Array.from({length:20},(_,i)=>`<option>${i+1}</option>`).join('')}</select>
+        </label>
+      </div>
+
+      <button class="rfid-v5-submit" onclick="submitIndividualRFID()">${rfidIcon('cube')}<span>Add to Inventory</span></button>
+    </div>
+  `;
+}
+
+function groupRFIDView(){
+  return `
+    <div class="rfid-v5-card">
+      <div class="rfid-v5-step-head">
+        <div class="rfid-v5-step-title"><span class="rfid-v5-step-num">1</span><span>Group RFID</span></div>
+      </div>
+      <div class="rfid-v5-form-grid">
+        <label class="rfid-v5-field full">Group RFID Code
+          <input id="grpCode" placeholder="RFID-GRP-OM-0001" autocomplete="off">
+        </label>
+      </div>
+    </div>
+
+    <div class="rfid-v5-card">
+      <div class="rfid-v5-step-head">
+        <div class="rfid-v5-step-title"><span class="rfid-v5-step-num">2</span><span>Inventory Details</span></div>
+      </div>
+
+      ${commonRFIDSelect('grp')}
+
+      <div class="rfid-v5-form-grid" style="margin-top:13px;">
+        <label class="rfid-v5-field full">Quantity
+          <input id="grpQty" type="number" min="1" inputmode="numeric" placeholder="e.g. 120">
+        </label>
+      </div>
+
+      <button class="rfid-v5-submit" onclick="submitGroupRFID()">${rfidIcon('cube')}<span>Add to Inventory</span></button>
+    </div>
+  `;
+}
+
+function toggleRFID(r){state.selectedRfids.has(r)?state.selectedRfids.delete(r):state.selectedRfids.add(r);render()}
+function selectFirstRFIDs(){state.selectedRfids=new Set(availableRfids.filter(x=>!mappedRfidRegistry.has(x)).slice(0,5));render()}
+function invKey(f,b,p,s){return [f,b,p,s].join('|')}
+function addInventory(f,b,p,s,q){const k=invKey(f,b,p,s);state.inventory[k]=(state.inventory[k]||0)+q}
+function submitIndividualRFID(){if(!state.selectedRfids.size){showToast('Select at least one RFID.',true);return}const p=document.getElementById('indPlant').value,s=document.getElementById('indStage').value,f=document.getElementById('indFarm').value,b=document.getElementById('indBlock').value,batch=document.getElementById('indBatch').value,rfids=[...state.selectedRfids];rfids.forEach(r=>mappedRfidRegistry.add(r));addInventory(f,b,p,s,rfids.length);const l={id:'INV-ADD-2026-'+String(state.individualLogs.length+1).padStart(3,'0'),rfids,plant:p,stage:s,farm:f,block:'Block '+b,batch,count:rfids.length,date:nowText()};state.individualLogs.unshift(l);state.selectedRfids.clear();render();showToast(l.id+' submitted. '+l.count+' plants added.')}
+function submitGroupRFID(){const r=document.getElementById('grpCode').value.trim().toUpperCase(),q=Number(document.getElementById('grpQty').value||0);if(!r){showToast('Enter Group RFID code.',true);return}if(mappedRfidRegistry.has(r)){showToast('RFID already mapped.',true);return}if(!Number.isInteger(q)||q<1){showToast('Enter valid group quantity.',true);return}const p=document.getElementById('grpPlant').value,s=document.getElementById('grpStage').value,f=document.getElementById('grpFarm').value,b=document.getElementById('grpBlock').value;mappedRfidRegistry.add(r);addInventory(f,b,p,s,q);const l={id:'GRP-RFID-2026-'+String(state.groupLogs.length+1).padStart(3,'0'),rfid:r,plant:p,stage:s,farm:f,block:'Block '+b,count:q,date:nowText()};state.groupLogs.unshift(l);render();showToast(l.id+' submitted. '+q+' plants added.')}
+
+function latestRFIDInventoryUpdate(){
+  const ind=state.individualLogs[0];
+  const grp=state.groupLogs[0];
+  if(!ind && !grp)return null;
+  if(ind && !grp)return {...ind,type:'Individual'};
+  if(grp && !ind)return {...grp,type:'Group'};
+  // Both arrays are newest-first; use the latest action count as a stable prototype tie-breaker.
+  const indNo=Number(String(ind.id||'').match(/(\d+)$/)?.[1]||0);
+  const grpNo=Number(String(grp.id||'').match(/(\d+)$/)?.[1]||0);
+  return indNo>=grpNo?{...ind,type:'Individual'}:{...grp,type:'Group'};
+}
+
+function renderUpdatedFarmInventory(){
+  const l=latestRFIDInventoryUpdate();
+  if(!l)return '';
+  return `
+    <div class="rfid-v5-updated">
+      <div class="rfid-v5-updated-left">
+        <div class="rfid-v5-updated-icon">${rfidIcon('check')}</div>
+        <div style="min-width:0;">
+          <div class="rfid-v5-updated-title">Inventory Updated</div>
+          <div class="rfid-v5-updated-plant">${esc(l.plant)}</div>
+          <div class="rfid-v5-updated-meta">${esc(l.farm)} &nbsp;·&nbsp; ${esc(l.block)} &nbsp;·&nbsp; ${esc(l.stage)}</div>
+        </div>
+      </div>
+      <div class="rfid-v5-updated-qty"><strong>+${Number(l.count||0)}</strong><span>${l.type==='Individual'?'RFID tags':'plants'}</span></div>
+    </div>
+  `;
+}
+
+function getRFIDHistoryLogs(){
+  return [
+    ...state.individualLogs.map(x=>({...x,type:'Individual',code:x.rfids.join(', '),tagCount:x.rfids.length})),
+    ...state.groupLogs.map(x=>({...x,type:'Group',code:x.rfid,tagCount:1}))
+  ];
+}
+
+function rfidHistoryCard(l){
+  return `
+    <div class="rfid-v5-history-card">
+      <div class="rfid-v5-history-card-top">
+        <div class="rfid-v5-history-id">${esc(l.id)}</div>
+        <div class="rfid-v5-history-date">${esc(l.date)}</div>
+      </div>
+      <div class="rfid-v5-history-type">
+        <span>${rfidIcon('user')}${esc(l.type)}</span>
+        <span>${rfidIcon('tag')}${l.type==='Individual'?`${l.tagCount} RFID tags`:`${esc(l.code)} · ${l.count} plants`}</span>
+      </div>
+      <div class="rfid-v5-history-details">
+        <span><strong>${esc(l.plant)}</strong> &nbsp;·&nbsp; ${esc(l.stage)} &nbsp;·&nbsp; ${esc(l.farm)} &nbsp;·&nbsp; ${esc(l.block)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function rfidHistoryView(){
+  const logs=getRFIDHistoryLogs();
+  return `
+    <div class="rfid-v5-page">
+      <div class="rfid-v5-breadcrumb">
+        <button onclick="backToRFIDAdd()">RFID Add</button>
+        <span>›</span>
+        <span>Inventory History</span>
+      </div>
+
+      <div class="rfid-v5-history-head">
+        <div>
+          <h1>Inventory Addition History</h1>
+          <p>RFID inventory additions recorded by the supervisor.</p>
+        </div>
+      </div>
+
+      ${logs.length?`
+        <div class="rfid-v5-mobile-history-list">
+          ${logs.map(rfidHistoryCard).join('')}
+        </div>
+
+        <div class="rfid-v5-desktop-history-table">
+          <div class="erp-table-wrap" style="margin-top:0;">
+            <table class="erp-table" style="min-width:820px;">
+              <thead><tr><th>Addition</th><th>Type</th><th>Plant / Stage</th><th>Farm / Block</th><th>Qty</th><th>RFID</th><th>Date</th></tr></thead>
+              <tbody>${logs.map(l=>`
+                <tr>
+                  <td><div class="ref-table-id">${esc(l.id)}</div></td>
+                  <td>${esc(l.type)}</td>
+                  <td><strong>${esc(l.plant)}</strong><div class="ref-sub">${esc(l.stage)}</div></td>
+                  <td><strong>${esc(l.farm)}</strong><div class="ref-sub">${esc(l.block)}</div></td>
+                  <td><strong>${Number(l.count||0)}</strong></td>
+                  <td style="max-width:240px;overflow-wrap:anywhere;">${esc(l.code)}</td>
+                  <td>${esc(l.date)}</td>
+                </tr>
+              `).join('')}</tbody>
+            </table>
+          </div>
+        </div>
+      `:`<div class="rfid-v5-empty">No RFID inventory additions have been recorded yet.<br>Go back to Add RFID Inventory and submit an Individual or Group RFID mapping.</div>`}
+    </div>
+  `;
+}
+
+function renderRFIDLogs(){
+  const logs=getRFIDHistoryLogs();
+  return logs.length?`<div class="rfid-v5-history-list">${logs.map(rfidHistoryCard).join('')}</div>`:`<div class="rfid-v5-empty">No RFID inventory addition submitted yet.</div>`;
+}
 
 function updateB2BInline(id,field,value){
   const o=b2bOrders.find(x=>x.id===id);
