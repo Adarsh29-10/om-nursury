@@ -732,6 +732,94 @@
   }
 </style>
 
+
+<style id="supervisor-v5-b2b-reference-card-refinement">
+  /* B2B mobile card refinement based on supplied reference. Desktop table remains unchanged. */
+  .b2b-clear-top-mobile{display:none;}
+  .b2b-card-items-chip{display:inline-flex;align-items:center;min-height:25px;padding:0 9px;border-radius:8px;background:#eaf7ee;color:#187443;font-size:10px;font-weight:800;box-sizing:border-box;margin-top:8px;}
+  .b2b-ref-card{border:1px solid #e1e7e2;border-radius:15px;background:#fff;box-shadow:0 4px 14px rgba(19,42,27,.055);padding:16px 17px 14px;}
+  .b2b-ref-card .ops-mobile-card-top{align-items:flex-start;}
+  .b2b-ref-card .ops-mobile-id{font-size:15.5px;color:#08733d;font-weight:900;letter-spacing:-.02em;}
+  .b2b-ref-card .ops-mobile-primary{font-size:14px;color:#172019;font-weight:850;line-height:1.35;}
+  .b2b-ref-card .ops-mobile-secondary{font-size:10px;color:#778078;font-weight:600;margin-top:4px;}
+  .b2b-ref-card .ops-mobile-main{align-items:center;margin-top:14px;}
+  .b2b-ref-card .ops-mobile-qty{flex-direction:row;align-items:baseline;gap:5px;padding:0;}
+  .b2b-ref-card .ops-mobile-qty strong{font-size:15px;font-weight:900;color:#121a15;}
+  .b2b-ref-card .ops-mobile-qty span{font-size:10px;color:#717a74;font-weight:650;}
+
+  .b2b-ref-status{width:auto;min-width:96px;max-width:130px;height:34px;border:1px solid transparent;border-radius:9px;padding:0 28px 0 10px;font:inherit;font-size:10.5px;font-weight:800;outline:none;cursor:pointer;box-sizing:border-box;}
+  .b2b-ref-status[data-value="In Progress"],
+  .b2b-ref-status[data-value="Ready to Dispatch"],
+  .b2b-ref-status[data-value="Completed"]{background:#eaf7ee;color:#176f40;}
+  .b2b-ref-status[data-value="Pending"],
+  .b2b-ref-status[data-value="On Hold"],
+  .b2b-ref-status[data-value="Not Started"]{background:#fff3e4;color:#c66b08;}
+  .b2b-ref-status[data-value="Failed"]{background:#fff0f1;color:#b9333e;}
+
+  .b2b-detail-matrix{border-top:1px solid #e8ece9;border-bottom:1px solid #e8ece9;margin-top:14px;}
+  .b2b-detail-row{display:grid;grid-template-columns:1fr 1fr;}
+  .b2b-detail-row + .b2b-detail-row{border-top:1px solid #e8ece9;}
+  .b2b-detail-cell{padding:11px 0 10px;min-width:0;}
+  .b2b-detail-cell:nth-child(2){border-left:1px solid #e8ece9;padding-left:16px;margin-left:16px;}
+  .b2b-detail-label{font-size:10px;color:#737d76;font-weight:600;line-height:1.2;margin-bottom:6px;}
+  .b2b-detail-value{font-size:11.5px;color:#172019;font-weight:850;line-height:1.35;overflow-wrap:anywhere;}
+  .b2b-detail-action{display:block;width:auto;max-width:100%;border:0;background:transparent;padding:0;margin:0;color:#172019;font:inherit;font-size:11.5px;font-weight:850;line-height:1.35;text-align:left;cursor:pointer;overflow-wrap:anywhere;}
+
+  .b2b-ref-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;}
+  .b2b-schedule-meta{display:flex;align-items:center;gap:9px;min-width:0;}
+  .b2b-schedule-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:#148146;}
+  .b2b-schedule-icon.unscheduled{color:#d66b06;}
+  .b2b-schedule-icon svg{width:20px;height:20px;}
+  .b2b-schedule-title{font-size:10px;color:#727b75;font-weight:600;line-height:1.2;}
+  .b2b-schedule-value{font-size:10.5px;color:#6f7872;font-weight:600;margin-top:4px;line-height:1.3;}
+  .b2b-unscheduled-text{font-size:10.5px;color:#707973;font-weight:650;line-height:1.3;}
+  .b2b-ref-view{height:39px;min-width:126px;border-radius:9px;padding:0 16px;font:inherit;font-size:10.5px;font-weight:850;cursor:pointer;box-sizing:border-box;}
+  .b2b-ref-view.filled{border:1px solid #0f7b42;background:#0e7a40;color:#fff;box-shadow:0 2px 6px rgba(15,123,66,.12);}
+  .b2b-ref-view.outline{border:1px solid #0f7b42;background:#fff;color:#0f6f3d;}
+
+  @media(max-width:899px){
+    .b2b-v5-page .wo-search-row{grid-template-columns:minmax(0,1fr) 88px auto!important;gap:8px!important;}
+    .b2b-clear-top-mobile{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;background:transparent;color:#0f7b42;font:inherit;font-size:10px;font-weight:800;padding:0 1px;white-space:nowrap;cursor:pointer;}
+    .b2b-clear-top-mobile svg{width:16px;height:16px;}
+    .b2b-v5-page #b2b-filter-strip .ref-filter-chip-icon{display:none!important;}
+    .b2b-v5-page #b2b-filter-strip .erp-multi summary{font-size:10px!important;padding:0 10px!important;}
+    .b2b-mobile-list{gap:12px!important;}
+  }
+
+  @media(max-width:430px){
+    .b2b-ref-card{padding:14px 14px 13px;}
+    .b2b-ref-card .ops-mobile-id{font-size:14.5px;}
+    .b2b-ref-status{min-width:92px;max-width:118px;font-size:10px;padding-left:8px;}
+    .b2b-detail-cell:nth-child(2){padding-left:12px;margin-left:12px;}
+    .b2b-ref-view{min-width:116px;height:38px;padding:0 13px;font-size:10px;}
+    .b2b-v5-page .wo-search-row{grid-template-columns:minmax(0,1fr) 82px auto!important;gap:6px!important;}
+    .b2b-clear-top-mobile{font-size:9px;}
+  }
+</style>
+
+
+<style id="supervisor-v5-compact-modal-and-b2b-fix">
+  /* B2B mobile clarity */
+  .b2b-order-status-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:98px}
+  .b2b-order-status-label{font-size:8.5px;line-height:1;color:#7c8980;font-weight:850;white-space:nowrap}
+  .b2b-driver-line{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+  .b2b-driver-name{font-size:11.5px;line-height:1.3;color:#172019;font-weight:850;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .b2b-driver-change{border:0;background:#edf7ef;color:#17643a;border-radius:7px;padding:4px 7px;font:inherit;font-size:8.5px;font-weight:900;cursor:pointer;white-space:nowrap}
+  .b2b-delivery-line{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+  .b2b-delivery-update{border:0;background:#f4f7f5;color:#526158;border-radius:7px;padding:4px 7px;font:inherit;font-size:8.5px;font-weight:900;cursor:pointer;white-space:nowrap}
+
+  /* Keep modal proportions close to the supplied reference and avoid oversized whitespace */
+  #modal{align-items:center!important;padding:16px 12px calc(24px + env(safe-area-inset-bottom))!important}
+  #modalBox{margin:auto!important;max-height:calc(100vh - 32px)!important;overflow-y:auto!important;overflow-x:hidden!important;border-radius:22px!important;scrollbar-width:thin}
+  #modalBox::-webkit-scrollbar{width:6px}
+  #modalBox::-webkit-scrollbar-thumb{background:#cfd9d1;border-radius:999px}
+  @media(max-width:700px){
+    #modal{align-items:flex-start!important;padding:8px 8px calc(18px + env(safe-area-inset-bottom))!important}
+    #modalBox{max-height:calc(100vh - 16px)!important;width:100%!important;border-radius:18px!important}
+    .b2b-order-status-label{font-size:8px}
+  }
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
@@ -810,9 +898,9 @@ const plants=['Mango Plant','Guava Plant','Rose Plant','Tulsi','Areca Palm','Alo
 const farms=['Kamshet','Karla','Vadegaon','Ratnagiri'];const stages=['Sapling','Child','Adult'];const blocks=['A','B','C'];
 const availableRfids=Array.from({length:60},(_,i)=>'RFID-OM-'+String(i+1).padStart(4,'0'));const mappedRfidRegistry=new Set();
 const b2bOrders=[
-{id:'ORD-2026-001',inquiry:'INQ-2026-001',quotation:'QTN-2026-001-V1',company:'GreenScape Landscaping Pvt. Ltd.',contact:'Priya Deshmukh',mobile:'9876543210',farm:'Kamshet',supervisor:'Ramesh',driver:'Nilesh Patil',items:[['Tulsi','Child',50],['Tomato Tree','Adult',70],['Rose Plant','Sapling',25]],payment:'50% Advance Recorded',orderStatus:'In Progress',deliveryStatus:'Driver Assigned',address:'Hinjewadi Phase 2, Pune',requiredBy:'18 Aug 2026'},
-{id:'ORD-2026-002',inquiry:'INQ-2026-004',quotation:'QTN-2026-004-V2',company:'UrbanLeaf Developers',contact:'Amit Shah',mobile:'9822011122',farm:'Kamshet',supervisor:'Ramesh',driver:'',items:[['Areca Palm','Adult',40],['Money Plant','Child',80]],payment:'Advance Pending',orderStatus:'In Progress',deliveryStatus:'Pending Assignment',address:'Baner, Pune',requiredBy:'20 Aug 2026'},
-{id:'ORD-2026-003',inquiry:'INQ-2026-005',quotation:'QTN-2026-005-V1',company:'Konkan Resort Project',contact:'Megha Kulkarni',mobile:'9765512033',farm:'Karla',supervisor:'Suresh',driver:'Akash',items:[['Mango Tree','Adult',30]],payment:'Paid',orderStatus:'Completed',deliveryStatus:'Delivered',address:'Lonavala, Maharashtra',requiredBy:'12 Aug 2026'}];
+{id:'ORD-2026-001',inquiry:'INQ-2026-001',quotation:'QTN-2026-001-V1',company:'GreenScape Landscaping Pvt. Ltd.',contact:'Priya Deshmukh',mobile:'9876543210',farm:'Kamshet',supervisor:'Ramesh',driver:'Nilesh Patil',items:[['Tulsi','Child',50],['Tomato Tree','Adult',70],['Rose Plant','Sapling',25]],payment:'50% Advance Recorded',orderStatus:'In Progress',deliveryStatus:'Driver Assigned',address:'Hinjewadi Phase 2, Pune',requiredBy:'18 Aug 2026',scheduledOn:'15 Aug 2026, 09:00 AM'},
+{id:'ORD-2026-002',inquiry:'INQ-2026-004',quotation:'QTN-2026-004-V2',company:'UrbanLeaf Developers',contact:'Amit Shah',mobile:'9822011122',farm:'Kamshet',supervisor:'Ramesh',driver:'',items:[['Areca Palm','Adult',40],['Money Plant','Child',80]],payment:'Advance Pending',orderStatus:'In Progress',deliveryStatus:'Pending Assignment',address:'Baner, Pune',requiredBy:'20 Aug 2026',scheduledOn:''},
+{id:'ORD-2026-003',inquiry:'INQ-2026-005',quotation:'QTN-2026-005-V1',company:'Konkan Resort Project',contact:'Megha Kulkarni',mobile:'9765512033',farm:'Karla',supervisor:'Suresh',driver:'Akash',items:[['Mango Tree','Adult',30]],payment:'Paid',orderStatus:'Completed',deliveryStatus:'Delivered',address:'Lonavala, Maharashtra',requiredBy:'12 Aug 2026',scheduledOn:'10 Aug 2026, 08:30 AM'}];
 const plantDatabase={
 'OM-KAMSHET-0234':{rfid:'OM-KAMSHET-0234',plantId:'PL-KAM-MAN-0234',name:'Mango Plant',botanicalName:'Mangifera indica',farm:'Kamshet',block:'Block A',batch:'Batch 2',row:'Bed A-07 · Row 04',stage:'Adult',height:'168 cm',width:'92 cm canopy',age:'26 months',container:'24-inch grow bag',plantingDate:'18 June 2024',propagation:'Grafted',grade:'Grade A',sellable:'Ready for sale',health:'Healthy',healthScore:94,moisture:'68% · Optimal',fertilisation:'28 July 2026 · NPK + compost',pruning:'19 July 2026',pest:'Clear · Inspected 1 August 2026',nextAction:'Canopy shaping · 18 August 2026',owner:'Ramesh Jadhav',inspected:false},
 'OM-KAMSHET-0188':{rfid:'OM-KAMSHET-0188',plantId:'PL-KAM-ARE-0188',name:'Areca Palm',botanicalName:'Dypsis lutescens',farm:'Kamshet',block:'Block C',batch:'Batch 5',row:'Shade C-04 · Row 02',stage:'Sapling',height:'74 cm',width:'42 cm',age:'10 months',container:'12-inch grow bag',plantingDate:'14 October 2025',propagation:'Seed',grade:'Grade A',sellable:'Under growth',health:'Healthy',healthScore:91,moisture:'71% · Optimal',fertilisation:'02 August 2026 · Compost',pruning:'Not required',pest:'Clear',nextAction:'Growth check · 19 August 2026',owner:'Ramesh Jadhav',inspected:false},
@@ -829,7 +917,24 @@ const purchaseOrders=[
 function esc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}function nowText(){return new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}function myWO(){return workOrders.filter(w=>w.supervisors.includes(supervisor.shortName))}function myB2B(){return b2bOrders.filter(o=>o.supervisor===supervisor.shortName)}
 function showToast(msg,error=false){const t=document.getElementById('toast');t.textContent=(error?'⚠ ':'✓ ')+msg;t.style.background=error?'#b42331':'#1a4d2a';t.style.opacity='1';t.style.transform='translateY(0)';clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(70px)'},2500)}
-function openModal(html,width='820px'){const m=document.getElementById('modal'),b=document.getElementById('modalBox');b.style.width=`min(${width},100%)`;b.innerHTML=html;m.style.display='flex'}function closeModal(){document.getElementById('modal').style.display='none';document.getElementById('modalBox').innerHTML=''}
+function openModal(html,width='820px'){
+  const m=document.getElementById('modal'),b=document.getElementById('modalBox');
+  b.style.width=`min(${width},100%)`;
+  b.style.background='transparent';
+  b.style.border='none';
+  b.style.borderRadius='28px';
+  b.style.overflow='visible';
+  b.style.boxShadow='0 30px 90px rgba(0,20,0,.34)';
+  b.innerHTML=html;
+  m.style.display='flex';
+}
+function closeModal(){
+  document.getElementById('modal').style.display='none';
+  const b=document.getElementById('modalBox');
+  b.innerHTML='';
+  b.style.background='transparent';
+}
+
 function headerBlock(title,sub,icon){
   return `
     <div class="erp-page-heading" style="display:flex;align-items:flex-start;gap:11px;margin-bottom:13px;">
@@ -1016,6 +1121,55 @@ function renderMobileDrawer(){
 }
 
 function detail(label,value){return `<div style="border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;"><div style="font-size:10px;color:#829085;font-weight:900;text-transform:uppercase;">${label}</div><div style="font-size:12px;color:#294631;font-weight:900;margin-top:4px;word-break:break-word;">${esc(value)}</div></div>`}
+function modalTone(status=''){
+  const v=String(status||'').toLowerCase();
+  if(/failed|halted|variance|attention|not allocated/.test(v))return {bg:'#fff1f0',color:'#b42331',border:'#f0d5d8'};
+  if(/pending|partially|assigned|not started|on hold/.test(v))return {bg:'#fff5e5',color:'#b56a00',border:'#f2e1bb'};
+  if(/progress|transit|driver assigned|ready/.test(v))return {bg:'#edf5ff',color:'#215f8f',border:'#d6e6f6'};
+  return {bg:'#edf7ef',color:'#17643a',border:'#d8eadb'};
+}
+function modalBadge(text,tone='auto'){
+  const c=tone==='auto'?modalTone(text):modalTone(tone);
+  return `<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid ${c.border};background:${c.bg};color:${c.color};padding:7px 10px;border-radius:12px;font-size:11px;font-weight:950;line-height:1;white-space:nowrap;"><span style="width:16px;height:16px;border-radius:999px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:9px;">✓</span>${esc(text)}</span>`;
+}
+function modalAction(label,onclick,tone='green',extra=''){
+  const map={green:['#0f7a36','#fff','none'],outline:['#fff','#17643a','1px solid #2e874a'],light:['#fff','#17643a','1px solid #d8e5d9'],gold:['#f5c542','#1f2b1f','none'],red:['#b42331','#fff','none']};
+  const c=map[tone]||map.green;
+  return `<button onclick="${onclick}" style="border:${c[2]};background:${c[0]};color:${c[1]};border-radius:12px;padding:10px 14px;font-size:11px;font-weight:950;cursor:pointer;box-shadow:${tone==='green'?'0 7px 16px rgba(15,122,54,.14)':'none'};${extra}">${label}</button>`;
+}
+function modalCloseBtn(){return `<button onclick="closeModal()" aria-label="Close" style="border:none;background:rgba(255,255,255,.97);color:#1b5f2f;width:42px;height:42px;min-width:42px;border-radius:999px;font-size:24px;font-weight:500;cursor:pointer;box-shadow:0 6px 15px rgba(0,0,0,.12);line-height:1;">×</button>`;}
+function modalHero(eyebrow,title,subtitle,statusHtml=''){
+  return `<div style="position:relative;padding:16px 18px 46px;background:linear-gradient(135deg,#0f6c31,#197337);color:#fff;border-radius:22px 22px 18px 18px;overflow:hidden;box-shadow:0 16px 34px rgba(9,54,23,.20);">
+    <div style="position:absolute;right:-26px;bottom:-64px;width:190px;height:190px;background:radial-gradient(circle at center,rgba(255,255,255,.11),transparent 62%);"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:relative;z-index:1;">
+      <div style="min-width:0;flex:1 1 auto;">
+        <div style="font-size:9.5px;color:#ffd97a;font-weight:950;letter-spacing:.07em;text-transform:uppercase;">${eyebrow}</div>
+        <div style="font-size:25px;font-weight:950;line-height:1.08;margin-top:5px;letter-spacing:-.025em;word-break:break-word;">${title}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.88);margin-top:7px;font-weight:700;line-height:1.4;word-break:break-word;">${subtitle}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto;">${statusHtml}${modalCloseBtn()}</div>
+    </div>
+  </div>`;
+}
+function modalSurface(content){return `<div style="margin:-31px 12px 0;position:relative;z-index:2;background:#fff;border:1px solid #e4ece5;border-radius:18px;padding:12px;box-shadow:0 10px 24px rgba(16,41,24,.07);">${content}</div>`;}
+function modalInfoCard(label,value,icon='•'){
+  return `<div style="border:1px solid #e5ece6;border-radius:13px;padding:9px 10px;background:#fff;display:flex;align-items:center;gap:9px;min-width:0;min-height:54px;box-sizing:border-box;">
+    <div style="width:34px;height:34px;min-width:34px;border-radius:999px;background:#edf5ef;border:1px solid #deeadf;display:flex;align-items:center;justify-content:center;color:#17643a;font-size:15px;font-weight:900;">${icon}</div>
+    <div style="min-width:0;"><div style="font-size:9px;color:#738176;font-weight:800;line-height:1.15;">${label}</div><div style="font-size:12px;color:#16261d;font-weight:950;line-height:1.3;margin-top:3px;word-break:break-word;">${esc(value)}</div></div>
+  </div>`;
+}
+function modalSectionTitle(icon,title){return `<div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px;"><div style="width:31px;height:31px;min-width:31px;border:1px solid #dbe6dd;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;color:#17643a;font-size:15px;font-weight:900;">${icon}</div><div style="font-size:14px;color:#14251b;font-weight:950;line-height:1.2;">${title}</div></div>`;}
+function modalNoteBox(title,text,tone='green'){
+  const m=tone==='gold'?['#fff9eb','#e8cf8d','#6e5a12']:tone==='red'?['#fff3f2','#efcfcc','#9b3431']:['#f5faf6','#dce9df','#355f43'];
+  return `<div style="margin-top:8px;border:1px solid ${m[1]};background:${m[0]};border-radius:12px;padding:9px 11px;"><div style="font-size:10px;color:${m[2]};font-weight:950;line-height:1.2;">${title}</div><div style="font-size:10.5px;color:${m[2]};line-height:1.45;margin-top:5px;">${text}</div></div>`;
+}
+function modalInputBlock(label,controlHtml){
+  return `<label style="display:block;min-width:0;"><div style="font-size:11px;color:#5f7264;font-weight:900;margin-bottom:7px;">${label}</div>${controlHtml}</label>`;
+}
+function modalFooter(buttons){
+  return `<div style="margin-top:11px;padding-top:10px;border-top:1px solid #e8eeea;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">${buttons.join('')}</div>`;
+}
+
 function renderTop(){
   return supervisorMobile ? renderMobileTopbar() : '';
 }
@@ -1722,49 +1876,71 @@ function openWorkOrder(id){
   const w=workOrders.find(x=>x.id===id);
   if(!w)return;
 
+  const top = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">
+      ${modalInfoCard('Assigned On',w.assignedOn,'📅')}
+      ${modalInfoCard('Plant',w.plants.join(', '),'🌿')}
+      ${modalInfoCard('Stage',w.stages.join(', '),'🌱')}
+    </div>`;
+
+  const workInfo = `
+    ${modalSectionTitle('📋','Work Information')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+      ${modalInfoCard('Production Actions',w.actions.join(', '),'↗')}
+      ${modalInfoCard('Start Date',w.startDate,'📅')}
+      ${modalInfoCard('End Date',w.endDate,'📅')}
+      ${modalInfoCard('Estimated Time',w.estimatedTime,'🕒')}
+      ${modalInfoCard('Current Work Status',w.status,'✅')}
+      ${modalInfoCard('Efficiency',w.efficiency+'%','⟳')}
+    </div>`;
+
+  const material = `
+    ${modalSectionTitle('📦','Material & Transfer')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+      ${modalInfoCard('Material Allocation',w.allocationStatus,'▤')}
+      ${modalInfoCard('Transfer Voucher',w.transfer||'—','📄')}
+    </div>`;
+
+  const message = `
+    ${modalSectionTitle('💬','Supervisor Message')}
+    <div style="border:1px solid #dce8de;background:#f4faf5;border-radius:16px;padding:14px 16px;font-size:13px;line-height:1.65;color:#345a42;">${esc(w.message||'No message recorded.')}</div>`;
+
+  const footer = modalFooter([
+    modalAction('✎  Set / Edit Material Requirement',`closeModal();openAllocation('${w.id}')`,'green','width:100%;'),
+    modalAction('Close','closeModal()','outline','width:100%;')
+  ]);
+
   openModal(`
-    <div style="padding:16px 18px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-      <div>
-        <div style="font-size:10px;color:#f5c542;font-weight:900;letter-spacing:.08em;">WORK ORDER DETAILS</div>
-        <div style="font-size:20px;font-weight:950;margin-top:4px;">${w.id}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">${esc(w.farm)} · ${esc(w.block)} · ${w.quantity} plants</div>
-      </div>
-      ${button('×','closeModal()','light')}
+    <div style="background:transparent;border-radius:28px;overflow:visible;">
+      ${modalHero('Work Order Details',w.id,`${esc(w.farm)} • ${esc(w.block)} • ${w.quantity} plants`,modalBadge(w.status))}
+      ${modalSurface(top + workInfo + material + message + modalNoteBox('Important Note','Work status and allocation status are updated directly from the main table to avoid extra clicks. Use the action below only when material quantities need to be entered or changed.','gold') + footer)}
     </div>
-
-    <div style="padding:15px;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">
-        ${detail('Assigned On',w.assignedOn)}
-        ${detail('Plants',w.plants.join(', '))}
-        ${detail('Stages',w.stages.join(', '))}
-        ${detail('Production Actions',w.actions.join(', '))}
-        ${detail('Start Date',w.startDate)}
-        ${detail('End Date',w.endDate)}
-        ${detail('Estimated Time',w.estimatedTime)}
-        ${detail('Current Work Status',w.status)}
-        ${detail('Material Allocation',w.allocationStatus)}
-        ${detail('Transfer Voucher',w.transfer||'—')}
-        ${detail('Efficiency',w.efficiency+'%')}
-      </div>
-
-      <div style="margin-top:10px;padding:12px;border:1px solid #e1ebe2;border-radius:13px;background:#f8fbf8;">
-        <div style="font-size:10px;color:#758379;font-weight:900;text-transform:uppercase;letter-spacing:.05em;">Supervisor Message</div>
-        <div style="font-size:12px;line-height:1.55;color:#405b47;margin-top:5px;">${esc(w.message||'No message recorded.')}</div>
-      </div>
-
-      <div style="margin-top:11px;padding:10px;border-radius:12px;background:#fff8df;border:1px solid #f0dfa4;color:#6f5700;font-size:10px;line-height:1.5;font-weight:750;">
-        Work status and allocation status are updated directly from the main table to avoid extra clicks. Use the action below only when material quantities need to be entered or changed.
-      </div>
-
-      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;">
-        ${button('Set / Edit Material Requirement',`closeModal();openAllocation('${w.id}')`,'gold')}
-        ${button('Close','closeModal()','light')}
-      </div>
-    </div>
-  `);
+  `,'760px');
 }
 
-function openWOStatus(id){const w=workOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;gap:8px;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Update Work Order Status</div><div style="font-size:12px;color:#718176;margin-top:3px;">${w.id} · ${w.plants.join(', ')}</div></div>${button('×','closeModal()','light')}</div><label style="display:block;font-size:12px;color:#1a4d2a;font-weight:900;margin-top:14px;">Work Status</label><select id="woStatusNew" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;background:#fff;">${['Not Started','In-Progress','Completed','Halted','Attention'].map(s=>`<option ${s===w.status?'selected':''}>${s}</option>`).join('')}</select><label style="display:block;font-size:12px;color:#1a4d2a;font-weight:900;margin-top:10px;">Supervisor Message</label><textarea id="woMessageNew" style="width:100%;min-height:80px;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;">${esc(w.message)}</textarea><label style="display:block;font-size:12px;color:#1a4d2a;font-weight:900;margin-top:10px;">Efficiency %</label><input id="woEfficiencyNew" type="number" min="0" max="100" value="${w.efficiency}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:11px;padding:10px;margin-top:5px;"><div style="margin-top:12px;">${button('Save Status',`saveWOStatus('${id}')`)}</div></div>`)}
+function openWOStatus(id){
+  const w=workOrders.find(x=>x.id===id);
+  if(!w)return;
+
+  const body = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Work Order',w.id,'🧾')}
+      ${modalInfoCard('Plants',w.plants.join(', '),'🌿')}
+      ${modalInfoCard('Current Status',w.status,'📌')}
+    </div>
+    ${modalSectionTitle('✎','Update Work Status')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+      ${modalInputBlock('Work Status',`<select id="woStatusNew" style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;">${['Not Started','In-Progress','Completed','Halted','Attention'].map(s=>`<option ${s===w.status?'selected':''}>${s}</option>`).join('')}</select>`)}
+      ${modalInputBlock('Efficiency %',`<input id="woEfficiencyNew" type="number" min="0" max="100" value="${w.efficiency}" style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;">`)}
+    </div>
+    <div style="margin-top:12px;">${modalInputBlock('Supervisor Message',`<textarea id="woMessageNew" style="width:100%;min-height:108px;box-sizing:border-box;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:700;color:#1d3022;resize:vertical;">${esc(w.message)}</textarea>`)}</div>
+    ${modalFooter([
+      modalAction('Save Status',`saveWOStatus('${id}')`,'green','width:100%;'),
+      modalAction('Cancel','closeModal()','outline','width:100%;')
+    ])}`;
+
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Update Work Order Status',w.id,esc(w.plants.join(', ')),modalBadge(w.status))}${modalSurface(body)}</div>`,'650px');
+}
 function saveWOStatus(id){const w=workOrders.find(x=>x.id===id);w.status=document.getElementById('woStatusNew').value;w.message=document.getElementById('woMessageNew').value.trim();w.efficiency=Math.max(0,Math.min(100,Number(document.getElementById('woEfficiencyNew').value||0)));closeModal();render();showToast(id+' work status updated.')}
 function suggestedReq(w){
   const q=w.quantity;
@@ -1787,66 +1963,38 @@ function openAllocation(id){
   const w=workOrders.find(x=>x.id===id);
   if(!w)return;
 
-  if(!state.allocationDraft[id]){
-    state.allocationDraft[id]=suggestedReq(w);
-  }
-
+  if(!state.allocationDraft[id]) state.allocationDraft[id]=suggestedReq(w);
   const d=state.allocationDraft[id];
 
-  openModal(`
-    <div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
-      <div>
-        <div style="font-size:11px;color:#f5c542;font-weight:900;">MATERIAL ALLOCATION</div>
-        <div style="font-size:18px;font-weight:950;margin-top:3px;">${id}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:3px;">
-          ${w.farm} · ${w.block} · ${w.plants.join(', ')} · ${w.quantity} plants
-        </div>
+  const list = rawMaterials.map(m=>{
+    const qty=Number(d[m.id]||0);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #e5ece6;border-radius:18px;padding:14px 15px;background:#fff;">
+      <div style="min-width:0;">
+        <div style="font-size:14px;color:#173020;font-weight:950;">${m.name}</div>
+        <div style="font-size:11px;color:#78867b;font-weight:800;margin-top:5px;">${m.id} • Unit: ${m.unit}</div>
       </div>
+      <div style="width:128px;flex:0 0 128px;">
+        <div style="font-size:10px;color:#748176;font-weight:900;margin-bottom:6px;text-align:center;">REQUIRED QTY</div>
+        <input id="req-${m.id}" type="number" min="0" value="${qty}" inputmode="numeric" style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;border-radius:14px;padding:11px 10px;text-align:center;font-size:14px;font-weight:900;color:#173020;background:#fff;outline:none;">
+      </div>
+    </div>`;
+  }).join('');
 
-      ${button('×','closeModal()','light')}
+  const body = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Farm / Block',w.farm+' • '+w.block,'📍')}
+      ${modalInfoCard('Plants',w.plants.join(', '),'🌿')}
+      ${modalInfoCard('Quantity',w.quantity+' plants','#')}
     </div>
+    ${modalSectionTitle('🧾','Required Materials')}
+    <div style="display:grid;gap:10px;">${list}</div>
+    ${modalFooter([
+      modalAction('Submit Material Requirement',`saveAllocation('${id}')`,'green','width:100%;'),
+      modalAction('Close','closeModal()','outline','width:100%;')
+    ])}`;
 
-    <div style="padding:14px;">
-      <div style="display:grid;gap:8px;">
-        ${rawMaterials.map(m=>{
-          const qty=Number(d[m.id]||0);
-
-          return `
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #e2ebe3;border-radius:14px;padding:11px;background:#fbfdfb;">
-              <div style="min-width:0;">
-                <div style="font-size:12px;color:#1a4d2a;font-weight:950;">${m.name}</div>
-                <div style="font-size:10px;color:#829085;margin-top:3px;">${m.id} · Unit: ${m.unit}</div>
-              </div>
-
-              <div style="width:105px;flex:0 0 105px;">
-                <div style="font-size:10px;color:#718176;font-weight:900;margin-bottom:4px;text-align:center;">REQUIRED QTY</div>
-
-                <input
-                  id="req-${m.id}"
-                  type="number"
-                  min="0"
-                  value="${qty}"
-                  inputmode="numeric"
-                  style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:10px;padding:9px 7px;text-align:center;font-size:13px;font-weight:900;color:#1a4d2a;background:#fff;outline:none;"
-                >
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:7px;margin-top:12px;">
-        ${button(
-          'Submit Material Requirement',
-          `saveAllocation('${id}')`,
-          'green',
-          'width:100%;padding:12px 14px;'
-        )}
-      </div>
-    </div>
-  `);
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Material Allocation',id,`${esc(w.farm)} • ${esc(w.block)} • ${esc(w.plants.join(', '))} • ${w.quantity} plants`,modalBadge(w.allocationStatus))}${modalSurface(body)}</div>`,'800px');
 }
-
 function syncAllocationInputs(id){
   const d={};
 
@@ -2225,8 +2373,10 @@ function b2bView(){
   const filterIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/><circle cx="7" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>`;
   const moreIcon=`<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>`;
   const calendarIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M8 3v5M16 3v5M4 10h16"/></svg>`;
+  const clearIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>`;
 
   const rowSearch=o=>esc([o.id,o.company,o.contact,o.inquiry,o.quotation,o.address,o.items.map(i=>i[0]).join(' '),o.requiredBy,o.driver,o.deliveryStatus,o.orderStatus,o.farm].join(' ').toLowerCase());
+  const deliveryLabel=o=>o.scheduledOn?'Scheduled':'Not Scheduled';
 
   return `
     <div class="ref-list-page b2b-v5-page">
@@ -2239,13 +2389,14 @@ function b2bView(){
       <div class="wo-search-row">
         <label class="wo-search-box">${searchIcon}<input value="${esc(state.b2bFilters.search)}" placeholder="Search order, customer, item..." oninput="state.b2bFilters.search=this.value;applyB2BFiltersDom()"></label>
         <button class="wo-filter-master" onclick="toggleReferenceFilterStrip('b2b-filter-strip')">${filterIcon}<span>Filters</span></button>
+        <button class="b2b-clear-top-mobile" onclick="clearB2BFilters()">${clearIcon}<span>Clear All</span></button>
       </div>
 
       <div id="b2b-filter-strip" class="ref-filter-strip">
-        ${compactMultiFilter('b2bFilters','order','Order','☷',orderStatuses)}
-        ${compactMultiFilter('b2bFilters','delivery','Delivery','⌁',deliveryStatuses)}
-        ${compactMultiFilter('b2bFilters','driver','Driver','♙',driverOptions)}
-        ${compactMultiFilter('b2bFilters','farm','Farm','⌾',farms)}
+        ${compactMultiFilter('b2bFilters','order','Order Status','',orderStatuses)}
+        ${compactMultiFilter('b2bFilters','delivery','Delivery','',deliveryStatuses)}
+        ${compactMultiFilter('b2bFilters','driver','Driver','',driverOptions)}
+        ${compactMultiFilter('b2bFilters','farm','Farm','',farms)}
       </div>
 
       <div class="ref-result-bar">
@@ -2253,7 +2404,7 @@ function b2bView(){
         <button class="ref-clear-btn" onclick="clearB2BFilters()">↻ &nbsp;Clear all</button>
       </div>
 
-      <!-- Laptop / desktop: table only -->
+      <!-- Laptop / desktop: original table remains unchanged -->
       <div class="b2b-desktop-table">
         <div class="erp-table-wrap">
           <table class="erp-table" style="min-width:1160px;">
@@ -2276,16 +2427,19 @@ function b2bView(){
         </div>
       </div>
 
-      <!-- Mobile: clean cards containing every field from the desktop table -->
+      <!-- Mobile: reference-matched clean B2B cards -->
       <div class="b2b-mobile-list">
-        ${orders.map(o=>{const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);return `
-          <article class="ops-mobile-card b2b-data-row" data-b2b-id="${esc(o.id)}" data-order="${esc(o.orderStatus)}" data-delivery="${esc(o.deliveryStatus)}" data-driver="${esc(o.driver||'Not Assigned')}" data-farm="${esc(o.farm)}" data-search="${rowSearch(o)}">
+        ${orders.map(o=>{const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);const scheduled=!!o.scheduledOn;return `
+          <article class="b2b-ref-card b2b-data-row" data-b2b-id="${esc(o.id)}" data-order="${esc(o.orderStatus)}" data-delivery="${esc(o.deliveryStatus)}" data-driver="${esc(o.driver||'Not Assigned')}" data-farm="${esc(o.farm)}" data-search="${rowSearch(o)}">
             <div class="ops-mobile-card-top">
               <div class="ops-mobile-id">${esc(o.id)}</div>
               <div class="ops-mobile-card-actions">
-                <select class="ops-status-select" data-value="${esc(o.orderStatus)}" data-b2b-bind="${o.id}-orderStatus" onchange="this.dataset.value=this.value;updateB2BInline('${o.id}','orderStatus',this.value)">
-                  ${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${esc(x)}</option>`).join('')}
-                </select>
+                <div class="b2b-order-status-wrap">
+                  <span class="b2b-order-status-label">Order Status</span>
+                  <select class="b2b-ref-status" data-value="${esc(o.orderStatus)}" data-b2b-bind="${o.id}-orderStatus" onchange="this.dataset.value=this.value;updateB2BInline('${o.id}','orderStatus',this.value)">
+                    ${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${esc(x)}</option>`).join('')}
+                  </select>
+                </div>
                 <button class="ops-kebab" onclick="openB2B('${o.id}')" aria-label="More order options">${moreIcon}</button>
               </div>
             </div>
@@ -2294,39 +2448,46 @@ function b2bView(){
               <div style="min-width:0;">
                 <div class="ops-mobile-primary">${esc(o.company)}</div>
                 <div class="ops-mobile-secondary">${esc(o.contact)}</div>
+                <div class="b2b-card-items-chip">${o.items.length} item${o.items.length===1?'':'s'}</div>
               </div>
-              <div class="ops-mobile-qty"><strong>${o.items.length} items</strong><span>${itemCount} plants</span></div>
+              <div class="ops-mobile-qty"><strong>${itemCount}</strong><span>plants</span></div>
             </div>
 
-            <div class="ops-mobile-divider"></div>
-
-            <div class="ops-mobile-info-grid">
-              <div>
-                <div class="ops-mobile-label">Driver</div>
-                <select class="ops-mobile-select" data-b2b-bind="${o.id}-driver" onchange="updateB2BInline('${o.id}','driver',this.value)">
-                  <option value="">Not Assigned</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${esc(d)}</option>`).join('')}
-                </select>
+            <div class="b2b-detail-matrix">
+              <div class="b2b-detail-row">
+                <div class="b2b-detail-cell">
+                  <div class="b2b-detail-label">Required By</div>
+                  <div class="b2b-detail-value">${esc(o.requiredBy)}</div>
+                </div>
+                <div class="b2b-detail-cell">
+                  <div class="b2b-detail-label">Farm</div>
+                  <div class="b2b-detail-value">${esc(o.farm)}</div>
+                </div>
               </div>
-              <div>
-                <div class="ops-mobile-label">Farm</div>
-                <div class="ops-mobile-value">${esc(o.farm)}</div>
-              </div>
-              <div class="ops-mobile-info-full">
-                <div class="ops-mobile-label">Delivery Status</div>
-                <select class="ops-mobile-select ops-status-select" style="width:100%;max-width:none;" data-value="${esc(o.deliveryStatus)}" data-b2b-bind="${o.id}-deliveryStatus" onchange="this.dataset.value=this.value;updateB2BInline('${o.id}','deliveryStatus',this.value)">
-                  ${deliveryStatuses.map(x=>`<option ${x===o.deliveryStatus?'selected':''}>${esc(x)}</option>`).join('')}
-                </select>
+              <div class="b2b-detail-row">
+                <div class="b2b-detail-cell">
+                  <div class="b2b-detail-label">Delivery</div>
+                  <div class="b2b-delivery-line">
+                    <span class="b2b-detail-value">${esc(deliveryLabel(o))}</span>
+                    <button class="b2b-delivery-update" onclick="openDeliveryStatus('${o.id}')">Update</button>
+                  </div>
+                </div>
+                <div class="b2b-detail-cell">
+                  <div class="b2b-detail-label">Driver</div>
+                  <div class="b2b-driver-line">
+                    <span class="b2b-driver-name">${esc(o.driver||'Unassigned')}</span>
+                    <button class="b2b-driver-change" onclick="openDriverAssign('${o.id}')">Change</button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="ops-mobile-divider"></div>
-
-            <div class="ops-mobile-bottom">
-              <div class="ops-mobile-bottom-meta">
-                ${calendarIcon}
-                <div><div class="ops-mobile-bottom-title">Required By</div><div class="ops-mobile-bottom-value">${esc(o.requiredBy)}</div></div>
+            <div class="b2b-ref-bottom">
+              <div class="b2b-schedule-meta">
+                <div class="b2b-schedule-icon ${scheduled?'':'unscheduled'}">${calendarIcon}</div>
+                ${scheduled?`<div><div class="b2b-schedule-title">Scheduled on</div><div class="b2b-schedule-value">${esc(o.scheduledOn)}</div></div>`:`<div class="b2b-unscheduled-text">Delivery not scheduled</div>`}
               </div>
-              <button class="ops-mobile-view-btn" onclick="openB2B('${o.id}')">View Details</button>
+              <button class="b2b-ref-view ${scheduled?'filled':'outline'}" onclick="openB2B('${o.id}')">View Details</button>
             </div>
           </article>`;}).join('')}
       </div>
@@ -2339,59 +2500,81 @@ function openB2B(id){
   const o=b2bOrders.find(x=>x.id===id);
   if(!o)return;
 
-  openModal(`
-    <div style="padding:16px 18px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-      <div>
-        <div style="font-size:10px;color:#f5c542;font-weight:900;letter-spacing:.08em;">B2B ORDER DETAILS</div>
-        <div style="font-size:20px;font-weight:950;margin-top:4px;">${esc(o.id)}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">${esc(o.company)}</div>
-      </div>
-      ${button('×','closeModal()','light')}
-    </div>
+  const summary = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">
+      ${modalInfoCard('Customer Contact',o.contact,'👤')}
+      ${modalInfoCard('Required By',o.requiredBy,'📅')}
+      ${modalInfoCard('Delivery Status',o.deliveryStatus,'🚚')}
+    </div>`;
 
-    <div style="padding:15px;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">
-        ${detail('Inquiry',o.inquiry)}
-        ${detail('Quotation',o.quotation)}
-        ${detail('Customer Contact',o.contact)}
-        ${detail('Mobile',o.mobile)}
-        ${detail('Delivery Address',o.address)}
-        ${detail('Payment',o.payment)}
-        ${detail('Required By',o.requiredBy)}
-        ${detail('Assigned Driver',o.driver||'Not assigned')}
-        ${detail('Order Fulfilment',o.orderStatus)}
-        ${detail('Delivery Status',o.deliveryStatus)}
-      </div>
+  const info = `
+    ${modalSectionTitle('📋','Order Information')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Inquiry',o.inquiry,'🧾')}
+      ${modalInfoCard('Quotation',o.quotation,'📄')}
+      ${modalInfoCard('Mobile',o.mobile,'📞')}
+      ${modalInfoCard('Delivery Address',o.address,'📍')}
+      ${modalInfoCard('Payment',o.payment,'₹')}
+      ${modalInfoCard('Assigned Driver',o.driver||'Not assigned','🚛')}
+      ${modalInfoCard('Order Fulfilment',o.orderStatus,'✅')}
+      ${modalInfoCard('Delivery Status',o.deliveryStatus,'🛵')}
+    </div>`;
 
-      <div style="margin-top:11px;border:1px solid #e1ebe2;border-radius:13px;overflow:hidden;">
-        <div style="padding:9px 11px;background:#edf5ef;color:#1a4d2a;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.04em;">Order Items</div>
-        <div class="erp-table-wrap" style="border:none;border-radius:0;">
-          <table class="erp-table" style="min-width:560px;">
-            <thead><tr><th>Plant</th><th>Stage</th><th>Quantity</th></tr></thead>
-            <tbody>
-              ${o.items.map(i=>`
-                <tr>
-                  <td><strong>${esc(i[0])}</strong></td>
-                  <td>${esc(i[1])}</td>
-                  <td><strong>${i[2]} plants</strong></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+  const items = `
+    ${modalSectionTitle('📦','Order Items')}
+    <div style="border:1px solid #e5ece6;border-radius:18px;overflow:hidden;background:#fff;">
+      <div style="padding:10px 14px;background:#f3f8f4;color:#17643a;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.04em;">Items in this order</div>
+      <div style="overflow:auto;">
+        <table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13px;">
+          <thead><tr style="background:#fbfdfb;color:#617366;text-align:left;">${['Plant','Stage','Quantity'].map(h=>`<th style="padding:8px 10px;font-weight:900;border-top:1px solid #edf1ee;">${h}</th>`).join('')}</tr></thead>
+          <tbody>${o.items.map(i=>`<tr><td style="padding:9px 10px;border-top:1px solid #edf1ee;font-weight:900;color:#173020;">${esc(i[0])}</td><td style="padding:9px 10px;border-top:1px solid #edf1ee;color:#46584a;">${esc(i[1])}</td><td style="padding:9px 10px;border-top:1px solid #edf1ee;font-weight:900;color:#173020;">${i[2]} plants</td></tr>`).join('')}</tbody>
+        </table>
       </div>
+    </div>`;
 
-      <div style="margin-top:10px;padding:10px;border-radius:12px;background:#f8fbf8;border:1px solid #e1ebe2;color:#607366;font-size:10px;line-height:1.5;">
-        Driver, order fulfilment and delivery status are intentionally updated from the main table so daily operations do not require additional popups.
-      </div>
+  const footer = modalFooter([ modalAction('Close','closeModal()','outline','width:100%;') ]);
 
-      <div style="margin-top:11px;">${button('Close','closeModal()','light')}</div>
-    </div>
-  `);
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('B2B Order Details',esc(o.id),esc(o.company),modalBadge(o.orderStatus))}${modalSurface(summary + info + items + modalNoteBox('Important Note','Driver, order fulfilment and delivery status are intentionally updated from the main table so daily operations do not require additional popups.') + footer)}</div>`,'860px');
 }
-
-function openDriverAssign(id){const o=b2bOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Assign Delivery Driver</div><div style="font-size:12px;color:#718176;margin-top:3px;">${o.id} · ${o.company}</div></div>${button('×','closeModal()','light')}</div><select id="b2bDriver" style="width:100%;border:1px solid #dbe8db;border-radius:10px;padding:9px;margin-top:12px;background:#fff;"><option value="">Select Driver</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}</select><div style="margin-top:11px;">${button('Save Driver',`saveB2BDriver('${id}')`)}</div></div>`)}function saveB2BDriver(id){const o=b2bOrders.find(x=>x.id===id),d=document.getElementById('b2bDriver').value;if(!d){showToast('Select driver.',true);return}o.driver=d;o.deliveryStatus='Driver Assigned';closeModal();render();showToast(d+' assigned to '+id)}
-function openDeliveryStatus(id){const o=b2bOrders.find(x=>x.id===id);openModal(`<div style="padding:16px;"><div style="display:flex;justify-content:space-between;"><div><div style="font-size:17px;color:#1a4d2a;font-weight:950;">Order & Delivery Status</div><div style="font-size:12px;color:#718176;margin-top:3px;">${o.id}</div></div>${button('×','closeModal()','light')}</div><label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:12px;">Order Status</label><select id="newOrderStatus" style="width:100%;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;background:#fff;">${['In Progress','Completed','Failed','Variance'].map(s=>`<option ${s===o.orderStatus?'selected':''}>${s}</option>`).join('')}</select><label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:9px;">Delivery Status</label><select id="newDeliveryStatus" style="width:100%;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;background:#fff;">${['Pending Assignment','Driver Assigned','In Transit','Delivered','Failed','Variance'].map(s=>`<option ${s===o.deliveryStatus?'selected':''}>${s}</option>`).join('')}</select><div style="margin-top:11px;">${button('Save Status',`saveDeliveryStatus('${id}')`)}</div></div>`)}function saveDeliveryStatus(id){const o=b2bOrders.find(x=>x.id===id);o.orderStatus=document.getElementById('newOrderStatus').value;o.deliveryStatus=document.getElementById('newDeliveryStatus').value;closeModal();render();showToast(id+' updated.')}
+function openDriverAssign(id){
+  const o=b2bOrders.find(x=>x.id===id);
+  if(!o)return;
+  const body = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Order',o.id,'🧾')}
+      ${modalInfoCard('Customer',o.company,'🏢')}
+      ${modalInfoCard('Current Driver',o.driver||'Unassigned','🚚')}
+    </div>
+    ${modalSectionTitle('🚛','Assign Delivery Driver')}
+    ${modalInputBlock('Select Driver',`<select id="b2bDriver" style="width:100%;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;"><option value="">Select Driver</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}</select>`)}
+    ${modalFooter([
+      modalAction('Save Driver',`saveB2BDriver('${id}')`,'green','width:100%;'),
+      modalAction('Cancel','closeModal()','outline','width:100%;')
+    ])}`;
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Assign Delivery Driver',o.id,esc(o.company),o.driver?modalBadge(o.driver,'green'):'')}${modalSurface(body)}</div>`,'620px');
+}
+function saveB2BDriver(id){const o=b2bOrders.find(x=>x.id===id),d=document.getElementById('b2bDriver').value;if(!d){showToast('Select driver.',true);return}o.driver=d;o.deliveryStatus='Driver Assigned';closeModal();render();showToast(d+' assigned to '+id)}
+function openDeliveryStatus(id){
+  const o=b2bOrders.find(x=>x.id===id);
+  if(!o)return;
+  const body = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Order',o.id,'🧾')}
+      ${modalInfoCard('Customer',o.company,'🏢')}
+      ${modalInfoCard('Required By',o.requiredBy,'📅')}
+    </div>
+    ${modalSectionTitle('🔄','Order & Delivery Status')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInputBlock('Order Status',`<select id="newOrderStatus" style="width:100%;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;">${['In Progress','Completed','Failed','Variance'].map(s=>`<option ${s===o.orderStatus?'selected':''}>${s}</option>`).join('')}</select>`)}
+      ${modalInputBlock('Delivery Status',`<select id="newDeliveryStatus" style="width:100%;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;">${['Pending Assignment','Driver Assigned','In Transit','Delivered','Failed','Variance'].map(s=>`<option ${s===o.deliveryStatus?'selected':''}>${s}</option>`).join('')}</select>`)}
+    </div>
+    ${modalFooter([
+      modalAction('Save Status',`saveDeliveryStatus('${id}')`,'green','width:100%;'),
+      modalAction('Cancel','closeModal()','outline','width:100%;')
+    ])}`;
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Order & Delivery Status',o.id,esc(o.company),modalBadge(o.deliveryStatus))}${modalSurface(body)}</div>`,'650px');
+}
+function saveDeliveryStatus(id){const o=b2bOrders.find(x=>x.id===id);o.orderStatus=document.getElementById('newOrderStatus').value;o.deliveryStatus=document.getElementById('newDeliveryStatus').value;closeModal();render();showToast(id+' updated.')}
 function identifyView(){return sectionCard(`${headerBlock('RFID Plant Identification','','📡')}<div style="display:flex;gap:6px;margin-bottom:10px;">${button('Individual RFID',"state.identifyMode='individual';render()",state.identifyMode==='individual'?'green':'light')}${button('Group RFID',"state.identifyMode='group';render()",state.identifyMode==='group'?'green':'light')}</div>${state.identifyMode==='individual'?individualIdentify():groupIdentify()}`)}
 function individualIdentify(){
   const d=plantDatabase[state.currentIndividualCode];
@@ -2495,138 +2678,28 @@ function plantMaintenanceTile(icon,label,value){
 function openIndividualPlantModal(code){
   const d=plantDatabase[code];
   if(!d)return;
-
-  const viewport=window.innerWidth;
-  const mobile=viewport<700;
-  const tiny=viewport<420;
-  const tablet=viewport>=700&&viewport<1100;
   const stageOrder=['Seed / Cutting','Sapling','Child','Adult'];
   const stageIndex=Math.max(0,stageOrder.findIndex(s=>s.toLowerCase()===String(d.stage).toLowerCase()));
 
-  const modalRadius=mobile?'16px':'22px';
-  const headerPadding=mobile?'14px 13px 12px':'20px 22px 14px';
-  const titleSize=mobile?'19px':'23px';
-  const subtitleSize=mobile?'11px':'12px';
-  const bodyPadding=mobile?'10px':tablet?'15px':'20px';
-  const bodyColumns=mobile?'1fr':tablet?'minmax(250px,34%) minmax(0,1fr)':'minmax(280px,38%) minmax(0,1fr)';
-  const bodyGap=mobile?'11px':'20px';
-  const imageHeight=mobile?(tiny?'215px':'255px'):tablet?'320px':'390px';
-  const infoCols=mobile?(tiny?'1fr':'repeat(2,minmax(0,1fr))'):'repeat(3,minmax(0,1fr))';
-  const healthCols=infoCols;
-  const stageCols=mobile?'repeat(2,minmax(0,1fr))':'repeat(4,minmax(0,1fr))';
-  const sectionPad=mobile?'12px':'18px';
-  const sectionRadius=mobile?'16px':'22px';
-  const sectionTitleSize=mobile?'15px':'17px';
+  const identity=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">
+    ${modalInfoCard('RFID Number',d.rfid,'🏷')}${modalInfoCard('Plant ID',d.plantId,'#')}${modalInfoCard('Farm Location',d.farm,'📍')}${modalInfoCard('Block',d.block,'▦')}${modalInfoCard('Batch',d.batch,'B')}${modalInfoCard('Bed / Row',d.row,'↔')}
+  </div>`;
+  const physical=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">
+    ${modalInfoCard('Current Stage',d.stage,'🌱')}${modalInfoCard('Height',d.height,'↕')}${modalInfoCard('Width / Canopy',d.width,'↔')}${modalInfoCard('Plant Age',d.age,'⏱')}${modalInfoCard('Container',d.container,'▣')}${modalInfoCard('Planting Date',d.plantingDate,'📅')}${modalInfoCard('Propagation Type',d.propagation,'🌿')}${modalInfoCard('Grade',d.grade,'A')}${modalInfoCard('Sellable Status',d.sellable,'✓')}
+  </div>`;
+  const health=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">
+    ${modalInfoCard('Health Status',d.health,'♥')}${modalInfoCard('Health Score',d.healthScore+'%','%')}${modalInfoCard('Soil Moisture',d.moisture,'💧')}${modalInfoCard('Last Fertilisation',d.fertilisation,'🧪')}${modalInfoCard('Last Pruning',d.pruning,'✂')}${modalInfoCard('Pest Inspection',d.pest,'🛡')}${modalInfoCard('Next Action',d.nextAction,'📅')}${modalInfoCard('Responsible Person',d.owner,'👤')}
+  </div>`;
+  const journey=`<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;">${stageOrder.map((st,i)=>`<div style="border:1px solid ${i===stageIndex?'#17643a':'#dce8de'};background:${i===stageIndex?'#edf7ef':'#fff'};color:${i===stageIndex?'#17643a':'#6a786e'};border-radius:10px;padding:8px 5px;text-align:center;font-size:9px;font-weight:900;line-height:1.25;">${st}<div style="font-size:8px;margin-top:3px;opacity:.75;">${i===stageIndex?'Current':i<stageIndex?'Completed':'Upcoming'}</div></div>`).join('')}</div>`;
+  const photo=`<div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:stretch;"><img src="${plantDemoImage}" alt="${esc(d.name)}" style="width:150px;height:112px;object-fit:cover;border-radius:12px;border:1px solid #dfe7e0;background:#eef3ef;"><div style="border:1px solid #e5ece6;border-radius:12px;padding:10px;background:#fbfdfb;"><div style="font-size:17px;color:#17643a;font-weight:950;">${esc(d.name)}</div><div style="font-size:10px;color:#708078;font-style:italic;margin-top:3px;">${esc(d.botanicalName)}</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;">${modalBadge(d.stage)}${modalBadge(d.health)}${modalBadge(d.sellable)}</div><div style="margin-top:9px;font-size:9px;color:#69786e;font-weight:850;">Overall Health Score <strong style="float:right;color:#17643a;font-size:11px;">${d.healthScore}%</strong></div><div style="height:6px;background:#e5ece6;border-radius:999px;overflow:hidden;margin-top:5px;"><div style="height:100%;width:${Math.max(0,Math.min(100,d.healthScore))}%;background:#2c8a4a;"></div></div></div></div>`;
 
-  openModal(`
-    <div style="background:#fff;border-radius:${modalRadius};overflow:hidden;width:100%;box-sizing:border-box;">
-      <div style="padding:${headerPadding};border-bottom:1px solid #eef2ee;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <div style="min-width:0;flex:1 1 ${mobile?'100%':'300px'};">
-          <div style="font-size:${titleSize};color:#17562f;font-weight:950;line-height:1.18;">🌿 Complete Plant Details</div>
-          <div style="font-size:${subtitleSize};color:#667969;margin-top:5px;font-weight:700;line-height:1.45;">RFID-linked identity, physical measurements, production stage, health indicators and maintenance history.</div>
-        </div>
+  const actions=modalFooter([
+    modalAction('✎ Add / Update Details',`openUpdatePlantDetailsModal('${d.rfid}')`,'light','width:100%;'),
+    modalAction(`✓ ${d.inspected?'Inspected':'Mark Inspected'}`,`markIndividualInspectedModal('${d.rfid}')`,'light','width:100%;'),
+    modalAction('Print Plant Details',`printIdentification('individual','${d.rfid}')`,'green','width:100%;')
+  ]);
 
-        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;width:${mobile?'100%':'auto'};">
-          <span style="background:#17562f;color:#fff;border-radius:999px;padding:${mobile?'9px 12px':'10px 15px'};font-size:${mobile?'10px':'11px'};font-weight:950;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-sizing:border-box;${mobile?'flex:1 1 auto;':''}">🏷 ${esc(d.rfid)}</span>
-          <button onclick="scanAnotherIndividual()" style="border:1px solid #d6e4d7;background:#f1f7f2;color:#17562f;border-radius:999px;padding:${mobile?'9px 11px':'10px 15px'};font-size:${mobile?'10px':'11px'};font-weight:950;cursor:pointer;${mobile?'flex:1 1 auto;':''}">← Scan Another</button>
-          <button onclick="closeModal()" aria-label="Close" style="border:none;background:#f3f6f3;color:#17562f;width:${mobile?'34px':'38px'};height:${mobile?'34px':'38px'};min-width:${mobile?'34px':'38px'};border-radius:999px;font-size:${mobile?'19px':'21px'};font-weight:900;cursor:pointer;">×</button>
-        </div>
-      </div>
-
-      <div style="padding:${bodyPadding};display:grid;grid-template-columns:${bodyColumns};gap:${bodyGap};align-items:start;box-sizing:border-box;min-width:0;">
-        <div style="border:1px solid #dce8dd;border-radius:${sectionRadius};background:#fff;overflow:hidden;box-shadow:0 12px 28px rgba(24,76,42,.06);position:${mobile?'relative':'sticky'};top:${mobile?'auto':'0'};min-width:0;">
-          <img src="${plantDemoImage}" alt="${esc(d.name)}" style="width:100%;height:${imageHeight};object-fit:cover;display:block;background:#e8eee8;">
-          <div style="padding:${mobile?'14px 14px 15px':'18px 20px 19px'};">
-            <div style="font-size:${mobile?'21px':'24px'};color:#17562f;font-weight:950;line-height:1.15;">${esc(d.name)}</div>
-            <div style="font-size:${mobile?'12px':'12px'};color:#667969;margin-top:5px;font-weight:700;font-style:italic;">${esc(d.botanicalName)}</div>
-
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;">
-              <span style="background:#fff2cf;color:#936411;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:950;text-transform:uppercase;">${esc(d.stage)}</span>
-              <span style="background:#dcf6e6;color:#098247;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:950;">RFID VERIFIED</span>
-              <span style="background:#e8f3ff;color:#155b8d;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:950;">${esc(d.health).toUpperCase()}</span>
-            </div>
-
-            <div style="height:1px;background:#e7eee7;margin:14px 0 12px;"></div>
-            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:${mobile?'11px':'10px'};color:#5d715f;font-weight:900;">
-              <span>Overall Plant Health Score</span>
-              <strong style="font-size:14px;color:#17562f;">${d.healthScore}%</strong>
-            </div>
-            <div style="height:9px;background:#e6eee7;border-radius:999px;overflow:hidden;margin-top:9px;">
-              <div style="height:100%;width:${Math.max(0,Math.min(100,d.healthScore))}%;background:linear-gradient(90deg,#277541,#68ad73);border-radius:999px;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:grid;gap:${mobile?'10px':'16px'};min-width:0;">
-          <section style="border:1px solid #dce8dd;border-radius:${sectionRadius};background:#f8fbf8;padding:${sectionPad};min-width:0;box-sizing:border-box;">
-            <div style="font-size:${sectionTitleSize};color:#17562f;font-weight:950;margin-bottom:${mobile?'10px':'13px'};">📍 Identity & Location</div>
-            <div style="display:grid;grid-template-columns:${infoCols};gap:${mobile?'7px':'10px'};min-width:0;">
-              ${plantInfoTile('RFID Number',d.rfid)}
-              ${plantInfoTile('Plant ID',d.plantId)}
-              ${plantInfoTile('Farm Location',d.farm)}
-              ${plantInfoTile('Block',d.block)}
-              ${plantInfoTile('Batch',d.batch)}
-              ${plantInfoTile('Bed / Row',d.row)}
-            </div>
-          </section>
-
-          <section style="border:1px solid #dce8dd;border-radius:${sectionRadius};background:#f8fbf8;padding:${sectionPad};min-width:0;box-sizing:border-box;">
-            <div style="font-size:${sectionTitleSize};color:#17562f;font-weight:950;margin-bottom:${mobile?'10px':'13px'};">📏 Physical & Production Details</div>
-            <div style="display:grid;grid-template-columns:${infoCols};gap:${mobile?'7px':'10px'};min-width:0;">
-              ${plantInfoTile('Current Stage',d.stage)}
-              ${plantInfoTile('Height',d.height)}
-              ${plantInfoTile('Width / Canopy',d.width)}
-              ${plantInfoTile('Plant Age',d.age)}
-              ${plantInfoTile('Container',d.container)}
-              ${plantInfoTile('Planting Date',d.plantingDate)}
-              ${plantInfoTile('Propagation Type',d.propagation)}
-              ${plantInfoTile('Grade',d.grade)}
-              ${plantInfoTile('Sellable Status',d.sellable)}
-            </div>
-          </section>
-
-          <section style="border:1px solid #dce8dd;border-radius:${sectionRadius};background:#f8fbf8;padding:${sectionPad};min-width:0;box-sizing:border-box;">
-            <div style="font-size:${sectionTitleSize};color:#17562f;font-weight:950;margin-bottom:${mobile?'10px':'13px'};">🌱 Growth Stage Journey</div>
-            <div style="display:grid;grid-template-columns:${stageCols};gap:${mobile?'7px':'10px'};min-width:0;">
-              ${stageOrder.map((s,i)=>{
-                const active=i===stageIndex,done=i<stageIndex;
-                const icon=i===0?'🌰':i===1?'🌱':i===2?'🪴':'🌳';
-                return `<div style="border:1px solid ${active?'#17562f':'#cfe0d2'};border-radius:${mobile?'14px':'18px'};padding:${mobile?'13px 7px':'18px 10px'};text-align:center;background:${active?'#24683c':'#edf7ef'};color:${active?'#fff':'#17562f'};box-shadow:${active?'0 10px 20px rgba(23,86,47,.14)':'none'};min-width:0;">
-                  <div style="font-size:${mobile?'20px':'23px'};">${icon}</div>
-                  <div style="font-size:${mobile?'11px':'12px'};font-weight:950;margin-top:6px;line-height:1.25;">${s}</div>
-                  <div style="font-size:9px;font-weight:850;margin-top:4px;opacity:.82;">${active?'Current stage':done?'Completed':'Upcoming'}</div>
-                </div>`;
-              }).join('')}
-            </div>
-          </section>
-
-          <section style="border:1px solid #dce8dd;border-radius:${sectionRadius};background:#f8fbf8;padding:${sectionPad};min-width:0;box-sizing:border-box;">
-            <div style="font-size:${sectionTitleSize};color:#17562f;font-weight:950;margin-bottom:${mobile?'10px':'13px'};">💧 Health & Maintenance</div>
-            <div style="display:grid;grid-template-columns:${healthCols};gap:${mobile?'7px':'10px'};min-width:0;">
-              ${plantMaintenanceTile('💧','Soil Moisture',d.moisture)}
-              ${plantMaintenanceTile('🧪','Last Fertilisation',d.fertilisation)}
-              ${plantMaintenanceTile('✂️','Last Pruning',d.pruning)}
-              ${plantMaintenanceTile('🛡️','Pest Inspection',d.pest)}
-              ${plantMaintenanceTile('📅','Next Action',d.nextAction)}
-              ${plantMaintenanceTile('👤','Responsible Person',d.owner)}
-            </div>
-          </section>
-
-          <div style="border:1px solid #dce8dd;border-radius:${mobile?'16px':'20px'};background:#f8fbf8;padding:${mobile?'13px':'16px 18px'};display:flex;align-items:${mobile?'stretch':'center'};justify-content:space-between;gap:11px;flex-direction:${mobile?'column':'row'};flex-wrap:wrap;min-width:0;box-sizing:border-box;">
-            <div style="min-width:0;">
-              <div style="font-size:${mobile?'13px':'14px'};color:#17562f;font-weight:950;">Plant record verified through RFID</div>
-              <div style="font-size:${mobile?'10px':'10px'};color:#667969;margin-top:4px;font-weight:700;line-height:1.45;">Inspection and printing actions are available for this plant record.</div>
-            </div>
-            <div style="display:grid;grid-template-columns:${mobile?'1fr':'repeat(3,max-content)'};gap:7px;width:${mobile?'100%':'auto'};">
-              <button onclick="openUpdatePlantDetailsModal('${d.rfid}')" style="border:1px solid #cfe0d2;background:#edf7ef;color:#17562f;border-radius:999px;padding:11px 14px;font-size:11px;font-weight:950;cursor:pointer;width:100%;">✎ Add / Update Details</button>
-              <button onclick="markIndividualInspectedModal('${d.rfid}')" style="border:1px solid #cfe3f6;background:#eaf4ff;color:#175c8d;border-radius:999px;padding:11px 14px;font-size:11px;font-weight:950;cursor:pointer;width:100%;">✓ ${d.inspected?'Inspected':'Mark Inspected'}</button>
-              <button onclick="printIdentification('individual','${d.rfid}')" style="border:none;background:#17562f;color:#fff;border-radius:999px;padding:11px 14px;font-size:11px;font-weight:950;cursor:pointer;width:100%;">🖨 Print Plant Details</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `,mobile?'100%':tablet?'1100px':'1500px');
+  openModal(`<div style="background:transparent;border-radius:22px;overflow:visible;">${modalHero('Complete Plant Details',esc(d.name),`${esc(d.rfid)} • ${esc(d.farm)} • ${esc(d.block)}`,modalBadge(d.health))}${modalSurface(photo+modalSectionTitle('📍','Identity & Location')+identity+modalSectionTitle('📏','Physical & Production Details')+physical+modalSectionTitle('🌱','Growth Stage Journey')+journey+modalSectionTitle('💧','Health & Maintenance')+health+actions)}</div>`,'900px');
 }
 
 function plantEditInput(id,label,value,placeholder='',type='text'){
@@ -2655,77 +2728,16 @@ function plantEditTextarea(id,label,value,placeholder=''){
 function openUpdatePlantDetailsModal(code){
   const d=plantDatabase[code];
   if(!d)return;
-
-  const mobile=window.innerWidth<700;
-  const tiny=window.innerWidth<430;
-  const cols=mobile?(tiny?'1fr':'repeat(2,minmax(0,1fr))'):'repeat(3,minmax(0,1fr))';
-  const pad=mobile?'12px':'18px';
-  const gap=mobile?'8px':'10px';
-
-  openModal(`
-    <div style="background:#fff;border-radius:${mobile?'16px':'22px'};overflow:hidden;width:100%;box-sizing:border-box;">
-      <div style="padding:${mobile?'14px':'18px 20px'};background:linear-gradient(145deg,#17562f,#2d7245);color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <div style="min-width:0;">
-          <div style="font-size:${mobile?'18px':'21px'};font-weight:950;line-height:1.2;">✎ Add / Update Plant Details</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:5px;font-weight:700;">${esc(d.rfid)} · ${esc(d.name)}</div>
-        </div>
-        <button onclick="openIndividualPlantModal('${d.rfid}')" aria-label="Close edit form" style="border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;width:36px;height:36px;border-radius:999px;font-size:20px;font-weight:900;cursor:pointer;">×</button>
-      </div>
-
-      <div style="padding:${pad};max-height:${mobile?'calc(100vh - 145px)':'76vh'};overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;">
-        <div style="padding:10px 11px;border:1px solid #dfe9df;border-radius:12px;background:#f7faf7;margin-bottom:11px;display:grid;grid-template-columns:${mobile?'1fr':'repeat(2,minmax(0,1fr))'};gap:7px;">
-          <div><div style="font-size:9px;color:#728176;font-weight:950;text-transform:uppercase;">RFID Number</div><div style="font-size:12px;color:#17562f;font-weight:950;margin-top:4px;word-break:break-word;">${esc(d.rfid)}</div></div>
-          <div><div style="font-size:9px;color:#728176;font-weight:950;text-transform:uppercase;">Plant ID</div><div style="font-size:12px;color:#17562f;font-weight:950;margin-top:4px;word-break:break-word;">${esc(d.plantId)}</div></div>
-        </div>
-
-        <section style="border:1px solid #dfe9df;border-radius:14px;background:#f9fbf9;padding:${mobile?'11px':'14px'};margin-bottom:10px;">
-          <div style="font-size:14px;color:#17562f;font-weight:950;margin-bottom:10px;">🌿 Basic & Location Details</div>
-          <div style="display:grid;grid-template-columns:${cols};gap:${gap};">
-            ${plantEditInput('editPlantName','Plant Name',d.name,'Plant name')}
-            ${plantEditInput('editBotanical','Botanical Name',d.botanicalName,'Botanical name')}
-            ${plantEditSelect('editFarm','Farm',d.farm,farms)}
-            ${plantEditInput('editBlock','Block',d.block,'Block A')}
-            ${plantEditInput('editBatch','Batch',d.batch,'Batch 2')}
-            ${plantEditInput('editRow','Bed / Row',d.row,'Bed A-07 · Row 04')}
-          </div>
-        </section>
-
-        <section style="border:1px solid #dfe9df;border-radius:14px;background:#f9fbf9;padding:${mobile?'11px':'14px'};margin-bottom:10px;">
-          <div style="font-size:14px;color:#17562f;font-weight:950;margin-bottom:10px;">📏 Physical & Production Details</div>
-          <div style="display:grid;grid-template-columns:${cols};gap:${gap};">
-            ${plantEditSelect('editStage','Current Stage',d.stage,['Sapling','Child','Adult'])}
-            ${plantEditInput('editHeight','Height',d.height,'e.g. 168 cm')}
-            ${plantEditInput('editWidth','Width / Canopy',d.width,'e.g. 92 cm canopy')}
-            ${plantEditInput('editAge','Plant Age',d.age,'e.g. 26 months')}
-            ${plantEditInput('editContainer','Container',d.container,'e.g. 24-inch grow bag')}
-            ${plantEditInput('editPlantingDate','Planting Date',d.plantingDate,'e.g. 18 June 2024')}
-            ${plantEditInput('editPropagation','Propagation Type',d.propagation,'e.g. Grafted')}
-            ${plantEditInput('editGrade','Grade',d.grade,'e.g. Grade A')}
-            ${plantEditInput('editSellable','Sellable Status',d.sellable,'e.g. Ready for sale')}
-          </div>
-        </section>
-
-        <section style="border:1px solid #dfe9df;border-radius:14px;background:#f9fbf9;padding:${mobile?'11px':'14px'};margin-bottom:10px;">
-          <div style="font-size:14px;color:#17562f;font-weight:950;margin-bottom:10px;">💧 Health & Maintenance</div>
-          <div style="display:grid;grid-template-columns:${cols};gap:${gap};">
-            ${plantEditInput('editHealth','Health Status',d.health,'e.g. Healthy')}
-            ${plantEditInput('editHealthScore','Health Score %',d.healthScore,'0 - 100','number')}
-            ${plantEditInput('editMoisture','Soil Moisture',d.moisture,'e.g. 68% · Optimal')}
-            ${plantEditInput('editFertilisation','Last Fertilisation',d.fertilisation,'Date and treatment')}
-            ${plantEditInput('editPruning','Last Pruning',d.pruning,'Date or Not required')}
-            ${plantEditInput('editPest','Pest Inspection',d.pest,'Inspection result')}
-            ${plantEditInput('editNextAction','Next Action',d.nextAction,'Next activity and date')}
-            ${plantEditInput('editOwner','Responsible Person',d.owner,'Supervisor / employee name')}
-          </div>
-        </section>
-
-        <div style="display:grid;grid-template-columns:${mobile?'1fr':'1fr auto'};gap:8px;align-items:center;position:sticky;bottom:0;background:#fff;padding-top:8px;">
-          <div style="font-size:10px;color:#718176;font-weight:700;line-height:1.4;">RFID Number and Plant ID are locked to protect identification history.</div>
-          <button onclick="savePlantDetails('${d.rfid}')" style="border:none;background:#17562f;color:#fff;border-radius:999px;padding:12px 17px;font-size:11px;font-weight:950;cursor:pointer;width:${mobile?'100%':'auto'};">Save Plant Details</button>
-        </div>
-      </div>
-    </div>
-  `,mobile?'100%':'1120px');
+  const cols='repeat(auto-fit,minmax(180px,1fr))';
+  const section=(title,inner)=>`<div style="border:1px solid #e2eae3;border-radius:13px;background:#fbfdfb;padding:10px;margin-top:9px;"><div style="font-size:12px;color:#17643a;font-weight:950;margin-bottom:8px;">${title}</div><div style="display:grid;grid-template-columns:${cols};gap:8px;">${inner}</div></div>`;
+  const body=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">${modalInfoCard('RFID Number',d.rfid,'🏷')}${modalInfoCard('Plant ID',d.plantId,'#')}</div>
+    ${section('🌿 Basic & Location Details',plantEditInput('editPlantName','Plant Name',d.name,'Plant name')+plantEditInput('editBotanical','Botanical Name',d.botanicalName,'Botanical name')+plantEditSelect('editFarm','Farm',d.farm,farms)+plantEditInput('editBlock','Block',d.block,'Block A')+plantEditInput('editBatch','Batch',d.batch,'Batch 2')+plantEditInput('editRow','Bed / Row',d.row,'Bed A-07 · Row 04'))}
+    ${section('📏 Physical & Production Details',plantEditSelect('editStage','Current Stage',d.stage,['Sapling','Child','Adult'])+plantEditInput('editHeight','Height',d.height,'e.g. 168 cm')+plantEditInput('editWidth','Width / Canopy',d.width,'e.g. 92 cm canopy')+plantEditInput('editAge','Plant Age',d.age,'e.g. 26 months')+plantEditInput('editContainer','Container',d.container,'e.g. 24-inch grow bag')+plantEditInput('editPlantingDate','Planting Date',d.plantingDate,'e.g. 18 June 2024')+plantEditInput('editPropagation','Propagation Type',d.propagation,'e.g. Grafted')+plantEditInput('editGrade','Grade',d.grade,'e.g. Grade A')+plantEditInput('editSellable','Sellable Status',d.sellable,'e.g. Ready for sale'))}
+    ${section('💧 Health & Maintenance',plantEditInput('editHealth','Health Status',d.health,'e.g. Healthy')+plantEditInput('editHealthScore','Health Score %',d.healthScore,'0 - 100','number')+plantEditInput('editMoisture','Soil Moisture',d.moisture,'e.g. 68% · Optimal')+plantEditInput('editFertilisation','Last Fertilisation',d.fertilisation,'Date and treatment')+plantEditInput('editPruning','Last Pruning',d.pruning,'Date or Not required')+plantEditInput('editPest','Pest Inspection',d.pest,'Inspection result')+plantEditInput('editNextAction','Next Action',d.nextAction,'Next activity and date')+plantEditInput('editOwner','Responsible Person',d.owner,'Supervisor / employee name'))}
+    ${modalNoteBox('Identification fields locked','RFID Number and Plant ID are locked to protect identification history.')}
+    ${modalFooter([modalAction('Save Plant Details',`savePlantDetails('${d.rfid}')`,'green','width:100%;'),modalAction('Back',`openIndividualPlantModal('${d.rfid}')`,'outline','width:100%;')])}`;
+  openModal(`<div style="background:transparent;border-radius:22px;overflow:visible;">${modalHero('Add / Update Plant Details',esc(d.name),esc(d.rfid))}${modalSurface(body)}</div>`,'900px');
 }
 
 function savePlantDetails(code){
@@ -3285,57 +3297,82 @@ function openPODetailsModern(id){
   const p=purchaseOrders.find(x=>x.id===id);
   if(!p)return;
 
-  openModal(`
-    <div style="padding:16px 18px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-      <div>
-        <div style="font-size:10px;color:#f5c542;font-weight:900;letter-spacing:.08em;">PURCHASE ORDER</div>
-        <div style="font-size:20px;font-weight:950;margin-top:4px;">${esc(p.id)}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">${esc(p.vendor.name)}</div>
-      </div>
-      ${button('×','closeModal()','light')}
-    </div>
+  const summary = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Requisition',p.requisitionNo,'📄')}
+      ${modalInfoCard('Farm',p.farm,'📍')}
+      ${modalInfoCard('Expected Delivery',p.expectedDelivery,'📅')}
+    </div>`;
 
-    <div style="padding:15px;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">
-        ${detail('Requisition',p.requisitionNo)}
-        ${detail('Farm',p.farm)}
-        ${detail('Order Date',p.orderDate)}
-        ${detail('Expected Delivery',p.expectedDelivery)}
-        ${detail('Vendor Location',p.vendor.location)}
-        ${detail('GST',p.vendor.gst)}
-        ${detail('Vendor Contact',p.vendor.contact)}
-        ${detail('Receipt Status',p.status)}
-        ${detail('PO Amount',state.amountsUnlocked?money(p.amount):'Restricted')}
-      </div>
+  const info = `
+    ${modalSectionTitle('📋','Purchase Order Information')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Order Date',p.orderDate,'🗓')}
+      ${modalInfoCard('Vendor Location',p.vendor.location,'📍')}
+      ${modalInfoCard('GST',p.vendor.gst,'#')}
+      ${modalInfoCard('Vendor Contact',p.vendor.contact,'📞')}
+      ${modalInfoCard('Receipt Status',p.status,'✅')}
+      ${modalInfoCard('PO Amount',state.amountsUnlocked?money(p.amount):'Restricted','₹')}
+    </div>`;
 
-      <div style="margin-top:11px;border:1px solid #e1ebe2;border-radius:13px;overflow:hidden;">
-        <div style="padding:9px 11px;background:#edf5ef;color:#1a4d2a;font-size:10px;font-weight:950;text-transform:uppercase;">PO Line Items</div>
-        <div class="erp-table-wrap" style="border:none;border-radius:0;">
-          <table class="erp-table" style="min-width:600px;">
-            <thead><tr><th>Item</th><th>Category</th><th>Ordered Qty</th></tr></thead>
-            <tbody>
-              ${p.items.map(i=>`<tr><td><strong>${esc(i.name)}</strong></td><td>${esc(i.category)}</td><td>${i.requested}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
+  const items = `
+    ${modalSectionTitle('📦','PO Line Items')}
+    <div style="border:1px solid #e5ece6;border-radius:18px;overflow:hidden;background:#fff;">
+      <div style="padding:10px 14px;background:#f3f8f4;color:#17643a;font-size:11px;font-weight:950;text-transform:uppercase;">PO line items</div>
+      <div style="overflow:auto;">
+        <table style="width:100%;min-width:560px;border-collapse:collapse;font-size:13px;">
+          <thead><tr style="background:#fbfdfb;color:#617366;text-align:left;">${['Item','Category','Ordered Qty'].map(h=>`<th style="padding:8px 10px;font-weight:900;border-top:1px solid #edf1ee;">${h}</th>`).join('')}</tr></thead>
+          <tbody>${p.items.map(i=>`<tr><td style="padding:9px 10px;border-top:1px solid #edf1ee;font-weight:900;color:#173020;">${esc(i.name)}</td><td style="padding:9px 10px;border-top:1px solid #edf1ee;color:#46584a;">${esc(i.category)}</td><td style="padding:9px 10px;border-top:1px solid #edf1ee;font-weight:900;color:#173020;">${i.requested}</td></tr>`).join('')}</tbody>
+        </table>
       </div>
+    </div>`;
 
-      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:11px;">
-        ${!state.amountsUnlocked?button('View PO Amount','closeModal();openAmountAccess()','gold'):''}
-        ${button('Close','closeModal()','light')}
-      </div>
-    </div>
-  `);
+  const buttons=[];
+  if(!state.amountsUnlocked) buttons.push(modalAction('View PO Amount','closeModal();openAmountAccess()','gold','width:100%;'));
+  buttons.push(modalAction('Close','closeModal()','outline','width:100%;'));
+
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Purchase Order',esc(p.id),esc(p.vendor.name),modalBadge(p.status))}${modalSurface(summary + info + items + modalFooter(buttons))}</div>`,'860px');
 }
-
 function renderPODetails(p){return `${headerBlock('Purchase Order Details',`${p.id} · ${p.requisitionNo} · ${p.vendor.name}`,'🧾')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px;">${detail('Farm',p.farm)}${detail('Order Date',p.orderDate)}${detail('Expected Delivery',p.expectedDelivery)}${detail('PO Amount',state.amountsUnlocked?money(p.amount):'₹••••••')}</div><div style="display:flex;gap:6px;margin-top:8px;">${button(state.amountsUnlocked?'Amount Unlocked':'View PO Amount','openAmountAccess()','gold')}</div><div style="margin-top:10px;padding:10px;border:1px solid #e2ebe3;border-radius:12px;background:#f8fbf8;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">Vendor Details</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:6px;">${detail('Vendor',p.vendor.name)}${detail('Location',p.vendor.location)}${detail('GST',p.vendor.gst)}${detail('Contact',p.vendor.contact)}</div></div><div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:6px;">${p.items.map(i=>`<div style="border:1px solid #e2ebe3;border-radius:11px;padding:9px;background:#fff;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">${i.name}</div><div style="font-size:10px;color:#829085;margin-top:2px;">${i.category}</div><div style="font-size:11px;margin-top:6px;">Requested <strong>${i.requested}</strong> · Received <strong>${i.received}</strong> · Damaged <strong style="color:#b42331;">${i.damaged}</strong></div></div>`).join('')}</div>`}
-function openAmountAccess(){openModal(`<div style="padding:18px;text-align:center;"><div style="font-size:34px;">🔐</div><div style="font-size:18px;color:#1a4d2a;font-weight:950;margin-top:4px;">Amount Access</div><div style="font-size:12px;color:#718176;margin-top:4px;">Enter password to unmask PO amount.</div><input id="amountPass" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:10px;padding:10px;margin-top:12px;"><div style="display:flex;gap:6px;justify-content:center;margin-top:10px;">${button('Show Amounts','unlockAmount()')}${button('Cancel','closeModal()','light')}</div></div>`,'430px')}function unlockAmount(){if(document.getElementById('amountPass').value!=='fundsroom'){showToast('Incorrect password.',true);return}state.amountsUnlocked=true;closeModal();render();showToast('PO amount unlocked.')}
+function openAmountAccess(){
+  const body = `
+    <div style="display:grid;gap:12px;justify-items:center;text-align:center;">
+      <div style="width:74px;height:74px;border-radius:999px;background:#eef5ef;border:1px solid #dde8de;display:flex;align-items:center;justify-content:center;color:#17643a;font-size:34px;">🔐</div>
+      <div>
+        <div style="font-size:22px;color:#173020;font-weight:950;line-height:1.2;">Amount Access</div>
+        <div style="font-size:13px;color:#69786e;line-height:1.55;margin-top:6px;">Enter password to unmask PO amount.</div>
+      </div>
+      <div style="width:100%;">${modalInputBlock('Password',`<input id="amountPass" type="password" placeholder="Password" style="width:100%;box-sizing:border-box;border:1px solid #d9e4db;border-radius:14px;padding:13px 14px;background:#fff;font-size:13px;font-weight:800;color:#1d3022;">`)}</div>
+      ${modalFooter([
+        modalAction('Show Amounts','unlockAmount()','green','width:100%;'),
+        modalAction('Cancel','closeModal()','outline','width:100%;')
+      ])}
+    </div>`;
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Secure Access','Purchase Order Amounts','Unlock PO amounts for this supervisor session')}${modalSurface(body)}</div>`,'520px');
+}
+function unlockAmount(){if(document.getElementById('amountPass').value!=='fundsroom'){showToast('Incorrect password.',true);return}state.amountsUnlocked=true;closeModal();render();showToast('PO amount unlocked.')}
 function renderPackingSlip(p){return `${headerBlock('Packing Slip Entry',`Record actual received and damaged quantity for ${p.id}.`,'📄')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;">${p.items.map(i=>`<div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fbfdfb;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;">${i.name}</div><div style="font-size:10px;color:#829085;margin-top:2px;">Requested ${i.requested}</div><label style="display:block;font-size:10px;color:#1a4d2a;font-weight:900;margin-top:6px;">Actually Received<input id="recv-${i.id}" type="number" min="0" value="${i.received}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:8px;padding:7px;margin-top:3px;"></label><label style="display:block;font-size:10px;color:#1a4d2a;font-weight:900;margin-top:5px;">Damaged Qty<input id="dam-${i.id}" type="number" min="0" value="${i.damaged}" style="width:100%;box-sizing:border-box;border:1px solid #dbe8db;border-radius:8px;padding:7px;margin-top:3px;"></label></div>`).join('')}</div><label style="display:block;font-size:11px;color:#1a4d2a;font-weight:900;margin-top:9px;">Supervisor Comment<textarea id="poComment" style="width:100%;min-height:70px;box-sizing:border-box;border:1px solid #dbe8db;border-radius:9px;padding:9px;margin-top:4px;">${esc(p.comment)}</textarea></label><div style="margin-top:9px;">${button('Submit Packing Slip','submitPackingSlip()')}</div>`}
 function submitPackingSlip(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);p.items.forEach(i=>{i.received=Number(document.getElementById('recv-'+i.id).value||0);i.damaged=Number(document.getElementById('dam-'+i.id).value||0)});p.comment=document.getElementById('poComment').value.trim();p.status=totalShort(p)===0?'Received':'Partially Received';render();showToast('Packing slip submitted; variance updated.')}
 function renderVariance(p){const req=totalRequested(p),rec=totalReceived(p),dam=totalDamaged(p),sh=totalShort(p),healthy=Math.max(0,rec-dam),ful=req?((rec/req)*100).toFixed(1):'0.0',dr=rec?((dam/rec)*100).toFixed(1):'0.0';return `<div id="varianceReport">${headerBlock('Variance Report',`${p.id} · ${p.vendor.name}`,'📊')}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px;">${metric('📋','Requested',req,'Total requested')}${metric('📦','Received',rec,'Actual received')}${metric('⚠','Short',sh,'Not received')}${metric('💥','Damaged',dam,'Damaged stock')}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:10px;"><div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fff;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;margin-bottom:5px;">Received vs Short vs Damaged</div><canvas id="varianceChart" height="170"></canvas></div><div style="border:1px solid #e2ebe3;border-radius:12px;padding:9px;background:#fff;"><div style="font-size:12px;color:#1a4d2a;font-weight:950;margin-bottom:5px;">Stock Quality Split</div><canvas id="qualityChart" height="170"></canvas></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:10px;">${detail('Fulfilment Rate',ful+'%')}${detail('Damage Rate',dr+'%')}${detail('Healthy Stock',healthy)}${detail('Supervisor Comment',p.comment||'No comment')}</div><div style="overflow-x:auto;border:1px solid #e2ebe3;border-radius:12px;margin-top:10px;"><table style="width:100%;min-width:600px;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#edf5ef;color:#1a4d2a;text-align:left;">${['Stock','Requested','Received','Short','Damaged','Status'].map(h=>`<th style="padding:8px;">${h}</th>`).join('')}</tr></thead><tbody>${p.items.map(i=>{const x=Math.max(0,i.requested-i.received),issue=x>0||i.damaged>0;return `<tr><td style="padding:8px;border-top:1px solid #e7eee7;font-weight:900;">${i.name}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.requested}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.received}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${x}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${i.damaged}</td><td style="padding:8px;border-top:1px solid #e7eee7;">${issue?pill('Variance Found','red'):pill('Matched')}</td></tr>`}).join('')}</tbody></table></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">${button('Notify Head Of Operations',"showToast('Head Of Operations informed.')",'gold')}${button('Download PDF','downloadVariancePDF()')}</div></div>`}
 function drawVarianceCharts(){const p=purchaseOrders.find(x=>x.id===state.selectedPO);if(!p||typeof Chart==='undefined')return;if(state.varianceChart)state.varianceChart.destroy();if(state.qualityChart)state.qualityChart.destroy();const a=document.getElementById('varianceChart'),b=document.getElementById('qualityChart');if(!a||!b)return;state.varianceChart=new Chart(a,{type:'bar',data:{labels:p.items.map(i=>i.name),datasets:[{label:'Received',data:p.items.map(i=>i.received)},{label:'Short',data:p.items.map(i=>Math.max(0,i.requested-i.received))},{label:'Damaged',data:p.items.map(i=>i.damaged)}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});state.qualityChart=new Chart(b,{type:'doughnut',data:{labels:['Healthy Received','Damaged','Short'],datasets:[{data:[Math.max(0,totalReceived(p)-totalDamaged(p)),totalDamaged(p),totalShort(p)]}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}})}
 async function downloadVariancePDF(){if(typeof html2canvas==='undefined'||!window.jspdf){showToast('PDF libraries not loaded.',true);return}const t=document.getElementById('varianceReport');showToast('Preparing PDF...');const c=await html2canvas(t,{scale:1.5,useCORS:true}),img=c.toDataURL('image/png'),{jsPDF}=window.jspdf,pdf=new jsPDF('p','mm','a4'),pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight(),iw=pw-14,ih=c.height*iw/c.width;let left=ih,pos=7;pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph;while(left>0){pos=left-ih+7;pdf.addPage();pdf.addImage(img,'PNG',7,pos,iw,ih);left-=ph}pdf.save(state.selectedPO+'_variance_report.pdf');showToast('Variance PDF downloaded.')}
-function openProfile(){openModal(`<div style="padding:15px;background:linear-gradient(145deg,#1a4d2a,#2d6e3e);color:#fff;display:flex;justify-content:space-between;gap:8px;"><div><div style="font-size:11px;color:#f5c542;font-weight:900;">SUPERVISOR PROFILE</div><div style="font-size:19px;font-weight:950;margin-top:3px;">${supervisor.name}</div><div style="font-size:11px;color:rgba(255,255,255,.78);margin-top:3px;">${supervisor.role}</div></div>${button('×','closeModal()','light')}</div><div style="padding:14px;"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:6px;">${detail('Employee ID',supervisor.employeeId)}${detail('Phone',supervisor.phone)}${detail('Email',supervisor.email)}${detail('Base Farm',supervisor.farm)}${detail('Joining Date',supervisor.joined)}${detail('Status',supervisor.status)}</div><div style="margin-top:12px;">${button('Logout','logout()','red')}</div></div>`)}function logout(){closeModal();state.loggedIn=false;render()}function renderLoggedOut(){document.getElementById('app').innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;"><div style="width:min(390px,100%);background:#fff;border:1px solid #e2ebe3;border-radius:20px;padding:22px;text-align:center;box-shadow:0 16px 38px rgba(0,20,0,.08);"><div style="font-size:38px;">🌿</div><div style="font-size:20px;color:#1a4d2a;font-weight:950;margin-top:7px;">Supervisor Session Ended</div><div style="font-size:12px;color:#718176;line-height:1.5;margin-top:5px;">This is a prototype logout screen.</div><div style="margin-top:12px;">${button('Login Again',"state.loggedIn=true;state.view='workorders';render()")}</div></div></div>`}
+function openProfile(){
+  const body = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
+      ${modalInfoCard('Employee ID',supervisor.employeeId,'🆔')}
+      ${modalInfoCard('Phone',supervisor.phone,'📞')}
+      ${modalInfoCard('Email',supervisor.email,'✉')}
+      ${modalInfoCard('Base Farm',supervisor.farm,'📍')}
+      ${modalInfoCard('Joining Date',supervisor.joined,'📅')}
+      ${modalInfoCard('Status',supervisor.status,'✅')}
+    </div>
+    ${modalFooter([
+      modalAction('Logout','logout()','red','width:100%;'),
+      modalAction('Close','closeModal()','outline','width:100%;')
+    ])}`;
+  openModal(`<div style="background:transparent;border-radius:28px;overflow:visible;">${modalHero('Supervisor Profile',supervisor.name,supervisor.role,modalBadge(supervisor.status))}${modalSurface(body)}</div>`,'860px');
+}
+function logout(){closeModal();state.loggedIn=false;render()}function renderLoggedOut(){document.getElementById('app').innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;"><div style="width:min(390px,100%);background:#fff;border:1px solid #e2ebe3;border-radius:20px;padding:22px;text-align:center;box-shadow:0 16px 38px rgba(0,20,0,.08);"><div style="font-size:38px;">🌿</div><div style="font-size:20px;color:#1a4d2a;font-weight:950;margin-top:7px;">Supervisor Session Ended</div><div style="font-size:12px;color:#718176;line-height:1.5;margin-top:5px;">This is a prototype logout screen.</div><div style="margin-top:12px;">${button('Login Again',"state.loggedIn=true;state.view='workorders';render()")}</div></div></div>`}
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(supervisorDrawerOpen){
