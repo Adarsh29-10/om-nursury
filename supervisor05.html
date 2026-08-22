@@ -1126,6 +1126,160 @@
 }
 </style>
 
+
+<style id="supervisor-mobile-filter-view-toggle-final">
+  /* Filters stay collapsed until the Filters button is explicitly pressed. */
+  #wo-filter-strip,#b2b-filter-strip,#po-filter-strip{display:none;}
+
+  .mobile-view-toggle{display:none;border:1px solid #d7e2da;background:#fff;color:#17643a;height:36px;border-radius:9px;padding:0 10px;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:9.5px;font-weight:850;cursor:pointer;white-space:nowrap;box-sizing:border-box}
+  .mobile-view-toggle svg{width:15px;height:15px;flex:0 0 auto}
+
+  @media(max-width:899px){
+    .mobile-view-toggle{display:inline-flex}
+    .wo-mobile-heading,.ops-mobile-heading{align-items:center!important}
+
+    /* Cards are the mobile default. Table is available only through the view toggle. */
+    .mobile-table-mode .wo-mobile-list,
+    .mobile-table-mode .b2b-mobile-list,
+    .mobile-table-mode .po-mobile-list{display:none!important}
+    .mobile-table-mode .wo-desktop-table,
+    .mobile-table-mode .b2b-desktop-table,
+    .mobile-table-mode .po-desktop-table{display:block!important}
+
+    .mobile-card-mode .wo-mobile-list,
+    .mobile-card-mode .b2b-mobile-list,
+    .mobile-card-mode .po-mobile-list{display:grid!important}
+    .mobile-card-mode .wo-desktop-table,
+    .mobile-card-mode .b2b-desktop-table,
+    .mobile-card-mode .po-desktop-table{display:none!important}
+
+    /* Mobile table mode is intentionally dense, but preserves every column. */
+    .mobile-table-mode .erp-table-wrap{margin-top:0!important;border-radius:10px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+    .mobile-table-mode .erp-table{font-size:8.5px!important;line-height:1.25!important}
+    .mobile-table-mode .erp-table th{font-size:7.5px!important;padding:7px 6px!important}
+    .mobile-table-mode .erp-table td{font-size:8.5px!important;padding:8px 6px!important}
+    .mobile-table-mode .erp-inline-select{min-width:88px!important;max-width:108px!important;font-size:8px!important;padding:5px 20px 5px 6px!important}
+    .mobile-table-mode .ref-table-action{font-size:8px!important;padding:6px 7px!important}
+    .mobile-table-mode .ref-table-id{font-size:9px!important}
+    .mobile-table-mode .ref-sub{font-size:7px!important}
+
+    /* Keep the filter controls below search hidden until Filters is clicked. */
+    #wo-filter-strip,#b2b-filter-strip,#po-filter-strip{margin-top:8px!important}
+  }
+  @media(min-width:900px){
+    .mobile-view-toggle{display:none!important}
+    .wo-desktop-table,.b2b-desktop-table,.po-desktop-table{display:block!important}
+    .wo-mobile-list,.b2b-mobile-list,.po-mobile-list{display:none!important}
+  }
+</style>
+
+
+<style id="supervisor-mobile-collapsed-filter-spacing">
+  @media(max-width:899px){
+    /* When filters are collapsed, give the list breathing room below the toolbar/result area. */
+    .wo-v5-page:not(.filters-open) .wo-mobile-list,
+    .b2b-v5-page:not(.filters-open) .b2b-mobile-list,
+    .po-v5-page:not(.filters-open) .po-mobile-list{
+      margin-top:16px!important;
+    }
+    .mobile-table-mode.wo-v5-page:not(.filters-open) .wo-desktop-table,
+    .mobile-table-mode.b2b-v5-page:not(.filters-open) .b2b-desktop-table,
+    .mobile-table-mode.po-v5-page:not(.filters-open) .po-desktop-table{
+      margin-top:16px!important;
+    }
+
+    /* Once filters are opened, keep the list closer to the result bar. */
+    .filters-open .wo-mobile-list,
+    .filters-open .b2b-mobile-list,
+    .filters-open .po-mobile-list,
+    .filters-open .wo-desktop-table,
+    .filters-open .b2b-desktop-table,
+    .filters-open .po-desktop-table{
+      margin-top:6px!important;
+    }
+  }
+</style>
+
+<style id="supervisor-v5-mobile-card-two-column-clarity">
+@media(max-width:899px){
+  .wo-mobile-list .mobile-card-clean .card-facts,
+  .b2b-mobile-list .mobile-card-clean .card-facts,
+  .po-mobile-list .mobile-card-clean .card-facts{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px 14px!important;
+    margin-top:12px!important;
+    padding-top:12px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact,
+  .b2b-mobile-list .mobile-card-clean .card-fact,
+  .po-mobile-list .mobile-card-clean .card-fact{min-width:0!important;overflow:visible!important;}
+  .wo-mobile-list .mobile-card-clean .card-fact-label,
+  .b2b-mobile-list .mobile-card-clean .card-fact-label,
+  .po-mobile-list .mobile-card-clean .card-fact-label{
+    font-size:9.5px!important;line-height:1.2!important;margin-bottom:6px!important;color:#758178!important;white-space:normal!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact-value,
+  .b2b-mobile-list .mobile-card-clean .card-fact-value,
+  .po-mobile-list .mobile-card-clean .card-fact-value{
+    font-size:11.5px!important;line-height:1.35!important;color:#172019!important;font-weight:850!important;overflow-wrap:anywhere!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact .erp-status-badge-final,
+  .wo-mobile-list .mobile-card-clean .card-fact .desktop-material-badge,
+  .b2b-mobile-list .mobile-card-clean .card-fact .erp-status-badge-final,
+  .po-mobile-list .mobile-card-clean .card-fact .erp-status-badge-final{
+    display:inline-flex!important;width:auto!important;max-width:100%!important;min-height:28px!important;padding:5px 9px!important;font-size:9px!important;line-height:1.2!important;white-space:normal!important;text-align:left!important;justify-content:flex-start!important;border-radius:8px!important;
+  }
+  .mobile-card-clean .card-top-clean .primary-title{font-size:15px!important;line-height:1.35!important;}
+  .mobile-card-clean .card-token{font-size:9.5px!important;}
+  .mobile-card-clean .card-qty{font-size:10px!important;}
+  .mobile-card-clean .card-qty strong{font-size:13px!important;}
+  .wo-mobile-list .wo-card-actions-separated{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:10px!important;flex-wrap:nowrap!important;}
+  .wo-mobile-list .wo-material-card-action{flex:0 0 auto!important;align-self:flex-end!important;}
+  .wo-mobile-list .wo-card-actions-right{margin-left:auto!important;display:flex!important;align-items:flex-end!important;justify-content:flex-end!important;gap:7px!important;flex-wrap:nowrap!important;}
+  .b2b-mobile-list .mobile-card-clean .card-bottom-actions,
+  .po-mobile-list .mobile-card-clean .card-bottom-actions{justify-content:flex-end!important;padding-top:12px!important;margin-top:12px!important;}
+  .b2b-mobile-list .mobile-card-clean .primary-action,
+  .po-mobile-list .mobile-card-clean .primary-action{margin-left:auto!important;}
+}
+@media(max-width:390px){
+  .wo-mobile-list .mobile-card-clean .card-facts,
+  .b2b-mobile-list .mobile-card-clean .card-facts,
+  .po-mobile-list .mobile-card-clean .card-facts{gap:10px!important;}
+  .wo-mobile-list .mobile-card-clean .card-fact-label,
+  .b2b-mobile-list .mobile-card-clean .card-fact-label,
+  .po-mobile-list .mobile-card-clean .card-fact-label{font-size:9px!important;}
+  .wo-mobile-list .mobile-card-clean .card-fact-value,
+  .b2b-mobile-list .mobile-card-clean .card-fact-value,
+  .po-mobile-list .mobile-card-clean .card-fact-value{font-size:10.8px!important;}
+  .wo-mobile-list .wo-card-actions-separated{flex-wrap:wrap!important;}
+  .wo-mobile-list .wo-card-actions-right{width:100%!important;justify-content:flex-end!important;}
+}
+</style>
+
+
+<style id="supervisor-filter-button-robust-fix">
+  /* Robust filter behavior: options stay hidden until the Filters button is pressed. */
+  #wo-filter-strip,#b2b-filter-strip,#po-filter-strip{
+    display:none!important;
+  }
+  #wo-filter-strip.filter-strip-open,
+  #b2b-filter-strip.filter-strip-open,
+  #po-filter-strip.filter-strip-open{
+    display:flex!important;
+  }
+
+  @media(max-width:899px){
+    #wo-filter-strip.filter-strip-open,
+    #b2b-filter-strip.filter-strip-open,
+    #po-filter-strip.filter-strip-open{
+      display:flex!important;
+      flex-wrap:nowrap!important;
+      width:100%!important;
+      margin-top:8px!important;
+    }
+  }
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
@@ -1140,6 +1294,7 @@ const state={
   woFilters:{status:[],allocation:[],farm:[],plant:[],search:''},
   b2bFilters:{order:[],delivery:[],driver:[],farm:[],search:''},
   poFilters:{status:[],farm:[],vendor:[],search:''},
+  mobileListView:{workorders:'cards',b2b:'cards',po:'cards'},
   allocationDraft:{},
   rfidMode:'individual',
   rfidScreen:'main',
@@ -1960,7 +2115,27 @@ function toggleCompactFilter(scope,key,value,checked,label){
 function toggleReferenceFilterStrip(id){
   const el=document.getElementById(id);
   if(!el)return;
-  el.style.display=el.style.display==='none'?'flex':'none';
+  const opening=!el.classList.contains('filter-strip-open');
+  el.classList.toggle('filter-strip-open',opening);
+  el.setAttribute('aria-hidden',opening?'false':'true');
+  const page=el.closest('.wo-v5-page,.b2b-v5-page,.po-v5-page');
+  if(page)page.classList.toggle('filters-open',opening);
+}
+
+function toggleMobileListView(scope){
+  if(window.innerWidth>=900)return;
+  const current=state.mobileListView[scope]||'cards';
+  state.mobileListView[scope]=current==='cards'?'table':'cards';
+  render();
+}
+
+function mobileViewToggle(scope){
+  const current=state.mobileListView[scope]||'cards';
+  const next=current==='cards'?'Table':'Cards';
+  const icon=current==='cards'
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4zM4 10h16M9 5v14M15 5v14"/></svg>`
+    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>`;
+  return `<button class="mobile-view-toggle" onclick="toggleMobileListView('${scope}')" aria-label="Switch to ${next} view">${icon}<span>${next}</span></button>`;
 }
 
 function referencePagination(count,label){
@@ -2025,7 +2200,7 @@ function applyWorkOrderFiltersDom(){
 
   const mobileMode=window.innerWidth<900;
   const selector=mobileMode
-    ? '.wo-mobile-list .wo-data-row'
+    ? (state.mobileListView.workorders==='table'?'.wo-desktop-table .wo-data-row':'.wo-mobile-list .wo-data-row')
     : '.wo-desktop-table .wo-data-row';
 
   const visible=[...document.querySelectorAll(selector)]
@@ -2075,13 +2250,13 @@ function workOrdersView(){
   const filterIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/><circle cx="7" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>`;
 
   return `
-    <div class="ref-list-page wo-v5-page">
+    <div class="ref-list-page wo-v5-page ${window.innerWidth<900 && state.mobileListView.workorders==='table'?'mobile-table-mode':'mobile-card-mode'}">
       <div class="ref-title-row">
         <div class="ref-title-wrap"><h1 class="ref-title">Work Orders</h1><span class="ref-count-badge">${rows.length}</span></div>
       </div>
 
       <div class="wo-mobile-heading">
-        <div class="wo-mobile-heading-left"><h1>Work Orders</h1><span class="wo-mobile-count">${rows.length}</span></div>
+        <div class="wo-mobile-heading-left"><h1>Work Orders</h1><span class="wo-mobile-count">${rows.length}</span></div>${mobileViewToggle('workorders')}
       </div>
 
       <div class="wo-search-row">
@@ -2089,7 +2264,7 @@ function workOrdersView(){
         <button class="wo-filter-master" onclick="toggleReferenceFilterStrip('wo-filter-strip')">${filterIcon}<span>Filters</span></button>
       </div>
 
-      <div id="wo-filter-strip" class="ref-filter-strip">
+      <div id="wo-filter-strip" class="ref-filter-strip" style="display:none;">
         ${compactMultiFilter('woFilters','status','Status','☷',statuses)}
         ${compactMultiFilter('woFilters','allocation','Material','◇',allocations)}
         ${compactMultiFilter('woFilters','farm','Farm','⌾',farms)}
@@ -2132,9 +2307,9 @@ function workOrdersView(){
               <div class="card-fact"><div class="card-fact-label">Material</div>${materialStatusBadge(w.allocationStatus)}</div>
               <div class="card-fact"><div class="card-fact-label">Assigned</div><div class="card-fact-value">${esc(w.assignedOn.split(',')[0])}</div></div>
             </div>
-            <div class="card-bottom-actions">
-              <div class="action-group">
-                <button class="secondary-action" onclick="openAllocation('${w.id}')">Allocate Material</button>
+            <div class="card-bottom-actions wo-card-actions-separated">
+              <button class="secondary-action wo-material-card-action" onclick="openAllocation('${w.id}')">Allocate Material</button>
+              <div class="action-group wo-card-actions-right">
                 <div class="action-select-wrap"><span class="action-select-label">Work Status</span><select class="wo-mobile-status-select wo-real-select" data-value="${esc(w.status)}" data-wo-bind="${w.id}-status" onchange="this.dataset.value=this.value;updateWorkOrderInline('${w.id}','status',this.value)">${statuses.map(x=>`<option value="${esc(x)}" ${x===w.status?'selected':''}>${esc(statusLabel(x))}</option>`).join('')}</select></div>
                 <button class="primary-action" onclick="openWorkOrder('${w.id}')">View Details</button>
               </div>
@@ -2643,7 +2818,10 @@ function applyB2BFiltersDom(){
   });
 
   const isMobile=window.innerWidth<900;
-  const visible=[...document.querySelectorAll(isMobile?'.b2b-mobile-list .b2b-data-row':'.b2b-desktop-table .b2b-data-row')]
+  const b2bSelector=isMobile
+    ? (state.mobileListView.b2b==='table'?'.b2b-desktop-table .b2b-data-row':'.b2b-mobile-list .b2b-data-row')
+    : '.b2b-desktop-table .b2b-data-row';
+  const visible=[...document.querySelectorAll(b2bSelector)]
     .filter(row=>row.style.display!=='none').length;
   const count=document.getElementById('b2bVisibleCount');
   if(count)count.textContent=visible+' order'+(visible===1?'':'s');
@@ -2672,11 +2850,11 @@ function b2bView(){
   const deliveryLabel=o=>o.scheduledOn?'Scheduled':'Not Scheduled';
 
   return `
-    <div class="ref-list-page b2b-v5-page">
+    <div class="ref-list-page b2b-v5-page ${window.innerWidth<900 && state.mobileListView.b2b==='table'?'mobile-table-mode':'mobile-card-mode'}">
       <div class="ref-title-row"><div class="ref-title-wrap"><h1 class="ref-title">B2B Orders & Delivery</h1><span class="ref-count-badge">${orders.length}</span></div></div>
 
       <div class="ops-mobile-heading">
-        <div class="ops-mobile-heading-left"><h1>B2B Orders & Delivery</h1><span class="ops-mobile-count">${orders.length}</span></div>
+        <div class="ops-mobile-heading-left"><h1>B2B Orders & Delivery</h1><span class="ops-mobile-count">${orders.length}</span></div>${mobileViewToggle('b2b')}
       </div>
 
       <div class="wo-search-row">
@@ -2685,7 +2863,7 @@ function b2bView(){
         <button class="b2b-clear-top-mobile" onclick="clearB2BFilters()">${clearIcon}<span>Clear All</span></button>
       </div>
 
-      <div id="b2b-filter-strip" class="ref-filter-strip">
+      <div id="b2b-filter-strip" class="ref-filter-strip" style="display:none;">
         ${compactMultiFilter('b2bFilters','order','Order Status','',orderStatuses)}
         ${compactMultiFilter('b2bFilters','delivery','Delivery','',deliveryStatuses)}
         ${compactMultiFilter('b2bFilters','driver','Driver','',driverOptions)}
@@ -3132,7 +3310,10 @@ function applyPOFiltersDom(){
     row.style.display=show?'':'none';
   });
   const isMobile=window.innerWidth<900;
-  const visible=[...document.querySelectorAll(isMobile?'.po-mobile-list .po-data-row':'.po-desktop-table .po-data-row')]
+  const poSelector=isMobile
+    ? (state.mobileListView.po==='table'?'.po-desktop-table .po-data-row':'.po-mobile-list .po-data-row')
+    : '.po-desktop-table .po-data-row';
+  const visible=[...document.querySelectorAll(poSelector)]
     .filter(row=>row.style.display!=='none').length;
   const count=document.getElementById('poVisibleCount');
   if(count)count.textContent=visible+' purchase order'+(visible===1?'':'s');
@@ -3155,12 +3336,12 @@ function poListScreen(){
   const rowSearch=x=>esc([x.id,x.requisitionNo,x.vendor.name,x.vendor.location,x.farm,x.status,x.expectedDelivery].join(' ').toLowerCase());
 
   return `
-    <div class="ref-list-page po-v5-page">
+    <div class="ref-list-page po-v5-page ${window.innerWidth<900 && state.mobileListView.po==='table'?'mobile-table-mode':'mobile-card-mode'}">
       ${poBreadcrumb()}
       <div class="ref-title-row"><div class="ref-title-wrap"><h1 class="ref-title">Purchase Order Receiving</h1><span class="ref-count-badge">${purchaseOrders.length}</span></div></div>
 
       <div class="ops-mobile-heading">
-        <div class="ops-mobile-heading-left"><h1>Purchase Order Receiving</h1><span class="ops-mobile-count">${purchaseOrders.length}</span></div>
+        <div class="ops-mobile-heading-left"><h1>Purchase Order Receiving</h1><span class="ops-mobile-count">${purchaseOrders.length}</span></div>${mobileViewToggle('po')}
       </div>
 
       <div class="wo-search-row">
@@ -3168,7 +3349,7 @@ function poListScreen(){
         <button class="wo-filter-master" onclick="toggleReferenceFilterStrip('po-filter-strip')">${filterIcon}<span>Filters</span></button>
       </div>
 
-      <div id="po-filter-strip" class="ref-filter-strip">
+      <div id="po-filter-strip" class="ref-filter-strip" style="display:none;">
         ${compactMultiFilter('poFilters','status','Status','☷',statuses)}
         ${compactMultiFilter('poFilters','farm','Farm','⌾',farms)}
         ${compactMultiFilter('poFilters','vendor','Vendor','♙',vendors)}
