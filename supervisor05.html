@@ -1365,6 +1365,86 @@
 }
 </style>
 
+
+<style id="supervisor-v5-real-device-filter-dropdown-width-fix">
+/* Final filter dropdown fix for real phones.
+   Keep the compact filter trigger chips, but let the opened UI menu use a
+   practical width so option labels never get crushed into the trigger width. */
+@media(max-width:899px){
+  #wo-filter-strip .ref-filter-chip,
+  #b2b-filter-strip .ref-filter-chip,
+  #po-filter-strip .ref-filter-chip{
+    overflow:visible!important;
+  }
+
+  #wo-filter-strip .erp-multi,
+  #b2b-filter-strip .erp-multi,
+  #po-filter-strip .erp-multi{
+    position:relative!important;
+    overflow:visible!important;
+  }
+
+  #wo-filter-strip .erp-multi-menu,
+  #b2b-filter-strip .erp-multi-menu,
+  #po-filter-strip .erp-multi-menu{
+    left:0!important;
+    right:auto!important;
+    width:min(232px,calc(100vw - 24px))!important;
+    min-width:min(200px,calc(100vw - 24px))!important;
+    max-width:calc(100vw - 24px)!important;
+    max-height:260px!important;
+    padding:7px!important;
+    border-radius:12px!important;
+    z-index:1500!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    box-shadow:0 14px 34px rgba(17,48,28,.18)!important;
+  }
+
+  /* Anchor filters on the right half back toward the viewport so their
+     wider menus stay completely visible on physical mobile devices. */
+  #wo-filter-strip .ref-filter-chip:nth-child(n+3) .erp-multi-menu,
+  #b2b-filter-strip .ref-filter-chip:nth-child(n+3) .erp-multi-menu,
+  #po-filter-strip .ref-filter-chip:nth-child(n+3) .erp-multi-menu{
+    left:auto!important;
+    right:0!important;
+  }
+
+  #wo-filter-strip .erp-check,
+  #b2b-filter-strip .erp-check,
+  #po-filter-strip .erp-check{
+    min-height:40px!important;
+    padding:8px 9px!important;
+    gap:9px!important;
+    border-radius:9px!important;
+    font-size:11px!important;
+    line-height:1.3!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    color:#2d4033!important;
+  }
+
+  #wo-filter-strip .erp-check input,
+  #b2b-filter-strip .erp-check input,
+  #po-filter-strip .erp-check input{
+    width:16px!important;
+    height:16px!important;
+    min-width:16px!important;
+    flex:0 0 16px!important;
+  }
+}
+
+@media(max-width:380px){
+  #wo-filter-strip .erp-multi-menu,
+  #b2b-filter-strip .erp-multi-menu,
+  #po-filter-strip .erp-multi-menu{
+    width:min(218px,calc(100vw - 18px))!important;
+    min-width:min(190px,calc(100vw - 18px))!important;
+    max-width:calc(100vw - 18px)!important;
+  }
+}
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
