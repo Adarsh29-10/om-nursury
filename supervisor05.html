@@ -820,6 +820,312 @@
   }
 </style>
 
+
+<style id="supervisor-v5-desktop-table-v7-density">
+  /* Desktop/laptop only: V7-inspired dense tables. Mobile V5 remains unchanged. */
+  @media(min-width:900px){
+    .erp-table-wrap{
+      overflow-x:hidden!important;
+      border-radius:14px!important;
+    }
+    .erp-table{
+      width:100%!important;
+      min-width:0!important;
+      table-layout:fixed!important;
+      font-size:10.5px!important;
+      line-height:1.28!important;
+    }
+    .erp-table th{
+      padding:9px 7px!important;
+      font-size:8.5px!important;
+      line-height:1.2!important;
+      letter-spacing:.025em!important;
+      white-space:normal!important;
+      overflow-wrap:anywhere!important;
+    }
+    .erp-table td{
+      padding:9px 7px!important;
+      font-size:10px!important;
+      line-height:1.3!important;
+      white-space:normal!important;
+      overflow-wrap:anywhere!important;
+    }
+    .erp-table td[style*="min-width"],
+    .erp-table th[style*="min-width"]{
+      min-width:0!important;
+      width:auto!important;
+    }
+    .erp-table .ref-table-id{font-size:10.5px!important;white-space:normal!important;}
+    .erp-table .ref-sub{font-size:8px!important;line-height:1.25!important;}
+    .erp-table .ref-table-action{
+      width:100%!important;
+      min-width:0!important;
+      padding:7px 6px!important;
+      font-size:8.5px!important;
+      white-space:normal!important;
+      line-height:1.15!important;
+    }
+    .erp-table .erp-inline-select,
+    .erp-table .ref-status-select{
+      min-width:0!important;
+      width:100%!important;
+      max-width:100%!important;
+      padding:7px 22px 7px 7px!important;
+      border-radius:8px!important;
+      font-size:9px!important;
+      line-height:1.15!important;
+    }
+
+    /* Work Orders balanced column widths */
+    .wo-desktop-table .erp-table th:nth-child(1),.wo-desktop-table .erp-table td:nth-child(1){width:13%!important;}
+    .wo-desktop-table .erp-table th:nth-child(2),.wo-desktop-table .erp-table td:nth-child(2){width:18%!important;}
+    .wo-desktop-table .erp-table th:nth-child(3),.wo-desktop-table .erp-table td:nth-child(3){width:7%!important;}
+    .wo-desktop-table .erp-table th:nth-child(4),.wo-desktop-table .erp-table td:nth-child(4){width:15%!important;}
+    .wo-desktop-table .erp-table th:nth-child(5),.wo-desktop-table .erp-table td:nth-child(5){width:15%!important;}
+    .wo-desktop-table .erp-table th:nth-child(6),.wo-desktop-table .erp-table td:nth-child(6){width:12%!important;}
+    .wo-desktop-table .erp-table th:nth-child(7),.wo-desktop-table .erp-table td:nth-child(7){width:12%!important;}
+    .wo-desktop-table .erp-table th:nth-child(8),.wo-desktop-table .erp-table td:nth-child(8){width:8%!important;}
+
+    /* B2B table: fit all existing fields on one laptop screen */
+    .b2b-desktop-table .erp-table th:nth-child(1),.b2b-desktop-table .erp-table td:nth-child(1){width:11%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(2),.b2b-desktop-table .erp-table td:nth-child(2){width:18%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(3),.b2b-desktop-table .erp-table td:nth-child(3){width:10%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(4),.b2b-desktop-table .erp-table td:nth-child(4){width:9%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(5),.b2b-desktop-table .erp-table td:nth-child(5){width:12%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(6),.b2b-desktop-table .erp-table td:nth-child(6){width:12%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(7),.b2b-desktop-table .erp-table td:nth-child(7){width:12%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(8),.b2b-desktop-table .erp-table td:nth-child(8){width:8%!important;}
+    .b2b-desktop-table .erp-table th:nth-child(9),.b2b-desktop-table .erp-table td:nth-child(9){width:8%!important;}
+
+    /* PO list table */
+    .po-desktop-table .erp-table{table-layout:fixed!important;min-width:0!important;}
+    .po-desktop-table .erp-table th,.po-desktop-table .erp-table td{padding-left:7px!important;padding-right:7px!important;}
+
+    .desktop-material-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:27px;
+      width:100%;
+      padding:5px 7px;
+      border-radius:8px;
+      font-size:8.5px;
+      font-weight:850;
+      line-height:1.15;
+      text-align:center;
+      border:1px solid transparent;
+      box-sizing:border-box;
+    }
+    .desktop-material-badge.green{background:#eaf7ee;color:#176f40;border-color:#d3e9d9;}
+    .desktop-material-badge.red{background:#fff0f1;color:#b42331;border-color:#f0d1d4;}
+    .desktop-material-badge.blue{background:#eef5ff;color:#2563a7;border-color:#d9e7f7;}
+    .desktop-material-badge.orange{background:#fff5e7;color:#a86508;border-color:#f1dfb9;}
+    .desktop-material-badge.gray{background:#f3f5f4;color:#647169;border-color:#e0e5e2;}
+  }
+</style>
+
+
+<style id="supervisor-v5-mobile-card-structure-and-readonly-statuses">
+  .desktop-material-badge,.ops-readonly-badge{display:inline-flex;align-items:center;justify-content:center;min-height:28px;border-radius:999px;padding:5px 9px;font-size:9.5px;font-weight:850;line-height:1.15;white-space:nowrap;border:1px solid transparent;box-sizing:border-box}
+  .desktop-material-badge.green,.ops-readonly-badge.green{background:#eaf7ee;color:#176f40;border-color:#d5eadb}
+  .desktop-material-badge.blue,.ops-readonly-badge.blue{background:#eef5ff;color:#2768c7;border-color:#d8e7fb}
+  .desktop-material-badge.orange,.ops-readonly-badge.orange{background:#fff4e5;color:#ad6709;border-color:#f3dfbd}
+  .desktop-material-badge.red,.ops-readonly-badge.red{background:#fff0f1;color:#b9333e;border-color:#f1d5d8}
+  .desktop-material-badge.gray,.ops-readonly-badge.gray{background:#f2f4f3;color:#647069;border-color:#e2e7e3}
+
+  @media(max-width:899px){
+    .wo-card-v6{padding:14px!important}
+    .wo-card-primary-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .wo-card-plant-group{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-width:0}
+    .wo-card-plant-group .wo-mobile-plant{font-size:14px;line-height:1.3;flex:1;min-width:0}
+    .wo-card-plant-group .wo-mobile-stage-wrap{margin-top:0;justify-content:flex-end;flex:0 0 auto}
+    .wo-card-token-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding-bottom:10px;border-bottom:1px solid #e9eeea}
+    .wo-card-token{font-size:9px;color:#7b867f;font-weight:750;letter-spacing:.01em}
+    .wo-card-token-row .wo-mobile-qty{display:flex;flex-direction:row;align-items:baseline;gap:4px;padding:0}
+    .wo-card-token-row .wo-mobile-qty strong{font-size:13px}.wo-card-token-row .wo-mobile-qty span{font-size:9px}
+    .wo-card-facts-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid #e9eeea;align-items:start}
+    .wo-card-fact{min-width:0}.wo-card-fact>span{display:block;font-size:8.5px;color:#7a847e;font-weight:650;margin-bottom:5px;white-space:nowrap}.wo-card-fact>strong{display:block;font-size:10px;color:#202a24;font-weight:800;line-height:1.25;overflow-wrap:anywhere}
+    .wo-card-material .desktop-material-badge{max-width:100%;min-height:24px;padding:4px 7px;font-size:8px;white-space:normal;text-align:center}
+    .wo-card-bottom-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding-top:11px}
+    .wo-card-bottom-actions{margin-left:auto;display:flex;align-items:flex-end;justify-content:flex-end;gap:8px}
+    .wo-card-status-control{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.wo-card-status-control>span{font-size:8.5px;color:#7a847e;font-weight:700}
+    .wo-real-select{height:38px!important;min-width:112px!important;max-width:128px!important;border-radius:9px!important;font-size:9.5px!important;padding:0 26px 0 8px!important;appearance:auto!important;-webkit-appearance:menulist!important}
+    .wo-card-bottom-actions .wo-mobile-view-btn{height:38px!important}
+    .b2b-mobile-driver-select{width:100%;height:34px;border:1px solid #d8e2da;border-radius:8px;background:#fff;color:#172019;padding:0 25px 0 8px;font:inherit;font-size:9.5px;font-weight:800;outline:none;appearance:auto;-webkit-appearance:menulist;box-sizing:border-box}
+    .b2b-detail-cell .ops-readonly-badge{min-height:26px;padding:4px 7px;font-size:8.5px;white-space:normal;text-align:center}
+  }
+  @media(max-width:430px){
+    .wo-card-facts-row{gap:5px}.wo-card-fact>span{font-size:7.7px}.wo-card-fact>strong{font-size:9px}.wo-card-material .desktop-material-badge{font-size:7.5px;padding:3px 5px}
+    .wo-card-plant-group{gap:7px}.wo-mobile-stage-chip{padding:4px 6px!important;font-size:8px!important}
+    .wo-real-select{min-width:104px!important;max-width:116px!important;font-size:9px!important}
+  }
+</style>
+
+<style id="supervisor-v5-mobile-card-modal-final-pass">
+/* Final mobile production-UX pass: clear card tops, actions at bottom, compact mobile detail modals */
+@media(max-width:899px){
+  .mobile-card-clean{padding:13px 13px 12px!important;border-radius:14px!important;box-shadow:0 3px 12px rgba(18,39,25,.05)!important}
+  .mobile-card-clean .card-top-clean{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-width:0}
+  .mobile-card-clean .card-top-clean .primary-title{font-size:14px;font-weight:900;color:#172019;line-height:1.3;min-width:0;overflow-wrap:anywhere}
+  .mobile-card-clean .card-top-clean .secondary-chip{flex:0 0 auto}
+  .mobile-card-clean .card-token-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:7px}
+  .mobile-card-clean .card-token{font-size:9px;color:#7a857d;font-weight:750;letter-spacing:.01em}
+  .mobile-card-clean .card-qty{font-size:10px;color:#68746d;font-weight:700;white-space:nowrap}
+  .mobile-card-clean .card-qty strong{font-size:12px;color:#172019;font-weight:900;margin-right:3px}
+  .mobile-card-clean .card-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:11px;padding-top:10px;border-top:1px solid #edf1ee}
+  .mobile-card-clean .card-fact{min-width:0}
+  .mobile-card-clean .card-fact-label{font-size:8px;color:#7b867f;font-weight:700;line-height:1.15;margin-bottom:4px}
+  .mobile-card-clean .card-fact-value{font-size:9.5px;color:#1d2821;font-weight:850;line-height:1.25;overflow-wrap:anywhere}
+  .mobile-card-clean .card-fact .erp-status-badge-final{max-width:100%;font-size:8px!important;padding:4px 6px!important;white-space:normal!important;text-align:center!important;line-height:1.15!important}
+  .mobile-card-clean .card-bottom-actions{display:flex;justify-content:flex-end;align-items:flex-end;gap:7px;flex-wrap:wrap;margin-top:11px;padding-top:10px;border-top:1px solid #edf1ee}
+  .mobile-card-clean .card-bottom-actions .action-group{display:flex;align-items:flex-end;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+  .mobile-card-clean .card-bottom-actions .action-select-wrap{display:flex;flex-direction:column;gap:4px;min-width:112px}
+  .mobile-card-clean .card-bottom-actions .action-select-label{font-size:8px;color:#7a857e;font-weight:800}
+  .mobile-card-clean .card-bottom-actions select{height:36px!important;min-width:112px!important;max-width:132px!important;border-radius:9px!important;font-size:9.5px!important;font-weight:850!important;padding:0 24px 0 8px!important}
+  .mobile-card-clean .card-bottom-actions button{height:36px!important;min-height:36px!important;border-radius:9px!important;padding:0 11px!important;font-size:9.5px!important;font-weight:850!important;white-space:nowrap}
+  .mobile-card-clean .card-bottom-actions .secondary-action{border:1px solid #b8d5c0;background:#f4faf5;color:#17643a}
+  .mobile-card-clean .card-bottom-actions .primary-action{border:1px solid #0c7b42;background:#0f7d43;color:#fff}
+
+  /* B2B / PO old internal structures suppressed only in rebuilt mobile cards */
+  .b2b-mobile-list .mobile-card-clean .b2b-detail-matrix,
+  .b2b-mobile-list .mobile-card-clean .b2b-ref-bottom,
+  .po-mobile-list .mobile-card-clean .ops-mobile-divider,
+  .po-mobile-list .mobile-card-clean .ops-mobile-info-grid,
+  .po-mobile-list .mobile-card-clean .ops-mobile-bottom{display:none!important}
+
+  /* Mobile modal = compact bottom-sheet-like detail view, no repeated summary dashboard */
+  #modal{align-items:flex-end!important;padding:0!important;background:rgba(8,28,17,.52)!important;backdrop-filter:blur(4px)!important}
+  #modalBox{width:100%!important;max-width:100%!important;max-height:92vh!important;margin:0!important;border-radius:18px 18px 0 0!important;overflow-y:auto!important;background:#fff!important;box-shadow:0 -12px 36px rgba(0,20,0,.18)!important}
+  #modalBox .mobile-detail-modal{background:#fff!important;border-radius:18px 18px 0 0!important;overflow:hidden!important}
+  #modalBox .mobile-detail-head{position:sticky;top:0;z-index:5;background:#145f34;color:#fff;padding:12px 13px 11px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  #modalBox .mobile-detail-head .eyebrow{font-size:8px;color:#f6d36f;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+  #modalBox .mobile-detail-head .title{font-size:16px;font-weight:950;line-height:1.2;margin-top:3px}
+  #modalBox .mobile-detail-head .sub{font-size:9.5px;color:rgba(255,255,255,.78);font-weight:650;margin-top:3px;line-height:1.35}
+  #modalBox .mobile-detail-head .close-mobile{width:32px;height:32px;min-width:32px;border-radius:50%;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.10);color:#fff;font-size:20px;line-height:1;display:grid;place-items:center;padding:0}
+  #modalBox .mobile-detail-body{padding:11px 12px calc(14px + env(safe-area-inset-bottom));display:grid;gap:10px}
+  #modalBox .mobile-detail-section{border:1px solid #e3ebe5;border-radius:12px;background:#fff;padding:10px}
+  #modalBox .mobile-detail-section-title{font-size:11px;color:#17643a;font-weight:950;margin-bottom:8px}
+  #modalBox .mobile-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  #modalBox .mobile-detail-field{min-width:0;padding:8px;border-radius:9px;background:#f7faf8;border:1px solid #edf1ee}
+  #modalBox .mobile-detail-field.full{grid-column:1/-1}
+  #modalBox .mobile-detail-field .label{font-size:8px;color:#78837c;font-weight:750;margin-bottom:4px}
+  #modalBox .mobile-detail-field .value{font-size:10.5px;color:#18251d;font-weight:850;line-height:1.4;overflow-wrap:anywhere}
+  #modalBox .mobile-detail-note{font-size:10px;line-height:1.5;color:#405b47;background:#f4faf5;border:1px solid #dce8de;border-radius:10px;padding:9px 10px}
+  #modalBox .mobile-detail-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #e8eeea;padding:9px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  #modalBox .mobile-detail-actions button{height:40px;border-radius:10px;font-size:10px;font-weight:900}
+  #modalBox .mobile-items-list{display:grid;gap:6px}
+  #modalBox .mobile-item-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px;border:1px solid #e8eeea;border-radius:10px;background:#fff}
+  #modalBox .mobile-item-row strong{font-size:10.5px;color:#18251d}
+  #modalBox .mobile-item-row span{font-size:9px;color:#748078;margin-top:2px;display:block}
+  #modalBox .mobile-item-row .qty{font-size:10px;color:#17643a;font-weight:900;white-space:nowrap}
+}
+@media(max-width:430px){
+  .mobile-card-clean .card-facts{gap:5px}
+  .mobile-card-clean .card-fact-label{font-size:7.5px}
+  .mobile-card-clean .card-fact-value{font-size:9px}
+  .mobile-card-clean .card-bottom-actions{gap:6px}
+  #modalBox .mobile-detail-grid{gap:6px}
+}
+</style>
+
+
+<style id="workorder-mobile-layout-hotfix">
+/* Work Order mobile card hotfix: prevent Material/Assigned collision and keep all actions visible */
+@media(max-width:899px){
+  .wo-mobile-list .mobile-card-clean .card-facts{
+    grid-template-columns:minmax(0,.82fr) minmax(0,.78fr) minmax(0,1.28fr) minmax(0,1.12fr)!important;
+    gap:6px!important;
+    align-items:start!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact{
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact-label{
+    font-size:7.5px!important;
+    margin-bottom:4px!important;
+    white-space:nowrap!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact-value{
+    font-size:8.8px!important;
+    line-height:1.25!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact .erp-status-badge-final,
+  .wo-mobile-list .mobile-card-clean .card-fact .desktop-material-badge{
+    display:flex!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-height:25px!important;
+    padding:4px 5px!important;
+    box-sizing:border-box!important;
+    align-items:center!important;
+    justify-content:center!important;
+    font-size:7.2px!important;
+    line-height:1.12!important;
+    white-space:normal!important;
+    overflow-wrap:normal!important;
+    word-break:normal!important;
+    text-align:center!important;
+    border-radius:7px!important;
+  }
+
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions{
+    display:block!important;
+    margin-top:10px!important;
+    padding-top:10px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .action-group{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(92px,.95fr) minmax(102px,1fr) minmax(88px,.86fr)!important;
+    align-items:end!important;
+    gap:6px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .secondary-action,
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .primary-action{
+    width:100%!important;
+    min-width:0!important;
+    padding:0 7px!important;
+    font-size:8.6px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .action-select-wrap{
+    width:100%!important;
+    min-width:0!important;
+    gap:4px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .action-select-label{
+    font-size:7.5px!important;
+    line-height:1!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions select{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:36px!important;
+    padding:0 20px 0 7px!important;
+    font-size:8.7px!important;
+  }
+}
+@media(max-width:370px){
+  .wo-mobile-list .mobile-card-clean .card-facts{
+    grid-template-columns:minmax(0,.78fr) minmax(0,.72fr) minmax(0,1.34fr) minmax(0,1.16fr)!important;
+    gap:4px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-fact .erp-status-badge-final,
+  .wo-mobile-list .mobile-card-clean .card-fact .desktop-material-badge{font-size:6.8px!important;padding:4px 3px!important}
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .action-group{
+    grid-template-columns:minmax(88px,.95fr) minmax(98px,1fr) minmax(84px,.86fr)!important;
+    gap:5px!important;
+  }
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .secondary-action,
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions .primary-action{font-size:8px!important;padding:0 5px!important}
+  .wo-mobile-list .mobile-card-clean .card-bottom-actions select{font-size:8.2px!important;padding-left:5px!important}
+}
+</style>
+
 </head>
 <body style="margin:0;background:#fff;color:#1e2e24;font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;overflow-x:hidden;">
 <div id="app" style="min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom));box-sizing:border-box;"></div>
@@ -953,7 +1259,27 @@ function sectionCard(c){
   return `<section style="background:#fff;border:1px solid #e2ebe3;border-radius:22px;padding:16px;box-shadow:0 10px 24px rgba(0,20,0,.045);margin-bottom:12px;">${c}</section>`;
 }
 
-function pill(text,tone='green'){const c=tone==='red'?['#ffe3e6','#b42331']:tone==='gold'?['#fff4d8','#7a5c00']:tone==='blue'?['#e6f3ff','#1363a5']:['#e8f5ea','#17643a'];return `<span style="display:inline-flex;padding:5px 9px;border-radius:999px;background:${c[0]};color:${c[1]};font-size:10px;font-weight:900;white-space:nowrap;">${esc(text)}</span>`}function statusPill(s){const red=['Halted','Attention','Failed','Variance'].some(x=>String(s).includes(x)),blue=['In-Progress','In Transit','Driver Assigned','Ready to Dispatch','Ready for Pickup'].some(x=>String(s).includes(x)),gold=['Pending','Partially','Assigned','On Hold'].some(x=>String(s).includes(x));return pill(s,red?'red':blue?'blue':gold?'gold':'green')}
+function pill(text,tone='green'){const c=tone==='red'?['#ffe3e6','#b42331']:tone==='gold'?['#fff4d8','#7a5c00']:tone==='blue'?['#e6f3ff','#1363a5']:['#e8f5ea','#17643a'];return `<span style="display:inline-flex;padding:5px 9px;border-radius:999px;background:${c[0]};color:${c[1]};font-size:10px;font-weight:900;white-space:nowrap;">${esc(text)}</span>`}function statusPill(s){const red=['Halted','Attention','Failed','Variance'].some(x=>String(s).includes(x)),blue=['In-Progress','In Transit','Driver Assigned','Ready to Dispatch','Ready for Pickup'].some(x=>String(s).includes(x)),gold=['Pending','Partially','Assigned','On Hold'].some(x=>String(s).includes(x));return pill(s,red?'red':blue?'blue':gold?'gold':'green')}function materialStatusBadge(s){
+  const v=String(s||'');
+  const x=v.toLowerCase();
+  let tone='gray';
+  if(x.includes('fail')||x.includes('reject')||x.includes('blocked'))tone='red';
+  else if(x==='allocated'||x.includes('success')||x.includes('complete'))tone='green';
+  else if(x.includes('submitted')||x.includes('progress'))tone='blue';
+  else if(x.includes('pending')||x.includes('partial')||x.includes('waiting'))tone='orange';
+  else if(x.includes('not required')||x.includes('inactive')||x.includes('none'))tone='gray';
+  return `<span class="desktop-material-badge ${tone}">${esc(v)}</span>`;
+}
+function deliveryStatusBadge(s){
+  const v=String(s||'');
+  const x=v.toLowerCase();
+  let tone='gray';
+  if(x.includes('fail')||x.includes('cancel')||x.includes('variance'))tone='red';
+  else if(x.includes('delivered')||x.includes('complete'))tone='green';
+  else if(x.includes('driver assigned')||x.includes('in transit')||x.includes('ready for pickup'))tone='blue';
+  else if(x.includes('pending')||x.includes('waiting')||x.includes('not scheduled'))tone='orange';
+  return `<span class="ops-readonly-badge ${tone}">${esc(v)}</span>`;
+}
 function button(label,onclick,tone='green',extra=''){
   const bg=tone==='red'?'#b42331':tone==='gold'?'#f5c542':tone==='light'?'#fff':'#1a4d2a';
   const color=tone==='gold'?'#1e2e24':tone==='light'?'#1a4d2a':'#fff';
@@ -1747,30 +2073,19 @@ function workOrdersView(){
 
   const searchIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>`;
   const filterIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/><circle cx="7" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>`;
-  const plusIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
-  const moreIcon=`<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>`;
-  const calendarIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M8 3v5M16 3v5M4 10h16"/></svg>`;
 
   return `
     <div class="ref-list-page wo-v5-page">
-      <!-- Desktop title stays with the existing V4 table layout -->
       <div class="ref-title-row">
         <div class="ref-title-wrap"><h1 class="ref-title">Work Orders</h1><span class="ref-count-badge">${rows.length}</span></div>
       </div>
 
-      <!-- Mobile title row mirrors the supplied reference image -->
       <div class="wo-mobile-heading">
-        <div class="wo-mobile-heading-left">
-          <h1>Work Orders</h1>
-          <span class="wo-mobile-count">${rows.length}</span>
-        </div>
+        <div class="wo-mobile-heading-left"><h1>Work Orders</h1><span class="wo-mobile-count">${rows.length}</span></div>
       </div>
 
       <div class="wo-search-row">
-        <label class="wo-search-box">
-          ${searchIcon}
-          <input value="${esc(state.woFilters.search)}" placeholder="Search WO, plant, block..." oninput="state.woFilters.search=this.value;applyWorkOrderFiltersDom()">
-        </label>
+        <label class="wo-search-box">${searchIcon}<input value="${esc(state.woFilters.search)}" placeholder="Search WO, plant, block..." oninput="state.woFilters.search=this.value;applyWorkOrderFiltersDom()"></label>
         <button class="wo-filter-master" onclick="toggleReferenceFilterStrip('wo-filter-strip')">${filterIcon}<span>Filters</span></button>
       </div>
 
@@ -1781,82 +2096,48 @@ function workOrdersView(){
         ${compactMultiFilter('woFilters','plant','Plant','♧',plantsList)}
       </div>
 
-      <!-- Laptop / desktop: table only -->
       <div class="wo-desktop-table">
         <div class="erp-table-wrap">
           <table class="erp-table" style="min-width:960px;">
             <thead><tr><th>Work Order</th><th>Plant / Stage</th><th>Qty</th><th>Work Status</th><th>Material Status</th><th>Farm / Block</th><th>Assigned</th><th>Action</th></tr></thead>
-            <tbody>
-              ${rows.map(w=>`
-                <tr id="wo-row-${w.id}" class="wo-data-row" data-wo-id="${esc(w.id)}" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${rowSearch(w)}">
-                  <td style="min-width:150px;"><div class="ref-table-id">${w.id}</div></td>
-                  <td style="min-width:190px;"><strong style="color:#202c25;">${esc(w.plants.join(', '))}</strong><div class="ref-sub">${esc(w.stages.join(', '))}</div></td>
-                  <td style="min-width:80px;"><strong>${w.quantity}</strong><div class="ref-sub">plants</div></td>
-                  <td style="min-width:165px;"><select class="erp-inline-select ref-status-select" data-wo-bind="${w.id}-status" onchange="updateWorkOrderInline('${w.id}','status',this.value)">${statuses.map(x=>`<option value="${esc(x)}" ${x===w.status?'selected':''}>${esc(statusLabel(x))}</option>`).join('')}</select></td>
-                  <td style="min-width:190px;"><select class="erp-inline-select ref-status-select" data-wo-bind="${w.id}-allocationStatus" onchange="updateWorkOrderInline('${w.id}','allocationStatus',this.value)">${allocations.map(x=>`<option value="${esc(x)}" ${x===w.allocationStatus?'selected':''}>${esc(x)}</option>`).join('')}</select></td>
-                  <td style="min-width:145px;"><strong>${esc(w.farm)}</strong><div class="ref-sub">${esc(w.block)}</div></td>
-                  <td style="min-width:155px;"><strong>${esc(w.assignedOn.split(',')[0])}</strong><div class="ref-sub">${esc(w.assignedOn.split(',').slice(1).join(',').trim())}</div></td>
-                  <td style="min-width:110px;"><button class="ref-table-action" onclick="openWorkOrder('${w.id}')">View Details</button></td>
-                </tr>`).join('')}
-            </tbody>
+            <tbody>${rows.map(w=>`
+              <tr id="wo-row-${w.id}" class="wo-data-row" data-wo-id="${esc(w.id)}" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${rowSearch(w)}">
+                <td style="min-width:150px;"><div class="ref-table-id">${w.id}</div></td>
+                <td style="min-width:190px;"><strong style="color:#202c25;">${esc(w.plants.join(', '))}</strong><div class="ref-sub">${esc(w.stages.join(', '))}</div></td>
+                <td style="min-width:80px;"><strong>${w.quantity}</strong><div class="ref-sub">plants</div></td>
+                <td style="min-width:165px;"><select class="erp-inline-select ref-status-select" data-wo-bind="${w.id}-status" onchange="updateWorkOrderInline('${w.id}','status',this.value)">${statuses.map(x=>`<option value="${esc(x)}" ${x===w.status?'selected':''}>${esc(statusLabel(x))}</option>`).join('')}</select></td>
+                <td style="min-width:190px;">${materialStatusBadge(w.allocationStatus)}</td>
+                <td style="min-width:145px;"><strong>${esc(w.farm)}</strong><div class="ref-sub">${esc(w.block)}</div></td>
+                <td style="min-width:155px;"><strong>${esc(w.assignedOn.split(',')[0])}</strong><div class="ref-sub">${esc(w.assignedOn.split(',').slice(1).join(',').trim())}</div></td>
+                <td style="min-width:110px;"><button class="ref-table-action" onclick="openWorkOrder('${w.id}')">View Details</button></td>
+              </tr>`).join('')}</tbody>
           </table>
         </div>
       </div>
 
-      <!-- Mobile: card version of exactly the same Work Order records -->
       <div class="wo-mobile-list">
         ${rows.map(w=>`
-          <article id="wo-card-${w.id}" class="wo-mobile-card wo-data-row" data-wo-id="${esc(w.id)}" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${rowSearch(w)}">
-            <div class="wo-mobile-card-top">
-              <div class="wo-mobile-id">${esc(w.id)}</div>
-              <div class="wo-mobile-card-actions">
-                <select class="wo-mobile-status-select" data-value="${esc(w.status)}" data-wo-bind="${w.id}-status" onchange="this.dataset.value=this.value;updateWorkOrderInline('${w.id}','status',this.value)">
-                  ${statuses.map(x=>`<option value="${esc(x)}" ${x===w.status?'selected':''}>${esc(statusLabel(x))}</option>`).join('')}
-                </select>
-                <button class="wo-kebab" onclick="openWorkOrder('${w.id}')" aria-label="More work order options">${moreIcon}</button>
-              </div>
+          <article id="wo-card-${w.id}" class="wo-mobile-card wo-data-row mobile-card-clean" data-wo-id="${esc(w.id)}" data-status="${esc(w.status)}" data-allocation="${esc(w.allocationStatus)}" data-farm="${esc(w.farm)}" data-plants="${esc(w.plants.join('|'))}" data-search="${rowSearch(w)}">
+            <div class="card-top-clean">
+              <div class="primary-title">${esc(w.plants.join(', '))}</div>
+              <div class="wo-mobile-stage-wrap">${w.stages.map(stageChip).join('')}</div>
             </div>
-
-            <div class="wo-mobile-card-main">
-              <div style="min-width:0;">
-                <div class="wo-mobile-plant">${esc(w.plants.join(', '))}</div>
-                <div class="wo-mobile-stage-wrap">${w.stages.map(stageChip).join('')}</div>
-              </div>
-              <div class="wo-mobile-qty"><strong>${w.quantity}</strong><span>plants</span></div>
+            <div class="card-token-row">
+              <div class="card-token">${esc(w.id)}</div>
+              <div class="card-qty"><strong>${w.quantity}</strong>plants</div>
             </div>
-
-            <div class="wo-mobile-divider"></div>
-
-            <div class="wo-mobile-info-row">
-              <div>
-                <div class="wo-mobile-label">Material Status</div>
-                <select class="wo-mobile-material-select" data-value="${esc(w.allocationStatus)}" data-wo-bind="${w.id}-allocationStatus" onchange="this.dataset.value=this.value;updateWorkOrderInline('${w.id}','allocationStatus',this.value)">
-                  ${allocations.map(x=>`<option value="${esc(x)}" ${x===w.allocationStatus?'selected':''}>${esc(x)}</option>`).join('')}
-                </select>
-              </div>
-              <div class="wo-mobile-farm-block">
-                <div>
-                  <div class="wo-mobile-label">Farm</div>
-                  <div class="wo-mobile-value">${esc(w.farm)}</div>
-                </div>
-                <div>
-                  <div class="wo-mobile-label">Block</div>
-                  <div class="wo-mobile-value">${esc(w.block)}</div>
-                </div>
-              </div>
+            <div class="card-facts">
+              <div class="card-fact"><div class="card-fact-label">Farm</div><div class="card-fact-value">${esc(w.farm)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Block</div><div class="card-fact-value">${esc(w.block)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Material</div>${materialStatusBadge(w.allocationStatus)}</div>
+              <div class="card-fact"><div class="card-fact-label">Assigned</div><div class="card-fact-value">${esc(w.assignedOn.split(',')[0])}</div></div>
             </div>
-
-            <div class="wo-mobile-divider"></div>
-
-            <div class="wo-mobile-bottom">
-              <div class="wo-mobile-assigned">
-                ${calendarIcon}
-                <div>
-                  <div class="wo-mobile-assigned-title">Assigned</div>
-                  <div class="wo-mobile-assigned-date">${esc(w.assignedOn.split(',')[0])}</div>
-                </div>
+            <div class="card-bottom-actions">
+              <div class="action-group">
+                <button class="secondary-action" onclick="openAllocation('${w.id}')">Allocate Material</button>
+                <div class="action-select-wrap"><span class="action-select-label">Work Status</span><select class="wo-mobile-status-select wo-real-select" data-value="${esc(w.status)}" data-wo-bind="${w.id}-status" onchange="this.dataset.value=this.value;updateWorkOrderInline('${w.id}','status',this.value)">${statuses.map(x=>`<option value="${esc(x)}" ${x===w.status?'selected':''}>${esc(statusLabel(x))}</option>`).join('')}</select></div>
+                <button class="primary-action" onclick="openWorkOrder('${w.id}')">View Details</button>
               </div>
-              <button class="wo-mobile-view-btn" onclick="openWorkOrder('${w.id}')">View Details</button>
             </div>
           </article>
         `).join('')}
@@ -1866,9 +2147,27 @@ function workOrdersView(){
     </div>`;
 }
 
+function mobileDetailField(label,value,full=false){return `<div class="mobile-detail-field ${full?'full':''}"><div class="label">${label}</div><div class="value">${esc(value??'—')}</div></div>`}
+function workOrderStatusLabel(value){return value==='In-Progress'?'In Progress':value;}
+function mobileDetailModal(eyebrow,title,subtitle,body){return `<div class="mobile-detail-modal"><div class="mobile-detail-head"><div><div class="eyebrow">${eyebrow}</div><div class="title">${esc(title)}</div><div class="sub">${esc(subtitle||'')}</div></div><button class="close-mobile" onclick="closeModal()" aria-label="Close">×</button></div><div class="mobile-detail-body">${body}</div></div>`}
+
 function openWorkOrder(id){
   const w=workOrders.find(x=>x.id===id);
   if(!w)return;
+
+  if(window.innerWidth<900){
+    const body=`
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">Work Information</div><div class="mobile-detail-grid">
+        ${mobileDetailField('Production Actions',w.actions.join(', '),true)}
+        ${mobileDetailField('Start Date',w.startDate)}${mobileDetailField('End Date',w.endDate)}
+        ${mobileDetailField('Estimated Time',w.estimatedTime)}${mobileDetailField('Efficiency',w.efficiency+'%')}
+        ${mobileDetailField('Transfer Voucher',w.transfer||'—',true)}
+      </div></div>
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">Supervisor Message</div><div class="mobile-detail-note">${esc(w.message||'No message recorded.')}</div></div>
+      <div class="mobile-detail-actions"><button style="border:1px solid #b8d5c0;background:#f4faf5;color:#17643a" onclick="closeModal();openAllocation('${w.id}')">Allocate Material</button><button style="border:1px solid #0c7b42;background:#0f7d43;color:#fff" onclick="closeModal()">Close</button></div>`;
+    openModal(mobileDetailModal('Work Order Details',w.id,`${w.plants.join(', ')} · ${workOrderStatusLabel(w.status)}`,body),'100%');
+    return;
+  }
 
   const top = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">
@@ -2409,7 +2708,7 @@ function b2bView(){
                   <td style="min-width:115px;"><strong>${esc(o.requiredBy)}</strong></td>
                   <td style="min-width:170px;"><select class="erp-inline-select ref-status-select" data-b2b-bind="${o.id}-orderStatus" onchange="updateB2BInline('${o.id}','orderStatus',this.value)">${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${x}</option>`).join('')}</select></td>
                   <td style="min-width:165px;"><select class="erp-inline-select" data-b2b-bind="${o.id}-driver" onchange="updateB2BInline('${o.id}','driver',this.value)"><option value="">Not Assigned</option>${drivers.map(d=>`<option ${d===o.driver?'selected':''}>${d}</option>`).join('')}</select></td>
-                  <td style="min-width:175px;"><select class="erp-inline-select ref-status-select" data-b2b-bind="${o.id}-deliveryStatus" onchange="updateB2BInline('${o.id}','deliveryStatus',this.value)">${deliveryStatuses.map(x=>`<option ${x===o.deliveryStatus?'selected':''}>${x}</option>`).join('')}</select></td>
+                  <td style="min-width:175px;">${deliveryStatusBadge(o.deliveryStatus)}</td>
                   <td style="min-width:110px;"><strong>${esc(o.farm)}</strong></td>
                   <td style="min-width:110px;"><button class="ref-table-action" onclick="openB2B('${o.id}')">View Details</button></td>
                 </tr>`;}).join('')}
@@ -2420,66 +2719,21 @@ function b2bView(){
 
       <!-- Mobile: reference-matched clean B2B cards -->
       <div class="b2b-mobile-list">
-        ${orders.map(o=>{const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);const scheduled=!!o.scheduledOn;return `
-          <article class="b2b-ref-card b2b-data-row" data-b2b-id="${esc(o.id)}" data-order="${esc(o.orderStatus)}" data-delivery="${esc(o.deliveryStatus)}" data-driver="${esc(o.driver||'Not Assigned')}" data-farm="${esc(o.farm)}" data-search="${rowSearch(o)}">
-            <div class="ops-mobile-card-top">
-              <div class="ops-mobile-id">${esc(o.id)}</div>
-              <div class="ops-mobile-card-actions">
-                <div class="b2b-order-status-wrap">
-                  <span class="b2b-order-status-label">Order Status</span>
-                  <select class="b2b-ref-status" data-value="${esc(o.orderStatus)}" data-b2b-bind="${o.id}-orderStatus" onchange="this.dataset.value=this.value;updateB2BInline('${o.id}','orderStatus',this.value)">
-                    ${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${esc(x)}</option>`).join('')}
-                  </select>
-                </div>
-                <button class="ops-kebab" onclick="openB2B('${o.id}')" aria-label="More order options">${moreIcon}</button>
-              </div>
+        ${orders.map(o=>{const itemCount=o.items.reduce((sum,i)=>sum+Number(i[2]||0),0);return `
+          <article class="b2b-ref-card b2b-data-row mobile-card-clean" data-b2b-id="${esc(o.id)}" data-order="${esc(o.orderStatus)}" data-delivery="${esc(o.deliveryStatus)}" data-driver="${esc(o.driver||'Not Assigned')}" data-farm="${esc(o.farm)}" data-search="${rowSearch(o)}">
+            <div class="card-top-clean"><div class="primary-title">${esc(o.company)}</div><div class="secondary-chip">${deliveryStatusBadge(o.deliveryStatus)}</div></div>
+            <div class="card-token-row"><div class="card-token">${esc(o.id)} · ${esc(o.contact)}</div><div class="card-qty"><strong>${itemCount}</strong>plants · ${o.items.length} items</div></div>
+            <div class="card-facts">
+              <div class="card-fact"><div class="card-fact-label">Required By</div><div class="card-fact-value">${esc(o.requiredBy)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Farm</div><div class="card-fact-value">${esc(o.farm)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Driver</div><div class="card-fact-value">${esc(o.driver||'Not Assigned')}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Schedule</div><div class="card-fact-value">${esc(o.scheduledOn?o.scheduledOn.split(',')[0]:'Not scheduled')}</div></div>
             </div>
-
-            <div class="ops-mobile-main">
-              <div style="min-width:0;">
-                <div class="ops-mobile-primary">${esc(o.company)}</div>
-                <div class="ops-mobile-secondary">${esc(o.contact)}</div>
-                <div class="b2b-card-items-chip">${o.items.length} item${o.items.length===1?'':'s'}</div>
-              </div>
-              <div class="ops-mobile-qty"><strong>${itemCount}</strong><span>plants</span></div>
-            </div>
-
-            <div class="b2b-detail-matrix">
-              <div class="b2b-detail-row">
-                <div class="b2b-detail-cell">
-                  <div class="b2b-detail-label">Required By</div>
-                  <div class="b2b-detail-value">${esc(o.requiredBy)}</div>
-                </div>
-                <div class="b2b-detail-cell">
-                  <div class="b2b-detail-label">Farm</div>
-                  <div class="b2b-detail-value">${esc(o.farm)}</div>
-                </div>
-              </div>
-              <div class="b2b-detail-row">
-                <div class="b2b-detail-cell">
-                  <div class="b2b-detail-label">Delivery</div>
-                  <div class="b2b-delivery-line">
-                    <span class="b2b-detail-value">${esc(deliveryLabel(o))}</span>
-                    <button class="b2b-delivery-update" onclick="openDeliveryStatus('${o.id}')">Update</button>
-                  </div>
-                </div>
-                <div class="b2b-detail-cell">
-                  <div class="b2b-detail-label">Driver</div>
-                  <div class="b2b-driver-line">
-                    <span class="b2b-driver-name">${esc(o.driver||'Unassigned')}</span>
-                    <button class="b2b-driver-change" onclick="openDriverAssign('${o.id}')">Change</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="b2b-ref-bottom">
-              <div class="b2b-schedule-meta">
-                <div class="b2b-schedule-icon ${scheduled?'':'unscheduled'}">${calendarIcon}</div>
-                ${scheduled?`<div><div class="b2b-schedule-title">Scheduled on</div><div class="b2b-schedule-value">${esc(o.scheduledOn)}</div></div>`:`<div class="b2b-unscheduled-text">Delivery not scheduled</div>`}
-              </div>
-              <button class="b2b-ref-view ${scheduled?'filled':'outline'}" onclick="openB2B('${o.id}')">View Details</button>
-            </div>
+            <div class="card-bottom-actions"><div class="action-group">
+              <div class="action-select-wrap"><span class="action-select-label">Order Status</span><select class="b2b-ref-status" data-value="${esc(o.orderStatus)}" data-b2b-bind="${o.id}-orderStatus" onchange="this.dataset.value=this.value;updateB2BInline('${o.id}','orderStatus',this.value)">${orderStatuses.map(x=>`<option ${x===o.orderStatus?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+              <div class="action-select-wrap"><span class="action-select-label">Driver</span><select class="b2b-mobile-driver-select" data-b2b-bind="${o.id}-driver" onchange="updateB2BInline('${o.id}','driver',this.value)"><option value="">Not Assigned</option>${drivers.map(d=>`<option value="${esc(d)}" ${d===o.driver?'selected':''}>${esc(d)}</option>`).join('')}</select></div>
+              <button class="primary-action" onclick="openB2B('${o.id}')">View Details</button>
+            </div></div>
           </article>`;}).join('')}
       </div>
 
@@ -2490,6 +2744,20 @@ function b2bView(){
 function openB2B(id){
   const o=b2bOrders.find(x=>x.id===id);
   if(!o)return;
+
+  if(window.innerWidth<900){
+    const items=o.items.map(i=>`<div class="mobile-item-row"><div><strong>${esc(i[0])}</strong><span>${esc(i[1])}</span></div><div class="qty">${i[2]} plants</div></div>`).join('');
+    const body=`
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">Order Details</div><div class="mobile-detail-grid">
+        ${mobileDetailField('Inquiry',o.inquiry)}${mobileDetailField('Quotation',o.quotation)}
+        ${mobileDetailField('Mobile',o.mobile)}${mobileDetailField('Payment',o.payment)}
+        ${mobileDetailField('Delivery Address',o.address,true)}
+      </div></div>
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">Items</div><div class="mobile-items-list">${items}</div></div>
+      <div class="mobile-detail-actions"><button style="border:1px solid #b8d5c0;background:#f4faf5;color:#17643a" onclick="closeModal();openDriverAssign('${o.id}')">Change Driver</button><button style="border:1px solid #0c7b42;background:#0f7d43;color:#fff" onclick="closeModal()">Close</button></div>`;
+    openModal(mobileDetailModal('B2B Order Details',o.id,o.company,body),'100%');
+    return;
+  }
 
   const summary = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;">
@@ -2930,45 +3198,16 @@ function poListScreen(){
       <!-- Mobile: card version containing every field from the desktop PO table -->
       <div class="po-mobile-list">
         ${purchaseOrders.map(x=>`
-          <article class="ops-mobile-card po-data-row" data-po-id="${esc(x.id)}" data-status="${esc(x.status)}" data-farm="${esc(x.farm)}" data-vendor="${esc(x.vendor.name)}" data-search="${rowSearch(x)}">
-            <div class="ops-mobile-card-top">
-              <div class="ops-mobile-id">${esc(x.id)}</div>
-              <div class="ops-mobile-card-actions">
-                <span class="ops-status-badge" data-value="${esc(x.status)}">${esc(x.status)}</span>
-                <button class="ops-kebab" onclick="selectPOForReceiving('${x.id}')" aria-label="More purchase order options">${moreIcon}</button>
-              </div>
+          <article class="ops-mobile-card po-data-row mobile-card-clean" data-po-id="${esc(x.id)}" data-status="${esc(x.status)}" data-farm="${esc(x.farm)}" data-vendor="${esc(x.vendor.name)}" data-search="${rowSearch(x)}">
+            <div class="card-top-clean"><div class="primary-title">${esc(x.vendor.name)}</div><div class="secondary-chip"><span class="ops-status-badge" data-value="${esc(x.status)}">${esc(x.status)}</span></div></div>
+            <div class="card-token-row"><div class="card-token">${esc(x.id)} · ${esc(x.requisitionNo)}</div><div class="card-qty"><strong>${x.items.length}</strong>lines</div></div>
+            <div class="card-facts">
+              <div class="card-fact"><div class="card-fact-label">Location</div><div class="card-fact-value">${esc(x.vendor.location)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Farm</div><div class="card-fact-value">${esc(x.farm)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">Expected</div><div class="card-fact-value">${esc(x.expectedDelivery)}</div></div>
+              <div class="card-fact"><div class="card-fact-label">PO Status</div><div class="card-fact-value">${esc(x.status)}</div></div>
             </div>
-
-            <div class="ops-mobile-main">
-              <div style="min-width:0;">
-                <div class="ops-mobile-primary">${esc(x.vendor.name)}</div>
-                <div class="ops-mobile-secondary">${esc(x.vendor.location)}</div>
-              </div>
-              <div class="ops-mobile-qty"><strong>${x.items.length}</strong><span>lines</span></div>
-            </div>
-
-            <div class="ops-mobile-divider"></div>
-
-            <div class="ops-mobile-info-grid">
-              <div>
-                <div class="ops-mobile-label">Farm</div>
-                <div class="ops-mobile-value">${esc(x.farm)}</div>
-              </div>
-              <div>
-                <div class="ops-mobile-label">Expected</div>
-                <div class="ops-mobile-value">${esc(x.expectedDelivery)}</div>
-              </div>
-            </div>
-
-            <div class="ops-mobile-divider"></div>
-
-            <div class="ops-mobile-bottom">
-              <div class="ops-mobile-bottom-meta">
-                ${docIcon}
-                <div><div class="ops-mobile-bottom-title">Requisition</div><div class="ops-mobile-bottom-value">${esc(x.requisitionNo)}</div></div>
-              </div>
-              <button class="ops-mobile-view-btn" onclick="selectPOForReceiving('${x.id}')">${x.status==='Received'?'View Receipt':'Open PO'}</button>
-            </div>
+            <div class="card-bottom-actions"><div class="action-group"><button class="primary-action" onclick="selectPOForReceiving('${x.id}')">${x.status==='Received'?'View Receipt':'Open PO'}</button></div></div>
           </article>`).join('')}
       </div>
 
@@ -3282,6 +3521,19 @@ function completePOReceipt(id){
 function openPODetailsModern(id){
   const p=purchaseOrders.find(x=>x.id===id);
   if(!p)return;
+
+  if(window.innerWidth<900){
+    const items=p.items.map(i=>`<div class="mobile-item-row"><div><strong>${esc(i.name)}</strong><span>${esc(i.category)}</span></div><div class="qty">${i.requested} ordered</div></div>`).join('');
+    const body=`
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">Purchase Details</div><div class="mobile-detail-grid">
+        ${mobileDetailField('Order Date',p.orderDate)}${mobileDetailField('GST',p.vendor.gst)}
+        ${mobileDetailField('Vendor Contact',p.vendor.contact)}${mobileDetailField('PO Amount',state.amountsUnlocked?money(p.amount):'Restricted')}
+      </div></div>
+      <div class="mobile-detail-section"><div class="mobile-detail-section-title">PO Line Items</div><div class="mobile-items-list">${items}</div></div>
+      <div class="mobile-detail-actions">${!state.amountsUnlocked?`<button style="border:1px solid #e1c970;background:#fff8dd;color:#6f5700" onclick="closeModal();openAmountAccess()">View Amount</button>`:'<span></span>'}<button style="border:1px solid #0c7b42;background:#0f7d43;color:#fff" onclick="closeModal()">Close</button></div>`;
+    openModal(mobileDetailModal('Purchase Order',p.id,p.vendor.name,body),'100%');
+    return;
+  }
 
   const summary = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;">
